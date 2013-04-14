@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+<div class="menuHolder">
+	<ul class="nav">
+		<li>        
+			<li><a class="top-a" href="#url"><b>Administrar Usuario</b></a>
+			<div class="col1">
+				<ul class="colSingle">
+					<li><a href="#url">Eliminar</a>
+					<li><a href="#url">Modificar</a>
+				</ul>
+			</div>
+		</li>
+		 <li>
+		 <form action="{{url_for('index')}}" method="post">
+            <input type="submit" name="logout" value="logout" />
+        </form>
+        </li>
+	</ul>
+</div>
+{%endblock%}
+
+
+{%block mensaje%}
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class=flashes>
+	    {% for message in messages %}
+	      <li>{{ message }}</li>
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+{%endblock%}
+
+{%block content%}
+<p>Complete los datos del usuario:</p>
+        <form action="{{url_for('crearusuario')}}" method="post">
+            <p>Nombre:<br />
+             <input type="text" name="nombre" /></p>
+             <p>Usuario:<br />
+            <input type="text" name="usuario" /></p>
+            <p>Clave:<br />
+            <input type="password" name="clave" /></p>
+            <p>Es Admin:<br />
+            <input type="checkbox" name="admin" /></p>
+            <p><input type="submit" value="submit" /></p>
+        </form>
+{%endblock%}

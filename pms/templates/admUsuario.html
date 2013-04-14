@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+<div class="menuHolder">
+	<ul class="nav">
+		<li>        
+			<li><a class="top-a" href="/admproyecto/"><b>Administrar Proyecto</b></a>
+			<div class="col1">
+				<ul class="colSingle">
+					<li><a href="#">Crear</a>
+					<li><a href="#url">Eliminar</a>
+					<li><a href="#">Editar</a>
+				</ul>
+			</div>
+		</li>
+			<li><a class="top-a" href="/admusuario/crearusuario/"><b>Crear Usuario</b></a>
+			<li><a class="top-a" href="/"><b>logout</b></a></li>
+	</ul>
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="usuarios">
+
+<div class="row">
+      <div class="span12">
+        <h2> Listado de Usuarios </h2>
+        <table class="table table-striped">
+          <tr>
+            <th>Id</th>
+            <th>Nombre Usuario</th>
+            <th>Nombre </th>
+            <th>Administrador?</th>
+            <th>Contrasena</th>
+            <th>Eliminar</th>
+            <th>Editar</th>
+          </tr>
+          {% for u in usuarios %}
+          <tr>
+          <form></form>
+            <td>{{u.id}}</td>
+            <td>{{u.nombredeusuario}}</td>
+            <td>{{u.nombre}}</td>
+            <td>{{u.isAdmin}}</td>
+            <td>{{u.clave}}</td>
+            <td><a class="btn btn-danger" href="/admusuario/eliminarusuario/{{u.nombredeusuario}}">Eliminar</a></td>
+            <!--<td><a class="btn" href="/admusuario/editarusuario/{{u.idUsuario}}','{{u.nombredeusuario}}','{{u.nombre}}','{{u.clave}}','{{u.isAdmin}}');">  -->
+            <td><a class="btn" href="/admusuario/editarusuario/{{u.nombredeusuario}}">
+            Editar</a>
+          </tr>
+          
+          {% else %}
+          	<tr>
+          		NO HAY REGISTROS
+          	</tr>
+          {% endfor %}
+          
+        </table>
+      </div>  
+    </div>
+{%endblock%}

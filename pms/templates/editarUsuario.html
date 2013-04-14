@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+<div class="menuHolder">
+	<ul class="nav">
+		<li>        
+			<li><a class="top-a" href="#url"><b>Administrar Usuario</b></a>
+			<div class="col1">
+				<ul class="colSingle">
+					<li><a href="#url">Crear</a>
+					<li><a href="#url">Eliminar</a>
+					<li><a href="">Modificar</a>
+				</ul>
+			</div>
+		</li>
+		 <li><a class="top-a" href="/"><b>logout</b></a></li>
+	</ul>
+</div>
+
+{%endblock%}
+
+{%block content%}
+<p>Modifique los datos del usuario:</p>
+        <form action="/admusuario/editarusuario/" method="post">
+        	<p>Id:<br />
+             <input type="text" name="id" value="{{u.idd}}"  /></p>
+            <p>Nombre:<br />
+             <input type="text" name="nombre" value="{{u.nombre}}" /></p>
+             <p>Usuario:<br />
+            <input type="text" name="usuario" value="{{u.nombredeusuario}}"  /></p>
+            <p>Clave:<br />
+            <input type="text" name="clave" value="{{u.clave}}" /></p>
+            <p>Es Admin:<br />
+            {% if u.isAdmin %}
+            <input type="checkbox" name="admin" checked /></p>
+            {% else %}
+            <input type="checkbox" name="admin" /></p>
+            {% endif %}
+            <p><input type="submit" value="submit" /></p>
+        </form>
+
+{%endblock%}
