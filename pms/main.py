@@ -10,11 +10,9 @@ from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
 
 app = flask.Flask(__name__)
-# Don't do this!
-app.secret_key = "bacon"
 
-#users = {'jake':'bacon'}
-#comentario
+
+
 
 class Main(flask.views.MethodView):
     """

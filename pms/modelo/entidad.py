@@ -12,6 +12,7 @@ from sqlalchemy.types import DateTime
 
 
 class Usuario(Base):
+
     """
         Define la clase Usuario y la mapea con la tabla usuario
     """
