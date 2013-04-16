@@ -9,6 +9,8 @@ from initdb import Base
 from sqlalchemy.types import Unicode
 from sqlalchemy.types import DateTime
 
+
+
 class Usuario(Base):
     """
         Define la clase Usuario y la mapea con la tabla usuario
