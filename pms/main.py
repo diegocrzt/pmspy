@@ -8,7 +8,7 @@ import functools
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
-from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos
+from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto
 
 app = flask.Flask(__name__)
 # Don't do this!
@@ -215,6 +215,15 @@ def edUsuario(u=None):
         return flask.render_template('editarUsuario.html',u=usuario)
     else:
         return flask.render_template('admUsuario.html')
+
+
+@app.route('/admproyecto/eliminarproyecto/<proyecto>')
+@login_required
+def eProyecto(proyecto=None): 
+        eliminarProyecto(proyecto)
+        p=getProyectos()
+        return flask.render_template('admProyecto.html',proyectos=p)
+
 
 
 app.debug = True 

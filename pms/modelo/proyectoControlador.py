@@ -43,4 +43,10 @@ def comprobarProyecto(nombre=None):
     else:
         return True
     
-
+def eliminarProyecto(proyecto=None):
+    """
+    elimina un proyecto
+    """
+    if(proyecto):
+        session.query(Proyecto).filter(Proyecto.nombre==proyecto).delete()
+        session.commit()

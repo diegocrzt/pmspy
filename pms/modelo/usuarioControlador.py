@@ -94,7 +94,6 @@ def comprobarUsuarioB(ident=None,user=None):
     """
     comprueba sin usuario existe por id o por nombre d eusuario
     """
-    a=getUsuario(user)
     a=getUsuarioById(ident)
     if a == None:
         return False
