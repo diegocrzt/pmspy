@@ -179,5 +179,6 @@ def edUsuario(u=None):
         return flask.render_template('admUsuario.html')
 
 
+
 app.debug = True 
-run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)
+run_simple("localhost", 5050, app, use_reloader=True, use_debugger=True, use_evalex=True)
