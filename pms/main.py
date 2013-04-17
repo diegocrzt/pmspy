@@ -163,15 +163,16 @@ app.add_url_rule('/admusuario/editarusuario/',
 
 
 @app.route('/admusuario/eliminarusuario/<username>')
-def eUsuario(username=None):
+@login_required
+def eUsuario(username=None): 
         eliminarUsuario(username)
         b=getUsuarios()
         return flask.render_template('admUsuario.html',usuarios=b)
     
 
 @app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
+@login_required
 def edUsuario(u=None):
-    
     if request.method == "GET":
         usuario=getUsuario(u)
         return flask.render_template('editarUsuario.html',u=usuario)
@@ -180,4 +181,4 @@ def edUsuario(u=None):
 
 
 app.debug = True 
-run_simple("localhost", 5050, app, use_reloader=True, use_debugger=True, use_evalex=True)
+run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)
