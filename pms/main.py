@@ -79,11 +79,21 @@ class Crearusuario(flask.views.MethodView):
         return flask.render_template('crearUsuario.html')
     @login_required
     def post(self):
-        required = ['nombre','usuario', 'clave']
+        '''required = ['nombre','usuario', 'clave']
+        
         for r in required:
             if r not in flask.request.form:
-                flask.flash("Error: {0} is required.".format(r))
-                return flask.redirect(flask.url_for('index'))
+                flask.flash("Error: {0} is required.".format(r))'''
+        if(flask.request.form['nombre']==""):
+            flask.flash("El campo nombre no puede estar vacio")
+            return flask.redirect(flask.url_for('crearusuario'))
+        if(flask.request.form['usuario']==""):
+            flask.flash("El campo usuario no puede estar vacio")
+            return flask.redirect(flask.url_for('crearusuario'))
+        if(flask.request.form['clave']==""):
+            flask.flash("El campo clave no puede estar vacio")
+            return flask.redirect(flask.url_for('crearusuario'))
+        
         if comprobarUsuario(flask.request.form['usuario']):
             flask.flash("El usuario ya existe")
             return flask.redirect(flask.url_for('crearusuario'))
@@ -91,7 +101,7 @@ class Crearusuario(flask.views.MethodView):
         if a not in flask.request.form:
             a=False
         else:
-            a=True
+            a=flask.request.form['admin']
         crearUsuario(flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
         return flask.redirect(flask.url_for('admusuario'))
     
@@ -181,4 +191,4 @@ def edUsuario(u=None):
 
 
 app.debug = True 
-run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)
+run_simple("localhost", 5050, app, use_reloader=True, use_debugger=True, use_evalex=True)
