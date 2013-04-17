@@ -61,7 +61,7 @@ def getUsuarioById(id=None):
     recupera un usuario por su id
     """
     if(id):
-            res=session.query(Usuario).filter(Usuario.get_id()==id).first()
+            res=session.query(Usuario).filter(Usuario.id==id).first()
             return res
         
 def editarUsuario(id=None,nom=None, usua=None, contrase=None, admin=None):
@@ -69,8 +69,6 @@ def editarUsuario(id=None,nom=None, usua=None, contrase=None, admin=None):
     permite editar un usuario existente
     """
     init_db()
-    print "id en editar"
-    print id
     u = getUsuarioById(id)
     u.nombre=nom
     u.nombredeusuario=usua

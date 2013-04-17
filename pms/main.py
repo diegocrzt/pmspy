@@ -5,9 +5,12 @@ Created on 05/04/2013
 '''
 import flask.views
 import functools
+from pms.modelo.entidad import Usuario
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
+
+globusuario = None
 
 app = flask.Flask(__name__)
 # Don't do this!
@@ -134,19 +137,29 @@ class Editarusuario(flask.views.MethodView):
         return flask.redirect(flask.url_for('admusuario'))
     @login_required
     def post(self):
-        required = ['nombre','usuario', 'clave']
-        for r in required:
-            if r not in flask.request.form:
-                flask.flash("Error: {0} is required.".format(r))
-                return flask.redirect(flask.url_for('index'))
+        global globusuario
+        if(flask.request.form['nombre']==""):
+            flask.flash("El campo nombre no puede estar vacio")
+            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
+        if(flask.request.form['usuario']==""):
+            flask.flash("El campo usuario no puede estar vacio")
+            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
+        if(flask.request.form['clave']==""):
+            flask.flash("El campo clave no puede estar vacio")
+            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
         a = 'admin'
         if a not in flask.request.form:
             a=False
         else:
-            a=True
-        print "aca esta el id:  "
-        print flask.request.form['id']
-        editarUsuario(flask.request.form['id'], flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
+            a=flask.request.form['admin']
+        print "aca imprimer el global!!!!"
+        print globusuario.nombredeusuario
+        if globusuario.nombredeusuario != flask.request.form['usuario']:
+            if comprobarUsuario(flask.request.form['usuario']):
+                flask.flash("El usuario ya esta usado")
+                return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)     
+            
+        editarUsuario(globusuario.id, flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
         return flask.redirect(flask.url_for('admusuario'))
     
     
@@ -183,9 +196,10 @@ def eUsuario(username=None):
 @app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
 @login_required
 def edUsuario(u=None):
+    global globusuario
     if request.method == "GET":
-        usuario=getUsuario(u)
-        return flask.render_template('editarUsuario.html',u=usuario)
+        globusuario=getUsuario(u)
+        return flask.render_template('editarUsuario.html',u=globusuario)
     else:
         return flask.render_template('admUsuario.html')
 
