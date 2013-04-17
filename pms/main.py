@@ -183,7 +183,6 @@ def eUsuario(username=None):
 @app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
 @login_required
 def edUsuario(u=None):
-    
     if request.method == "GET":
         usuario=getUsuario(u)
         return flask.render_template('editarUsuario.html',u=usuario)
