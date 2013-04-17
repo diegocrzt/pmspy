@@ -4,20 +4,82 @@
 <div class="menuHolder">
 	<ul class="nav">
 		<li>        
-			<li><a class="top-a" href="/admusuario/"><b>Administrar Usuario</b></a>
+			<li>
+				<a class="top-a" href="/admusuario/">
+					<b>Administrar Usuario</b>
+				</a>
 			<div class="col1">
 				<ul class="colSingle">
 					<li><a href="/admusuario/">Crear</a>
-					<li><a href="#url">Eliminar</a>
 					<li><a href="/admusuario/">Editar</a>
 				</ul>
 			</div>
 		</li>
-			<li><a class="top-a" href="/"><b>logout</b></a></li>
+		<li>        
+			<li>
+				<a class="top-a" href="/admproyecto/">
+					<b>Administrar Proyecto</b>
+				</a>
+			<div class="col1">
+				<ul class="colSingle">
+					<li><a href="/admproyecto/">Crear</a>
+					<li><a href="/admproyecto/">Editar</a>
+				</ul>
+			</div>
+		</li>
+		<li><a class="top-a" href="/"><b>logout</b></a></li>
 	</ul>
 </div>
 {%endblock%}
 
 {%block content%}
-<div>holanati</div>
+<div class="usuarios" align="center">
+
+
+	<div class="row" align="center">
+		<div class="span12" align="center">
+			<h2> Listado de Proyectos </h2>
+			<a class="btn"
+				href="/admProyecto/proyecto/">
+				Crear Proyecto
+			</a>
+			<div/>
+			<table class="table table-striped">
+				<tr>
+					<th>Nombre</th>
+					<th>Cantidad de fases </th>
+					<th>Fecha de Inicio</th>
+					<th>Fecha de Finalización</th>
+					<th>Fecha de Última Modificación</th>
+				</tr>
+         			{% for p in proyectos %}
+				<tr>
+					<td>{{p.nombre}}</td>
+					<td>{{p.cantFase}}</td>
+					<td>{{p.fechaInicio}}</td>
+					<td>{{p.fechaFin}}</td>
+					<td>{{p.fechaUltMod}}</td>
+					<td>
+						<a class="btn btn-danger"
+							href="/admProyecto/eliminarProyecto/{{p.id}}">
+							Eliminar
+						</a>
+					</td>
+           			<td>
+           				<a class="btn" 
+           					href="/admProyecto/proyecto/{{p.id}}">
+							Editar
+						</a>
+					</td>
+         			</tr>
+         			{% else %}
+         			<tr>
+         				No se han creado proyectos aún
+         			</tr>
+         			{% endfor %}
+       		</table>
+		</div>
+	</div>
+	
+</div>
 {%endblock%}
