@@ -14,3 +14,33 @@ def getProyectos():
     init_db()
     proyectos = session.query(Proyecto).all()
     return proyectos
+
+def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod=None, lider=None):
+    """Crea un proyecto
+
+    """
+    init_db()
+    session = db_session()
+    pro = Proyecto(nombre=nom,cantFase=cant, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, lider=lider)
+    session.add(pro)
+    session.commit()
+    
+def getProyecto(nombre=None):
+    """
+    recupera un proyecto por su nombre de usuario
+    """
+    if(nombre):
+            res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
+            return res
+
+def comprobarProyecto(nombre=None):
+    """
+    comprueba si un proyecto ya existe
+    """
+    a=getProyecto(nombre)
+    if a == None:
+        return False
+    else:
+        return True
+    
+

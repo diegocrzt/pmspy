@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block menu %}
-<<<<<<< HEAD
 
  <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -18,27 +17,8 @@
               <li><a href="#contact">Contact</a></li>
               </ul>
           </div>
-
-=======
- <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">Project Manager System</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
-              <li><a href="/">Logout</a></li>
-              <li><a href="#contact">Contact</a></li>
-              </ul>
-          </div>
->>>>>>> refs/heads/mpoletti
-       </div>
-     </div>
+         </div>
+        </div>
 </div>
               
 
@@ -58,11 +38,14 @@
 			<div/>
 			<table class="table table-striped">
 				<tr>
-					<th>Nombre</th>
+					<th>Nombre    </th>
 					<th>Cantidad de fases </th>
 					<th>Fecha de Inicio</th>
 					<th>Fecha de Finalización</th>
 					<th>Fecha de Última Modificación</th>
+					<th>lider</th>
+					<th>Eliminar</th>
+            		<th>Editar</th>
 				</tr>
          			{% for p in proyectos %}
 				<tr>
@@ -71,6 +54,8 @@
 					<td>{{p.fechaInicio}}</td>
 					<td>{{p.fechaFin}}</td>
 					<td>{{p.fechaUltMod}}</td>
+					<td>{{p.lider}}</td>
+
 					<td>
 						<a class="btn btn-danger"
 							href="/admProyecto/eliminarProyecto/{{p.id}}">
@@ -86,12 +71,12 @@
          			</tr>
          			{% else %}
          			<tr>
-         				No se han creado proyectos aún
+         				No se han creado proyectos aun
          			</tr>
          			{% endfor %}
        		</table>
 		</div>
-		<p><a href="#" class="btn btn-primary btn-large">Crear Proyecto</a>
+		<p><a href="/admproyecto/crearproyecto/" class="btn btn-primary btn-large">Crear Proyecto</a>
 		</p>
 		
 	</div>

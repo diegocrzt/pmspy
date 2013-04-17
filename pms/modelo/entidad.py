@@ -3,7 +3,7 @@ Created on 05/04/2013
 
 @author: synchro
 '''
-from sqlalchemy import Column, Integer, Boolean
+from sqlalchemy import Column, Integer, Boolean, ForeignKey
 from initdb import init_db
 from initdb import Base
 from sqlalchemy.types import Unicode
@@ -73,14 +73,16 @@ class Proyecto(Base):
     fechaInicio = Column(DateTime)
     fechaFin = Column(DateTime)
     fechaUltMod = Column(DateTime)
+    lider = Column(Integer, ForeignKey('usuario.id') )
     
-    def __init__(self,nombre,cantFase,fechaInicio,fechaFin,fechaUltMod):
+    def __init__(self,nombre,cantFase,fechaInicio,fechaFin,fechaUltMod,lider):
         self.nombre = nombre
         self.cantFase = cantFase
         self.fechaInicio = fechaInicio
         self.fechaFin = fechaFin
         self.fechaUltMod = fechaUltMod
-
+        self.lider = lider
+        
     def get_nombre(self):
         return self.__nombre
 
@@ -99,10 +101,18 @@ class Proyecto(Base):
 
     def get_fecha_ult_mod(self):
         return self.__fechaUltMod
+    
+    
+    def get_lider(self):
+        return self.__lider
 
 
     def set_nombre(self, value):
         self.__nombre = value
+        
+        
+    def set_lider(self, value):
+        self.__lider = value
 
 
     def set_cant_fase(self, value):
