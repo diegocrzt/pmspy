@@ -1,23 +1,26 @@
 {% extends "base.html" %}
 {% block menu %}
 	
-<div class="menuHolder">
-	<ul class="nav">
-		<li>        
-			<li><a class="top-a" href="#url"><b>Administrar Usuario</b></a>
-			<div class="col1">
-				<ul class="colSingle">
-					<li><a href="#url">Eliminar</a>
-					<li><a href="#url">Modificar</a>
-				</ul>
-			</div>
-		</li>
-		 <li>
-		 <form action="{{url_for('index')}}" method="post">
-            <input type="submit" name="logout" value="logout" />
-        </form>
-        </li>
-	</ul>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
+              <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
 </div>
 {%endblock%}
 
