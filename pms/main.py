@@ -48,6 +48,8 @@ class Main(flask.views.MethodView):
 
 def login_required(method):
     """
+        holaaaaaaaa
+        
         Muestra un mensaje pidiendo que el usuario inicie sesion
     """
     @functools.wraps(method)
