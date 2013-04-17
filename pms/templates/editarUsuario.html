@@ -22,11 +22,9 @@
 {%block content%}
 <p>Modifique los datos del usuario:</p>
         <form action="/admusuario/editarusuario/" method="post">
-        	<p>Id:<br />
-             <input type="text" name="id" value="{{u.idd}}"  /></p>
             <p>Nombre:<br />
-             <input type="text" name="nombre" value="{{u.nombre}}" /></p>
-             <p>Usuario:<br />
+            <input type="text" name="nombre" value="{{u.nombre}}" /></p>
+            <p>Usuario:<br />
             <input type="text" name="usuario" value="{{u.nombredeusuario}}"  /></p>
             <p>Clave:<br />
             <input type="text" name="clave" value="{{u.clave}}" /></p>

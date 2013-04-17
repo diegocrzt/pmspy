@@ -173,6 +173,7 @@ app.add_url_rule('/admusuario/editarusuario/',
 
 
 @app.route('/admusuario/eliminarusuario/<username>')
+@login_required
 def eUsuario(username=None):
         eliminarUsuario(username)
         b=getUsuarios()
@@ -180,6 +181,7 @@ def eUsuario(username=None):
     
 
 @app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
+@login_required
 def edUsuario(u=None):
     
     if request.method == "GET":
