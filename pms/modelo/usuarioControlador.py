@@ -56,12 +56,12 @@ def getUsuario(username=None):
             res=session.query(Usuario).filter(Usuario.nombredeusuario==username).first()
             return res
         
-def getUsuarioById(idd=None):
+def getUsuarioById(id=None):
     """
     recupera un usuario por su id
     """
-    if(idd):
-            res=session.query(Usuario).filter(Usuario.idd==idd).first()
+    if(id):
+            res=session.query(Usuario).filter(Usuario.get_id()==id).first()
             return res
         
 def editarUsuario(id=None,nom=None, usua=None, contrase=None, admin=None):

@@ -17,7 +17,7 @@ class Usuario(Base):
         Define la clase Usuario y la mapea con la tabla usuario
     """
     __tablename__ = 'usuario'
-    idd = Column(Integer,primary_key = True)
+    id = Column(Integer,primary_key = True)
     nombre = Column(Unicode(20))
     nombredeusuario = Column(Unicode(20), unique=True)
     clave = Column(Unicode(10))
@@ -29,8 +29,8 @@ class Usuario(Base):
         self.clave = clave
         self.isAdmin = isAdmin
 
-    def get_idd(self):
-        return self.__idd
+    def get_id(self):
+        return self.__id
 
 
     def get_nombre(self):
@@ -45,8 +45,8 @@ class Usuario(Base):
         return self.__clave
 
 
-    def set_idd(self, value):
-        self.__idd = value
+    def set_id(self, value):
+        self.__id = value
 
 
     def set_nombre(self, value):
