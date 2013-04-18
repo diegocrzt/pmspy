@@ -1,7 +1,7 @@
 '''
 Created on 05/04/2013
 
-@author: Martin Poletti
+@author: Martin Poletti, Natalia Valdez
 '''
 from entidad import Usuario
 from initdb import db_session, init_db

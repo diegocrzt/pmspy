@@ -12,7 +12,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
+              <li class="active"><a href="/admusuario/">Administrar proyecto</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -22,43 +22,44 @@
 </div>
               
 
-
 {%endblock%}
 
 {%block content%}
 
-
-<div class="proyectos">
+<div class="fases">
 	<div class="row" >
 		<div class="span12">
-			<h2> Listado de Proyectos </h2>
+			<h2> Listado de Fases </h2>
+
+
 			<table class="table table-striped">
 				<tr>
-					<th>id</th>
+					<th>Numero</th>
 					<th>Nombre</th>
-					<th>Cantidad de fases </th>
 					<th>Fecha de Inicio</th>
 					<th>Fecha de Finalización</th>
 					<th>Fecha de Última Modificación</th>
-					<th>lider</th>
+					<th>Estado</th>
 					<th>Eliminar</th>
             		<th>Editar</th>
 				</tr>
-         			{% for p in proyectos %}
+         			{% for f in fases %}
 				<tr>
-					<td>{{p.id}}</td>
-					<td>{{p.nombre}}</td>
-					<td>{{p.cantFase}}</td>
-					<td>{{p.fechaInicio}}</td>
-					<td>{{p.fechaFin}}</td>
-					<td>{{p.fechaUltMod}}</td>
-					<td>{{p.lider}}</td>
+					<td>{{f.numero}}</td>
+					<td>{{f.nombre}</td>
+					<td>{{f.fechaInicio}}</td>
+					<td>{{f.fechaFin}}</td>
+					<td>{{f.fechaUltMod}}</td>
+					<td>{{f.estado}}</td>
 
 					<td>
-						<a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.nombre}}">Eliminar</a>
+						<a class="btn btn-danger" href="/admfase/eliminarfase/{{p.nombre}}">Eliminar</a>
 					</td>
            			<td>
-           				<a class="btn" href="/admProyecto/proyecto/{{p.id}}">Editar</a>
+           				<a class="btn" 
+           					href="/admProyecto/proyecto/{{p.id}}">
+							Editar
+						</a>
 					</td>
          			</tr>
          			{% else %}
@@ -68,8 +69,9 @@
          			{% endfor %}
        		</table>
 		</div>
-		<p><a href="/admproyecto/crearproyecto/" class="btn btn-primary btn-large">Crear Proyecto</a>
+		<p><a href="/admproyecto/crearproyecto/" class="btn btn-primary btn-large">Crear Fase</a>
 		</p>
 	</div>
+	
 </div>
 {%endblock%}

@@ -1,7 +1,7 @@
 '''
 Created on 05/04/2013
 
-@author: synchro
+@author: synchro, Natalia Valdez
 '''
 from sqlalchemy import Column, Integer, Boolean, ForeignKey
 from initdb import init_db

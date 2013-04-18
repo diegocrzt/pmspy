@@ -1,7 +1,7 @@
 '''
 Created on 14/04/2013
 
-@author: synchro
+@author: synchro, Natalia Valdez
 '''
 from entidad import Proyecto
 from initdb import db_session, init_db
