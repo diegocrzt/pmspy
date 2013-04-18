@@ -35,6 +35,7 @@ class Main(flask.views.MethodView):
         """
         if 'logout' in flask.request.form:
             flask.session.pop('username', None)
+            flask.session.pop('isAdmin',None)
             return flask.redirect(flask.url_for('index'))
         required = ['username', 'passwd']
         for r in required:
@@ -45,6 +46,9 @@ class Main(flask.views.MethodView):
         passwd = flask.request.form['passwd']
         if validar(username, passwd):
             flask.session['username'] = username          
+            u = getUsuario(username)
+            if u.isAdmin==True:
+                flask.session['isAdmin']=u.isAdmin
         else:
             flask.flash("Username doesn't exist or incorrect password")
         return flask.redirect(flask.url_for('admproyecto'))
@@ -64,6 +68,21 @@ def login_required(method):
             return flask.redirect(flask.url_for('index'))
     return wrapper
 
+
+
+def admin_required(method):
+    """
+        Muestra un mensaje pidiendo que el usuario inicie sesion
+    """
+    @functools.wraps(method)
+    def wrapper(*args, **kwargs):
+        if 'isAdmin' in flask.session:
+            return method(*args, **kwargs)
+        else:
+            flask.flash("no tiene permiso de admin!")
+            return flask.redirect(flask.url_for('admproyecto'))
+    return wrapper
+
     
 class AdmProyecto(flask.views.MethodView):
     """
@@ -77,9 +96,11 @@ class AdmProyecto(flask.views.MethodView):
         return flask.render_template('admProyecto.html')
 
 class Crearusuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         return flask.render_template('crearUsuario.html')
+    @admin_required
     @login_required
     def post(self):
         '''required = ['nombre','usuario', 'clave']
@@ -110,6 +131,7 @@ class Crearusuario(flask.views.MethodView):
     
     
 class EliminarUsuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         b=getUsuarios()
@@ -117,24 +139,29 @@ class EliminarUsuario(flask.views.MethodView):
             print u.nombre
             print u.clave
         return flask.redirect(flask.url_for('admusuario'))
+    @admin_required
     @login_required
     def post(self):
         return flask.redirect(flask.url_for('admusuario'))
     
 class AdmUsuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         b=getUsuarios()
         return flask.render_template('admUsuario.html',usuarios=b)
+    @admin_required
     @login_required
     def post(self):
         b=getUsuarios()
         return flask.render_template('admUsuario.html',usuarios=b)
     
 class Editarusuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         return flask.redirect(flask.url_for('admusuario'))
+    @admin_required
     @login_required
     def post(self):
         global globusuario
@@ -163,6 +190,28 @@ class Editarusuario(flask.views.MethodView):
         return flask.redirect(flask.url_for('admusuario'))
     
     
+    
+@app.route('/admusuario/eliminarusuario/<username>')
+@admin_required
+@login_required
+def eUsuario(username=None): 
+        eliminarUsuario(username)
+        b=getUsuarios()
+        return flask.render_template('admUsuario.html',usuarios=b)
+    
+
+@app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
+@admin_required
+@login_required
+def edUsuario(u=None):
+    global globusuario
+    if request.method == "GET":
+        globusuario=getUsuario(u)
+        return flask.render_template('editarUsuario.html',u=globusuario)
+    else:
+        return flask.render_template('admUsuario.html')
+    
+    
 app.add_url_rule('/',
                  view_func=Main.as_view('index'),
                  methods=["GET", "POST"])
@@ -185,23 +234,7 @@ app.add_url_rule('/admusuario/editarusuario/',
                  methods=["GET", "POST"])
 
 
-@app.route('/admusuario/eliminarusuario/<username>')
-@login_required
-def eUsuario(username=None): 
-        eliminarUsuario(username)
-        b=getUsuarios()
-        return flask.render_template('admUsuario.html',usuarios=b)
-    
 
-@app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
-@login_required
-def edUsuario(u=None):
-    global globusuario
-    if request.method == "GET":
-        globusuario=getUsuario(u)
-        return flask.render_template('editarUsuario.html',u=globusuario)
-    else:
-        return flask.render_template('admUsuario.html')
 
 app.debug = True 
-run_simple("localhost", 5050, app, use_reloader=True, use_debugger=True, use_evalex=True)
+run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)
