@@ -19,11 +19,13 @@
 
     </head>
         <body> 
-	   
+	   {% if 'username' in session%}
             {% block menu%}{% endblock %}
             {% block mensaje%}{% endblock %}
             {% block content%}{% endblock %}
-
+       {% else %}
+       		deja de joder con el atras
+	   {% endif %}
 
     </body>
 </html>
