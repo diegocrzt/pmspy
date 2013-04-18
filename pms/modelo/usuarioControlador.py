@@ -61,7 +61,9 @@ def getUsuarioById(id=None):
     recupera un usuario por su id
     """
     if(id):
+
             res=session.query(Usuario).filter(Usuario.id==id).first()
+
             return res
         
 def editarUsuario(id=None,nom=None, usua=None, contrase=None, admin=None):

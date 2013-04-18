@@ -11,12 +11,13 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
+              {% if 'isAdmin' in session %}
               <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
+              {% endif %}
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
           </div>
-
        </div>
      </div>
 </div>
