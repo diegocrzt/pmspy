@@ -10,7 +10,7 @@ from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
 from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 
 globusuario = None
 
@@ -235,6 +235,27 @@ class Crearfase(flask.views.MethodView):
         crearFase(flask.request.form['nombre'],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'], None, None, flask.session['proyectoid'])
         return flask.redirect('/admfase/'+flask.session['proyectoid']) 
     
+class Editarfase(flask.views.MethodView):
+    @login_required
+    def get(self):
+        return flask.redirect(flask.url_for('admfase'))
+    @login_required
+    def post(self):
+        
+        if(flask.request.form['nombre']==""):
+            flask.flash("El campo nombre no puede estar vacio")
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+        if(flask.request.form['numero']==""):
+            flask.flash("El campo numero no puede estar vacio")
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+        if str(flask.session['numerofase']) != str(flask.request.form['numero']):
+            if comprobarFase(flask.request.form['numero'], flask.session['proyectoid']):
+                flask.flash("El numero de fase ya esta usado")
+                return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))     
+            
+        editarFase(flask.session['faseid'], flask.request.form['nombre'],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'])
+        return flask.redirect('/admfase/'+flask.session['proyectoid'])
+
 @app.route('/admusuario/eliminarusuario/<username>')
 @admin_required
 @login_required
@@ -278,11 +299,22 @@ def admFase(p=None):
         return flask.redirect(flask.url_for('admproyecto'))
 
 @app.route('/admfase/eliminarfase/<fase>')
-@admin_required
 @login_required
 def eFase(fase=None): 
         eliminarFase(fase, flask.session['proyectoid'])
-        return flask.redirect('/admfase/'+flask.session['proyectoid'])   
+        return flask.redirect('/admfase/'+flask.session['proyectoid'])
+    
+@app.route('/admfase/editarfase/<f>', methods=["POST", "GET"])
+@login_required
+def edFase(f=None):
+    if request.method == "GET":
+        fas=getFaseId(f)
+        flask.session['numerofase']=fas.numero
+        flask.session['faseid']=fas.id
+        return flask.render_template('editarFase.html',f=fas)
+    else:
+        return flask.render_template('admFase.html')
+         
     
 app.add_url_rule('/',
                  view_func=Main.as_view('index'),
@@ -313,6 +345,9 @@ app.add_url_rule('/admfase/crearfase/',
                  view_func=Crearfase.as_view('crearfase'),
                  methods=["GET", "POST"])
 
+app.add_url_rule('/admfase/editarfase/',
+                 view_func=Editarfase.as_view('editarfase'),
+                 methods=["GET", "POST"])
 
 app.debug = True 
 run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)

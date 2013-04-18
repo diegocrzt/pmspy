@@ -50,17 +50,13 @@
 					<td>{{f.fechaFin}}</td>
 					<td>{{f.fechaUltMod}}</td>
 					<td>{{f.estado}}</td>
-
 					<td>
-						<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
+					<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
 					</td>
            			<td>
-           				<a class="btn" 
-           					href="/admProyecto/proyecto/{{f.id}}">
-							Editar
-						</a>
+           			<a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
 					</td>
-         			</tr>
+         		</tr>
          			{% else %}
          			<tr>
          				No se han creado fases aun

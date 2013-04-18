@@ -50,7 +50,26 @@ def eliminarFase(fase=None, proy=None):
     elimina una fase
     """
     if(fase and proy):
-        session.query(Fase).filter(Fase.numero==fase).filter(Fase.proyecto==proy).delete()
+        session.query(Fase).filter(Fase.id==fase).delete()
         session.commit()
         
-        
+def getFaseId(id=None):
+    """
+    recupera una fase por su nombre de usuario
+    """
+    if(id):
+            res=session.query(Fase).filter(Fase.id==id).first()
+            return res      
+          
+def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
+    """
+    permite editar una fase existente
+    """
+    init_db()
+    f = getFaseId(id)
+    f.nombre=nom
+    f.numero= numero
+    f.fechaInicio=fechaini
+    f.fechaFin=fechafin
+    session.merge(f)
+    session.commit()
