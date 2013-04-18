@@ -11,7 +11,7 @@ session = db_session()
 
 def getFases(p=None):
     """Obtener fases
-    """ 
+    """
     init_db()
     fases = session.query(Fase).filter(Fase.proyecto==p).order_by(Fase.numero)
     return fases
@@ -26,7 +26,7 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", proyecto=proy)
     session.add(fa)
     session.commit()
-    
+   
 def getFase(numero=None, proy=None):
     """
     recupera un proyecto por su numero
@@ -44,7 +44,7 @@ def comprobarFase(numero=None, proy=None):
         return False
     else:
         return True
-    
+   
 def eliminarFase(fase=None, proy=None):
     """
     elimina una fase
@@ -52,7 +52,7 @@ def eliminarFase(fase=None, proy=None):
     if(fase and proy):
         session.query(Fase).filter(Fase.id==fase).delete()
         session.commit()
-        
+       
 def getFaseId(id=None):
     """
     recupera una fase por su nombre de usuario
@@ -60,7 +60,7 @@ def getFaseId(id=None):
     if(id):
             res=session.query(Fase).filter(Fase.id==id).first()
             return res      
-          
+         
 def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
     """
     permite editar una fase existente

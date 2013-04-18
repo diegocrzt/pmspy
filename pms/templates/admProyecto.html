@@ -12,7 +12,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              {% if 'isAdmin' in session %}
+              {% if session['isAdmin']==True %}
               <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
               {% endif %}
               <li><a href="/">Logout</a></li>
@@ -29,7 +29,6 @@
 
 {%block content%}
 
-
 <div class="proyectos">
 	<div class="row" >
 		<div class="span12">
@@ -43,7 +42,9 @@
 					<th>Fecha de Finalización</th>
 					<th>Fecha de Última Modificación</th>
 					<th>lider</th>
+					{% if session['isAdmin']==True %}
 					<th>Eliminar</th>
+					{% endif %}
             		<th>Editar</th>
 				</tr>
          			{% for p in proyectos %}
@@ -55,12 +56,15 @@
 					<td>{{p.fechaFin}}</td>
 					<td>{{p.fechaUltMod}}</td>
 					<td>{{p.lider}}</td>
-
+					{% if session['isAdmin']==True %}
 					<td>
 						<a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.nombre}}">Eliminar</a>
 					</td>
+					{% endif %}
            			<td>
+           				{%if session['usuarioid']==p.lider%}
            				<a class="btn" href="/admfase/{{p.id}}">Editar</a>
+           				{% endif %}
 					</td>
          			</tr>
          			{% else %}
@@ -69,8 +73,10 @@
          			</tr>
          			{% endfor %}
        		</table>
-		</div>
+		</div>	
+		{% if session['isAdmin']==True %}	
 		<p><a href="/admproyecto/crearproyecto/" class="btn btn-primary btn-large">Crear Proyecto</a>
+		{% endif %}
 		</p>
 	</div>
 </div>
