@@ -11,7 +11,9 @@
     {% else %}
         <p>El logueo es necesario:</p>
         <form action="{{url_for('index')}}" method="post">
-            <p>Nombre de usario:<br />
+
+            <p>Nombre de usuario:<br />
+
             <input type="text" name="username" /></p>
             <p>Clave:<br />
             <input type="password" name="passwd" /></p>
