@@ -1,7 +1,7 @@
 '''
 Created on 05/04/2013
 
-@author: Martin Poletti
+@author: Martin Poletti, Natalia Valdez
 '''
 from entidad import Usuario
 from initdb import db_session, init_db
@@ -94,7 +94,6 @@ def comprobarUsuarioB(ident=None,user=None):
     """
     comprueba sin usuario existe por id o por nombre d eusuario
     """
-    a=getUsuario(user)
     a=getUsuarioById(ident)
     if a == None:
         return False
