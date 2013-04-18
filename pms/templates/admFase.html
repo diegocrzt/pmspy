@@ -12,7 +12,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admusuario/">Administrar proyecto</a></li>
+              <li class="active"><a href="/admproyecto/">Administrar proyecto</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -50,17 +50,13 @@
 					<td>{{f.fechaFin}}</td>
 					<td>{{f.fechaUltMod}}</td>
 					<td>{{f.estado}}</td>
-
 					<td>
-						<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.nombre}}">Eliminar</a>
+					<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
 					</td>
            			<td>
-           				<a class="btn" 
-           					href="/admProyecto/proyecto/{{f.id}}">
-							Editar
-						</a>
+           			<a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
 					</td>
-         			</tr>
+         		</tr>
          			{% else %}
          			<tr>
          				No se han creado fases aun
@@ -68,7 +64,7 @@
          			{% endfor %}
        		</table>
 		</div>
-		<p><a href="#" class="btn btn-primary btn-large">Crear Fase</a>
+		<p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a>
 		</p>
 	</div>
 	

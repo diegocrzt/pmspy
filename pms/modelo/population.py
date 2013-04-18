@@ -5,13 +5,12 @@ Created on 05/04/2013
 '''
 from sqlalchemy import Table
 from pms.modelo.entidad import Usuario, Proyecto, Fase
-from pms.modelo.initdb import metadata, db_session, init_db
-
-
+from pms.modelo.initdb import metadata, db_session, init_db, engine
+'''Se deben borrar todas las tablas antes'''
 init_db()
 usuario = Table('usuario', metadata)
 proyecto = Table('proyecto', metadata)
-
+fase = Table('fase', metadata)
 session = db_session()
 '''
 user = Usuario(nombre="Administrador", nombredeusuario="admin", clave="123456", isAdmin="true")

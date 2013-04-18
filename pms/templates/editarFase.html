@@ -38,15 +38,15 @@
 
 {%block content%}
 <p>Complete los datos del proyecto:</p>
-        <form action="{{url_for('crearfase')}}" method="post">
+        <form action="{{url_for('editarfase')}}" method="post">
             <p>Nombre:<br />
-            <input type="text" name="nombre" /></p>
+            <input type="text" name="nombre" value="{{f.nombre}}" /></p>
             <p>Numero:<br />
-            <input type="number" name="numero" /></p>
+            <input type="number" name="numero" value="{{f.numero}}"/></p>
             <p>Fecha de inicio:<br />
-            <input type="date" name="fechainicio" /></p>
+            <input type="datetime" name="fechainicio" value="{{f.fechaInicio}}"/></p>
             <p>Fecha de fin:<br />
-            <input type="date" name="fechafin" /></p>
+            <input type="datetime" name="fechafin" value="{{f.fechaFin}}" /></p>
             <p><input type="submit" value="submit" /></p>
         </form>
 {%endblock%}
