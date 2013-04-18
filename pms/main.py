@@ -1,7 +1,7 @@
 '''
 Created on 05/04/2013
 
-@author: synchro
+@author: mpoletti
 '''
 import flask.views
 import functools
@@ -9,6 +9,8 @@ from pms.modelo.entidad import Usuario
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
+from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto
+from pms.modelo.faseControlador import getFases
 
 globusuario = None
 
@@ -86,14 +88,16 @@ def admin_required(method):
     
 class AdmProyecto(flask.views.MethodView):
     """
-        
+    Administrar Proyectos
     """
     @login_required
     def get(self):
-        return flask.render_template('admProyecto.html')
+        p=getProyectos()
+        return flask.render_template('admProyecto.html',proyectos=p)
     @login_required
     def post(self):
-        return flask.render_template('admProyecto.html')
+        p=getProyectos()
+        return flask.render_template('admProyecto.html',proyectos=p)
 
 class Crearusuario(flask.views.MethodView):
     @admin_required
@@ -189,6 +193,40 @@ class Editarusuario(flask.views.MethodView):
         editarUsuario(globusuario.id, flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
         return flask.redirect(flask.url_for('admusuario'))
     
+class Crearproyecto(flask.views.MethodView):
+    @login_required
+    def get(self):
+        return flask.render_template('crearProyecto.html')
+    @login_required
+    def post(self):
+        
+        if(flask.request.form['nombre']==""):
+            flask.flash("El campo nombre no puede estar vacio")
+            return flask.redirect(flask.url_for('crearproyecto'))
+        if(flask.request.form['lider']==""):
+            flask.flash("El campo lider no puede estar vacio")
+            return flask.redirect(flask.url_for('crearproyecto'))
+
+        if comprobarProyecto(flask.request.form['nombre']):
+            flask.flash("El proyecto ya existe")
+            return flask.redirect(flask.url_for('crearproyecto'))
+        crearProyecto(flask.request.form['nombre'],0, flask.request.form['fechainicio'],flask.request.form['fechafin'], None, flask.request.form['lider'])
+        return flask.redirect(flask.url_for('admproyecto'))
+
+class AdmFase(flask.views.MethodView):
+    """
+    Administrar fases de un proyecto
+    """
+    @login_required
+    def get(self):
+        #f=getFases()
+        return flask.render_template('admFase.html'''',fases=f''')
+    @login_required
+    def post(self):
+        #f=getFases()
+        return flask.render_template('admFase.html' ''',fases=f''')
+
+    
     
     
 @app.route('/admusuario/eliminarusuario/<username>')
@@ -210,7 +248,24 @@ def edUsuario(u=None):
         return flask.render_template('editarUsuario.html',u=globusuario)
     else:
         return flask.render_template('admUsuario.html')
-    
+      
+
+@app.route('/admproyecto/eliminarproyecto/<proyecto>')
+@login_required
+def eProyecto(proyecto=None): 
+        eliminarProyecto(proyecto)
+        p=getProyectos()
+        return flask.render_template('admProyecto.html',proyectos=p)
+
+@app.route('/admfase/<p>')
+@login_required
+def admFase(p=None): 
+    if request.method == "GET":
+        f=getFases(p)
+        return flask.render_template('admFase.html',fases=f)
+    else:
+        return flask.render_template('admProyecto.html')
+
     
 app.add_url_rule('/',
                  view_func=Main.as_view('index'),
@@ -232,6 +287,12 @@ app.add_url_rule('/admusuario/',
 app.add_url_rule('/admusuario/editarusuario/',
                  view_func=Editarusuario.as_view('editusuario'),
                  methods=["GET", "POST"])
+
+app.add_url_rule('/admproyecto/crearproyecto/',
+                 view_func=Crearproyecto.as_view('crearproyecto'),
+                 methods=["GET", "POST"])
+
+
 
 
 
