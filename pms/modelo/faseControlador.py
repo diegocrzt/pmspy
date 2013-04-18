@@ -23,23 +23,23 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     """
     init_db()
     session = db_session()
-    fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado=estado, proyecto=proy)
+    fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", proyecto=proy)
     session.add(fa)
     session.commit()
     
-def getFase(numero=None):
+def getFase(numero=None, proy=None):
     """
     recupera un proyecto por su numero
     """
-    if(numero):
-            res=session.query(Fase).filter(Fase.numero==numero).first()
+    if(numero and proy):
+            res=session.query(Fase).filter(Fase.numero==numero).filter(Fase.proyecto==proy).first()
             return res
 
-def comprobarFase(numero=None):
+def comprobarFase(numero=None, proy=None):
     """
     comprueba si una fase ya existe
     """
-    a=getFase(numero)
+    a=getFase(numero, proy)
     if a == None:
         return False
     else:
