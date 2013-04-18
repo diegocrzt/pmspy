@@ -171,13 +171,13 @@ class Editarusuario(flask.views.MethodView):
     def post(self):
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+flask.session['usviejousername'])
+            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         if(flask.request.form['usuario']==""):
             flask.flash("El campo usuario no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+flask.session['usviejousername'])
+            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         if(flask.request.form['clave']==""):
             flask.flash("El campo clave no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+flask.session['usviejousername'])
+            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         a = 'admin'
         if a not in flask.request.form:
             a=False
@@ -186,7 +186,7 @@ class Editarusuario(flask.views.MethodView):
         if flask.session['usviejousername'] != flask.request.form['usuario']:
             if comprobarUsuario(flask.request.form['usuario']):
                 flask.flash("El usuario ya esta usado")
-                return flask.redirect('/admusuario/editarusuario/'+flask.session['usviejousername'])     
+                return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))     
             
         editarUsuario(flask.session['usviejoid'], flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
         return flask.redirect(flask.url_for('admusuario'))
@@ -231,7 +231,7 @@ class Crearfase(flask.views.MethodView):
             flask.flash("La fase ya existe")
             return flask.redirect(flask.url_for('crearfase'))
         crearFase(flask.request.form['nombre'],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'], None, None, flask.session['proyectoid'])
-        return flask.redirect('/admfase/'+flask.session['proyectoid']) 
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
     
 class Editarfase(flask.views.MethodView):
     @login_required
@@ -252,7 +252,7 @@ class Editarfase(flask.views.MethodView):
                 return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))     
             
         editarFase(flask.session['faseid'], flask.request.form['nombre'],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'])
-        return flask.redirect('/admfase/'+flask.session['proyectoid'])        
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     
 @app.route('/admusuario/eliminarusuario/<username>')
 @admin_required
