@@ -2,6 +2,7 @@
 Created on 14/04/2013
 
 @author: synchro, Natalia Valdez
+@author: mpoletti
 '''
 from entidad import Proyecto
 from initdb import db_session, init_db

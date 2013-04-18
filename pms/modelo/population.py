@@ -1,7 +1,7 @@
 '''
 Created on 05/04/2013
 
-@author: synchro
+@author: mpoletti
 '''
 from sqlalchemy import Table
 from pms.modelo.entidad import Usuario, Proyecto, Fase

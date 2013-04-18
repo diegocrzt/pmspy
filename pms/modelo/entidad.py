@@ -2,6 +2,7 @@
 Created on 05/04/2013
 
 @author: synchro, Natalia Valdez
+@author: mpoletti
 '''
 from sqlalchemy import Column, Integer, Boolean, ForeignKey
 from initdb import init_db

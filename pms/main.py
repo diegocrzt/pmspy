@@ -1,15 +1,18 @@
 '''
 Created on 05/04/2013
 
-@author: synchro
+@author: mpoletti
 '''
 import flask.views
 import functools
+from pms.modelo.entidad import Usuario
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
 from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto
 from pms.modelo.faseControlador import getFases
+
+globusuario = None
 
 app = flask.Flask(__name__)
 # Don't do this!
@@ -34,6 +37,7 @@ class Main(flask.views.MethodView):
         """
         if 'logout' in flask.request.form:
             flask.session.pop('username', None)
+            flask.session.pop('isAdmin',None)
             return flask.redirect(flask.url_for('index'))
         required = ['username', 'passwd']
         for r in required:
@@ -44,6 +48,9 @@ class Main(flask.views.MethodView):
         passwd = flask.request.form['passwd']
         if validar(username, passwd):
             flask.session['username'] = username          
+            u = getUsuario(username)
+            if u.isAdmin==True:
+                flask.session['isAdmin']=u.isAdmin
         else:
             flask.flash("Username doesn't exist or incorrect password")
         return flask.redirect(flask.url_for('admproyecto'))
@@ -63,6 +70,21 @@ def login_required(method):
             return flask.redirect(flask.url_for('index'))
     return wrapper
 
+
+
+def admin_required(method):
+    """
+        Muestra un mensaje pidiendo que el usuario inicie sesion
+    """
+    @functools.wraps(method)
+    def wrapper(*args, **kwargs):
+        if 'isAdmin' in flask.session:
+            return method(*args, **kwargs)
+        else:
+            flask.flash("no tiene permiso de admin!")
+            return flask.redirect(flask.url_for('admproyecto'))
+    return wrapper
+
     
 class AdmProyecto(flask.views.MethodView):
     """
@@ -78,9 +100,11 @@ class AdmProyecto(flask.views.MethodView):
         return flask.render_template('admProyecto.html',proyectos=p)
 
 class Crearusuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         return flask.render_template('crearUsuario.html')
+    @admin_required
     @login_required
     def post(self):
         '''required = ['nombre','usuario', 'clave']
@@ -111,6 +135,7 @@ class Crearusuario(flask.views.MethodView):
     
     
 class EliminarUsuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         b=getUsuarios()
@@ -118,39 +143,54 @@ class EliminarUsuario(flask.views.MethodView):
             print u.nombre
             print u.clave
         return flask.redirect(flask.url_for('admusuario'))
+    @admin_required
     @login_required
     def post(self):
         return flask.redirect(flask.url_for('admusuario'))
     
 class AdmUsuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         b=getUsuarios()
         return flask.render_template('admUsuario.html',usuarios=b)
+    @admin_required
     @login_required
     def post(self):
         b=getUsuarios()
         return flask.render_template('admUsuario.html',usuarios=b)
     
 class Editarusuario(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         return flask.redirect(flask.url_for('admusuario'))
+    @admin_required
     @login_required
     def post(self):
-        required = ['nombre','usuario', 'clave']
-        for r in required:
-            if r not in flask.request.form:
-                flask.flash("Error: {0} is required.".format(r))
-                return flask.redirect(flask.url_for('index'))
+        global globusuario
+        if(flask.request.form['nombre']==""):
+            flask.flash("El campo nombre no puede estar vacio")
+            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
+        if(flask.request.form['usuario']==""):
+            flask.flash("El campo usuario no puede estar vacio")
+            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
+        if(flask.request.form['clave']==""):
+            flask.flash("El campo clave no puede estar vacio")
+            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
         a = 'admin'
         if a not in flask.request.form:
             a=False
         else:
-            a=True
-        print "aca esta el id:  "
-        print flask.request.form['id']
-        editarUsuario(flask.request.form['id'], flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
+            a=flask.request.form['admin']
+        print "aca imprimer el global!!!!"
+        print globusuario.nombredeusuario
+        if globusuario.nombredeusuario != flask.request.form['usuario']:
+            if comprobarUsuario(flask.request.form['usuario']):
+                flask.flash("El usuario ya esta usado")
+                return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)     
+            
+        editarUsuario(globusuario.id, flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
         return flask.redirect(flask.url_for('admusuario'))
     
 class Crearproyecto(flask.views.MethodView):
@@ -188,6 +228,45 @@ class AdmFase(flask.views.MethodView):
 
     
     
+    
+@app.route('/admusuario/eliminarusuario/<username>')
+@admin_required
+@login_required
+def eUsuario(username=None): 
+        eliminarUsuario(username)
+        b=getUsuarios()
+        return flask.render_template('admUsuario.html',usuarios=b)
+    
+
+@app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
+@admin_required
+@login_required
+def edUsuario(u=None):
+    global globusuario
+    if request.method == "GET":
+        globusuario=getUsuario(u)
+        return flask.render_template('editarUsuario.html',u=globusuario)
+    else:
+        return flask.render_template('admUsuario.html')
+    
+
+@app.route('/admproyecto/eliminarproyecto/<proyecto>')
+@login_required
+def eProyecto(proyecto=None): 
+        eliminarProyecto(proyecto)
+        p=getProyectos()
+        return flask.render_template('admProyecto.html',proyectos=p)
+
+@app.route('/admfase/<p>')
+@login_required
+def admFase(p=None): 
+    if request.method == "GET":
+        f=getFases(p)
+        return flask.render_template('admFase.html',fases=f)
+    else:
+        return flask.render_template('admProyecto.html')
+
+    
 app.add_url_rule('/',
                  view_func=Main.as_view('index'),
                  methods=["GET", "POST"])
@@ -214,39 +293,9 @@ app.add_url_rule('/admproyecto/crearproyecto/',
                  methods=["GET", "POST"])
 
 
-@app.route('/admusuario/eliminarusuario/<username>')
-@login_required
-def eUsuario(username=None): 
-        eliminarUsuario(username)
-        b=getUsuarios()
-        return flask.render_template('admUsuario.html',usuarios=b)
-    
-
-@app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
-@login_required
-def edUsuario(u=None):
-    if request.method == "GET":
-        usuario=getUsuario(u)
-        return flask.render_template('editarUsuario.html',u=usuario)
-    else:
-        return flask.render_template('admUsuario.html')
 
 
-@app.route('/admproyecto/eliminarproyecto/<proyecto>')
-@login_required
-def eProyecto(proyecto=None): 
-        eliminarProyecto(proyecto)
-        p=getProyectos()
-        return flask.render_template('admProyecto.html',proyectos=p)
 
-@app.route('/admfase/<p>')
-@login_required
-def admFase(p=None): 
-    if request.method == "GET":
-        f=getFases(p)
-        return flask.render_template('admFase.html',fases=f)
-    else:
-        return flask.render_template('admProyecto.html')
 
 app.debug = True 
-run_simple("localhost", 5050, app, use_reloader=True, use_debugger=True, use_evalex=True)
+run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)

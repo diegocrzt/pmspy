@@ -26,6 +26,18 @@
 
 {%endblock%}
 
+{%block mensaje%}
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class=flashes>
+	    {% for message in messages %}
+	      <li>{{ message }}</li>
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+{%endblock%}
+
 {%block content%}
 <p>Modifique los datos del usuario:</p>
         <form action="/admusuario/editarusuario/" method="post">
