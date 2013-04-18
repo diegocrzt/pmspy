@@ -35,6 +35,14 @@ def getProyecto(nombre=None):
             res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
             return res
 
+
+def getProyectoId(id=None):
+    """
+    recupera un proyecto por su nombre de usuario
+    """
+    if(id):
+            res=session.query(Proyecto).filter(Proyecto.id==id).first()
+            return res
 def comprobarProyecto(nombre=None):
     """
     comprueba si un proyecto ya existe
