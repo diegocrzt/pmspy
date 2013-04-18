@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+
+{%block mensaje%}
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class=flashes>
+	    {% for message in messages %}
+	      <li>{{ message }}</li>
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+{%endblock%}
+
+{%block content%}
+<p>Complete los datos del proyecto:</p>
+        <form action="{{url_for('crearfase')}}" method="post">
+            <p>Nombre:<br />
+            <input type="text" name="nombre" /></p>
+            <p>Numero:<br />
+            <input type="text" name="numero" /></p>
+            <p>Fecha de inicio:<br />
+            <input type="date" name="fechainicio" /></p>
+            <p>Fecha de fin:<br />
+            <input type="date" name="fechafin" /></p>
+            <p><input type="submit" value="submit" /></p>
+        </form>
+{%endblock%}
