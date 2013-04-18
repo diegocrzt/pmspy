@@ -10,7 +10,7 @@ from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
 from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase
 
 globusuario = None
 
@@ -277,6 +277,12 @@ def admFase(p=None):
     else:
         return flask.redirect(flask.url_for('admproyecto'))
 
+@app.route('/admfase/eliminarfase/<fase>')
+@admin_required
+@login_required
+def eFase(fase=None): 
+        eliminarFase(fase, flask.session['proyectoid'])
+        return flask.redirect('/admfase/'+flask.session['proyectoid'])   
     
 app.add_url_rule('/',
                  view_func=Main.as_view('index'),

@@ -45,12 +45,12 @@ def comprobarFase(numero=None, proy=None):
     else:
         return True
     
-def eliminarFase(fase=None):
+def eliminarFase(fase=None, proy=None):
     """
     elimina una fase
     """
-    if(fase):
-        session.query(Fase).filter(Fase.numero==fase).delete()
+    if(fase and proy):
+        session.query(Fase).filter(Fase.numero==fase).filter(Fase.proyecto==proy).delete()
         session.commit()
         
         
