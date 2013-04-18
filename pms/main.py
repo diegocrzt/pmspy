@@ -9,6 +9,7 @@ from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
 from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto
+from pms.modelo.faseControlador import getFases
 
 app = flask.Flask(__name__)
 # Don't do this!
@@ -65,7 +66,7 @@ def login_required(method):
     
 class AdmProyecto(flask.views.MethodView):
     """
-        
+    Administrar Proyectos
     """
     @login_required
     def get(self):
@@ -171,6 +172,20 @@ class Crearproyecto(flask.views.MethodView):
             return flask.redirect(flask.url_for('crearproyecto'))
         crearProyecto(flask.request.form['nombre'],0, flask.request.form['fechainicio'],flask.request.form['fechafin'], None, flask.request.form['lider'])
         return flask.redirect(flask.url_for('admproyecto'))
+
+class AdmFase(flask.views.MethodView):
+    """
+    Administrar fases de un proyecto
+    """
+    @login_required
+    def get(self):
+        #f=getFases()
+        return flask.render_template('admFase.html'''',fases=f''')
+    @login_required
+    def post(self):
+        #f=getFases()
+        return flask.render_template('admFase.html' ''',fases=f''')
+
     
     
 app.add_url_rule('/',
@@ -224,7 +239,14 @@ def eProyecto(proyecto=None):
         p=getProyectos()
         return flask.render_template('admProyecto.html',proyectos=p)
 
-
+@app.route('/admfase/<p>')
+@login_required
+def admFase(p=None): 
+    if request.method == "GET":
+        f=getFases(p)
+        return flask.render_template('admFase.html',fases=f)
+    else:
+        return flask.render_template('admProyecto.html')
 
 app.debug = True 
 run_simple("localhost", 5050, app, use_reloader=True, use_debugger=True, use_evalex=True)

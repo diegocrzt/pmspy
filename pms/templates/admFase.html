@@ -21,7 +21,6 @@
         </div>
 </div>
               
-
 {%endblock%}
 
 {%block content%}
@@ -46,7 +45,7 @@
          			{% for f in fases %}
 				<tr>
 					<td>{{f.numero}}</td>
-					<td>{{f.nombre}</td>
+					<td>{{f.nombre}}</td>
 					<td>{{f.fechaInicio}}</td>
 					<td>{{f.fechaFin}}</td>
 					<td>{{f.fechaUltMod}}</td>
@@ -64,12 +63,12 @@
          			</tr>
          			{% else %}
          			<tr>
-         				No se han creado proyectos aun
+         				No se han creado fases aun
          			</tr>
          			{% endfor %}
        		</table>
 		</div>
-		<p><a href="/admproyecto/crearproyecto/" class="btn btn-primary btn-large">Crear Fase</a>
+		<p><a href="#" class="btn btn-primary btn-large">Crear Fase</a>
 		</p>
 	</div>
 	

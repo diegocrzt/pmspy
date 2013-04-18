@@ -130,4 +130,84 @@ class Proyecto(Base):
     def set_fecha_ult_mod(self, value):
         self.__fechaUltMod = value
 
+
+class Fase(Base):
+    """
+        Define la clase Fase y la mapea con la tabla fase
+    """
+    __tablename__ = 'fase'
+    id = Column(Integer,primary_key=True)
+    nombre = Column(Unicode(10),unique=True)
+    numero = Column(Integer)
+    fechaInicio = Column(DateTime)
+    fechaFin = Column(DateTime)
+    fechaUltMod = Column(DateTime)
+    estado = Column(Unicode(10))
+    proyecto = Column(Integer, ForeignKey('proyecto.id'))
+    
+    def __init__(self,nombre,numero,fechaInicio,fechaFin,fechaUltMod,estado, proyecto):
+        self.nombre = nombre
+        self.numero = numero
+        self.fechaInicio = fechaInicio
+        self.fechaFin = fechaFin
+        self.fechaUltMod = fechaUltMod
+        self.estado = estado
+        self.proyecto = proyecto
+        
+    def get_nombre(self):
+        return self.__nombre
+
+
+    def get_numero(self):
+        return self.__numero
+
+
+    def get_fecha_inicio(self):
+        return self.__fechaInicio
+
+
+    def get_fecha_fin(self):
+        return self.__fechaFin
+
+
+    def get_fecha_ult_mod(self):
+        return self.__fechaUltMod
+    
+    
+    def get_estado(self):
+        return self.__estado
+    
+
+    def get_proyecto(self):
+        return self.__proyecto
+    
+
+    def set_nombre(self, value):
+        self.__nombre = value
+        
+        
+    def set_estado(self, value):
+        self.__estado = value
+
+
+    def set_numero(self, value):
+        self.__numero = value
+
+
+    def set_fecha_inicio(self, value):
+        self.__fechaInicio = value
+
+
+    def set_fecha_fin(self, value):
+        self.__fechaFin = value
+
+
+    def set_fecha_ult_mod(self, value):
+        self.__fechaUltMod = value
+        
+        
+    def set_proyecto(self, value):
+        self.__proyecto = value
+
+
 init_db()

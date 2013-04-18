@@ -9,7 +9,7 @@ from initdb import db_session, init_db
 session = db_session()
 
 def getProyectos():
-    """Obtener usuarios
+    """Obtener proyectos
     """ 
     init_db()
     proyectos = session.query(Proyecto).all()
