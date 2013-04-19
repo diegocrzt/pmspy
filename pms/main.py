@@ -235,6 +235,7 @@ class Crearfase(flask.views.MethodView):
         fechainicio = datetime.strptime(fechainicio, '%m/%d/%Y')
         if fechafin <= fechainicio:
             flask.flash("incoherencia entre fechas de inicio y de fin")
+            return flask.redirect(flask.url_for('crearfase'))
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect(flask.url_for('crearfase'))
@@ -263,6 +264,7 @@ class Editarfase(flask.views.MethodView):
         fechainicio = datetime.strptime(fechainicio, '%m/%d/%Y')
         if fechafin <= fechainicio:
             flask.flash("incoherencia entre fechas de inicio y de fin")
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
