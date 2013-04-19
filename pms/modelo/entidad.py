@@ -22,7 +22,7 @@ class Usuario(Base):
     id = Column(Integer,primary_key = True)
     nombre = Column(Unicode(20))
     nombredeusuario = Column(Unicode(20), unique=True)
-    clave = Column(Unicode(10))
+    clave = Column(Unicode(41))
     isAdmin = Column(Boolean)
     
     def __init__(self, nombre,nombredeusuario, clave, isAdmin):

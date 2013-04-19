@@ -9,7 +9,7 @@ from pms.modelo.entidad import Usuario
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario, usuarioIsLider
-from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, getProyecto
+from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from datetime import date, timedelta
 app = flask.Flask(__name__)
@@ -169,14 +169,12 @@ class Editarusuario(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
+        clave=flask.request.form['clave']
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         if(flask.request.form['usuario']==""):
             flask.flash("El campo usuario no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
-        if(flask.request.form['clave']==""):
-            flask.flash("El campo clave no puede estar vacio")
             return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         a = 'admin'
         if a not in flask.request.form:
@@ -187,8 +185,9 @@ class Editarusuario(flask.views.MethodView):
             if comprobarUsuario(flask.request.form['usuario']):
                 flask.flash("El usuario ya esta usado")
                 return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))     
-            
-        editarUsuario(flask.session['usviejoid'], flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
+        if  flask.request.form['clave']=="":
+            clave=None  
+        editarUsuario(flask.session['usviejoid'], flask.request.form['nombre'], flask.request.form['usuario'],clave,a)
         return flask.redirect(flask.url_for('admusuario'))
     
 class Crearproyecto(flask.views.MethodView):
