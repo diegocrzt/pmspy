@@ -12,22 +12,21 @@ usuario = Table('usuario', metadata)
 proyecto = Table('proyecto', metadata)
 fase = Table('fase', metadata)
 session = db_session()
-'''
+
 user = Usuario(nombre="Administrador", nombredeusuario="admin", clave="123456", isAdmin="true")
 session.add(user)
 user2 = Usuario(nombre="Natalia Valdez", nombredeusuario="natalia", clave="admin2", isAdmin="true")
 session.add(user2)
 user3 = Usuario(nombre="Martin Poletti", nombredeusuario="martin", clave="martin", isAdmin="false")
 session.add(user3) 
+session.commit()
 
-
-pro = Proyecto(nombre="Proyecto 1", cantFase="0", fechaInicio="12/01/2013", fechaFin = "10/05/2015",fechaUltMod="01/02/2013", lider = "3")
+pro = Proyecto(nombre="Proyecto 1", cantFase="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",fechaUltMod=None, lider = "3")
 session.add(pro)
-
+session.commit()
 fa = Fase(nombre="Fase 1", numero="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",
           fechaUltMod="01/02/2013", estado = "abierta", proyecto= "1")
 session.add(fa)
-'''
+
 
 session.commit()
-

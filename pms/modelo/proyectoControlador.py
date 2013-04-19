@@ -61,3 +61,16 @@ def eliminarProyecto(proyecto=None):
         session.query(Proyecto).filter(Proyecto.nombre==proyecto).delete()
         session.commit()
 
+def actualizarCantFases(id=None, aumentar=None):
+    """
+    actualiza la cantidad de fases de un proyecto
+    """
+    init_db()
+    p = getProyectoId(id)
+    if aumentar:
+        p.cantFase= p.cantFase+1
+    else:
+        p.cantFase = p.cantFase-1
+    session.merge(p)
+    session.commit()
+
