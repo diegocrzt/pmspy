@@ -12,7 +12,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admusuario/">Administrar proyecto</a></li>
+              <li class="active"><a href="/admproyecto/">Administrar proyecto</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -26,51 +26,47 @@
 {%block content%}
 
 <div class="fases">
-	<div class="row" >
-		<div class="span12">
-			<h2> Listado de Fases </h2>
+        <div class="row" >
+                <div class="span12">
+                        <h2> Listado de Fases </h2>
 
 
-			<table class="table table-striped">
-				<tr>
-					<th>Numero</th>
-					<th>Nombre</th>
-					<th>Fecha de Inicio</th>
-					<th>Fecha de Finalización</th>
-					<th>Fecha de Última Modificación</th>
-					<th>Estado</th>
-					<th>Eliminar</th>
-            		<th>Editar</th>
-				</tr>
-         			{% for f in fases %}
-				<tr>
-					<td>{{f.numero}}</td>
-					<td>{{f.nombre}}</td>
-					<td>{{f.fechaInicio}}</td>
-					<td>{{f.fechaFin}}</td>
-					<td>{{f.fechaUltMod}}</td>
-					<td>{{f.estado}}</td>
-
-					<td>
-						<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.nombre}}">Eliminar</a>
-					</td>
-           			<td>
-           				<a class="btn" 
-           					href="/admProyecto/proyecto/{{f.id}}">
-							Editar
-						</a>
-					</td>
-         			</tr>
-         			{% else %}
-         			<tr>
-         				No se han creado fases aun
-         			</tr>
-         			{% endfor %}
-       		</table>
-		</div>
-		<p><a href="#" class="btn btn-primary btn-large">Crear Fase</a>
-		</p>
-	</div>
-	
+                        <table class="table table-striped">
+                                <tr>
+                                        <th>Numero</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha de Inicio</th>
+                                        <th>Fecha de Finalización</th>
+                                        <th>Fecha de Última Modificación</th>
+                                        <th>Estado</th>
+                                        <th>Eliminar</th>
+                        <th>Editar</th>
+                                </tr>
+                                {% for f in fases %}
+                                <tr>
+                                        <td>{{f.numero}}</td>
+                                        <td>{{f.nombre}}</td>
+                                        <td>{{f.fechaInicio}}</td>
+                                        <td>{{f.fechaFin}}</td>
+                                        <td>{{f.fechaUltMod}}</td>
+                                        <td>{{f.estado}}</td>
+                                        <td>
+                                        <a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
+                                        </td>
+                                <td>
+                                <a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
+                                        </td>
+                        </tr>
+                                {% else %}
+                                <tr>
+                                        No se han creado fases aun
+                                </tr>
+                                {% endfor %}
+                </table>
+                </div>
+                <p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a>
+                </p>
+        </div>
+        
 </div>
 {%endblock%}

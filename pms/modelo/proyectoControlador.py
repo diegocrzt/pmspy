@@ -1,6 +1,7 @@
 '''
 Created on 14/04/2013
 
+@author: mpoletti
 @author: synchro, Natalia Valdez
 @author: mpoletti
 '''
@@ -11,7 +12,7 @@ session = db_session()
 
 def getProyectos():
     """Obtener proyectos
-    """ 
+    """
     init_db()
     proyectos = session.query(Proyecto).all()
     return proyectos
@@ -25,7 +26,7 @@ def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod
     pro = Proyecto(nombre=nom,cantFase=cant, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, lider=lider)
     session.add(pro)
     session.commit()
-    
+   
 def getProyecto(nombre=None):
     """
     recupera un proyecto por su nombre de usuario
@@ -33,7 +34,15 @@ def getProyecto(nombre=None):
     if(nombre):
             res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
             return res
-
+       
+       
+def getProyectoId(id=None):
+    """
+    recupera un proyecto por su nombre de usuario
+    """
+    if(id):
+            res=session.query(Proyecto).filter(Proyecto.id==id).first()
+            return res
 def comprobarProyecto(nombre=None):
     """
     comprueba si un proyecto ya existe
@@ -43,7 +52,7 @@ def comprobarProyecto(nombre=None):
         return False
     else:
         return True
-    
+   
 def eliminarProyecto(proyecto=None):
     """
     elimina un proyecto

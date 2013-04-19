@@ -1,6 +1,7 @@
 '''
 Created on 05/04/2013
 
+@author: mpoletti
 @author: synchro, Natalia Valdez
 @author: mpoletti
 '''
@@ -69,7 +70,7 @@ class Proyecto(Base):
     """
     __tablename__ = 'proyecto'
     id = Column(Integer,primary_key=True)
-    nombre = Column(Unicode(10),unique=True)
+    nombre = Column(Unicode(20),unique=True)
     cantFase = Column(Integer)
     fechaInicio = Column(DateTime)
     fechaFin = Column(DateTime)
@@ -138,7 +139,7 @@ class Fase(Base):
     """
     __tablename__ = 'fase'
     id = Column(Integer,primary_key=True)
-    nombre = Column(Unicode(10),unique=True)
+    nombre = Column(Unicode(20))
     numero = Column(Integer)
     fechaInicio = Column(DateTime)
     fechaFin = Column(DateTime)
@@ -209,6 +210,8 @@ class Fase(Base):
         
     def set_proyecto(self, value):
         self.__proyecto = value
+
+
 
 
 init_db()

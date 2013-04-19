@@ -9,10 +9,8 @@ from pms.modelo.entidad import Usuario
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
-from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto
-from pms.modelo.faseControlador import getFases
-
-globusuario = None
+from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 
 app = flask.Flask(__name__)
 # Don't do this!
@@ -38,6 +36,7 @@ class Main(flask.views.MethodView):
         if 'logout' in flask.request.form:
             flask.session.pop('username', None)
             flask.session.pop('isAdmin',None)
+            flask.session.pop('usuarioid',None)
             return flask.redirect(flask.url_for('index'))
         required = ['username', 'passwd']
         for r in required:
@@ -51,14 +50,13 @@ class Main(flask.views.MethodView):
             u = getUsuario(username)
             if u.isAdmin==True:
                 flask.session['isAdmin']=u.isAdmin
+            flask.session['usuarioid']=u.id
         else:
             flask.flash("Username doesn't exist or incorrect password")
         return flask.redirect(flask.url_for('admproyecto'))
 
 def login_required(method):
     """
-        holaaaaaaaa
-        
         Muestra un mensaje pidiendo que el usuario inicie sesion
     """
     @functools.wraps(method)
@@ -79,7 +77,10 @@ def admin_required(method):
     @functools.wraps(method)
     def wrapper(*args, **kwargs):
         if 'isAdmin' in flask.session:
-            return method(*args, **kwargs)
+            if flask.session['isAdmin']:
+                return method(*args, **kwargs)
+            else:
+                return flask.redirect(flask.url_for('admproyecto'))
         else:
             flask.flash("no tiene permiso de admin!")
             return flask.redirect(flask.url_for('admproyecto'))
@@ -168,35 +169,34 @@ class Editarusuario(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
-        global globusuario
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
+            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         if(flask.request.form['usuario']==""):
             flask.flash("El campo usuario no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
+            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         if(flask.request.form['clave']==""):
             flask.flash("El campo clave no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)
+            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         a = 'admin'
         if a not in flask.request.form:
             a=False
         else:
             a=flask.request.form['admin']
-        print "aca imprimer el global!!!!"
-        print globusuario.nombredeusuario
-        if globusuario.nombredeusuario != flask.request.form['usuario']:
+        if flask.session['usviejousername'] != flask.request.form['usuario']:
             if comprobarUsuario(flask.request.form['usuario']):
                 flask.flash("El usuario ya esta usado")
-                return flask.redirect('/admusuario/editarusuario/'+globusuario.nombredeusuario)     
+                return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))     
             
-        editarUsuario(globusuario.id, flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
+        editarUsuario(flask.session['usviejoid'], flask.request.form['nombre'], flask.request.form['usuario'],flask.request.form['clave'],a)
         return flask.redirect(flask.url_for('admusuario'))
     
 class Crearproyecto(flask.views.MethodView):
+    @admin_required
     @login_required
     def get(self):
         return flask.render_template('crearProyecto.html')
+    @admin_required
     @login_required
     def post(self):
         
@@ -213,21 +213,46 @@ class Crearproyecto(flask.views.MethodView):
         crearProyecto(flask.request.form['nombre'],0, flask.request.form['fechainicio'],flask.request.form['fechafin'], None, flask.request.form['lider'])
         return flask.redirect(flask.url_for('admproyecto'))
 
-class AdmFase(flask.views.MethodView):
-    """
-    Administrar fases de un proyecto
-    """
+class Crearfase(flask.views.MethodView):
     @login_required
     def get(self):
-        #f=getFases()
-        return flask.render_template('admFase.html'''',fases=f''')
+        return flask.render_template('crearFase.html')
     @login_required
     def post(self):
-        #f=getFases()
-        return flask.render_template('admFase.html' ''',fases=f''')
+        
+        if(flask.request.form['nombre']==""):
+            flask.flash("El campo nombre no puede estar vacio")
+            return flask.redirect(flask.url_for('crearfase'))
+        if(flask.request.form['numero']==""):
+            flask.flash("El campo numero no puede estar vacio")
+            return flask.redirect(flask.url_for('crearfase'))
 
+        if comprobarFase(flask.request.form['numero'],flask.session['proyectoid']):
+            flask.flash("La fase ya existe")
+            return flask.redirect(flask.url_for('crearfase'))
+        crearFase(flask.request.form['nombre'],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'], None, None, flask.session['proyectoid'])
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
     
-    
+class Editarfase(flask.views.MethodView):
+    @login_required
+    def get(self):
+        return flask.redirect(flask.url_for('admfase'))
+    @login_required
+    def post(self):
+        
+        if(flask.request.form['nombre']==""):
+            flask.flash("El campo nombre no puede estar vacio")
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+        if(flask.request.form['numero']==""):
+            flask.flash("El campo numero no puede estar vacio")
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+        if str(flask.session['numerofase']) != str(flask.request.form['numero']):
+            if comprobarFase(flask.request.form['numero'], flask.session['proyectoid']):
+                flask.flash("El numero de fase ya esta usado")
+                return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))     
+            
+        editarFase(flask.session['faseid'], flask.request.form['nombre'],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'])
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     
 @app.route('/admusuario/eliminarusuario/<username>')
 @admin_required
@@ -242,15 +267,17 @@ def eUsuario(username=None):
 @admin_required
 @login_required
 def edUsuario(u=None):
-    global globusuario
     if request.method == "GET":
-        globusuario=getUsuario(u)
-        return flask.render_template('editarUsuario.html',u=globusuario)
+        usuar=getUsuario(u)
+        flask.session['usviejoid']=usuar.id
+        flask.session['usviejousername']=usuar.nombredeusuario
+        return flask.render_template('editarUsuario.html',u=usuar)
     else:
         return flask.render_template('admUsuario.html')
-    
+      
 
 @app.route('/admproyecto/eliminarproyecto/<proyecto>')
+@admin_required
 @login_required
 def eProyecto(proyecto=None): 
         eliminarProyecto(proyecto)
@@ -259,14 +286,46 @@ def eProyecto(proyecto=None):
 
 @app.route('/admfase/<p>')
 @login_required
-def admFase(p=None): 
+def admFase(p=None):  
     if request.method == "GET":
-        f=getFases(p)
-        return flask.render_template('admFase.html',fases=f)
+        if(getProyectoId(p).lider==flask.session['usuarioid']):
+            flask.session['proyectoid']=p
+            f=getFases(p)
+            return flask.render_template('admFase.html',fases=f)
+        else:
+            return flask.redirect(flask.url_for('admproyecto'))
     else:
-        return flask.render_template('admProyecto.html')
+        return flask.redirect(flask.url_for('admproyecto'))
 
+@app.route('/admfase/eliminarfase/<fase>')
+@login_required
+def eFase(fase=None): 
+        fas=getFaseId(fase)
+        fas.numero
+        fas.id
+        flask.session['proyectoid']=fas.proyecto
+        p=getProyectoId(fas.proyecto)
+        if(p.lider == flask.session['usuarioid']):
+            eliminarFase(fase, p.id)
+            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+        else:
+            return flask.redirect(flask.url_for('admproyecto'))
     
+@app.route('/admfase/editarfase/<f>', methods=["POST", "GET"])
+@login_required
+def edFase(f=None):
+    if request.method == "GET":
+        fas=getFaseId(f)
+        flask.session['numerofase']=fas.numero
+        flask.session['faseid']=fas.id
+        flask.session['proyectoid']=fas.proyecto
+        p=getProyectoId(fas.proyecto)
+        if(p.lider == flask.session['usuarioid']):
+            return flask.render_template('editarFase.html',f=fas)
+        else:
+            return flask.redirect(flask.url_for('admproyecto'))
+    else:
+        return flask.render_template('admFase.html')
 app.add_url_rule('/',
                  view_func=Main.as_view('index'),
                  methods=["GET", "POST"])
@@ -294,7 +353,14 @@ app.add_url_rule('/admproyecto/crearproyecto/',
 
 
 
+app.add_url_rule('/admfase/crearfase/',
+                 view_func=Crearfase.as_view('crearfase'),
+                 methods=["GET", "POST"])
 
+
+app.add_url_rule('/admfase/editarfase/',
+                 view_func=Editarfase.as_view('editarfase'),
+                 methods=["GET", "POST"])
 
 
 app.debug = True 
