@@ -5,7 +5,6 @@ Created on 05/04/2013
 '''
 import flask.views
 import functools
-from pms.modelo.entidad import Usuario
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario, usuarioIsLider
