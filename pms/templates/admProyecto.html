@@ -38,14 +38,15 @@
 					<th>id</th>
 					<th>Nombre</th>
 					<th>Cantidad de fases </th>
-					<th>Fecha de Inicio</th>
-					<th>Fecha de Finalización</th>
-					<th>Fecha de Última Modificación</th>
+					<th>Inicio</th>
+					<th>Finalización</th>
+					<th>Última Modificación</th>
+					<th>Estado</th>
 					<th>lider</th>
 					{% if session['isAdmin']==True %}
 					<th>Eliminar</th>
 					{% endif %}
-            		<th>Editar</th>
+            		<th>Ingresar</th>
 				</tr>
          			{% for p in proyectos %}
 				<tr>
@@ -55,6 +56,7 @@
 					<td>{{p.fechaInicio}}</td>
 					<td>{{p.fechaFin}}</td>
 					<td>{{p.fechaUltMod}}</td>
+					<td>{{p.estado}}</td>
 					<td>{{p.lider}}</td>
 					{% if session['isAdmin']==True %}
 					<td>
@@ -63,7 +65,7 @@
 					{% endif %}
            			<td>
            				{%if session['usuarioid']==p.lider%}
-           				<a class="btn" href="/admfase/{{p.id}}">Editar</a>
+           				<a class="btn" href="/admfase/{{p.id}}"> Selec>> </a>
            				{% endif %}
 					</td>
          			</tr>

@@ -21,11 +21,11 @@ user3 = Usuario(nombre="Martin Poletti", nombredeusuario="martin", clave="martin
 session.add(user3) 
 session.commit()
 
-pro = Proyecto(nombre="Proyecto 1", cantFase="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",fechaUltMod=None, lider = "3")
+pro = Proyecto(nombre="Proyecto 1", cantFase="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",fechaUltMod=None, lider = "3", estado="Pendiente")
 session.add(pro)
 session.commit()
 fa = Fase(nombre="Fase 1", numero="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",
-          fechaUltMod="01/02/2013", estado = "abierta", proyecto= "1")
+          fechaUltMod="01/02/2013", estado = "Abierta", proyecto= "1")
 session.add(fa)
 
 

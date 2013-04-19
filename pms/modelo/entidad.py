@@ -76,14 +76,17 @@ class Proyecto(Base):
     fechaFin = Column(DateTime)
     fechaUltMod = Column(DateTime)
     lider = Column(Integer, ForeignKey('usuario.id') )
+    estado = Column(Unicode(10))
     
-    def __init__(self,nombre,cantFase,fechaInicio,fechaFin,fechaUltMod,lider):
+    
+    def __init__(self, nombre, cantFase, fechaInicio, fechaFin, fechaUltMod, lider, estado):
         self.nombre = nombre
         self.cantFase = cantFase
         self.fechaInicio = fechaInicio
         self.fechaFin = fechaFin
         self.fechaUltMod = fechaUltMod
         self.lider = lider
+        self.estado = estado
         
     def get_nombre(self):
         return self.__nombre

@@ -11,7 +11,7 @@ from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
 from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
-
+from datetime import date, timedelta
 app = flask.Flask(__name__)
 # Don't do this!
 app.secret_key = "bacon"
@@ -199,18 +199,22 @@ class Crearproyecto(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
-        
+        fechainicio=flask.request.form['fechainicio']
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect(flask.url_for('crearproyecto'))
         if(flask.request.form['lider']==""):
             flask.flash("El campo lider no puede estar vacio")
             return flask.redirect(flask.url_for('crearproyecto'))
-
+        if(flask.request.form['fechainicio']==""):
+            fechainicio=date.today()
+        if(flask.request.form['fechafin']==""):
+            flask.flash("El campo fecha fin no puede estar vacio")
+            return flask.redirect(flask.url_for('crearproyecto'))
         if comprobarProyecto(flask.request.form['nombre']):
             flask.flash("El proyecto ya existe")
             return flask.redirect(flask.url_for('crearproyecto'))
-        crearProyecto(flask.request.form['nombre'],0, flask.request.form['fechainicio'],flask.request.form['fechafin'], None, flask.request.form['lider'])
+        crearProyecto(flask.request.form['nombre'], 0, fechainicio,flask.request.form['fechafin'], None, flask.request.form['lider'], None)
         return flask.redirect(flask.url_for('admproyecto'))
 
 class Crearfase(flask.views.MethodView):
@@ -219,18 +223,22 @@ class Crearfase(flask.views.MethodView):
         return flask.render_template('crearFase.html')
     @login_required
     def post(self):
-        
+        fechainicio=flask.request.form['fechainicio']
+        fechafin=flask.request.form['fechafin']
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect(flask.url_for('crearfase'))
         if(flask.request.form['numero']==""):
             flask.flash("El campo numero no puede estar vacio")
             return flask.redirect(flask.url_for('crearfase'))
-
+        if(flask.request.form['fechainicio']==""):
+            fechainicio=date.today()
+        if(flask.request.form['fechafin']==""):
+            fechafin=date.today()+timedelta(days=15)
         if comprobarFase(flask.request.form['numero'],flask.session['proyectoid']):
             flask.flash("La fase ya existe")
             return flask.redirect(flask.url_for('crearfase'))
-        crearFase(flask.request.form['nombre'],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'], None, None, flask.session['proyectoid'])
+        crearFase(flask.request.form['nombre'],flask.request.form['numero'], fechainicio, fechafin, None, None, flask.session['proyectoid'])
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
     
 class Editarfase(flask.views.MethodView):

@@ -17,13 +17,13 @@ def getProyectos():
     proyectos = session.query(Proyecto).all()
     return proyectos
 
-def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod=None, lider=None):
+def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod=None, lider=None, estado=None):
     """Crea un proyecto
 
     """
     init_db()
     session = db_session()
-    pro = Proyecto(nombre=nom,cantFase=cant, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, lider=lider)
+    pro = Proyecto(nombre=nom,cantFase=cant, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, lider=lider, estado="Pendiente")
     session.add(pro)
     session.commit()
    
