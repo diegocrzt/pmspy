@@ -7,6 +7,8 @@ Created on 14/04/2013
 '''
 from entidad import Proyecto
 from initdb import db_session, init_db
+from faseControlador import eliminarFase
+from faseControlador import getFases
 
 session = db_session()
 
@@ -29,19 +31,19 @@ def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod
    
 def getProyecto(nombre=None):
     """
-    recupera un proyecto por su nombre de usuario
+    recupera un proyecto por su id
     """
     if(nombre):
             res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
             return res
        
        
-def getProyectoId(id=None):
+def getProyectoId(idp=None):
     """
     recupera un proyecto por su nombre de usuario
     """
-    if(id):
-            res=session.query(Proyecto).filter(Proyecto.id==id).first()
+    if(idp):
+            res=session.query(Proyecto).filter(Proyecto.id==idp).first()
             return res
 def comprobarProyecto(nombre=None):
     """
@@ -58,15 +60,19 @@ def eliminarProyecto(proyecto=None):
     elimina un proyecto
     """
     if(proyecto):
-        session.query(Proyecto).filter(Proyecto.nombre==proyecto).delete()
+        fases=getFases(proyecto)
+        for f in fases:
+            eliminarFase(f.id, proyecto)
+        print "sale del eliminar Fase"            
+        session.query(Proyecto).filter(Proyecto.id==proyecto).delete()
         session.commit()
 
-def actualizarCantFases(id=None, aumentar=None):
+def actualizarCantFases(idp=None, aumentar=None):
     """
     actualiza la cantidad de fases de un proyecto
     """
     init_db()
-    p = getProyectoId(id)
+    p = getProyectoId(idp)
     if aumentar:
         p.cantFase= p.cantFase+1
     else:

@@ -8,8 +8,8 @@ import functools
 from pms.modelo.entidad import Usuario
 from flask import request
 from werkzeug.serving import run_simple
-from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario
-from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
+from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario, usuarioIsLider
+from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, getProyecto
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from datetime import date, timedelta
 app = flask.Flask(__name__)
@@ -266,9 +266,13 @@ class Editarfase(flask.views.MethodView):
 @admin_required
 @login_required
 def eUsuario(username=None): 
-        eliminarUsuario(username)
-        b=getUsuarios()
-        return flask.render_template('admUsuario.html',usuarios=b)
+        if usuarioIsLider(username):
+            flask.flash("El usuario seleccionado no se puede eliminar puesto que es lider de un o mas proyectos")
+            return flask.redirect(flask.url_for('admusuario'))
+        else:
+            eliminarUsuario(username)
+            b=getUsuarios()
+            return flask.render_template('admUsuario.html',usuarios=b)
     
 
 @app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
@@ -287,10 +291,15 @@ def edUsuario(u=None):
 @app.route('/admproyecto/eliminarproyecto/<proyecto>')
 @admin_required
 @login_required
-def eProyecto(proyecto=None): 
-        eliminarProyecto(proyecto)
-        p=getProyectos()
-        return flask.render_template('admProyecto.html',proyectos=p)
+def eProyecto(proyecto=None):
+        p=getProyectoId(proyecto)
+        if p.estado!="Inicializado":  
+            eliminarProyecto(proyecto)
+            p=getProyectos()
+            return flask.render_template('admProyecto.html',proyectos=p)
+        else:
+            flask.flash("El Proyecto seleccionado no se puede eliminar porque ya fue inicializado")
+            return flask.redirect(flask.url_for('admproyecto'))
 
 @app.route('/admfase/<p>')
 @login_required

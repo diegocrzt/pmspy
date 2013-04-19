@@ -23,7 +23,19 @@
 
 {%endblock%}
 
+{%block mensaje%}
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class=flashes>
+	    {% for message in messages %}
+	      <li>{{ message }}</li>
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+{%endblock%}
 {%block content%}
+
 <div class="usuarios">
 
 	<div class="row">
@@ -64,4 +76,8 @@
        <p><a href="/admusuario/crearusuario/" class="btn btn-primary btn-large">Crear Usuario</a></p>
     </div>
  </div>
+ 
 {%endblock%}
+
+
+
