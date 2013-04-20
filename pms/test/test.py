@@ -14,7 +14,7 @@ import pms
 '''
 def _initTestingDB():
     from sqlalchemy import create_engine
-    pms.main.app.config['TESTING'] = True
+    #pms.main.app.config['TESTING'] = True
 
     engine = create_engine('sqlite:///:memory:')
     db_session.configure(bind=engine)
@@ -69,7 +69,6 @@ class UsuarioTest(unittest.TestCase):
         instance = self._makeOne()
         self.assertEqual(instance.nombre, 'Fulano de Tal')
         self.assertEqual(instance.nombredeusuario, 'fulano')
-        self.assertEqual(instance.clave, '123456')
         self.assertEqual(instance.isAdmin, "true")
         print 'Agregar usuario: [EXITO]'
         
@@ -159,7 +158,7 @@ class FaseTest(unittest.TestCase):
     '''
     def test_constructor(self):
         instance = self._makeOne()
-        self.assertEqual(instance.nombre, 'Proyecto Test')
+        self.assertEqual(instance.nombre, 'Fase 1')
         self.assertEqual(instance.numero, '1')
         self.assertEqual(instance.fechaInicio, '12/01/2013')
         self.assertEqual(instance.fechaFin, "10/05/2015")

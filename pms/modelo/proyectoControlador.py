@@ -31,7 +31,8 @@ def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod
    
 def getProyecto(nombre=None):
     """
-    recupera un proyecto por su id
+    recupera un proyecto por su nombre
+    
     """
     if(nombre):
             res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
@@ -40,7 +41,7 @@ def getProyecto(nombre=None):
        
 def getProyectoId(idp=None):
     """
-    recupera un proyecto por su nombre de usuario
+    recupera un proyecto por su id
     """
     if(idp):
             res=session.query(Proyecto).filter(Proyecto.id==idp).first()

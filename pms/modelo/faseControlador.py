@@ -19,7 +19,7 @@ def getFases(p=None):
 
 
 def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None, estado=None, proy=None):
-    """Crea un proyecto
+    """Crea una fase
 
     """
     init_db()
@@ -31,7 +31,7 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
    
 def getFase(numero=None, proy=None):
     """
-    recupera un proyecto por su numero
+    recupera una fase por su numero y proyecto id
     """
     if(numero and proy):
             res=session.query(Fase).filter(Fase.numero==numero).filter(Fase.proyecto==proy).first()
@@ -58,7 +58,7 @@ def eliminarFase(fase=None, proy=None):
        
 def getFaseId(id=None):
     """
-    recupera una fase por su nombre de usuario
+    recupera una fase por su id
     """
     if(id):
             res=session.query(Fase).filter(Fase.id==id).first()

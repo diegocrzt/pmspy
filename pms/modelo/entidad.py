@@ -66,7 +66,7 @@ class Usuario(Base):
         
 class Proyecto(Base):
     """
-        Define la clase proyecto y la mapea con la tabla proyecto
+        Define la clase Proyecto y la mapea con la tabla proyecto
     """
     __tablename__ = 'proyecto'
     id = Column(Integer,primary_key=True)

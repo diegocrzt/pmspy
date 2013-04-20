@@ -58,9 +58,13 @@
 				<tr>
 					<td>{{f.numero}}</td>
 					<td>{{f.nombre}}</td>
-					<td>{{f.fechaInicio}}</td>
-					<td>{{f.fechaFin}}</td>
+					<td>{{f.fechaInicio.strftime('%Y/%m/%d')}}</td>
+					<td>{{f.fechaFin.strftime('%Y/%m/%d')}}</td>
+					{% if f.fechaUltMod!=None %}
 					<td>{{f.fechaUltMod}}</td>
+					{% else %}
+					<td>----</td>
+					{% endif %}
 					<td>{{f.estado}}</td>
 					<td>
 					<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>

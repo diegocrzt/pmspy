@@ -7,6 +7,7 @@ from sqlalchemy import Table
 from pms.modelo.entidad import Usuario, Proyecto, Fase
 from pms.modelo.initdb import metadata, db_session, init_db, engine
 import hashlib
+"""Puebla la base de datos con datos de pureba"""
 '''Se deben borrar todas las tablas antes'''
 init_db()
 usuario = Table('usuario', metadata)

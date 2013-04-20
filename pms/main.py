@@ -7,7 +7,7 @@ import flask.views
 import functools
 from flask import request
 from werkzeug.serving import run_simple
-from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, editarUsuario, comprobarUsuario, usuarioIsLider
+from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from datetime import date, timedelta
@@ -37,6 +37,8 @@ class Main(flask.views.MethodView):
             flask.session.pop('username', None)
             flask.session.pop('isAdmin',None)
             flask.session.pop('usuarioid',None)
+            flask.session.pop('proyectoid', None)
+            flask.session.pop('faseid',None)
             return flask.redirect(flask.url_for('index'))
         required = ['username', 'passwd']
         for r in required:
@@ -52,7 +54,7 @@ class Main(flask.views.MethodView):
                 flask.session['isAdmin']=u.isAdmin
             flask.session['usuarioid']=u.id
         else:
-            flask.flash("Username doesn't exist or incorrect password")
+            flask.flash("Nombre de usuario no existe o clave incorrecta")
         return flask.redirect(flask.url_for('admproyecto'))
 
 def login_required(method):
@@ -64,7 +66,7 @@ def login_required(method):
         if 'username' in flask.session:
             return method(*args, **kwargs)
         else:
-            flask.flash("A login is required to see the page!")
+            flask.flash("Es necesario el logueo")
             return flask.redirect(flask.url_for('index'))
     return wrapper
 
@@ -200,21 +202,26 @@ class Crearproyecto(flask.views.MethodView):
     def post(self):
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
-        fechafin = datetime.strptime(fechafin, '%m/%d/%Y')
-        fechainicio = datetime.strptime(fechainicio, '%m/%d/%Y')
-        if fechafin <= fechainicio:
-            flask.flash("incoherencia entre fechas de inicio y de fin")
-            return flask.redirect(flask.url_for('crearproyecto'))
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect(flask.url_for('crearproyecto'))
         if(flask.request.form['lider']==""):
             flask.flash("El campo lider no puede estar vacio")
             return flask.redirect(flask.url_for('crearproyecto'))
+        if getUsuarioById(flask.request.form['lider'])==None:
+            flask.flash("El usuario asignado como lider no existe")
+            return flask.redirect(flask.url_for('crearproyecto'))
         if(flask.request.form['fechainicio']==""):
-            fechainicio=date.today()
+            fechainicio=datetime.today()
+        else:
+            fechainicio = datetime.strptime(fechainicio, '%Y-%m-%d')
         if(flask.request.form['fechafin']==""):
             flask.flash("El campo fecha fin no puede estar vacio")
+            return flask.redirect(flask.url_for('crearproyecto'))
+        else:
+            fechafin = datetime.strptime(fechafin, '%Y-%m-%d')
+        if fechafin <= fechainicio:
+            flask.flash("incoherencia entre fechas de inicio y de fin")
             return flask.redirect(flask.url_for('crearproyecto'))
         if comprobarProyecto(flask.request.form['nombre']):
             flask.flash("El proyecto ya existe")
@@ -230,11 +237,6 @@ class Crearfase(flask.views.MethodView):
     def post(self):
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
-        fechafin = datetime.strptime(fechafin, '%m/%d/%Y')
-        fechainicio = datetime.strptime(fechainicio, '%m/%d/%Y')
-        if fechafin <= fechainicio:
-            flask.flash("incoherencia entre fechas de inicio y de fin")
-            return flask.redirect(flask.url_for('crearfase'))
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect(flask.url_for('crearfase'))
@@ -242,9 +244,16 @@ class Crearfase(flask.views.MethodView):
             flask.flash("El campo numero no puede estar vacio")
             return flask.redirect(flask.url_for('crearfase'))
         if(flask.request.form['fechainicio']==""):
-            fechainicio=date.today()
+            fechainicio=datetime.today()
+        else:
+            fechainicio = datetime.strptime(fechainicio, '%Y-%m-%d')
         if(flask.request.form['fechafin']==""):
-            fechafin=date.today()+timedelta(days=15)
+            fechafin=datetime.today()+timedelta(days=15)
+        else:
+            fechafin = datetime.strptime(fechafin, '%Y-%m-%d')
+        if fechafin <= fechainicio:
+            flask.flash("incoherencia entre fechas de inicio y de fin")
+            return flask.redirect(flask.url_for('crearfase'))
         if comprobarFase(flask.request.form['numero'],flask.session['proyectoid']):
             flask.flash("La fase ya existe")
             return flask.redirect(flask.url_for('crearfase'))
@@ -259,23 +268,28 @@ class Editarfase(flask.views.MethodView):
     def post(self):
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
-        fechafin = datetime.strptime(fechafin, '%m/%d/%Y')
-        fechainicio = datetime.strptime(fechainicio, '%m/%d/%Y')
-        if fechafin <= fechainicio:
-            flask.flash("incoherencia entre fechas de inicio y de fin")
-            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
         if(flask.request.form['numero']==""):
             flask.flash("El campo numero no puede estar vacio")
-            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))     
+        if(flask.request.form['fechainicio']==""):
+            fechainicio=datetime.today()
+        else:
+            fechainicio = datetime.strptime(fechainicio, '%Y-%m-%d')
+        if(flask.request.form['fechafin']==""):
+            fechafin=datetime.today()+timedelta(days=15)
+        else:
+            fechafin = datetime.strptime(fechafin, '%Y-%m-%d')
+        if fechafin <= fechainicio:
+            flask.flash("incoherencia entre fechas de inicio y de fin")
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid'])) 
         if str(flask.session['numerofase']) != str(flask.request.form['numero']):
             if comprobarFase(flask.request.form['numero'], flask.session['proyectoid']):
                 flask.flash("El numero de fase ya esta usado")
-                return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))     
-            
-        editarFase(flask.session['faseid'], flask.request.form['nombre'][:20],flask.request.form['numero'], flask.request.form['fechainicio'],flask.request.form['fechafin'])
+                return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+        editarFase(flask.session['faseid'], flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio,fechafin)
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     
 @app.route('/admusuario/eliminarusuario/<username>')
