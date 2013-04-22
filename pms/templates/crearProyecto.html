@@ -41,13 +41,17 @@
 <p>Complete los datos del proyecto:</p>
         <form action="{{url_for('crearproyecto')}}" method="post">
             <p>Nombre:<br />
-            <input type="text" name="nombre" /></p>
+            <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
+            {{session.pop('aux1',none)}}
             <p>Fecha de inicio:<br />
-            <input type="date" name="fechainicio" /></p>
+            <input type="date" name="fechainicio" value="{{session['aux3']}}"/></p>
+            {{session.pop('aux2',none)}}
             <p>Fecha de fin:<br />
-            <input type="date" name="fechafin" /></p>
+            <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
+            {{session.pop('aux3',none)}}
             <p>Lider:<br />
-            <input type="number" name="lider" /></p>
+            <input type="number" name="lider" value="{{session['aux2']}}"/></p>
+            {{session.pop('aux4',none)}}
             <p><input type="submit" value="submit" /></p>
         </form>
 {%endblock%}

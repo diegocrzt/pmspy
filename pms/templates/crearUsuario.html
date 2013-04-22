@@ -41,9 +41,11 @@
 <p>Complete los datos del usuario:</p>
         <form action="{{url_for('crearusuario')}}" method="post">
             <p>Nombre:<br />
-             <input type="text" name="nombre" /></p>
+             <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
+             {{session.pop('aux1',none)}}
              <p>Usuario:<br />
-            <input type="text" name="usuario" /></p>
+            <input type="text" name="usuario" value="{{session['aux2']}}"/></p>
+            {{session.pop('aux2',none)}}
             <p>Clave:<br />
             <input type="password" name="clave" /></p>
             <p>Es Admin:<br />

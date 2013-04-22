@@ -110,11 +110,8 @@ class Crearusuario(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
-        '''required = ['nombre','usuario', 'clave']
-        
-        for r in required:
-            if r not in flask.request.form:
-                flask.flash("Error: {0} is required.".format(r))'''
+        flask.session['aux1']=flask.request.form['nombre']
+        flask.session['aux2']=flask.request.form['usuario']
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
             return flask.redirect(flask.url_for('crearusuario'))
@@ -200,6 +197,10 @@ class Crearproyecto(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
+        flask.session['aux1']=flask.request.form['nombre']
+        flask.session['aux2']=flask.request.form['lider']
+        flask.session['aux3']=flask.request.form['fechainicio']
+        flask.session['aux4']=flask.request.form['fechafin']
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
         if(flask.request.form['nombre']==""):
@@ -235,6 +236,10 @@ class Crearfase(flask.views.MethodView):
         return flask.render_template('crearFase.html')
     @login_required
     def post(self):
+        flask.session['aux1']=flask.request.form['nombre']
+        flask.session['aux2']=flask.request.form['numero']
+        flask.session['aux3']=flask.request.form['fechainicio']
+        flask.session['aux4']=flask.request.form['fechafin']
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
         if(flask.request.form['nombre']==""):
