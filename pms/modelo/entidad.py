@@ -22,7 +22,7 @@ class Usuario(Base):
     id = Column(Integer,primary_key = True)
     nombre = Column(Unicode(20))
     nombredeusuario = Column(Unicode(20), unique=True)
-    clave = Column(Unicode(10))
+    clave = Column(Unicode(41))
     isAdmin = Column(Boolean)
     
     def __init__(self, nombre,nombredeusuario, clave, isAdmin):
@@ -66,7 +66,7 @@ class Usuario(Base):
         
 class Proyecto(Base):
     """
-        Define la clase proyecto y la mapea con la tabla proyecto
+        Define la clase Proyecto y la mapea con la tabla proyecto
     """
     __tablename__ = 'proyecto'
     id = Column(Integer,primary_key=True)
@@ -76,14 +76,17 @@ class Proyecto(Base):
     fechaFin = Column(DateTime)
     fechaUltMod = Column(DateTime)
     lider = Column(Integer, ForeignKey('usuario.id') )
+    estado = Column(Unicode(10))
     
-    def __init__(self,nombre,cantFase,fechaInicio,fechaFin,fechaUltMod,lider):
+    
+    def __init__(self, nombre, cantFase, fechaInicio, fechaFin, fechaUltMod, lider, estado):
         self.nombre = nombre
         self.cantFase = cantFase
         self.fechaInicio = fechaInicio
         self.fechaFin = fechaFin
         self.fechaUltMod = fechaUltMod
         self.lider = lider
+        self.estado = estado
         
     def get_nombre(self):
         return self.__nombre
@@ -210,8 +213,6 @@ class Fase(Base):
         
     def set_proyecto(self, value):
         self.__proyecto = value
-
-
 
 
 init_db()

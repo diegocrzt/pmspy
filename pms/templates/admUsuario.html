@@ -23,7 +23,19 @@
 
 {%endblock%}
 
+{%block mensaje%}
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class=flashes>
+	    {% for message in messages %}
+	      <li>{{ message }}</li>
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+{%endblock%}
 {%block content%}
+
 <div class="usuarios">
 
 	<div class="row">
@@ -35,7 +47,6 @@
             <th>Nombre Usuario</th>
             <th>Nombre </th>
             <th>Administrador?</th>
-            <th>Contrasena</th>
             <th>Eliminar</th>
             <th>Editar</th>
           </tr>
@@ -46,7 +57,6 @@
             <td>{{u.nombredeusuario}}</td>
             <td>{{u.nombre}}</td>
             <td>{{u.isAdmin}}</td>
-            <td>{{u.clave}}</td>
             <td><a class="btn btn-danger" href="/admusuario/eliminarusuario/{{u.nombredeusuario}}">Eliminar</a></td>
             <!--<td><a class="btn" href="/admusuario/editarusuario/{{u.idUsuario}}','{{u.nombredeusuario}}','{{u.nombre}}','{{u.clave}}','{{u.isAdmin}}');">  -->
             <td><a class="btn" href="/admusuario/editarusuario/{{u.nombredeusuario}}">
@@ -64,4 +74,8 @@
        <p><a href="/admusuario/crearusuario/" class="btn btn-primary btn-large">Crear Usuario</a></p>
     </div>
  </div>
+ 
 {%endblock%}
+
+
+

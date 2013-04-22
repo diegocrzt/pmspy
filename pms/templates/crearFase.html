@@ -40,13 +40,19 @@
 <p>Complete los datos del proyecto:</p>
         <form action="{{url_for('crearfase')}}" method="post">
             <p>Nombre:<br />
-            <input type="text" name="nombre" /></p>
+            <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
+            {{session.pop('aux1',none)}}
             <p>Numero:<br />
-            <input type="number" name="numero" /></p>
+            <input type="number" name="numero" value="{{session['aux2']}}"/></p>
+            {{session.pop('aux2',none)}}
             <p>Fecha de inicio:<br />
-            <input type="date" name="fechainicio" /></p>
-            <p>Fecha de fin:<br />
-            <input type="date" name="fechafin" /></p>
+            <input type="date" name="fechainicio" value="{{session['aux3']}}"/></p>
+            {{session.pop('aux3',none)}}
+            <p>Fecha de fin(*):<br />
+            <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
+            {{session.pop('aux4',none)}}
             <p><input type="submit" value="submit" /></p>
         </form>
+        *Por defecto se le asigna 15 dias
 {%endblock%}
+
