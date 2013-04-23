@@ -361,7 +361,10 @@ def admFase(p=None):
                 flask.session['proyectoiniciado']=False
             else:
                 flask.session['proyectoiniciado']=True
-            return flask.render_template('admFase.html',fases=f)
+            tienefases=True
+            if(getProyectoId(p).cantFase==0):
+                tienefases=False
+            return flask.render_template('admFase.html',fases=f, hay=tienefases)
         else:
             return flask.redirect(flask.url_for('admproyecto'))
     else:
@@ -439,4 +442,3 @@ app.add_url_rule('/admfase/inicializarproyecto/',
 
 app.debug = True 
 run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)
-

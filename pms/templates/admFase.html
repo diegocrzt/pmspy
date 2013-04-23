@@ -25,85 +25,86 @@
 {%endblock%}
 
 {%block mensaje%}
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-	    <ul class=flashes>
-	    {% for message in messages %}
-	      <li>{{ message }}</li>
-	    {% endfor %}
-	    </ul>
-	  {% endif %}
-	{% endwith %}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 {%endblock%}
 
 {%block content%}
-{% set hayf = True %}
 <div class="fases">
-	<h4 class="muted"> Proyecto: {{session['proyectonombre']}}</h4>
-	<div class="row" >
-		<div class="span12">
-			<h2> Listado de Fases </h2>
+		{% set hayf = True %}
+        <h4 class="muted"> Proyecto: {{session['proyectonombre']}}</h4>
+        <div class="row" >
+                <div class="span12">
+                        <h2> Listado de Fases </h2>
 
 
-			<table class="table table-striped">
-				<tr>
-					<th>Numero</th>
-					<th>Nombre</th>
-					<th>Inicio</th>
-					<th>Finalización</th>
-					<th>Última Modificación</th>
-					<th>Estado</th>
-					{% if session['proyectoiniciado']==False %}
-					<th>Eliminar</th>
-            		<th>Editar</th>
-            		{% else %}
-            		<th>Tipos de Items</th>
-            		<th>Items</th>
-            		{% endif %}
-				</tr>
-         			{% for f in fases %}
-				<tr>
-					<td>{{f.numero}}</td>
-					<td>{{f.nombre}}</td>
-					<td>{{f.fechaInicio.strftime('%Y/%m/%d')}}</td>
-					<td>{{f.fechaFin.strftime('%Y/%m/%d')}}</td>
-					{% if f.fechaUltMod!=None %}
-					<td>{{f.fechaUltMod}}</td>
-					{% else %}
-					<td>----</td>
-					{% endif %}
-					<td>{{f.estado}}</td>
-					{% if session['proyectoiniciado']==False %}
-					<td>
-					<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
-					</td>
-           			<td>
-           			<a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
-					</td>
-					{% else %}
-					<td>
-					<a class="btn" href="#">Ir>></a>
-					</td>
-					<td>
-					<a class="btn" href="#">Ir>></a>
-					</td>
-					{% endif %}
-         		</tr>
-         			{% else %}
-         			{% set hayf = False %}
-         			<tr>
-         				No se han creado fases aun
-         			</tr>
-         			{% endfor %}
-       		</table>
-		</div>
-		{% if session['proyectoiniciado']==False %}
-		<p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a></p>
-			{% if hayf==True %}
-			<p><a href="/admfase/inicializarproyecto/" class="btn btn-primary btn-large">Inicializar Proyecto</a></p>
-			{% endif %}
-		{% endif %}
-	</div>
-	
+                        <table class="table table-striped">
+                                <tr>
+                                        <th>Numero</th>
+                                        <th>Nombre</th>
+                                        <th>Inicio</th>
+                                        <th>Finalización</th>
+                                        <th>Última Modificación</th>
+                                        <th>Estado</th>
+                                        {% if session['proyectoiniciado']==False %}
+                                        <th>Eliminar</th>
+                        <th>Editar</th>
+                        {% else %}
+                        <th>Tipos de Items</th>
+                        <th>Items</th>
+                        {% endif %}
+                                </tr>
+                                {% for f in fases %}
+                    
+                                <tr>
+                                        <td>{{f.numero}}</td>
+                                        <td>{{f.nombre}}</td>
+                                        <td>{{f.fechaInicio.strftime('%Y/%m/%d')}}</td>
+                                        <td>{{f.fechaFin.strftime('%Y/%m/%d')}}</td>
+                                        {% if f.fechaUltMod!=None %}
+                                        <td>{{f.fechaUltMod}}</td>
+                                        {% else %}
+                                        <td>----</td>
+                                        {% endif %}
+                                        <td>{{f.estado}}</td>
+                                        {% if session['proyectoiniciado']==False %}
+                                        <td>
+                                        <a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
+                                        </td>
+                                <td>
+                                <a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                        <a class="btn" href="#">Ir>></a>
+                                        </td>
+                                        <td>
+                                        <a class="btn" href="#">Ir>></a>
+                                        </td>
+                                        {% endif %}
+                        </tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No se han creado fases aun
+                                </tr>
+                                {% endfor %}
+                </table>
+                </div>
+                {% if session['proyectoiniciado']==False %}
+                <p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a></p>
+                        {% if hay == True %}
+                        <p><a href="/admfase/inicializarproyecto/" class="btn btn-primary btn-large">Inicializar Proyecto</a></p>
+                        {% endif %}
+                {% endif %}
+        </div>
+        
 </div>
 {%endblock%}
