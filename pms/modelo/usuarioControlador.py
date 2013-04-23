@@ -3,8 +3,9 @@ Created on 05/04/2013
 
 @author: Martin Poletti, Natalia Valdez
 '''
-from entidad import Usuario
+from entidad import Usuario, Proyecto
 from initdb import db_session, init_db
+import hashlib
 
 session = db_session()
 
@@ -18,7 +19,7 @@ def validar(username=None, passwd=None):
     if res == None:
         return False
     else:
-        if res.clave == passwd:
+        if res.clave == hashlib.sha1( passwd ).hexdigest():
             return True
         else:
             return False
@@ -36,7 +37,8 @@ def crearUsuario(nom=None, usua=None, contrase=None, admin=None):
     """
     init_db()
     session = db_session()
-    user = Usuario(nombre=nom, nombredeusuario=usua, clave=contrase, isAdmin=admin)
+    clavecifra= hashlib.sha1( contrase ).hexdigest()
+    user = Usuario(nombre=nom, nombredeusuario=usua, clave=clavecifra, isAdmin=admin)
     session.add(user)
     session.commit()
     
@@ -56,26 +58,25 @@ def getUsuario(username=None):
             res=session.query(Usuario).filter(Usuario.nombredeusuario==username).first()
             return res
         
-def getUsuarioById(id=None):
+def getUsuarioById(idu=None):
     """
     recupera un usuario por su id
     """
-    if(id):
-
-            res=session.query(Usuario).filter(Usuario.id==id).first()
-
+    if(idu):
+            res=session.query(Usuario).filter(Usuario.id==idu).first()
             return res
         
-def editarUsuario(id=None,nom=None, usua=None, contrase=None, admin=None):
+def editarUsuario(idu=None,nom=None, usua=None, contrase=None, admin=None):
     """
     permite editar un usuario existente
     """
     init_db()
-    u = getUsuarioById(id)
+    u = getUsuarioById(idu)
     u.nombre=nom
     u.nombredeusuario=usua
-    u.clave=contrase
     u.isAdmin=admin
+    if contrase!=None:
+        u.clave=hashlib.sha1( contrase ).hexdigest()
     session.merge(u)
     session.commit()
     
@@ -99,5 +100,8 @@ def comprobarUsuarioB(ident=None,user=None):
         return False
     else:
         return True
-
-    
+   
+def usuarioIsLider(username=None):
+    u=getUsuario(username)
+    res=session.query(Proyecto).filter(Proyecto.lider==u.id).first()
+    return res

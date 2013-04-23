@@ -6,26 +6,29 @@ Created on 05/04/2013
 from sqlalchemy import Table
 from pms.modelo.entidad import Usuario, Proyecto, Fase
 from pms.modelo.initdb import metadata, db_session, init_db, engine
+import hashlib
+"""Puebla la base de datos con datos de pureba"""
 '''Se deben borrar todas las tablas antes'''
 init_db()
 usuario = Table('usuario', metadata)
 proyecto = Table('proyecto', metadata)
 fase = Table('fase', metadata)
 session = db_session()
-'''
-user = Usuario(nombre="Administrador", nombredeusuario="admin", clave="123456", isAdmin="true")
+
+user = Usuario(nombre="Administrador", nombredeusuario="admin", clave=hashlib.sha1( "123456" ).hexdigest(), isAdmin="true")
 session.add(user)
-user2 = Usuario(nombre="Natalia Valdez", nombredeusuario="natalia", clave="admin2", isAdmin="true")
+user2 = Usuario(nombre="Natalia Valdez", nombredeusuario="natalia", clave=hashlib.sha1( "admin2" ).hexdigest(), isAdmin="true")
 session.add(user2)
-user3 = Usuario(nombre="Martin Poletti", nombredeusuario="martin", clave="martin", isAdmin="false")
+user3 = Usuario(nombre="Martin Poletti", nombredeusuario="martin", clave=hashlib.sha1( "martin" ).hexdigest(), isAdmin="false")
 session.add(user3) 
-
-pro = Proyecto(nombre="Proyecto 1", cantFase="0", fechaInicio="12/01/2013", fechaFin = "10/05/2015",fechaUltMod="01/02/2013", lider = "3")
-session.add(pro)
-
-fa = Fase(nombre="Fase 1", numero="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",
-          fechaUltMod="01/02/2013", estado = "abierta", proyecto= "1")
-session.add(fa)
-'''
 session.commit()
 
+pro = Proyecto(nombre="Proyecto 1", cantFase="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",fechaUltMod=None, lider = "3", estado="Pendiente")
+session.add(pro)
+session.commit()
+fa = Fase(nombre="Fase 1", numero="1", fechaInicio="12/01/2013", fechaFin = "10/05/2015",
+          fechaUltMod="01/02/2013", estado = "Abierta", proyecto= "1")
+session.add(fa)
+
+
+session.commit()

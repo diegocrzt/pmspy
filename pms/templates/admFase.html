@@ -12,7 +12,8 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li class="active"><a href="">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -23,9 +24,22 @@
               
 {%endblock%}
 
+{%block mensaje%}
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class=flashes>
+	    {% for message in messages %}
+	      <li>{{ message }}</li>
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+{%endblock%}
+
 {%block content%}
 
 <div class="fases">
+	<h4 class="muted"> Proyecto: {{session['proyectonombre']}}</h4>
 	<div class="row" >
 		<div class="span12">
 			<h2> Listado de Fases </h2>
@@ -35,9 +49,9 @@
 				<tr>
 					<th>Numero</th>
 					<th>Nombre</th>
-					<th>Fecha de Inicio</th>
-					<th>Fecha de Finalización</th>
-					<th>Fecha de Última Modificación</th>
+					<th>Inicio</th>
+					<th>Finalización</th>
+					<th>Última Modificación</th>
 					<th>Estado</th>
 					<th>Eliminar</th>
             		<th>Editar</th>
@@ -46,9 +60,13 @@
 				<tr>
 					<td>{{f.numero}}</td>
 					<td>{{f.nombre}}</td>
-					<td>{{f.fechaInicio}}</td>
-					<td>{{f.fechaFin}}</td>
+					<td>{{f.fechaInicio.strftime('%Y/%m/%d')}}</td>
+					<td>{{f.fechaFin.strftime('%Y/%m/%d')}}</td>
+					{% if f.fechaUltMod!=None %}
 					<td>{{f.fechaUltMod}}</td>
+					{% else %}
+					<td>----</td>
+					{% endif %}
 					<td>{{f.estado}}</td>
 					<td>
 					<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
@@ -64,8 +82,8 @@
          			{% endfor %}
        		</table>
 		</div>
-		<p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a>
-		</p>
+		<p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a></p>
+		<p><a href="/admfase/inicializarproyecto/" class="btn btn-primary btn-large">Inicializar Proyecto</a></p>
 	</div>
 	
 </div>

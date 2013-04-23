@@ -13,7 +13,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/admproyecto/">Administrar Proyecto</a></li>
               <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
@@ -45,15 +45,15 @@
             <input type="text" name="nombre" value="{{u.nombre}}" /></p>
             <p>Usuario:<br />
             <input type="text" name="usuario" value="{{u.nombredeusuario}}"  /></p>
-            <p>Clave:<br />
-            <input type="text" name="clave" value="{{u.clave}}" /></p>
+            <p>Clave(*):<br />
+            <input type="text" name="clave" value="" /></p>
             <p>Es Admin:<br />
             {% if u.isAdmin %}
             <input type="checkbox" name="admin" checked /></p>
             {% else %}
             <input type="checkbox" name="admin" /></p>
             {% endif %}
-            <p><input type="submit" value="submit" /></p>
+            <p><input type="submit" value="Aceptar" /></p>
         </form>
-
+*Si no se completa el campo se toma la clave anterior
 {%endblock%}

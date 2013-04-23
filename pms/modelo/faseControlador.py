@@ -6,6 +6,7 @@ Created on 18/04/2013
 
 from initdb import db_session, init_db
 from entidad import Fase
+import proyectoControlador
 
 session = db_session()
 
@@ -18,18 +19,19 @@ def getFases(p=None):
 
 
 def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None, estado=None, proy=None):
-    """Crea un proyecto
+    """Crea una fase
 
     """
     init_db()
     session = db_session()
     fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", proyecto=proy)
     session.add(fa)
+    proyectoControlador.actualizarCantFases(proy, True)
     session.commit()
    
 def getFase(numero=None, proy=None):
     """
-    recupera un proyecto por su numero
+    recupera una fase por su numero y proyecto id
     """
     if(numero and proy):
             res=session.query(Fase).filter(Fase.numero==numero).filter(Fase.proyecto==proy).first()
@@ -51,11 +53,12 @@ def eliminarFase(fase=None, proy=None):
     """
     if(fase and proy):
         session.query(Fase).filter(Fase.id==fase).delete()
+        proyectoControlador.actualizarCantFases(proy,False)
         session.commit()
        
 def getFaseId(id=None):
     """
-    recupera una fase por su nombre de usuario
+    recupera una fase por su id
     """
     if(id):
             res=session.query(Fase).filter(Fase.id==id).first()

@@ -1,23 +1,50 @@
 {% extends "baseLog.html" %}
 {% block body %}
-    <h1>Proyect Manager System</h1>
     {% if 'username' in session %}
-        <p>Usuario: {{session['username']}}  </p>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+        <div class="container">
+        <h2>Logout</h2>
+        <strong>Usuario:</strong> {{session['username']}}
+        <hr>
         <form action="{{url_for('index')}}" method="post">
             <input type="submit" name="logout" value="logout" />
         </form>
-    	<a class="btn" href="/admproyecto/"> Cancelar</a>
- 		
+ 	</div>	
+	</div>
+	
     {% else %}
-        <p>El logueo es necesario:</p>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+     <div class="container">
+        <h2>Login</h2>
+        <strong>El logueo es necesario:</strong>
+        <p></p>
         <form action="{{url_for('index')}}" method="post">
             <p>Nombre de usuario:<br />
             <input type="text" name="username" /></p>
             <p>Clave:<br />
             <input type="password" name="passwd" /></p>
+            <hr>
             <p><input type="submit" value="submit" /></p>
         </form>
     {% endif %}
+     </div>
+    </div>
     {% with messages = get_flashed_messages() %}
         {% for message in messages %}
             {{message}}
