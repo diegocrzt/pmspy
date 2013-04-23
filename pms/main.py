@@ -40,6 +40,7 @@ class Main(flask.views.MethodView):
             flask.session.pop('proyectoid', None)
             flask.session.pop('faseid',None)
             flask.session.pop('proyectonombre',None)
+            flask.session.pop('proyectoiniciado', None)
             return flask.redirect(flask.url_for('index'))
         required = ['username', 'passwd']
         for r in required:
@@ -305,6 +306,7 @@ class Inicializarproyecto(flask.views.MethodView):
     @login_required
     def post(self):
         inicializarProyecto(flask.session['proyectoid'])
+        flask.session['proyectoiniciado']=True
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
         
     
@@ -355,6 +357,10 @@ def admFase(p=None):
             flask.session['proyectoid']=p
             flask.session['proyectonombre']=getProyectoId(p).nombre
             f=getFases(p)
+            if(getProyectoId(p).estado!="Iniciado"):
+                flask.session['proyectoiniciado']=False
+            else:
+                flask.session['proyectoiniciado']=True
             return flask.render_template('admFase.html',fases=f)
         else:
             return flask.redirect(flask.url_for('admproyecto'))

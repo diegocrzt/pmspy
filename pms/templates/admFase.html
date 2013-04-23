@@ -53,8 +53,13 @@
 					<th>Finalización</th>
 					<th>Última Modificación</th>
 					<th>Estado</th>
+					{% if session['proyectoiniciado']==False %}
 					<th>Eliminar</th>
             		<th>Editar</th>
+            		{% else %}
+            		<th>Tipos de Items</th>
+            		<th>Items</th>
+            		{% endif %}
 				</tr>
          			{% for f in fases %}
 				<tr>
@@ -68,12 +73,21 @@
 					<td>----</td>
 					{% endif %}
 					<td>{{f.estado}}</td>
+					{% if session['proyectoiniciado']==False %}
 					<td>
 					<a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
 					</td>
            			<td>
            			<a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
 					</td>
+					{% else %}
+					<td>
+					<a class="btn" href="#">Ir>></a>
+					</td>
+					<td>
+					<a class="btn" href="#">Ir>></a>
+					</td>
+					{% endif %}
          		</tr>
          			{% else %}
          			<tr>
@@ -82,8 +96,10 @@
          			{% endfor %}
        		</table>
 		</div>
+		{% if session['proyectoiniciado']==False %}
 		<p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a></p>
 		<p><a href="/admfase/inicializarproyecto/" class="btn btn-primary btn-large">Inicializar Proyecto</a></p>
+		{% endif %}
 	</div>
 	
 </div>
