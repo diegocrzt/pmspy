@@ -39,6 +39,7 @@ class Main(flask.views.MethodView):
             flask.session.pop('usuarioid',None)
             flask.session.pop('proyectoid', None)
             flask.session.pop('faseid',None)
+            flask.session.pop('proyectonombre',None)
             return flask.redirect(flask.url_for('index'))
         required = ['username', 'passwd']
         for r in required:
@@ -352,6 +353,7 @@ def admFase(p=None):
     if request.method == "GET":
         if(getProyectoId(p).lider==flask.session['usuarioid']):
             flask.session['proyectoid']=p
+            flask.session['proyectonombre']=getProyectoId(p).nombre
             f=getFases(p)
             return flask.render_template('admFase.html',fases=f)
         else:

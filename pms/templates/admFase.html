@@ -12,7 +12,8 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li class="active"><a href="">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -38,6 +39,7 @@
 {%block content%}
 
 <div class="fases">
+	<h4 class="muted"> Proyecto: {{session['proyectonombre']}}</h4>
 	<div class="row" >
 		<div class="span12">
 			<h2> Listado de Fases </h2>
