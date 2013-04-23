@@ -194,7 +194,7 @@ class Crearproyecto(flask.views.MethodView):
     @admin_required
     @login_required
     def get(self):
-        return flask.render_template('crearProyecto.html')
+        return flask.render_template('crearProyecto.html',u=getUsuarios())
     @admin_required
     @login_required
     def post(self):
