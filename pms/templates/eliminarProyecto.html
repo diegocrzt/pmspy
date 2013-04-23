@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admproyecto/">Administrar Proyecto</a></li>
+              {% if session['isAdmin']==True %}
+              <li><a href="/admusuario/">Administrar Usuario</a></li>
+              {% endif %}
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+
+{%endblock%}
+
+{%block content%}
+
+<div class="container" align="left">
+    <h3>Eliminar Proyecto <em>{{p.nombre}}</em></h3>
+    <hr>
+    <p class="text-info">	La elminación de un proyecto es <strong>irreversible</strong>.</p>
+    <p>	<strong>Cantidad de fases:</strong> {{p.cantFase}}</p>
+    <p>	<strong>Inicio:</strong> {{p.fechaInicio.strftime('%Y/%m/%d')}}</p>
+    <p>	<strong>Fin:</strong> {{p.fechaFin.strftime('%Y/%m/%d')}}</p>
+    {% if p.fechaUltMod!=None %}
+    	<p><strong>Ultima modificacón:</strong>{{p.fechaUltMod.strftime('%Y/%m/%d')}}<p>
+    {% else %}
+    	<p><strong>Ultima modificacón:</strong> --- <p>
+    {% endif %}
+    <p>	<strong>Estado:</strong> {{p.estado}}</p>
+    <p>Esta seguro que desea eliminar? </p>
+    <div>
+	    <form action="{{url_for('eliminarproyecto')}}" method="post">        
+	    	<p><input type="submit" value="Eliminar" /></p>
+	    </form>
+   	</div>
+</div>
+
+{%endblock%}

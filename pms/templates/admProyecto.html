@@ -68,17 +68,18 @@
                                         <td>{{p.fechaInicio.strftime('%Y/%m/%d')}}</td>
                                         <td>{{p.fechaFin.strftime('%Y/%m/%d')}}</td>
                                         {% if p.fechaUltMod!=None %}
-                                        <td>{{p.fechaUltMod}}</td>
+                                        <td>{{p.fechaUltMod.strftime('%Y/%m/%d')}}</td>
                                         {% else %}
                                         <td>----</td>
                                         {% endif %}
                                         <td>{{p.estado}}</td>
                                         <td>{{p.lider}}</td>
-                                        {% if session['isAdmin']==True %}
-                                        <td>
+                                        
+                                        <td>{% if session['isAdmin']==True and p.estado!="Iniciado" %}
                                                 <a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
+                                        	{% endif %}
                                         </td>
-                                        {% endif %}
+                                        
                                 <td>
                                         {%if session['usuarioid']==p.lider%}
                                         <a class="btn" href="/admfase/{{p.id}}"> Selec>> </a>

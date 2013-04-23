@@ -324,8 +324,16 @@ class Eliminarfase(flask.views.MethodView):
         else:
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
 
-            
-    
+class Eliminarproyecto(flask.views.MethodView):
+    @login_required  
+    def get(self):
+        return flask.redirect(flask.url_for('admproyecto'))
+    @login_required
+    def post(self):
+        eliminarProyecto(flask.session['proyectoid'])
+        flask.session.pop('proyectoid',None)
+        return flask.redirect(flask.url_for('admproyecto'))
+
 @app.route('/admusuario/eliminarusuario/<username>')
 @admin_required
 @login_required
@@ -358,9 +366,8 @@ def edUsuario(u=None):
 def eProyecto(proyecto=None):
         p=getProyectoId(proyecto)
         if p.estado!="Inicializado":  
-            eliminarProyecto(proyecto)
-            p=getProyectos()
-            return flask.render_template('admProyecto.html',proyectos=p)
+            flask.session['proyectoid']=p.id
+            return flask.render_template('eliminarProyecto.html',p=p)
         else:
             flask.flash("El Proyecto seleccionado no se puede eliminar porque ya fue inicializado")
             return flask.redirect(flask.url_for('admproyecto'))
@@ -452,6 +459,10 @@ app.add_url_rule('/admfase/inicializarproyecto/',
 
 app.add_url_rule('/admfase/eliminarfase/',
                  view_func=Eliminarfase.as_view('eliminarfase'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admfase/eliminarproyecto/',
+                 view_func=Eliminarproyecto.as_view('eliminarproyecto'),
                  methods=["GET", "POST"])
 
 app.debug = True 
