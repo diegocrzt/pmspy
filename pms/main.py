@@ -8,7 +8,7 @@ import functools
 from flask import request
 from werkzeug.serving import run_simple
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
-from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId
+from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from datetime import date, timedelta
 from datetime import datetime
@@ -297,6 +297,16 @@ class Editarfase(flask.views.MethodView):
         editarFase(flask.session['faseid'], flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio,fechafin)
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     
+class Inicializarproyecto(flask.views.MethodView):  
+    @login_required  
+    def get(self):
+        return flask.render_template('inicializarProyecto.html')
+    @login_required
+    def post(self):
+        inicializarProyecto(flask.session['proyectoid'])
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
+        
+    
 @app.route('/admusuario/eliminarusuario/<username>')
 @admin_required
 @login_required
@@ -378,6 +388,7 @@ def edFase(f=None):
             return flask.redirect(flask.url_for('admproyecto'))
     else:
         return flask.render_template('admFase.html')
+
 app.add_url_rule('/',
                  view_func=Main.as_view('index'),
                  methods=["GET", "POST"])
@@ -414,6 +425,9 @@ app.add_url_rule('/admfase/editarfase/',
                  view_func=Editarfase.as_view('editarfase'),
                  methods=["GET", "POST"])
 
+app.add_url_rule('/admfase/inicializarproyecto/',
+                 view_func=Inicializarproyecto.as_view('inicializarproyecto'),
+                 methods=["GET", "POST"])
 
 app.debug = True 
 run_simple("localhost", 5000, app, use_reloader=True, use_debugger=True, use_evalex=True)
