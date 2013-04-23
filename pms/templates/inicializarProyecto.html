@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              {% if session['isAdmin']==True %}
+              <li class=><a href="/admusuario/">Administrar Proyecto</a></li>
+              {% endif %}
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+
+{%endblock%}
+
+{%block content%}
+
+    <h3>Inicializar Proyecto</h3>
+    <p class="text-warning">La Inicializacion de un proyecto es irreversible. No se podrá crear ni editar más fases.</p>
+    <p>Esta seguro que desea Inicializar?</p>
+    <div>
+    <form action="{{url_for('inicializarproyecto')}}" method="post">        
+    	<p><input type="submit" value="Inicializar" /></p>
+    </form>
+    </div>
+
+
+{%endblock%}
