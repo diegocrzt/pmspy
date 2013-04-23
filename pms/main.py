@@ -308,7 +308,23 @@ class Inicializarproyecto(flask.views.MethodView):
         inicializarProyecto(flask.session['proyectoid'])
         flask.session['proyectoiniciado']=True
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
-        
+
+class Eliminarfase(flask.views.MethodView):
+    @login_required  
+    def get(self):
+        if(flask.session['faseid']!=None):
+            return flask.render_template('eliminarFase.html')
+        else:
+            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+    @login_required
+    def post(self):
+        if(flask.session['faseid']!=None):
+            eliminarFase(flask.session['faseid'],flask.session['proyectoid'])
+            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+        else:
+            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+
+            
     
 @app.route('/admusuario/eliminarusuario/<username>')
 @admin_required
@@ -354,6 +370,7 @@ def eProyecto(proyecto=None):
 def admFase(p=None):  
     if request.method == "GET":
         if(getProyectoId(p).lider==flask.session['usuarioid']):
+            flask.session.pop('faseid',None)
             flask.session['proyectoid']=p
             flask.session['proyectonombre']=getProyectoId(p).nombre
             f=getFases(p)
@@ -374,13 +391,10 @@ def admFase(p=None):
 @login_required
 def eFase(fase=None): 
         fas=getFaseId(fase)
-        fas.numero
-        fas.id
-        flask.session['proyectoid']=fas.proyecto
+        flask.session['faseid']=fas.id
         p=getProyectoId(fas.proyecto)
         if(p.lider == flask.session['usuarioid']):
-            eliminarFase(fase, p.id)
-            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+            return flask.render_template('eliminarFase.html',f=fas)           
         else:
             return flask.redirect(flask.url_for('admproyecto'))
     
@@ -434,6 +448,10 @@ app.add_url_rule('/admfase/editarfase/',
 
 app.add_url_rule('/admfase/inicializarproyecto/',
                  view_func=Inicializarproyecto.as_view('inicializarproyecto'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admfase/eliminarfase/',
+                 view_func=Eliminarfase.as_view('eliminarfase'),
                  methods=["GET", "POST"])
 
 app.debug = True 

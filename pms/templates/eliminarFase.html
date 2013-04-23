@@ -22,19 +22,24 @@
        </div>
      </div>
 </div>
+
 {%endblock%}
 
 {%block content%}
 
 <div class="container" align="left">
-    <h3>Inicializar Proyecto <em>{{session['proyectonombre']}}</em></h3>
+    <h3>Eliminar Fase de Proyecto <em>{{session['proyectonombre']}}</em></h3>
     <hr>
-    <p class="text-info">	La Inicializacion de un proyecto es <strong>irreversible</strong>. No se podrá crear ni editar más fases.</p>
-    <p class="text-info">	Los número de las fases serán reasignados para que sean secuenciales, pero el orden será el mismo</p>
-    <p>Esta seguro que desea Inicializar? </p>
+    <p class="text-info">	La elminación de una fase es <strong>irreversible</strong>.</p>
+    <p>	<strong>Fase:</strong> {{f.nombre}}</p>
+    <p>	<strong>Número:</strong> {{f.numero}}</p>
+    <p>	<strong>Fecha de inicio:</strong> {{f.fechaInicio.strftime('%Y/%m/%d')}}</p>
+    <p>	<strong>Fecha de fin:</strong> {{f.fechaFin.strftime('%Y/%m/%d')}}</p>
+    <p>	<strong>Estado:</strong> {{f.estado}}</p>
+    <p>Esta seguro que desea eliminar? </p>
     <div>
-	    <form action="{{url_for('inicializarproyecto')}}" method="post">        
-	    	<p><input type="submit" value="Inicializar" /></p>
+	    <form action="{{url_for('eliminarfase')}}" method="post">        
+	    	<p><input type="submit" value="Eliminar" /></p>
 	    </form>
    	</div>
 </div>
