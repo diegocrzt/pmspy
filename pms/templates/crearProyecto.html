@@ -50,8 +50,11 @@
             <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
             {{session.pop('aux3',none)}}
             <p>Lider:<br />
-            <input type="number" name="lider" value="{{session['aux2']}}"/></p>
-            {{session.pop('aux4',none)}}
+            <select name="lider">
+            	{% for usuario in u : %}
+                	<option value="{{ usuario.id }}">{{usuario.id}} - {{ usuario.nombre }} </option>
+                {% endfor %}
+            </select>
             <p><input type="submit" value="Crear" /></p>
         </form>
 {%endblock%}

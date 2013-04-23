@@ -100,7 +100,7 @@ def comprobarUsuarioB(ident=None,user=None):
         return False
     else:
         return True
-    
+  
 def usuarioIsLider(username=None):
     u=getUsuario(username)
     res=session.query(Proyecto).filter(Proyecto.lider==u.id).first()
