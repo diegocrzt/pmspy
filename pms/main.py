@@ -96,6 +96,10 @@ class AdmProyecto(flask.views.MethodView):
     """
     @login_required
     def get(self):
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         p=getProyectos()
         return flask.render_template('admProyecto.html',proyectos=p)
     @login_required
@@ -132,6 +136,10 @@ class Crearusuario(flask.views.MethodView):
         else:
             a=flask.request.form['admin']
         crearUsuario(flask.request.form['nombre'][:20], flask.request.form['usuario'][:20],flask.request.form['clave'][:20],a)
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         return flask.redirect(flask.url_for('admusuario'))
     
     
@@ -153,6 +161,10 @@ class AdmUsuario(flask.views.MethodView):
     @admin_required
     @login_required
     def get(self):
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         b=getUsuarios()
         return flask.render_template('admUsuario.html',usuarios=b)
     @admin_required
@@ -198,10 +210,6 @@ class Crearproyecto(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
-        flask.session['aux1']=flask.request.form['nombre']
-        flask.session['aux2']=flask.request.form['lider']
-        flask.session['aux3']=flask.request.form['fechainicio']
-        flask.session['aux4']=flask.request.form['fechafin']
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
         if(flask.request.form['nombre']==""):
@@ -229,6 +237,10 @@ class Crearproyecto(flask.views.MethodView):
             flask.flash("El proyecto ya existe")
             return flask.redirect(flask.url_for('crearproyecto'))
         crearProyecto(flask.request.form['nombre'][:20], 0, fechainicio,fechafin, None, flask.request.form['lider'], None)
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         return flask.redirect(flask.url_for('admproyecto'))
 
 class Crearfase(flask.views.MethodView):
@@ -264,6 +276,10 @@ class Crearfase(flask.views.MethodView):
             flask.flash("La fase ya existe")
             return flask.redirect(flask.url_for('crearfase'))
         crearFase(flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio, fechafin, None, None, flask.session['proyectoid'])
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
     
 class Editarfase(flask.views.MethodView):
@@ -312,6 +328,10 @@ class Inicializarproyecto(flask.views.MethodView):
 @admin_required
 @login_required
 def eUsuario(username=None): 
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         if usuarioIsLider(username):
             flask.flash("El usuario seleccionado no se puede eliminar puesto que es lider de un o mas proyectos")
             return flask.redirect(flask.url_for('admusuario'))
@@ -325,6 +345,10 @@ def eUsuario(username=None):
 @admin_required
 @login_required
 def edUsuario(u=None):
+    flask.session.pop('aux1',None)
+    flask.session.pop('aux2',None)
+    flask.session.pop('aux3',None)
+    flask.session.pop('aux4',None)
     if request.method == "GET":
         usuar=getUsuario(u)
         flask.session['usviejoid']=usuar.id
@@ -338,6 +362,10 @@ def edUsuario(u=None):
 @admin_required
 @login_required
 def eProyecto(proyecto=None):
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         p=getProyectoId(proyecto)
         if p.estado!="Inicializado":  
             eliminarProyecto(proyecto)
@@ -350,6 +378,10 @@ def eProyecto(proyecto=None):
 @app.route('/admfase/<p>')
 @login_required
 def admFase(p=None):  
+    flask.session.pop('aux1',None)
+    flask.session.pop('aux2',None)
+    flask.session.pop('aux3',None)
+    flask.session.pop('aux4',None)
     if request.method == "GET":
         if(getProyectoId(p).lider==flask.session['usuarioid']):
             flask.session['proyectoid']=p
@@ -364,6 +396,10 @@ def admFase(p=None):
 @app.route('/admfase/eliminarfase/<fase>')
 @login_required
 def eFase(fase=None): 
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         fas=getFaseId(fase)
         fas.numero
         fas.id
@@ -378,6 +414,10 @@ def eFase(fase=None):
 @app.route('/admfase/editarfase/<f>', methods=["POST", "GET"])
 @login_required
 def edFase(f=None):
+    flask.session.pop('aux1',None)
+    flask.session.pop('aux2',None)
+    flask.session.pop('aux3',None)
+    flask.session.pop('aux4',None)
     if request.method == "GET":
         fas=getFaseId(f)
         flask.session['numerofase']=fas.numero
