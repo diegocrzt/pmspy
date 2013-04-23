@@ -12,7 +12,8 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li class="active"><a href="">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -38,6 +39,7 @@
 {%block content%}
 
 <div class="fases">
+	<h4 class="muted"> Proyecto: {{session['proyectonombre']}}</h4>
 	<div class="row" >
 		<div class="span12">
 			<h2> Listado de Fases </h2>
@@ -80,8 +82,8 @@
          			{% endfor %}
        		</table>
 		</div>
-		<p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a>
-		</p>
+		<p><a href="/admfase/crearfase/" class="btn btn-primary btn-large">Crear Fase</a></p>
+		<p><a href="/admfase/inicializarproyecto/" class="btn btn-primary btn-large">Inicializar Proyecto</a></p>
 	</div>
 	
 </div>

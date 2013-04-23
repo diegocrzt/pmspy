@@ -13,7 +13,8 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -37,7 +38,7 @@
 {%endblock%}
 
 {%block content%}
-<p>Complete los datos del proyecto:</p>
+<p>Complete los datos de la fase:</p>
         <form action="{{url_for('crearfase')}}" method="post">
             <p>Nombre:<br />
             <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
@@ -51,7 +52,7 @@
             <p>Fecha de fin(*):<br />
             <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
             {{session.pop('aux4',none)}}
-            <p><input type="submit" value="submit" /></p>
+            <p><input type="submit" value="Crear" /></p>
         </form>
         *Por defecto se le asigna 15 dias
 {%endblock%}

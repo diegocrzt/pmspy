@@ -12,8 +12,9 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
+            <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
               {% if session['isAdmin']==True %}
-              <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
+              <li><a href="/admusuario/">Administrar Usuario</a></li>
               {% endif %}
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
@@ -23,8 +24,6 @@
      </div>
 </div>
               
-
-
 {%endblock%}
 
 {%block mensaje%}

@@ -7,8 +7,7 @@ Created on 14/04/2013
 '''
 from entidad import Proyecto
 from initdb import db_session, init_db
-from faseControlador import eliminarFase
-from faseControlador import getFases
+import faseControlador
 
 session = db_session()
 
@@ -61,9 +60,9 @@ def eliminarProyecto(proyecto=None):
     elimina un proyecto
     """
     if(proyecto):
-        fases=getFases(proyecto)
+        fases=faseControlador.getFases(proyecto)
         for f in fases:
-            eliminarFase(f.id, proyecto)
+            faseControlador.eliminarFase(f.id, proyecto)
         print "sale del eliminar Fase"            
         session.query(Proyecto).filter(Proyecto.id==proyecto).delete()
         session.commit()
@@ -81,3 +80,18 @@ def actualizarCantFases(idp=None, aumentar=None):
     session.merge(p)
     session.commit()
 
+def inicializarProyecto(p):
+    """ 
+    inicializa el proyecto
+    """
+    fases=faseControlador.getFases(p)
+    n=1
+    for f in fases:
+        f.numero=n
+        session.merge(f)
+        n=n+1        
+    proy=getProyectoId(p)
+    proy.estado="Iniciado"
+    session.merge(proy)
+    session.commit()
+    
