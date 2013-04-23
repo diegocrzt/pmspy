@@ -412,7 +412,6 @@ app.add_url_rule('/admusuario/crearusuario/',
                  view_func=Crearusuario.as_view('crearusuario'),
                  methods=["GET", "POST"])
 
-
 app.add_url_rule('/admusuario/',
                  view_func=AdmUsuario.as_view('admusuario'),
                  methods=["GET", "POST"])
@@ -425,12 +424,9 @@ app.add_url_rule('/admproyecto/crearproyecto/',
                  view_func=Crearproyecto.as_view('crearproyecto'),
                  methods=["GET", "POST"])
 
-
-
 app.add_url_rule('/admfase/crearfase/',
                  view_func=Crearfase.as_view('crearfase'),
                  methods=["GET", "POST"])
-
 
 app.add_url_rule('/admfase/editarfase/',
                  view_func=Editarfase.as_view('editarfase'),
