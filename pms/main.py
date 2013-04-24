@@ -1,7 +1,8 @@
 '''
 Created on 05/04/2013
 
-@author: mpoletti
+@author: Martin Poletti
+@author: Natalia Valdez
 '''
 import flask.views
 import functools
@@ -13,12 +14,8 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from datetime import date, timedelta
 from datetime import datetime
 app = flask.Flask(__name__)
-# Don't do this!
+import os
 app.secret_key = "bacon"
-
-#users = {'jake':'bacon'}
-#comentario
-
 class Main(flask.views.MethodView):
     """
         Punto de entrada de la aplicacion
@@ -61,7 +58,7 @@ class Main(flask.views.MethodView):
 
 def login_required(method):
     """
-        Muestra un mensaje pidiendo que el usuario inicie sesion
+    Controla que el usuario haya iniciado sesion para realizar la opercacion
     """
     @functools.wraps(method)
     def wrapper(*args, **kwargs):
@@ -76,7 +73,7 @@ def login_required(method):
 
 def admin_required(method):
     """
-        Muestra un mensaje pidiendo que el usuario inicie sesion
+        Controla que el usuario posea el rol de administrador
     """
     @functools.wraps(method)
     def wrapper(*args, **kwargs):
@@ -93,18 +90,27 @@ def admin_required(method):
     
 class AdmProyecto(flask.views.MethodView):
     """
-    Administrar Proyectos
+    Gestiona y Ejecuta la Vista de Administrar Proyectos
     """
     @login_required
     def get(self):
+        """
+        Ejecuta el template admProyecto.html
+        """
         p=getProyectos()
         return flask.render_template('admProyecto.html',proyectos=p)
     @login_required
     def post(self):
+        """
+        Ejecuta el template admProyecto.html
+        """
         p=getProyectos()
         return flask.render_template('admProyecto.html',proyectos=p)
 
 class Crearusuario(flask.views.MethodView):
+    """
+    Vista de Crear Usuario
+    """
     @admin_required
     @login_required
     def get(self):
@@ -112,6 +118,9 @@ class Crearusuario(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
+        """
+        Ejecuta la funcion de Crear Usuario
+        """
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['usuario']
         if(flask.request.form['nombre']==""):
@@ -137,13 +146,12 @@ class Crearusuario(flask.views.MethodView):
     
     
 class EliminarUsuario(flask.views.MethodView):
+    """
+    Vista de Eliminar Usuario
+    """
     @admin_required
     @login_required
     def get(self):
-        b=getUsuarios()
-        for u in b:
-            print u.nombre
-            print u.clave
         return flask.redirect(flask.url_for('admusuario'))
     @admin_required
     @login_required
@@ -151,6 +159,9 @@ class EliminarUsuario(flask.views.MethodView):
         return flask.redirect(flask.url_for('admusuario'))
     
 class AdmUsuario(flask.views.MethodView):
+    """
+    Vista de Administrar Usuario
+    """
     @admin_required
     @login_required
     def get(self):
@@ -163,6 +174,9 @@ class AdmUsuario(flask.views.MethodView):
         return flask.render_template('admUsuario.html',usuarios=b)
     
 class Editarusuario(flask.views.MethodView):
+    """
+    Vista de Editar Usuario
+    """
     @admin_required
     @login_required
     def get(self):
@@ -170,6 +184,9 @@ class Editarusuario(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
+        """
+        Ejecuta la funcion de Editar Usuario
+        """
         clave=flask.request.form['clave']
         if(flask.request.form['nombre']==""):
             flask.flash("El campo nombre no puede estar vacio")
@@ -192,6 +209,9 @@ class Editarusuario(flask.views.MethodView):
         return flask.redirect(flask.url_for('admusuario'))
     
 class Crearproyecto(flask.views.MethodView):
+    """
+    Vista de Crear Proyecto
+    """
     @admin_required
     @login_required
     def get(self):
@@ -199,6 +219,9 @@ class Crearproyecto(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
+        """
+        Ejecuta la funcion de Crear Proyecto
+        """
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['lider']
         flask.session['aux3']=flask.request.form['fechainicio']
@@ -233,6 +256,9 @@ class Crearproyecto(flask.views.MethodView):
         return flask.redirect(flask.url_for('admproyecto'))
 
 class Crearfase(flask.views.MethodView):
+    """
+    Gestiona la Vista de Crear Fase
+    """
     @login_required
     def get(self):
         return flask.render_template('crearFase.html')
@@ -268,11 +294,17 @@ class Crearfase(flask.views.MethodView):
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
     
 class Editarfase(flask.views.MethodView):
+    """
+    Vista de Editar Fase
+    """
     @login_required
     def get(self):
         return flask.redirect(flask.url_for('admfase'))
     @login_required
     def post(self):
+        """
+        Ejecuta la funcion de Editar Fase
+        """
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
         if(flask.request.form['nombre']==""):
@@ -299,17 +331,27 @@ class Editarfase(flask.views.MethodView):
         editarFase(flask.session['faseid'], flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio,fechafin)
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     
-class Inicializarproyecto(flask.views.MethodView):  
+class Inicializarproyecto(flask.views.MethodView):
+    """
+    Vista de Inicializar Proyecto
+    """  
     @login_required  
     def get(self):
         return flask.render_template('inicializarProyecto.html')
     @login_required
     def post(self):
+        """
+        Ejecuta la funcion de Inicializar Proyecto
+        """
         inicializarProyecto(flask.session['proyectoid'])
         flask.session['proyectoiniciado']=True
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
 
 class Eliminarfase(flask.views.MethodView):
+    """
+    Vista de Eliminar Fase
+    """
+    
     @login_required  
     def get(self):
         if(flask.session['faseid']!=None):
@@ -318,6 +360,9 @@ class Eliminarfase(flask.views.MethodView):
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
     @login_required
     def post(self):
+        """
+        Ejecuta la funcion de Eliminar Fase
+        """
         if(flask.session['faseid']!=None):
             eliminarFase(flask.session['faseid'],flask.session['proyectoid'])
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
@@ -325,11 +370,17 @@ class Eliminarfase(flask.views.MethodView):
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
 
 class Eliminarproyecto(flask.views.MethodView):
+    """
+    Vista de Eliminar Proyecto
+    """
     @login_required  
     def get(self):
         return flask.redirect(flask.url_for('admproyecto'))
     @login_required
     def post(self):
+        """
+        Ejecuta la funcion de Eliminar Proyecto
+        """
         eliminarProyecto(flask.session['proyectoid'])
         flask.session.pop('proyectoid',None)
         return flask.redirect(flask.url_for('admproyecto'))
@@ -338,19 +389,25 @@ class Eliminarproyecto(flask.views.MethodView):
 @admin_required
 @login_required
 def eUsuario(username=None): 
-        if usuarioIsLider(username):
-            flask.flash("El usuario seleccionado no se puede eliminar puesto que es lider de un o mas proyectos")
-            return flask.redirect(flask.url_for('admusuario'))
-        else:
-            eliminarUsuario(username)
-            b=getUsuarios()
-            return flask.render_template('admUsuario.html',usuarios=b)
+    """
+    Funcion que llama a la Vista de Eliminar Usuario, responde al boton de 'Eliminar' de Administrar Usuario
+    """
+    if usuarioIsLider(username):
+        flask.flash("El usuario seleccionado no se puede eliminar puesto que es lider de un o mas proyectos")
+        return flask.redirect(flask.url_for('admusuario'))
+    else:
+        eliminarUsuario(username)
+        b=getUsuarios()
+        return flask.render_template('admUsuario.html',usuarios=b)
     
 
 @app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
 @admin_required
 @login_required
 def edUsuario(u=None):
+    """
+    Funcion que llama a la Vista de Editar Usuario, responde al boton de 'Editar' de Administrar Usuario
+    """
     if request.method == "GET":
         usuar=getUsuario(u)
         flask.session['usviejoid']=usuar.id
@@ -364,17 +421,23 @@ def edUsuario(u=None):
 @admin_required
 @login_required
 def eProyecto(proyecto=None):
-        p=getProyectoId(proyecto)
-        if p.estado!="Inicializado":  
-            flask.session['proyectoid']=p.id
-            return flask.render_template('eliminarProyecto.html',p=p)
-        else:
-            flask.flash("El Proyecto seleccionado no se puede eliminar porque ya fue inicializado")
-            return flask.redirect(flask.url_for('admproyecto'))
+    """
+    Funcion que llama a la Vista de Eliminar Proyecto, responde al boton de 'Eliminar' de Administrar Proyecto
+    """
+    p=getProyectoId(proyecto)
+    if p.estado!="Inicializado":  
+        flask.session['proyectoid']=p.id
+        return flask.render_template('eliminarProyecto.html',p=p)
+    else:
+        flask.flash("El Proyecto seleccionado no se puede eliminar porque ya fue inicializado")
+        return flask.redirect(flask.url_for('admproyecto'))
 
 @app.route('/admfase/<p>')
 @login_required
-def admFase(p=None):  
+def admFase(p=None):
+    """
+    Funcion que llama a la Vista de Administrar Fase, responde al boton de 'Selec>>' de Administrar Proyecto
+    """  
     if request.method == "GET":
         if(getProyectoId(p).lider==flask.session['usuarioid']):
             flask.session.pop('faseid',None)
@@ -397,17 +460,23 @@ def admFase(p=None):
 @app.route('/admfase/eliminarfase/<fase>')
 @login_required
 def eFase(fase=None): 
-        fas=getFaseId(fase)
-        flask.session['faseid']=fas.id
-        p=getProyectoId(fas.proyecto)
-        if(p.lider == flask.session['usuarioid']):
-            return flask.render_template('eliminarFase.html',f=fas)           
-        else:
-            return flask.redirect(flask.url_for('admproyecto'))
+    """
+    Funcion que llama a la Vista de Eliminar Fase, responde al boton de 'Eliminar' de Administrar Fase
+    """
+    fas=getFaseId(fase)
+    flask.session['faseid']=fas.id
+    p=getProyectoId(fas.proyecto)
+    if(p.lider == flask.session['usuarioid']):
+        return flask.render_template('eliminarFase.html',f=fas)           
+    else:
+        return flask.redirect(flask.url_for('admproyecto'))
     
 @app.route('/admfase/editarfase/<f>', methods=["POST", "GET"])
 @login_required
 def edFase(f=None):
+    """
+    Funcion que llama a la Vista de Editar Fase, responde al boton de 'Editar' de Administrar Fase
+    """
     if request.method == "GET":
         fas=getFaseId(f)
         flask.session['numerofase']=fas.numero
