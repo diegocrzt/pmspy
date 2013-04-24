@@ -26,6 +26,7 @@
 
 
 {%block mensaje%}
+	<div class="container">
 	{% with messages = get_flashed_messages() %}
 	  {% if messages %}
 	    <ul class=flashes>
@@ -35,21 +36,22 @@
 	    </ul>
 	  {% endif %}
 	{% endwith %}
+	</div>
 {%endblock%}
 
 {%block content%}
-<p>Complete los datos del proyecto:</p>
+<div class="container">
+	<h3>Crear Proyecto</h3>
+	<hr>
+	<p>Complete los datos del proyecto:</p>
         <form action="{{url_for('crearproyecto')}}" method="post">
-            <p>Nombre:<br />
-            <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
-            {{session.pop('aux1',none)}}
-            <p>Fecha de inicio:<br />
-            <input type="date" name="fechainicio" value="{{session['aux3']}}"/></p>
-            {{session.pop('aux2',none)}}
-            <p>Fecha de fin:<br />
+            <p>Nombre:<br/>
+            <input type="text" name="nombre" value="{{session['aux1']}}" /></p>
+            <p>Fecha de inicio(*):<br/>
+            <input type="date" name="fechainicio"  value="{{session['aux3']}}"/></p>
+            <p>Fecha de fin:<br/>
             <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
-            {{session.pop('aux3',none)}}
-            <p>Lider:<br />
+            <p>Lider:<br/>
             <select name="lider">
             	{% for usuario in u : %}
                 	<option value="{{ usuario.id }}">{{usuario.id}} - {{ usuario.nombre }} </option>
@@ -57,4 +59,6 @@
             </select>
             <p><input type="submit" value="Crear" /></p>
         </form>
+        <p class="text-info">* Por defecto se le asigna la fecha actual</p>
+</div>
 {%endblock%}

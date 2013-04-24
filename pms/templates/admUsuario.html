@@ -59,7 +59,9 @@
             <td>{{u.nombre}}</td>
             <td>{{u.isAdmin}}</td>
             <td>
+            {% if u.nombredeusuario != "admin" %}
             <a class="btn btn-danger" href="/admusuario/eliminarusuario/{{u.nombredeusuario}}">Eliminar</a>
+            {% endif %}
             </td>
             <td>
             <a class="btn" href="/admusuario/editarusuario/{{u.nombredeusuario}}">Editar</a>

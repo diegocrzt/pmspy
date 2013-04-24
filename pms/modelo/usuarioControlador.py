@@ -28,7 +28,7 @@ def getUsuarios():
     """Obtener usuarios
     """ 
     init_db()
-    res = session.query(Usuario).all()
+    res = session.query(Usuario).order_by(Usuario.id)
     return res
 
 def crearUsuario(nom=None, usua=None, contrase=None, admin=None):
