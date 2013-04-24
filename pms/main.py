@@ -156,7 +156,11 @@ class EliminarUsuario(flask.views.MethodView):
     @admin_required
     @login_required
     def post(self):
-        return flask.redirect(flask.url_for('admusuario'))
+        eliminarUsuario(flask.session['usuarioeliminar'])
+        b=getUsuarios()
+        flask.session.pop('usuarioeliminar',None)
+        return flask.render_template('admUsuario.html',usuarios=b)
+ 
     
 class AdmUsuario(flask.views.MethodView):
     """
@@ -396,9 +400,10 @@ def eUsuario(username=None):
         flask.flash("El usuario seleccionado no se puede eliminar puesto que es lider de un o mas proyectos")
         return flask.redirect(flask.url_for('admusuario'))
     else:
-        eliminarUsuario(username)
-        b=getUsuarios()
-        return flask.render_template('admUsuario.html',usuarios=b)
+        user=getUsuario(username)
+        flask.session['usuarioeliminar']=user.nombre
+        return flask.render_template('eliminarUsuario.html',u=user)
+
     
 
 @app.route('/admusuario/editarusuario/<u>', methods=["POST", "GET"])
@@ -532,6 +537,10 @@ app.add_url_rule('/admfase/eliminarfase/',
 
 app.add_url_rule('/admfase/eliminarproyecto/',
                  view_func=Eliminarproyecto.as_view('eliminarproyecto'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admfase/eliminarusuario/',
+                 view_func=EliminarUsuario.as_view('eliminarusuario'),
                  methods=["GET", "POST"])
 
 app.debug = True 

@@ -58,15 +58,17 @@
             <td>{{u.nombredeusuario}}</td>
             <td>{{u.nombre}}</td>
             <td>{{u.isAdmin}}</td>
-            <td><a class="btn btn-danger" href="/admusuario/eliminarusuario/{{u.nombredeusuario}}">Eliminar</a></td>
-            <!--<td><a class="btn" href="/admusuario/editarusuario/{{u.idUsuario}}','{{u.nombredeusuario}}','{{u.nombre}}','{{u.clave}}','{{u.isAdmin}}');">  -->
-            <td><a class="btn" href="/admusuario/editarusuario/{{u.nombredeusuario}}">
-            Editar</a>
+            <td>
+            <a class="btn btn-danger" href="/admusuario/eliminarusuario/{{u.nombredeusuario}}">Eliminar</a>
+            </td>
+            <td>
+            <a class="btn" href="/admusuario/editarusuario/{{u.nombredeusuario}}">Editar</a>
+            </td>
           </tr>
           
           {% else %}
           	<tr>
-          		NO HAY REGISTROS
+          		No se han creado aun usuarios
           	</tr>
           {% endfor %}
           

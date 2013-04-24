@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admproyecto/">Administrar Proyecto</a></li>
+              {% if session['isAdmin']==True %}
+              <li><a href="/admusuario/">Administrar Usuario</a></li>
+              {% endif %}
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+
+{%endblock%}
+
+{%block content%}
+
+<div class="container" align="left">
+    <h3>Eliminar Usuario <em>{{u.nombre}}</em></h3>
+    <hr>
+    <p class="text-info">	La elminación de un usuario es <strong>irreversible</strong>.</p>
+    <p>	<strong>Nombre: </strong> {{u.nombre}}</p>
+    <p>	<strong>Nombre de Usuario: </strong> {{u.nombredeusuario}}</p>
+    {% if u.isAdmin==True %}
+    	<p><strong>Administrador: </strong>Si<p>
+    {% else %}
+    	<p><strong>Administradir: </strong>No<p>
+    {% endif %}
+    <p>Esta seguro que desea eliminar? </p>
+    <div>
+	    <form action="{{url_for('eliminarusuario')}}" method="post">        
+	    	<p><input type="submit" value="Eliminar" /></p>
+	    </form>
+   	</div>
+</div>
+
+{%endblock%}
