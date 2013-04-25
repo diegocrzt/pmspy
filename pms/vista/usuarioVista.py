@@ -3,6 +3,7 @@ from flask import request
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 import pms.vista.required
 from pms import app
+
 class AdmUsuario(flask.views.MethodView):
     """
     Vista de Administrar Usuario

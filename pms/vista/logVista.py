@@ -1,7 +1,6 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
-from datetime import timedelta
-from flask import request
+
 
 class Main(flask.views.MethodView):
     """

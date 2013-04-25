@@ -4,6 +4,8 @@ app.secret_key = "bacon"
 import vista.proyectoVista
 import vista.required
 import vista.usuarioVista
+import vista.faseVista
+import vista.logVista
 
 
 app.add_url_rule('/admproyecto/',
