@@ -52,9 +52,14 @@
             <p>Fecha de fin:<br/>
             <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
             <p>Lider:<br/>
+            
             <select name="lider">
-            	{% for usuario in u : %}
+            	{% for usuario in u  %}
+            		{%if session['aux2']==usuario.id%}
+            		<option value="{{ usuario.id }}" selected>{{usuario.id}} - {{ usuario.nombre }} </option>	
+            		{% else %}
                 	<option value="{{ usuario.id }}">{{usuario.id}} - {{ usuario.nombre }} </option>
+                	{% endif %}
                 {% endfor %}
             </select>
             <p><input type="submit" value="Crear" /></p>

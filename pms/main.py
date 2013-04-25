@@ -239,7 +239,7 @@ class Crearproyecto(flask.views.MethodView):
         Ejecuta la funcion de Crear Proyecto
         """
         flask.session['aux1']=flask.request.form['nombre']
-        flask.session['aux2']=flask.request.form['lider']
+        flask.session['aux2']=int(flask.request.form['lider'])
         flask.session['aux3']=flask.request.form['fechainicio']
         flask.session['aux4']=flask.request.form['fechafin']
         fechainicio=flask.request.form['fechainicio']

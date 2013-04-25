@@ -38,11 +38,10 @@
 {%block content%}
 
 <div class="usuarios">
-
 	<div class="row">
       <div class="span12">
         <h2> Listado de Usuarios </h2>
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
           <tr>
             <th>Id</th>
             <th>Nombre Usuario</th>
@@ -76,8 +75,13 @@
           
         </table>
       	</div>  
-       <p><a href="/admusuario/crearusuario/" class="btn btn-primary btn-large">Crear Usuario</a></p>
-    </div>
+      	<div class="span3 bs-docs-sidebar">
+        	<ul class="nav nav-list bs-docs-sidenav">
+        	{% if session['isAdmin']==True %}  
+				  <li><a href="/admusuario/crearusuario/"><i class="icon-chevron-right"></i> Crear Usuario</a></li>
+			{% endif %}
+				</ul>
+		</div>
  </div>
  
 {%endblock%}
