@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block menu %}
-
  <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -22,9 +21,7 @@
           </div>
        </div>
      </div>
-</div>
-              
-
+</div>              
 {%endblock%}
 
 {%block mensaje%}
@@ -40,7 +37,6 @@
 {%endblock%}
 
 {%block content%}
-
 <div class="proyectos">
         <div class="row" >
                 <div class="span12">
@@ -92,7 +88,7 @@
                                 </tr>
                                 {% endfor %}
                 	</table>
-                	<div class="row">
+                	<!-- <div class="row">
 	                	<div class="span8">
 	                		<div class="dataTables_info" id="example_info">Showing 1 to 10 entries</div>
 	                	</div>
@@ -102,8 +98,8 @@
 		                		<a class="paginate_enabled_next" tabindex="0" role="button" id="example_next" aria-controls="example">Next</a>
 	               			</div>
 	               		</div>
-               		</div>
-                </div>
+               		</div>-->
+                </div> 
                	<div class="span3 bs-docs-sidebar">
 		        	<ul class="nav nav-list bs-docs-sidenav">
 		        	{% if session['isAdmin']==True %}  
@@ -114,5 +110,4 @@
 				</div>
        </div>  
 </div>
-
 {%endblock%}
