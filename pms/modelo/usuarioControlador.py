@@ -49,6 +49,8 @@ def eliminarUsuario(username=None):
     if(username):
         session.query(Usuario).filter(Usuario.nombredeusuario==username).delete()
         session.commit()
+    else:
+        print "eliminar no anda"
             
 def getUsuario(username=None):
     """

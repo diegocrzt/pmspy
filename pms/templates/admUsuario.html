@@ -46,7 +46,7 @@
             <th>Id</th>
             <th>Nombre Usuario</th>
             <th>Nombre </th>
-            <th>Administrador?</th>
+            <th>Administrador</th>
             <th>Eliminar</th>
             <th>Editar</th>
           </tr>
@@ -56,7 +56,11 @@
             <td>{{u.id}}</td>
             <td>{{u.nombredeusuario}}</td>
             <td>{{u.nombre}}</td>
-            <td>{{u.isAdmin}}</td>
+            {% if u.isAdmin %}
+            <td>Si</td>
+            {% else %}
+            <td>No </td>
+			{% endif %}
             <td>
             {% if u.nombredeusuario != "admin" %}
             <a class="btn btn-danger" href="/admusuario/eliminarusuario/{{u.nombredeusuario}}">Eliminar</a>

@@ -47,13 +47,13 @@
 	            <input type="text" name="nombre" value="{{f.nombre}}" /></p>
 	            <p>Numero:<br />
 	            <input type="number" name="numero" value="{{f.numero}}"/></p>
-	            <p>Fecha de inicio(*):<br />
-	            <input type="date" name="fechainicio" value="{{f.fechaInicio.strftime('%Y-%m-%d')}}"/></p>
+	            <p>Fecha de inicio:<br />
+	            <input type="date" name="fechainicio" value="{{f.fechaInicio.strftime('%Y-%m-%d')}}"/> <small class="text-info"> (Por defecto se le asigna la fecha actual)</small></p>
 	            <p>Fecha de fin(**):<br />
 	            <input type="date" name="fechafin" value="{{f.fechaFin.strftime('%Y-%m-%d')}}" /></p>
 	            <p><input type="submit" value="Aceptar" /></p>
 	        </form>
-	<p class="text-info">* Por defecto se le asigna la fecha actual</p>
+	
     <p class="text-info">** Por defecto se le asigna 15 dias</p>
 </div>
 {%endblock%}

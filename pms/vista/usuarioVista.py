@@ -32,7 +32,7 @@ class Eliminarusuario(flask.views.MethodView):
     @pms.vista.required.login_required
     def get(self):
         return flask.redirect(flask.url_for('admusuario'))
-    @pms.vista.required.admin_required
+    @pms.vista.required.admuin_required
     @pms.vista.required.login_required
     def post(self):
         eliminarUsuario(flask.session['usuarioeliminar'])
@@ -134,7 +134,7 @@ def eUsuario(username=None):
         return flask.redirect(flask.url_for('admusuario'))
     else:
         user=getUsuario(username)
-        flask.session['usuarioeliminar']=user.nombre
+        flask.session['usuarioeliminar']=user.nombredeusuario
         return flask.render_template('eliminarUsuario.html',u=user)
 
     
