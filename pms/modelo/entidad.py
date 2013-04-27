@@ -129,7 +129,7 @@ class Item(Base):
     id = Column(Integer,primary_key=True)
     tipo = Column(Integer,ForeignKey('tipoitem.id'))
     etiqueta=Column(Unicode(60), unique=True)
-    version =relationship("VersionItem",uselist=False,backref="item")
+    version =relationship("VersionItem", backref="item")
     
     def __init__(self, tipo, etiqueta):
         self.tipo = tipo
