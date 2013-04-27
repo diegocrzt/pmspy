@@ -45,13 +45,13 @@
 	<hr>
 	<p>Complete los datos del proyecto:</p>
         <form action="{{url_for('crearproyecto')}}" method="post">
-            <p>Nombre:<br/>
+            <p>Nombre<small class="text-error">(*)</small>:<br/>
             <input type="text" name="nombre" value="{{session['aux1']}}" /></p>
             <p>Fecha de inicio(*):<br/>
-            <input type="date" name="fechainicio"  value="{{session['aux3']}}"/></p>
-            <p>Fecha de fin:<br/>
+            <input type="date" name="fechainicio"  value="{{session['aux3']}}"/><small class="text-info">(Por defecto la fecha actual)</small></p>
+            <p>Fecha de fin<small class="text-error">(*)</small>:<br/>
             <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
-            <p>Lider:<br/>
+            <p>Lider<small class="text-error">(*)</small>:<br/>
             
             <select name="lider">
             	{% for usuario in u  %}
@@ -62,8 +62,9 @@
                 	{% endif %}
                 {% endfor %}
             </select>
-            <p><input type="submit" value="Crear" /></p>
+            <p><input class="btn btn-success" type="submit" value="Aceptar" />
+            <a class="btn btn-inverse" href="/admproyecto/">Cancelar</a></p>
         </form>
-        <p class="text-info">* Por defecto se le asigna la fecha actual</p>
+        
 </div>
 {%endblock%}

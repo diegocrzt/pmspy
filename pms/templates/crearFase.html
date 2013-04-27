@@ -14,7 +14,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li><a href="/admproyecto/">Administrar Proyecto</a></li>
-              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
+              <li class="active"><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -23,20 +23,7 @@
      </div>
 </div>
 {%endblock%}
-
-
 {%block mensaje%}
-<div class="container">
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-	    <ul class=flashes>
-	    {% for message in messages %}
-	      <li>{{ message }}</li>
-	    {% endfor %}
-	    </ul>
-	  {% endif %}
-	{% endwith %}
-</div>
 {%endblock%}
 
 {%block content%}
@@ -45,18 +32,49 @@
 	<hr>
 	<p>Complete los datos de la fase:</p>
 		<form action="{{url_for('crearfase')}}" method="post">
-            <p>Nombre:<br/>
+            <p>Nombre<small class="text-error">(*)</small>:
+	            {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}  
+				<br/>          
             <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
-            <p>Numero:<br/>
+            <p>Numero<small class="text-error">(*)</small>:
+	            {%  with messages = get_flashed_messages(category_filter=["numero"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+				<br/>       
             <input type="number" name="numero" value="{{session['aux2']}}"/></p>
-            <p>Fecha de inicio(*):<br/>
-            <input type="date" name="fechainicio" value="{{session['aux3']}}"/></p>
-            <p>Fecha de fin(**):<br/>
-            <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
-            <p><input type="submit" value="Crear" /></p>
+            <p>Fecha de inicio<small class="text-error">(*)</small>:
+            	 {%  with messages = get_flashed_messages(category_filter=["fecha"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            <br/>
+            <input type="date" name="fechainicio" value="{{session['aux3']}}"/><small class="text-info">(Por defecto la fecha actual)</small></p>
+            <p>Fecha de fin<small class="text-error">(*)</small>:
+            	{%  with messages = get_flashed_messages(category_filter=["fecha"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            <br/>
+            <input type="date" name="fechafin" value="{{session['aux4']}}"/><small class="text-info">(Por defecto un plazo de 15 días)</small></p>
+            <p><input class="btn btn-success" type="submit" value="Aceptar" />
+            <a class="btn btn-inverse" href="/admfase/">Cancelar</a></p>
         </form>
-    <p class="text-info">* Por defecto se le asigna la fecha actual</p>
-    <p class="text-info">** Por defecto se le asigna 15 dias</p>
 </div>        
 {%endblock%}
 

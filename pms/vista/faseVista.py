@@ -22,11 +22,17 @@ class Crearfase(flask.views.MethodView):
         flask.session['aux4']=flask.request.form['fechafin']
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
+        error=False
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
-            return flask.redirect(flask.url_for('crearfase'))
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
+            error=True
         if(flask.request.form['numero']==""):
-            flask.flash("El campo numero no puede estar vacio")
+            flask.flash(u"El campo numero no puede estar vacio","numero")
+            error=True
+        elif comprobarFase(flask.request.form['numero'],flask.session['proyectoid']):
+            flask.flash(u"La fase ya existe","numero")
+            error=True
+        if error:
             return flask.redirect(flask.url_for('crearfase'))
         if(flask.request.form['fechainicio']==""):
             fechainicio=datetime.today()
@@ -37,11 +43,9 @@ class Crearfase(flask.views.MethodView):
         else:
             fechafin = datetime.strptime(fechafin, '%Y-%m-%d')
         if fechafin <= fechainicio:
-            flask.flash("incoherencia entre fechas de inicio y de fin")
+            flask.flash(u"Incoherencia entre fechas de inicio y de fin","fecha")
             return flask.redirect(flask.url_for('crearfase'))
-        if comprobarFase(flask.request.form['numero'],flask.session['proyectoid']):
-            flask.flash("La fase ya existe")
-            return flask.redirect(flask.url_for('crearfase'))
+        
         crearFase(flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio, fechafin, None, None, flask.session['proyectoid'])
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
@@ -61,14 +65,21 @@ class Editarfase(flask.views.MethodView):
         """
         Ejecuta la funcion de Editar Fase
         """
+        error=False
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
-            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
+            error=True
         if(flask.request.form['numero']==""):
-            flask.flash("El campo numero no puede estar vacio")
-            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))     
+            flask.flash(u"El campo numero no puede estar vacio","numero")  
+            error=True  
+        elif str(flask.session['numerofase']) != str(flask.request.form['numero']):
+            if comprobarFase(flask.request.form['numero'], flask.session['proyectoid']):
+                flask.flash("El numero de fase ya esta usado")
+                error=True
+        if error:
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
         if(flask.request.form['fechainicio']==""):
             fechainicio=datetime.today()
         else:
@@ -78,12 +89,8 @@ class Editarfase(flask.views.MethodView):
         else:
             fechafin = datetime.strptime(fechafin, '%Y-%m-%d')
         if fechafin <= fechainicio:
-            flask.flash("incoherencia entre fechas de inicio y de fin")
-            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid'])) 
-        if str(flask.session['numerofase']) != str(flask.request.form['numero']):
-            if comprobarFase(flask.request.form['numero'], flask.session['proyectoid']):
-                flask.flash("El numero de fase ya esta usado")
-                return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))
+            flask.flash(u"Incoherencia entre fechas de inicio y de fin","fecha")
+            return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))         
         editarFase(flask.session['faseid'], flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio,fechafin)
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     

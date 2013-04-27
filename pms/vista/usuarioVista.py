@@ -91,20 +91,22 @@ class Crearusuario(flask.views.MethodView):
         """
         Ejecuta la funcion de Crear Usuario
         """
+        error=False
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['usuario']
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
-            return flask.redirect(flask.url_for('crearusuario'))
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
+            error=True
         if(flask.request.form['usuario']==""):
-            flask.flash("El campo usuario no puede estar vacio")
-            return flask.redirect(flask.url_for('crearusuario'))
+            flask.flash(u"El campo usuario no puede estar vacio","usuario")
+            error=True
+        else:
+            if comprobarUsuario(flask.request.form['usuario']):
+                flask.flash(u"El usuario ya existe","usuario")
         if(flask.request.form['clave']==""):
-            flask.flash("El campo clave no puede estar vacio")
-            return flask.redirect(flask.url_for('crearusuario'))
-        
-        if comprobarUsuario(flask.request.form['usuario']):
-            flask.flash("El usuario ya existe")
+            flask.flash(u"El campo clave no puede estar vacio","clave")
+            error=True
+        if error:
             return flask.redirect(flask.url_for('crearusuario'))
         a = 'admin'
         if a not in flask.request.form:
