@@ -24,35 +24,50 @@
 </div>
 {%endblock%}
 
-
-{%block mensaje%}
-	<div class="container">
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-	    <ul class=flashes>
-	    {% for message in messages %}
-	      <li>{{ message }}</li>
-	    {% endfor %}
-	    </ul>
-	  {% endif %}
-	{% endwith %}
-	</div>
-{%endblock%}
-
 {%block content%}
 <div class="container">
 	<h3>Crear Proyecto</h3>
 	<hr>
 	<p>Complete los datos del proyecto:</p>
         <form action="{{url_for('crearproyecto')}}" method="post">
-            <p>Nombre<small class="text-error">(*)</small>:<br/>
+            <p>Nombre<small class="text-error">(*)</small>:
+            	{%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            <br/>
             <input type="text" name="nombre" value="{{session['aux1']}}" /></p>
-            <p>Fecha de inicio(*):<br/>
+            <p>Fecha de inicio:
+            {%  with messages = get_flashed_messages(category_filter=["fecha"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            <br/>
             <input type="date" name="fechainicio"  value="{{session['aux3']}}"/><small class="text-info">(Por defecto la fecha actual)</small></p>
-            <p>Fecha de fin<small class="text-error">(*)</small>:<br/>
+            <p>Fecha de fin<small class="text-error">(*)</small>:
+            	{%  with messages = get_flashed_messages(category_filter=["fechafin"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            	{%  with messages = get_flashed_messages(category_filter=["fecha"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            <br/>
             <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
             <p>Lider<small class="text-error">(*)</small>:<br/>
-            
             <select name="lider">
             	{% for usuario in u  %}
             		{%if session['aux2']==usuario.id%}

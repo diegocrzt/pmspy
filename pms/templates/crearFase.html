@@ -52,7 +52,7 @@
 				{% endwith %}
 				<br/>       
             <input type="number" name="numero" value="{{session['aux2']}}"/></p>
-            <p>Fecha de inicio<small class="text-error">(*)</small>:
+            <p>Fecha de inicio:
             	 {%  with messages = get_flashed_messages(category_filter=["fecha"]) %}
 		  			{% if messages %}
 		  				{% for message in messages %}
@@ -62,7 +62,7 @@
 				{% endwith %}
             <br/>
             <input type="date" name="fechainicio" value="{{session['aux3']}}"/><small class="text-info">(Por defecto la fecha actual)</small></p>
-            <p>Fecha de fin<small class="text-error">(*)</small>:
+            <p>Fecha de fin:
             	{%  with messages = get_flashed_messages(category_filter=["fecha"]) %}
 		  			{% if messages %}
 		  				{% for message in messages %}
@@ -73,7 +73,7 @@
             <br/>
             <input type="date" name="fechafin" value="{{session['aux4']}}"/><small class="text-info">(Por defecto un plazo de 15 días)</small></p>
             <p><input class="btn btn-success" type="submit" value="Aceptar" />
-            <a class="btn btn-inverse" href="/admfase/">Cancelar</a></p>
+            <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}">Cancelar</a></p>
         </form>
 </div>        
 {%endblock%}

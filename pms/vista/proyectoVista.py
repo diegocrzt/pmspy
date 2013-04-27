@@ -52,29 +52,24 @@ class Crearproyecto(flask.views.MethodView):
         fechainicio=flask.request.form['fechainicio']
         fechafin=flask.request.form['fechafin']
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
             return flask.redirect(flask.url_for('crearproyecto'))
-        if(flask.request.form['lider']==""):
-            flask.flash("El campo lider no puede estar vacio")
-            return flask.redirect(flask.url_for('crearproyecto'))
-        if getUsuarioById(flask.request.form['lider'])==None:
-            flask.flash("El usuario asignado como lider no existe")
+        if comprobarProyecto(flask.request.form['nombre']):
+            flask.flash(u"El proyecto ya existe","nombre")
             return flask.redirect(flask.url_for('crearproyecto'))
         if(flask.request.form['fechainicio']==""):
             fechainicio=datetime.today()
         else:
             fechainicio = datetime.strptime(fechainicio, '%Y-%m-%d')
         if(flask.request.form['fechafin']==""):
-            flask.flash("El campo fecha fin no puede estar vacio")
+            flask.flash(u"El campo fecha fin no puede estar vacio","fechafin")
             return flask.redirect(flask.url_for('crearproyecto'))
         else:
             fechafin = datetime.strptime(fechafin, '%Y-%m-%d')
         if fechafin <= fechainicio:
-            flask.flash("incoherencia entre fechas de inicio y de fin")
+            flask.flash(u"Incoherencia entre fechas de inicio y de fin","fecha")
             return flask.redirect(flask.url_for('crearproyecto'))
-        if comprobarProyecto(flask.request.form['nombre']):
-            flask.flash("El proyecto ya existe")
-            return flask.redirect(flask.url_for('crearproyecto'))
+        
         crearProyecto(flask.request.form['nombre'][:20], 0, fechainicio,fechafin, None, flask.request.form['lider'], None)
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
