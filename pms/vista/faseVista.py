@@ -121,8 +121,8 @@ def eFase(fase=None):
     flask.session.pop('aux4',None)
     fas=getFaseId(fase)
     flask.session['faseid']=fas.id
-    p=getProyectoId(fas.proyecto)
-    if(p.lider == flask.session['usuarioid']):
+    p=getProyectoId(fas.proyecto.id)
+    if(p.delider == flask.session['usuarioid']):
         return flask.render_template('eliminarFase.html',f=fas)           
     else:
         return flask.redirect(flask.url_for('admproyecto'))
@@ -141,9 +141,9 @@ def edFase(f=None):
         fas=getFaseId(f)
         flask.session['numerofase']=fas.numero
         flask.session['faseid']=fas.id
-        flask.session['proyectoid']=fas.proyecto
-        p=getProyectoId(fas.proyecto)
-        if(p.lider == flask.session['usuarioid']):
+        flask.session['proyectoid']=fas.proyecto.id
+        p=getProyectoId(fas.proyecto.id)
+        if(p.delider == flask.session['usuarioid']):
             return flask.render_template('editarFase.html',f=fas)
         else:
             return flask.redirect(flask.url_for('admproyecto'))
@@ -161,7 +161,7 @@ def admFase(p=None):
     flask.session.pop('aux3',None)
     flask.session.pop('aux4',None)  
     if request.method == "GET":
-        if(getProyectoId(p).lider==flask.session['usuarioid']):
+        if(getProyectoId(p).lider.id==flask.session['usuarioid']):
             flask.session.pop('faseid',None)
             flask.session['proyectoid']=p
             flask.session['proyectonombre']=getProyectoId(p).nombre

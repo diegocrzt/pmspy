@@ -14,7 +14,7 @@ def getFases(p=None):
     """Obtener fases
     """
     init_db()
-    fases = session.query(Fase).filter(Fase.proyecto==p).order_by(Fase.numero)
+    fases = session.query(Fase).filter(Fase.delproyecto==p).order_by(Fase.numero)
     return fases
 
 
@@ -24,9 +24,11 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     """
     init_db()
     session = db_session()
-    fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", proyecto=proy)
+    fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", delproyecto=proy)
     session.add(fa)
-    proyectoControlador.actualizarCantFases(proy, True)
+    session.commit()
+    fa.proyecto.cantFase=fa.proyecto.cantFase+1
+    session.merge(fa.proyecto)
     session.commit()
    
 def getFase(numero=None, proy=None):
@@ -34,7 +36,7 @@ def getFase(numero=None, proy=None):
     recupera una fase por su numero y proyecto id
     """
     if(numero and proy):
-            res=session.query(Fase).filter(Fase.numero==numero).filter(Fase.proyecto==proy).first()
+            res=session.query(Fase).filter(Fase.numero==numero).filter(Fase.delproyecto==proy).first()
             return res
 
 def comprobarFase(numero=None, proy=None):
@@ -53,8 +55,8 @@ def eliminarFase(fase=None, proy=None):
     """
     if(fase and proy):
         session.query(Fase).filter(Fase.id==fase).delete()
-        proyectoControlador.actualizarCantFases(proy,False)
         session.commit()
+        
        
 def getFaseId(id=None):
     """

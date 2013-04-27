@@ -69,7 +69,7 @@
                                         <td>----</td>
                                         {% endif %}
                                         <td>{{p.estado}}</td>
-                                        <td>{{p.lider}}</td>
+                                        <td>{{p.delider}}</td>
                                         
                                         <td>{% if session['isAdmin']==True and p.estado!="Iniciado" %}
                                                 <a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
@@ -77,7 +77,7 @@
                                         </td>
                                         
                                 <td>
-                                        {%if session['usuarioid']==p.lider%}
+                                        {%if session['usuarioid']==p.delider%}
                                         <a class="btn" href="/admfase/{{p.id}}"> Selec>> </a>
                                         {% endif %}
                                         </td>

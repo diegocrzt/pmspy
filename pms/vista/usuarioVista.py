@@ -134,7 +134,7 @@ def eUsuario(username=None):
         return flask.redirect(flask.url_for('admusuario'))
     else:
         user=getUsuario(username)
-        flask.session['usuarioeliminar']=user.nombre
+        flask.session['usuarioeliminar']=user.nombredeusuario
         return flask.render_template('eliminarUsuario.html',u=user)
 
     

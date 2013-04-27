@@ -24,14 +24,13 @@ def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod
     """
     init_db()
     session = db_session()
-    pro = Proyecto(nombre=nom,cantFase=cant, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, lider=lider, estado="Pendiente")
+    pro = Proyecto(nombre=nom,cantFase=cant, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, delider=lider, estado="Pendiente")
     session.add(pro)
     session.commit()
    
 def getProyecto(nombre=None):
     """
     recupera un proyecto por su nombre
-    
     """
     if(nombre):
             res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
@@ -60,10 +59,10 @@ def eliminarProyecto(proyecto=None):
     elimina un proyecto
     """
     if(proyecto):
-        fases=faseControlador.getFases(proyecto)
-        for f in fases:
-            faseControlador.eliminarFase(f.id, proyecto)
-        print "sale del eliminar Fase"            
+        p=getProyectoId(proyecto)
+        for f in p.fases:
+            faseControlador.eliminarFase(f.id)
+            p.cantFase=p.cantFase-1   
         session.query(Proyecto).filter(Proyecto.id==proyecto).delete()
         session.commit()
 
@@ -84,14 +83,13 @@ def inicializarProyecto(p):
     """ 
     inicializa el proyecto
     """
-    fases=faseControlador.getFases(p)
+    proy=getProyectoId(p)
     n=1
-    for f in fases:
+    for f in proy.fases:
         f.numero=n
         session.merge(f)
-        n=n+1        
+        n=n+1
     proy=getProyectoId(p)
     proy.estado="Iniciado"
     session.merge(proy)
     session.commit()
-    
