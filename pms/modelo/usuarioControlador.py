@@ -105,5 +105,5 @@ def comprobarUsuarioB(ident=None,user=None):
 
 def usuarioIsLider(username=None):
     u=getUsuario(username)
-    res=session.query(Proyecto).filter(Proyecto.lider==u.id).first()
+    res=session.query(Proyecto).filter(Proyecto.delider==u.id).first()
     return res
