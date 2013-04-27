@@ -39,21 +39,25 @@
 {%endblock%}
 
 {%block content%}
-<p>Modifique los datos del usuario:</p>
-        <form action="/admusuario/editarusuario/" method="post">
-            <p>Nombre:<br />
-            <input type="text" name="nombre" value="{{u.nombre}}" /></p>
-            <p>Usuario:<br />
-            <input type="text" name="usuario" value="{{u.nombredeusuario}}"  /></p>
-            <p>Clave(*):<br />
-            <input type="text" name="clave" value="" /></p>
-            <p>Es Admin:<br />
-            {% if u.isAdmin %}
-            <input type="checkbox" name="admin" checked /></p>
-            {% else %}
-            <input type="checkbox" name="admin" /></p>
-            {% endif %}
-            <p><input type="submit" value="Aceptar" /></p>
-        </form>
-*Si no se completa el campo se toma la clave anterior
+<div class="container">
+	<h3>Editar Usuario</h3>
+	<hr>
+	<p>Modifique los datos del usuario:</p>
+	        <form action="/admusuario/editarusuario/" method="post">
+	            <p>Nombre:<br />
+	            <input type="text" name="nombre" value="{{u.nombre}}" /></p>
+	            <p>Usuario:<br />
+	            <input type="text" name="usuario" value="{{u.nombredeusuario}}"  /></p>
+	            <p>Clave(*):<br />
+	            <input type="text" name="clave" value="" /></p>
+	            {% if u.isAdmin %}
+	            <p><input type="checkbox" name="admin" checked />Es Administrador</p>
+	            {% else %}
+	             <p><input type="checkbox" name="admin" /> Es Administrador</p>
+	            {% endif %}
+	            <p></p>
+	            <p><input type="submit" value="Aceptar" /></p>
+	        </form>
+	  <p class="text-info">* Si no se completa el campo se toma la clave anterior</p>
+</div>
 {%endblock%}

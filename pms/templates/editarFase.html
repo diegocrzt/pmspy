@@ -13,7 +13,8 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -37,17 +38,22 @@
 {%endblock%}
 
 {%block content%}
-<p>Complete los datos del proyecto:</p>
-        <form action="{{url_for('editarfase')}}" method="post">
-            <p>Nombre:<br />
-            <input type="text" name="nombre" value="{{f.nombre}}" /></p>
-            <p>Numero:<br />
-            <input type="number" name="numero" value="{{f.numero}}"/></p>
-            <p>Fecha de inicio:<br />
-            <input type="date" name="fechainicio" value="{{f.fechaInicio.strftime('%Y-%m-%d')}}"/></p>
-            <p>Fecha de fin(*):<br />
-            <input type="date" name="fechafin" value="{{f.fechaFin.strftime('%Y-%m-%d')}}" /></p>
-            <p><input type="submit" value="Aceptar" /></p>
-        </form>
-        *Por defecto se le asigna 15 dias
+<div class="container">
+	<h3>Editar Fase</h3>
+	<hr>
+	<p>Complete los datos de la Fase:</p>
+	        <form action="{{url_for('editarfase')}}" method="post">
+	            <p>Nombre:<br />
+	            <input type="text" name="nombre" value="{{f.nombre}}" /></p>
+	            <p>Numero:<br />
+	            <input type="number" name="numero" value="{{f.numero}}"/></p>
+	            <p>Fecha de inicio(*):<br />
+	            <input type="date" name="fechainicio" value="{{f.fechaInicio.strftime('%Y-%m-%d')}}"/></p>
+	            <p>Fecha de fin(**):<br />
+	            <input type="date" name="fechafin" value="{{f.fechaFin.strftime('%Y-%m-%d')}}" /></p>
+	            <p><input type="submit" value="Aceptar" /></p>
+	        </form>
+	<p class="text-info">* Por defecto se le asigna la fecha actual</p>
+    <p class="text-info">** Por defecto se le asigna 15 dias</p>
+</div>
 {%endblock%}

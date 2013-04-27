@@ -13,8 +13,8 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admusuario/">Administrar Usuario</a></li>
-              <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/admproyecto/">Administrar Proyecto</a></li>            
+              <li><a href="/admusuario/">Administrar Usuario</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -26,6 +26,7 @@
 
 
 {%block mensaje%}
+	<div class="container">
 	{% with messages = get_flashed_messages() %}
 	  {% if messages %}
 	    <ul class=flashes>
@@ -35,19 +36,34 @@
 	    </ul>
 	  {% endif %}
 	{% endwith %}
+	</div>
 {%endblock%}
 
 {%block content%}
-<p>Complete los datos del proyecto:</p>
+<div class="container">
+	<h3>Crear Proyecto</h3>
+	<hr>
+	<p>Complete los datos del proyecto:</p>
         <form action="{{url_for('crearproyecto')}}" method="post">
-            <p>Nombre:<br />
+            <p>Nombre:<br/>
             <input type="text" name="nombre" value="{{session['aux1']}}" /></p>
-            <p>Fecha de inicio:<br />
+            <p>Fecha de inicio(*):<br/>
             <input type="date" name="fechainicio"  value="{{session['aux3']}}"/></p>
-            <p>Fecha de fin:<br />
+            <p>Fecha de fin:<br/>
             <input type="date" name="fechafin" value="{{session['aux4']}}"/></p>
-            <p>Lider:<br />
-            <input type="number" name="lider" value="{{session['aux2']}}"/></p>
-            <p><input type="submit" value="submit" /></p>
+            <p>Lider:<br/>
+            
+            <select name="lider">
+            	{% for usuario in u  %}
+            		{%if session['aux2']==usuario.id%}
+            		<option value="{{ usuario.id }}" selected>{{usuario.id}} - {{ usuario.nombre }} </option>	
+            		{% else %}
+                	<option value="{{ usuario.id }}">{{usuario.id}} - {{ usuario.nombre }} </option>
+                	{% endif %}
+                {% endfor %}
+            </select>
+            <p><input type="submit" value="Crear" /></p>
         </form>
+        <p class="text-info">* Por defecto se le asigna la fecha actual</p>
+</div>
 {%endblock%}

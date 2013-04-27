@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block menu %}
-
  <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -22,79 +21,93 @@
           </div>
        </div>
      </div>
-</div>
-              
+</div>              
 {%endblock%}
 
 {%block mensaje%}
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-	    <ul class=flashes>
-	    {% for message in messages %}
-	      <li>{{ message }}</li>
-	    {% endfor %}
-	    </ul>
-	  {% endif %}
-	{% endwith %}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
 {%endblock%}
 
 {%block content%}
-
 <div class="proyectos">
-	<div class="row" >
-		<div class="span12">
-			<h2> Listado de Proyectos </h2>
-			<table class="table table-striped">
-				<tr>
-					<th>id</th>
-					<th>Nombre</th>
-					<th>Fases </th>
-					<th>Inicio</th>
-					<th>Finalización</th>
-					<th>Última Modificación</th>
-					<th>Estado</th>
-					<th>lider</th>
-					{% if session['isAdmin']==True %}
-					<th>Eliminar</th>
+        <div class="row" >
+                <div class="span12">
+                        <h2> Listado de Proyectos </h2>
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Id</th>
+                                        <th>Nombre</th>
+                                        <th>Fases </th>
+                                        <th>Inicio</th>
+                                        <th>Finalización</th>
+                                        <th>Última Modificación</th>
+                                        <th>Estado</th>
+                                        <th>lider</th>
+                                        {% if session['isAdmin']==True %}
+                                        <th>Eliminar</th>
+                                        {% endif %}
+                        				<th>Ingresar</th>
+                                </tr>
+                                {% for p in proyectos %}
+                                <tr>
+                                        <td>{{p.id}}</td>
+                                        <td>{{p.nombre}}</td>
+                                        <td>{{p.cantFase}}</td>
+                                        <td>{{p.fechaInicio.strftime('%Y/%m/%d')}}</td>
+                                        <td>{{p.fechaFin.strftime('%Y/%m/%d')}}</td>
+                                        {% if p.fechaUltMod!=None %}
+                                        <td>{{p.fechaUltMod.strftime('%Y/%m/%d')}}</td>
+                                        {% else %}
+                                        <td>----</td>
+                                        {% endif %}
+                                        <td>{{p.estado}}</td>
+                                        <td>{{p.delider}}</td>
+                                        
+                                        <td>{% if session['isAdmin']==True and p.estado!="Iniciado" %}
+                                                <a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
+                                        	{% endif %}
+                                        </td>
+                                        
+                                <td>
+                                        {%if session['usuarioid']==p.delider%}
+                                        <a class="btn" href="/admfase/{{p.id}}"> Selec>> </a>
+                                        {% endif %}
+                                        </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                 No se han creado proyectos aun
+                                </tr>
+                                {% endfor %}
+                	</table>
+                	<!-- <div class="row">
+	                	<div class="span8">
+	                		<div class="dataTables_info" id="example_info">Showing 1 to 10 entries</div>
+	                	</div>
+	               		<div class="span8">
+	                		<div class="dataTables_paginate paging_two_button" id="example_paginate">
+		                		<a class="paginate_disabled_previous" tabindex="0" role="button" id="example_previous" aria-controls="example">Previous</a>
+		                		<a class="paginate_enabled_next" tabindex="0" role="button" id="example_next" aria-controls="example">Next</a>
+	               			</div>
+	               		</div>
+               		</div>-->
+                </div> 
+               	<div class="span3 bs-docs-sidebar">
+		        	<ul class="nav nav-list bs-docs-sidenav">
+		        	{% if session['isAdmin']==True %}  
+						  <li><a href="/admproyecto/crearproyecto/"><i class="icon-chevron-right"></i> Crear Proyecto</a></li>
 					{% endif %}
-            		<th>Ingresar</th>
-				</tr>
-         			{% for p in proyectos %}
-				<tr>
-					<td>{{p.id}}</td>
-					<td>{{p.nombre}}</td>
-					<td>{{p.cantFase}}</td>
-					<td>{{p.fechaInicio.strftime('%Y/%m/%d')}}</td>
-					<td>{{p.fechaFin.strftime('%Y/%m/%d')}}</td>
-					{% if p.fechaUltMod!=None %}
-					<td>{{p.fechaUltMod}}</td>
-					{% else %}
-					<td>----</td>
-					{% endif %}
-					<td>{{p.estado}}</td>
-					<td>{{p.lider}}</td>
-					{% if session['isAdmin']==True %}
-					<td>
-						<a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
-					</td>
-					{% endif %}
-           			<td>
-           				{%if session['usuarioid']==p.lider%}
-           				<a class="btn" href="/admfase/{{p.id}}"> Selec>> </a>
-           				{% endif %}
-					</td>
-         			</tr>
-         			{% else %}
-         			<tr>
-         				No se han creado proyectos aun
-         			</tr>
-         			{% endfor %}
-       		</table>
-		</div>	
-		{% if session['isAdmin']==True %}	
-		<p><a href="/admproyecto/crearproyecto/" class="btn btn-primary btn-large">Crear Proyecto</a>
-		{% endif %}
-		</p>
-	</div>
+					 <li><a href="#"><i class="icon-chevron-right"></i> Consultar Proyecto</a></li>
+						</ul>
+				</div>
+       </div>  
 </div>
 {%endblock%}

@@ -28,7 +28,7 @@ def getUsuarios():
     """Obtener usuarios
     """ 
     init_db()
-    res = session.query(Usuario).all()
+    res = session.query(Usuario).order_by(Usuario.id)
     return res
 
 def crearUsuario(nom=None, usua=None, contrase=None, admin=None):
@@ -100,8 +100,8 @@ def comprobarUsuarioB(ident=None,user=None):
         return False
     else:
         return True
-   
+
 def usuarioIsLider(username=None):
     u=getUsuario(username)
-    res=session.query(Proyecto).filter(Proyecto.lider==u.id).first()
+    res=session.query(Proyecto).filter(Proyecto.delider==u.id).first()
     return res

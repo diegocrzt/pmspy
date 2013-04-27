@@ -8,13 +8,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
           </button>
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              {% if session['isAdmin']==True %}
-              <li class=><a href="/admusuario/">Administrar Proyecto</a></li>
-              {% endif %}
+              <li><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -22,19 +22,21 @@
        </div>
      </div>
 </div>
-
 {%endblock%}
 
 {%block content%}
 
-    <h3>Inicializar Proyecto</h3>
-    <p class="text-warning">La Inicializacion de un proyecto es irreversible. No se podrá crear ni editar más fases.</p>
-    <p>Esta seguro que desea Inicializar?</p>
+<div class="container" align="left">
+    <h3>Inicializar Proyecto <em>{{session['proyectonombre']}}</em></h3>
+    <hr>
+    <p class="text-info">	La Inicializacion de un proyecto es <strong>irreversible</strong>. No se podrá crear ni editar más fases.</p>
+    <p class="text-info">	Los número de las fases serán reasignados para que sean secuenciales, pero el orden será el mismo</p>
+    <p>Esta seguro que desea Inicializar? </p>
     <div>
-    <form action="{{url_for('inicializarproyecto')}}" method="post">        
-    	<p><input type="submit" value="Inicializar" /></p>
-    </form>
-    </div>
-
+	    <form action="{{url_for('inicializarproyecto')}}" method="post">        
+	    	<p><input type="submit" value="Inicializar" /></p>
+	    </form>
+   	</div>
+</div>
 
 {%endblock%}
