@@ -30,15 +30,17 @@
 <div class="container" align="left">
     <h3>Eliminar Fase de Proyecto <em>{{session['proyectonombre']}}</em></h3>
     <hr>
-    <p class="text-info">	La elminación de una fase es <strong>irreversible</strong>.</p>
+    <p class="text-info">	La eliminación de una fase es <strong>irreversible</strong>.</p>
     <p>	<strong>Fase:</strong> {{f.nombre}}</p>
     <p>	<strong>Número:</strong> {{f.numero}}</p>
     <p>	<strong>Fecha de inicio:</strong> {{f.fechaInicio.strftime('%Y/%m/%d')}}</p>
     <p>	<strong>Fecha de fin:</strong> {{f.fechaFin.strftime('%Y/%m/%d')}}</p>
     <p>	<strong>Estado:</strong> {{f.estado}}</p>
+    <br>
     <div>
 	    <form action="{{url_for('eliminarfase')}}" method="post">        
-	    	<p><input type="submit" value="Eliminar" /></p>
+	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
+	    	<a class="btn btn-inverse" href="/admfase/">Cancelar</a></p>
 	    </form>
    	</div>
 </div>

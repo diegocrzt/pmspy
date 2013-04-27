@@ -43,7 +43,7 @@
                         <h2> Listado de Proyectos </h2>
                         <table class="table table-striped table-bordered">
                                 <tr>
-                                        <th>Id</th>
+                                        <th>Nro</th>
                                         <th>Nombre</th>
                                         <th>Fases </th>
                                         <th>Inicio</th>
@@ -70,13 +70,12 @@
                                         {% endif %}
                                         <td>{{p.estado}}</td>
                                         <td>{{p.delider}}</td>
-                                        
-                                        <td>{% if session['isAdmin']==True and p.estado!="Iniciado" %}
-                                                <a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
-                                        	{% endif %}
+                                        {% if session['isAdmin']==True and p.estado!="Iniciado" %}
+                                        <td>
+                                           <a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
                                         </td>
-                                        
-                                <td>
+                                        {% endif %}
+                                		<td>
                                         {%if session['usuarioid']==p.delider%}
                                         <a class="btn" href="/admfase/{{p.id}}"> Selec>> </a>
                                         {% endif %}

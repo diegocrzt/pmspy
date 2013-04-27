@@ -41,7 +41,9 @@
 {%block content%}
 <div class="fases">
 		{% set hayf = True %}
-        <h4 class="muted"> Proyecto: {{session['proyectonombre']}}</h4>
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}}</h3>
+        </div>
         <div class="row" >
                 <div class="span12">
                         <h2> Listado de Fases </h2>
