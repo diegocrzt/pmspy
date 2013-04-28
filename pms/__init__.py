@@ -6,6 +6,7 @@ import vista.required
 import vista.usuarioVista
 import vista.faseVista
 import vista.logVista
+import vista.tipoVista
 
 
 app.add_url_rule('/admproyecto/',

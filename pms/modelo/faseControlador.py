@@ -5,10 +5,19 @@ Created on 18/04/2013
 '''
 
 from initdb import db_session, init_db
-from entidad import Fase
+from entidad import Fase, Proyecto
 import proyectoControlador
 
+
 session = db_session()
+
+def getProyectoId(idp=None):
+    """
+    recupera un proyecto por su id
+    """
+    if(idp):
+            res=session.query(Proyecto).filter(Proyecto.id==idp).first()
+            return res
 
 def getFases(p=None):
     """Obtener fases
@@ -27,8 +36,9 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", delproyecto=proy)
     session.add(fa)
     session.commit()
-    fa.proyecto.cantFase=fa.proyecto.cantFase+1
-    session.merge(fa.proyecto)
+    p=fa.proyecto
+    p.cantFase=p.cantFase+1
+    session.merge(p)
     session.commit()
    
 def getFase(numero=None, proy=None):
@@ -54,7 +64,11 @@ def eliminarFase(fase=None, proy=None):
     elimina una fase
     """
     if(fase and proy):
+        p=getProyectoId(proy)
         session.query(Fase).filter(Fase.id==fase).delete()
+        session.commit()
+        p.cantFase=p.cantFase-1
+        session.merge(p)
         session.commit()
         
        
