@@ -83,21 +83,19 @@
                                 </tr>
                                 {% else %}
                                 <tr>
-                                 No se han creado proyectos aun
+                                 No se han creado proyectos aún
                                 </tr>
                                 {% endfor %}
                 	</table>
-                	<!-- <div class="row">
-	                	<div class="span8">
-	                		<div class="dataTables_info" id="example_info">Showing 1 to 10 entries</div>
-	                	</div>
-	               		<div class="span8">
-	                		<div class="dataTables_paginate paging_two_button" id="example_paginate">
-		                		<a class="paginate_disabled_previous" tabindex="0" role="button" id="example_previous" aria-controls="example">Previous</a>
-		                		<a class="paginate_enabled_next" tabindex="0" role="button" id="example_next" aria-controls="example">Next</a>
-	               			</div>
-	               		</div>
-               		</div>-->
+                	<div class="conainer" align="right">
+                	<a class="muted">{{infopag}}</a>
+                	{% if session['hayprev']==True %}
+                	<a class="btn btn-mini" href="/admproyecto/prev/">&laquo; Anterior</a>
+                	{% endif %}
+                	{% if session['haynext']==True %}
+                	<a class="btn btn-mini" href="/admproyecto/next/"> Siguiente &raquo;</a>
+                	{% endif %}
+                	</div>
                 </div> 
                	<div class="span3 bs-docs-sidebar">
 		        	<ul class="nav nav-list bs-docs-sidenav">

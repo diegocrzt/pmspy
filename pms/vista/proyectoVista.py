@@ -1,9 +1,11 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
-from pms.modelo.proyectoControlador import comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto
+from pms.modelo.proyectoControlador import getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto
 from datetime import datetime
 import pms.vista.required
 from pms import app
+TAM_PAGINA=5
+CAMBIO=False
 class AdmProyecto(flask.views.MethodView):
     """
     Gestiona y Ejecuta la Vista de Administrar Proyectos
@@ -13,12 +15,38 @@ class AdmProyecto(flask.views.MethodView):
         """
         Ejecuta el template admProyecto.html
         """
+        global TAM_PAGINA
+        global CAMBIO
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
-        p=getProyectos()
-        return flask.render_template('admProyecto.html',proyectos=p)
+        
+        if CAMBIO:
+            CAMBIO=False
+        else:
+            flask.session['haynext']=True
+            flask.session['hayprev']=False
+            flask.session['pagina']=1
+        p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA)
+        t=getCantProyectos()/TAM_PAGINA
+        mod=getCantProyectos()%TAM_PAGINA
+        if mod>0:
+            t=int(t)+1#Total de paginas
+        else:
+            t=int(t+mod)
+        m=flask.session['pagina']#Pagina en la que estoy
+        infopag="Pagina "+ str(m) +" de " + str(t)
+        if m<t:
+            flask.session['haynext']=True
+        else:
+            flask.session['haynext']=False
+        if m==1:
+            flask.session['hayprev']=False
+        else:
+            flask.session['hayprev']=True
+        
+        return flask.render_template('admProyecto.html',proyectos=p, infopag=infopag)
     @pms.vista.required.login_required
     def post(self):
         """
@@ -75,7 +103,7 @@ class Crearproyecto(flask.views.MethodView):
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
-        flask.flash(u"Creacion exitosa","text-success")
+        flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admproyecto'))
     
 class Inicializarproyecto(flask.views.MethodView):
@@ -128,4 +156,48 @@ def eProyecto(proyecto=None):
     else:
         flask.flash("El Proyecto seleccionado no se puede eliminar porque ya fue inicializado")
         return flask.redirect(flask.url_for('admproyecto'))    
-       
+    
+@app.route('/admproyecto/next/')
+@pms.vista.required.admin_required
+@pms.vista.required.login_required       
+def nextPage():
+    global CAMBIO
+    CAMBIO=True
+    cantP=getCantProyectos()
+    flask.session['pagina']=flask.session['pagina']+1
+    global TAM_PAGINA
+    sobran=cantP-flask.session['pagina']* TAM_PAGINA
+    print "Pagina:"
+    print flask.session['pagina']
+    print sobran
+    if sobran>0:
+        flask.session['haynext']=True
+    else:
+        flask.session['haynext']=False
+    if flask.session['pagina']==1:
+        flask.session['hayprev']=False
+    else:
+        flask.session['hayprev']=True
+    return flask.redirect(flask.url_for('admproyecto'))  
+
+@app.route('/admproyecto/prev/')
+@pms.vista.required.admin_required
+@pms.vista.required.login_required       
+def prevPage():
+    global CAMBIO
+    CAMBIO=True
+    flask.session['pagina']=flask.session['pagina']-1
+    global TAM_PAGINA
+    pag=flask.session['pagina']
+    if pag==1:
+        flask.session['hayprev']=False
+    else:
+        flask.session['hayprev']=True
+    if getCantProyectos>(pag*TAM_PAGINA):
+            flask.session['haynext']=True
+    return flask.redirect(flask.url_for('admproyecto'))  
+    
+    
+    
+    
+    
