@@ -58,6 +58,6 @@ app.add_url_rule('/admfase/eliminarfase/',
                  view_func=vista.faseVista.Eliminarfase.as_view('eliminarfase'),
                  methods=["GET", "POST"])
 
-app.add_url_rule('/admfase/eliminarusuario/',
+app.add_url_rule('/admusuario/eliminarusuario/',
                  view_func=vista.usuarioVista.Eliminarusuario.as_view('eliminarusuario'),
                  methods=["GET", "POST"])

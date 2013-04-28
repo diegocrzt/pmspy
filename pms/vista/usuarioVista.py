@@ -107,10 +107,13 @@ class Crearusuario(flask.views.MethodView):
             flask.flash("El usuario ya existe")
             return flask.redirect(flask.url_for('crearusuario'))
         a = 'admin'
+        
         if a not in flask.request.form:
             a=False
         else:
             a=flask.request.form['admin']
+        
+        print 'Este es el valor de a = ', a
         crearUsuario(flask.request.form['nombre'][:20], flask.request.form['usuario'][:20],flask.request.form['clave'][:20],a)
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
