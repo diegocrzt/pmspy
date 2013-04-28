@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admtipo/{{session['faseid']}}">Administrar Tipo de Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+
+{%block mensaje%}
+<div class="container">
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+	    <ul class=flashes>
+	    {% for message in messages %}
+	      <li>{{ message }}</li>
+	    {% endfor %}
+	    </ul>
+	  {% endif %}
+	{% endwith %}
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="container">
+	<h3>Crear Tipo</h3>
+	<hr>
+	<p>Complete los datos del Tipo</p>
+		<form action="{{url_for('creartipo)}}" method="post">
+            <p>Nombre:<br/>
+            <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
+            <p>Comentario:<br/>
+            <input type="text" name="comentario" value="{{session['aux2']}}"/></p>
+            <p><input type="submit" value="Crear" /></p>
+        </form>
+
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                		<th>Numero</th>
+                                        <th>Nombre</th>
+                                        <th>Tipo de Dato</th>
+				                        <th>Eliminar</th>
+                                </tr>
+                                {% i=0%}
+                                {% for a in atributos %}
+                    			{% i=i+1%}
+                                <tr>
+                                		<td>{{i}}</td>
+                                        <td>{{a.nombre}}</td>
+                                        <td>{{a.tipoDato}}</td>
+		                                <td>
+		                                <a class="btn btn-danger" href="/creartipo/eliminar/{{i}}">Eliminar</a>
+                                        </td>
+                        </tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No se han creado atributos aun
+                                </tr>
+                                {% endfor %}
+                </table>
+                
+	<p>Crear un atributo para el tipo:</p>
+		<form action="{{url_for('creartipo)}}" method="post">
+            <p>Nombre:<br/>
+            <input type="text" name="nombre" value="{{session['aux3']}}"/></p>
+            <p>Tipo de Dato:<br/>
+            <input type="text" name="tipoDato" value="{{session['aux4']}}"/></p>
+            <p><input type="submit" name="CrearA" value="CrearA" /></p>
+                
+</div>        
+{%endblock%}
+

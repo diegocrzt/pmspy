@@ -60,3 +60,7 @@ app.add_url_rule('/admfase/eliminarfase/',
 app.add_url_rule('/admfase/eliminarusuario/',
                  view_func=vista.usuarioVista.Eliminarusuario.as_view('eliminarusuario'),
                  methods=["GET", "POST"])
+
+app.add_url_rule('/admtipo/creartipo/',
+                 view_func=vista.tipoVista.Creartipo.as_view('creartipo'),
+                 methods=["GET", "POST"])
