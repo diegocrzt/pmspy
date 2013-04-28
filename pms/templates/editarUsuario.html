@@ -26,29 +26,33 @@
 
 {%endblock%}
 
-{%block mensaje%}
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-	    <ul class=flashes>
-	    {% for message in messages %}
-	      <li>{{ message }}</li>
-	    {% endfor %}
-	    </ul>
-	  {% endif %}
-	{% endwith %}
-{%endblock%}
-
 {%block content%}
 <div class="container">
 	<h3>Editar Usuario</h3>
 	<hr>
 	<p>Modifique los datos del usuario:</p>
 	        <form action="/admusuario/editarusuario/" method="post">
-	            <p>Nombre:<br />
+	            <p>Nombre<small class="text-error">(*)</small>:
+	            {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+	            <br/>
 	            <input type="text" name="nombre" value="{{u.nombre}}" /></p>
-	            <p>Usuario:<br />
+	            <p>Usuario<small class="text-error">(*)</small>:
+	            {%  with messages = get_flashed_messages(category_filter=["usuario"]) %}
+	  				{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}  	  			
+					{% endif %}
+				{% endwith %}
+	            <br/>
 	            <input type="text" name="usuario" value="{{u.nombredeusuario}}"  /></p>
-	            <p>Clave(*):<br />
+	            <p>Clave:<br />
 	            <input type="text" name="clave" value="" /><small class="text-info"> (Si no se completa se conserva la clave actual)</small></p>
 	            {% if u.isAdmin %}
 	            <p><input type="checkbox" name="admin" checked />Es Administrador</p>

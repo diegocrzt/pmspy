@@ -75,6 +75,7 @@ class Crearproyecto(flask.views.MethodView):
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
+        flask.flash(u"Creacion exitosa","text-success")
         return flask.redirect(flask.url_for('admproyecto'))
     
 class Inicializarproyecto(flask.views.MethodView):
