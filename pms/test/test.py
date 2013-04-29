@@ -5,6 +5,9 @@ Created on 25/04/2013
 '''
 import pms
 import unittest
+from pms.modelo import proyectoControlador
+from pms.modelo.entidad import Proyecto
+from pms.modelo.proyectoControlador import getProyecto
 
 class PMSTestSuite(unittest.TestCase):
     
@@ -13,7 +16,6 @@ class PMSTestSuite(unittest.TestCase):
 
     def setUp(self):
         pms.app.config['TESTING'] = True
-        pms.app.config['LOGGER_NAME'] = "/tmp/pmspy.test.log"
         self.app = pms.app.test_client()
 
     def tearDown(self):
@@ -98,7 +100,6 @@ class PMSTestSuite(unittest.TestCase):
         
         #Eliminar Usuario
         rv = self.app.get('/admusuario/eliminarusuario/' + username, follow_redirects=True)
-        print rv.data
         assert 'Eliminar Usuario <em>'+ othername + '</em>' in rv.data
         
         rv = self.app.post('/admusuario/eliminarusuario/',follow_redirects=True)
@@ -107,38 +108,43 @@ class PMSTestSuite(unittest.TestCase):
         print 'CRUD Usuario [OK]'
     
     
-#    def testCRUDProyecto(self):
-#         # Dummy data
-#        nombre = 'Dummy Proyect'
-#        fechaInicio = '2013-10-10'
-#        fechaFin = '2014-10-10'
-#        lider = '1'
-#        
-#        #Login
-#        rv = self.login(self.default_user, self.default_password)
-#        assert 'Listado de Proyectos' in rv.data 
-#        
-#        #Crear Usuario
-#        rv = self.app.post('/admproyecto/crearproyecto/', data=dict(nombre=nombre,
-#                                                                fechainicio=fechaInicio,
-#                                                                fechafin=fechaFin,
-#                                                                lider=lider),
-#                           follow_redirects=True)
-#        assert nombre in rv.data
-#        
-#        rv = self.app.post('/admproyecto/crearproyecto/', data=dict(nombre=nombre,
-#                                                                fechainicio=fechaInicio,
-#                                                                fechafin=fechaFin,
-#                                                                lider=lider),
-#                           follow_redirects=True)
-#        assert 'El proyecto ya existe' in rv.data
-#        
-#        #Eliminar Usuario
-#        rv = self.app.get('/admproyecto/eliminarproyecto/' + nombre, follow_redirects=True)
-#        print rv.data
-#        assert 'Eliminar Proyecto <em>'+ nombre + '</em>' in rv.data
-#        
-#        rv = self.app.post('/admproyecto/eliminarproyecto/',follow_redirects=True)
-#        assert 'Listado de Proyectos' in rv.data
-#        assert nombre not in rv.data
-#        print 'CRUD Proyecto [OK]'
+    def testCRUDProyecto(self):
+        # Dummy data
+        nombre = 'Dummy Proyect'
+        fechaInicio = '2013-10-10'
+        fechaFin = '2014-10-10'
+        lider = '1'
+        
+        #Login
+        rv = self.login(self.default_user, self.default_password)
+        assert 'Listado de Proyectos' in rv.data 
+        
+        #Crear Usuario
+        rv = self.app.post('/admproyecto/crearproyecto/', data=dict(nombre=nombre,
+                                                                fechainicio=fechaInicio,
+                                                                fechafin=fechaFin,
+                                                                lider=lider),
+                           follow_redirects=True)
+        assert nombre in rv.data
+        
+        rv = self.app.post('/admproyecto/crearproyecto/', data=dict(nombre=nombre,
+                                                                fechainicio=fechaInicio,
+                                                                fechafin=fechaFin,
+                                                                lider=lider),
+                           follow_redirects=True)
+        assert 'El proyecto ya existe' in rv.data
+        
+        tempProyecto = getProyecto(nombre)
+        
+        #Eliminar Usuario
+        rv = self.app.get('/admproyecto/eliminarproyecto/' + tempProyecto.id.__str__(), follow_redirects=True)
+        assert 'Eliminar Proyecto <em>'+ nombre + '</em>' in rv.data
+        
+        # Teoricamente esta es la URL, para eliminar proyectos a partir del 
+        # menu admproyecto, pero, en el eliminarProyect.html, hay una url
+        # que pasa por /admfase. VERIFICAR
+        rv = self.app.post('/admfase/eliminarproyecto/',follow_redirects=True)
+        assert 'Listado de Proyectos' in rv.data
+        assert nombre not in rv.data
+        
+        print 'CRUD Proyecto [OK]'
