@@ -56,12 +56,15 @@ class Editarusuario(flask.views.MethodView):
         """
         Ejecuta la funcion de Editar Usuario
         """
+        error=False
         clave=flask.request.form['clave']
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
-            return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
+            error=True
         if(flask.request.form['usuario']==""):
-            flask.flash("El campo usuario no puede estar vacio")
+            flask.flash(u"El campo usuario no puede estar vacio","usuario")
+            error=True
+        if error:
             return flask.redirect('/admusuario/editarusuario/'+str(flask.session['usviejousername']))
         a = 'admin'
         if a not in flask.request.form:
@@ -75,6 +78,7 @@ class Editarusuario(flask.views.MethodView):
         if  flask.request.form['clave']=="":
             clave=None  
         editarUsuario(flask.session['usviejoid'], flask.request.form['nombre'][:20], flask.request.form['usuario'][:20],clave,a)
+        flask.flash(u"Edicion exitosa","text-success")
         return flask.redirect(flask.url_for('admusuario'))
 
 class Crearusuario(flask.views.MethodView):
@@ -91,20 +95,22 @@ class Crearusuario(flask.views.MethodView):
         """
         Ejecuta la funcion de Crear Usuario
         """
+        error=False
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['usuario']
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
-            return flask.redirect(flask.url_for('crearusuario'))
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
+            error=True
         if(flask.request.form['usuario']==""):
-            flask.flash("El campo usuario no puede estar vacio")
-            return flask.redirect(flask.url_for('crearusuario'))
+            flask.flash(u"El campo usuario no puede estar vacio","usuario")
+            error=True
+        else:
+            if comprobarUsuario(flask.request.form['usuario']):
+                flask.flash(u"El usuario ya existe","usuario")
         if(flask.request.form['clave']==""):
-            flask.flash("El campo clave no puede estar vacio")
-            return flask.redirect(flask.url_for('crearusuario'))
-        
-        if comprobarUsuario(flask.request.form['usuario']):
-            flask.flash("El usuario ya existe")
+            flask.flash(u"El campo clave no puede estar vacio","clave")
+            error=True
+        if error:
             return flask.redirect(flask.url_for('crearusuario'))
         a = 'admin'
         

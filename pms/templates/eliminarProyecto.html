@@ -13,7 +13,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admproyecto/">Administrar Proyecto</a></li>
+              <li class="active"><a href="/admproyecto/">Administrar Proyecto</a></li>
               {% if session['isAdmin']==True %}
               <li><a href="/admusuario/">Administrar Usuario</a></li>
               {% endif %}
@@ -32,7 +32,7 @@
 <div class="container" align="left">
     <h3>Eliminar Proyecto <em>{{p.nombre}}</em></h3>
     <hr>
-    <p class="text-info">	La elminación de un proyecto es <strong>irreversible</strong>.</p>
+    <p class="text-info">	La eliminación de un proyecto es <strong>irreversible</strong>.</p>
     <p>	<strong>Cantidad de fases:</strong> {{p.cantFase}}</p>
     <p>	<strong>Inicio:</strong> {{p.fechaInicio.strftime('%Y/%m/%d')}}</p>
     <p>	<strong>Fin:</strong> {{p.fechaFin.strftime('%Y/%m/%d')}}</p>
@@ -42,10 +42,11 @@
     	<p><strong>Ultima modificacón:</strong> --- <p>
     {% endif %}
     <p>	<strong>Estado:</strong> {{p.estado}}</p>
-    <p>Esta seguro que desea eliminar? </p>
+    <br>
     <div>
 	    <form action="{{url_for('eliminarproyecto')}}" method="post">        
-	    	<p><input type="submit" value="Eliminar" /></p>
+	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
+	    	<a class="btn btn-inverse" href="/admproyecto/">Cancelar</a></p>
 	    </form>
    	</div>
 </div>

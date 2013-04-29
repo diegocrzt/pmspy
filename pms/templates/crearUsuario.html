@@ -25,35 +25,46 @@
 {%endblock%}
 
 
-{%block mensaje%}
-<div class="container">
-	{% with messages = get_flashed_messages() %}
-	  {% if messages %}
-	    <ul class=flashes>
-	    {% for message in messages %}
-	      <li>{{ message }}</li>
-	    {% endfor %}
-	    </ul>
-	  {% endif %}
-	{% endwith %}
-</div>
-{%endblock%}
-
 {%block content%}
 <div class="container">
 	<h3>Crear Usuario</h3>
 	<hr>
 	<p>Complete los datos del usuario:</p>
         <form action="{{url_for('crearusuario')}}" method="post">
-            <p>Nombre:<br/>
-             <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
-             <p>Usuario:<br/>
+            <p>Nombre<small class="text-error">(*)</small>:
+            {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
+	  			{% if messages %}
+	  				{% for message in messages %}
+   						<small class="text-error">{{ message }}</small>	
+   					{% endfor %}    					
+				{% endif %}
+			{% endwith %}         
+	    	<br/>
+            <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
+            <p>Usuario<small class="text-error">(*)</small>	:
+            {%  with messages = get_flashed_messages(category_filter=["usuario"]) %}
+	  			{% if messages %}
+	  				{% for message in messages %}
+   						<small class="text-error">{{ message }}</small>	
+   					{% endfor %}  	  			
+				{% endif %}
+			{% endwith %}            
+            <br/>
             <input type="text" name="usuario" value="{{session['aux2']}}"/></p>
-            <p>Clave:<br/>
+            <p>Clave<small class="text-error">(*)</small>:
+            {%  with messages = get_flashed_messages(category_filter=["clave"]) %}
+	  			{% if messages %}
+   					{% for message in messages %}
+   						<small class="text-error">{{ message }}</small>	
+   					{% endfor %}  	    					
+				{% endif %}
+			{% endwith %}
+            <br/>
             <input type="password" name="clave" /></p>  
             <p><input type="checkbox" name="admin" /> Es Administrador</p>
             <p></p>
-            <p><input type="submit" value="Crear" /></p>
+            <p><input class="btn btn-success" type="submit" value="Aceptar" />
+            <a class="btn btn-inverse" href="/admusuario/">Cancelar</a></p>
         </form>
 </div>
 {%endblock%}
