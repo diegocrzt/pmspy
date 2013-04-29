@@ -222,10 +222,10 @@ def admFase(p=None):
         return flask.redirect(flask.url_for('admproyecto'))
     
     
-@app.route('/admfase/next/')
+@app.route('/admfase/nextfase/')
 @pms.vista.required.admin_required
 @pms.vista.required.login_required       
-def nextPage():
+def nextPageF():
     global CAMBIO
     CAMBIO=True
     cantF=getFases(flask.session['proyectoid']).count()
@@ -248,7 +248,7 @@ def nextPage():
 @app.route('/admfase/prev/')
 @pms.vista.required.admin_required
 @pms.vista.required.login_required       
-def prevPage():
+def prevPageF():
     global CAMBIO
     CAMBIO=True
     flask.session['pagina']=flask.session['pagina']-1

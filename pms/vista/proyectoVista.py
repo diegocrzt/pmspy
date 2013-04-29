@@ -161,10 +161,10 @@ def eProyecto(proyecto=None):
         flask.flash("El Proyecto seleccionado no se puede eliminar porque ya fue inicializado")
         return flask.redirect(flask.url_for('admproyecto'))    
     
-@app.route('/admproyecto/next/')
+@app.route('/admproyecto/nextproyecto/')
 @pms.vista.required.admin_required
 @pms.vista.required.login_required       
-def nextPage():
+def nextPageP():
     global CAMBIO
     CAMBIO=True
     cantP=getCantProyectos()
@@ -184,10 +184,10 @@ def nextPage():
         flask.session['hayprev']=True
     return flask.redirect(flask.url_for('admproyecto'))  
 
-@app.route('/admproyecto/prev/')
+@app.route('/admproyecto/prevproyecto/')
 @pms.vista.required.admin_required
 @pms.vista.required.login_required       
-def prevPage():
+def prevPageP():
     global CAMBIO
     CAMBIO=True
     flask.session['pagina']=flask.session['pagina']-1
@@ -200,8 +200,5 @@ def prevPage():
     if getCantProyectos>(pag*TAM_PAGINA):
             flask.session['haynext']=True
     return flask.redirect(flask.url_for('admproyecto'))  
-    
-    
-    
-    
+ 
     
