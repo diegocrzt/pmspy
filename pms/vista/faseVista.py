@@ -1,11 +1,13 @@
 import flask.views
 from flask import request
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas
 from pms.modelo.proyectoControlador import getProyectoId
 from datetime import timedelta
 from datetime import datetime
 import pms.vista.required
 from pms import app
+TAM_PAGINA=2
+CAMBIO=False
 
 class Crearfase(flask.views.MethodView):
     """
@@ -51,6 +53,7 @@ class Crearfase(flask.views.MethodView):
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
+        flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
     
 class Editarfase(flask.views.MethodView):
@@ -92,6 +95,7 @@ class Editarfase(flask.views.MethodView):
             flask.flash(u"Incoherencia entre fechas de inicio y de fin","fecha")
             return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))         
         editarFase(flask.session['faseid'], flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio,fechafin)
+        flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     
 class Eliminarfase(flask.views.MethodView):
@@ -112,6 +116,7 @@ class Eliminarfase(flask.views.MethodView):
         """
         if(flask.session['faseid']!=None):
             eliminarFase(flask.session['faseid'],flask.session['proyectoid'])
+            flask.flash(u"ELIMINACION EXITOSA","text-success")
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
         else:
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
@@ -161,8 +166,11 @@ def edFase(f=None):
 @pms.vista.required.login_required
 def admFase(p=None):
     """
-    Funcion que llama a la Vista de Administrar Fase, responde al boton de 'Selec>>' de Administrar Proyecto
+    Funcion que llama a la Vista de Administrar Fase, responde al boton de 'Selec>>' de Administrar Proyecto, 
+    recibe p que contiene el id del proyecto al que se ingreso
     """
+    global TAM_PAGINA
+    global CAMBIO
     flask.session.pop('aux1',None)
     flask.session.pop('aux2',None)
     flask.session.pop('aux3',None)
@@ -172,7 +180,34 @@ def admFase(p=None):
             flask.session.pop('faseid',None)
             flask.session['proyectoid']=p
             flask.session['proyectonombre']=getProyectoId(p).nombre
-            f=getFases(p)
+            if CAMBIO:
+                CAMBIO=False
+            else:
+                flask.session['haynext']=True
+                flask.session['hayprev']=False
+                flask.session['pagina']=1
+            f=getFasesPaginadas(flask.session['pagina']-1,TAM_PAGINA,p)
+            if(f.count()!=0):
+                t=getFases(p).count()/TAM_PAGINA
+                mod=getFases(p).count()%TAM_PAGINA
+                if mod>0:
+                    t=int(t)+1#Total de paginas
+                else:
+                    t=int(t+mod)
+                m=flask.session['pagina']#Pagina en la que estoy
+                infopag="Pagina "+ str(m) +" de " + str(t)
+                if m<t:
+                    flask.session['haynext']=True
+                else:
+                    flask.session['haynext']=False
+                if m==1:
+                    flask.session['hayprev']=False
+                else:
+                    flask.session['hayprev']=True
+            else:
+                flask.session['haynext']=False
+                flask.session['hayprev']=False
+                infopag="Pagina 1 de 1"
             if(getProyectoId(p).estado!="Iniciado"):
                 flask.session['proyectoiniciado']=False
             else:
@@ -180,8 +215,50 @@ def admFase(p=None):
             tienefases=True
             if(getProyectoId(p).cantFase==0):
                 tienefases=False
-            return flask.render_template('admFase.html',fases=f, hay=tienefases)
+            return flask.render_template('admFase.html',fases=f, hay=tienefases,infopag=infopag)
         else:
             return flask.redirect(flask.url_for('admproyecto'))
     else:
         return flask.redirect(flask.url_for('admproyecto'))
+    
+    
+@app.route('/admfase/next/')
+@pms.vista.required.admin_required
+@pms.vista.required.login_required       
+def nextPage():
+    global CAMBIO
+    CAMBIO=True
+    cantF=getFases(flask.session['proyectoid']).count()
+    flask.session['pagina']=flask.session['pagina']+1
+    global TAM_PAGINA
+    sobran=cantF-flask.session['pagina']* TAM_PAGINA
+    print "Pagina:"
+    print flask.session['pagina']
+    print sobran
+    if sobran>0:
+        flask.session['haynext']=True
+    else:
+        flask.session['haynext']=False
+    if flask.session['pagina']==1:
+        flask.session['hayprev']=False
+    else:
+        flask.session['hayprev']=True
+    return flask.redirect('/admfase/'+str(flask.session['proyectoid']))   
+
+@app.route('/admfase/prev/')
+@pms.vista.required.admin_required
+@pms.vista.required.login_required       
+def prevPage():
+    global CAMBIO
+    CAMBIO=True
+    flask.session['pagina']=flask.session['pagina']-1
+    global TAM_PAGINA
+    pag=flask.session['pagina']
+    if pag==1:
+        flask.session['hayprev']=False
+    else:
+        flask.session['hayprev']=True
+    if getFases(flask.session['proyectoid']).count()>(pag*TAM_PAGINA):
+            flask.session['haynext']=True
+    return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+    

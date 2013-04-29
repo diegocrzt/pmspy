@@ -29,22 +29,26 @@ class AdmProyecto(flask.views.MethodView):
             flask.session['hayprev']=False
             flask.session['pagina']=1
         p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA)
-        t=getCantProyectos()/TAM_PAGINA
-        mod=getCantProyectos()%TAM_PAGINA
-        if mod>0:
-            t=int(t)+1#Total de paginas
-        else:
-            t=int(t+mod)
-        m=flask.session['pagina']#Pagina en la que estoy
-        infopag="Pagina "+ str(m) +" de " + str(t)
-        if m<t:
-            flask.session['haynext']=True
+        if(p!=None):
+            t=getCantProyectos()/TAM_PAGINA
+            mod=getCantProyectos()%TAM_PAGINA
+            if mod>0:
+                t=int(t)+1#Total de paginas
+            else:
+                t=int(t+mod)
+            m=flask.session['pagina']#Pagina en la que estoy
+            infopag="Pagina "+ str(m) +" de " + str(t)
+            if m<t:
+                flask.session['haynext']=True
+            else:
+                flask.session['haynext']=False
+            if m==1:
+                flask.session['hayprev']=False
+            else:
+                flask.session['hayprev']=True
         else:
             flask.session['haynext']=False
-        if m==1:
             flask.session['hayprev']=False
-        else:
-            flask.session['hayprev']=True
         
         return flask.render_template('admProyecto.html',proyectos=p, infopag=infopag)
     @pms.vista.required.login_required

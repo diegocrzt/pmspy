@@ -54,6 +54,8 @@ def eliminarFase(fase=None, proy=None):
     elimina una fase
     """
     if(fase and proy):
+        fa=getFaseId(fase)
+        fa.proyecto.cantFase=fa.proyecto.cantFase-1
         session.query(Fase).filter(Fase.id==fase).delete()
         session.commit()
         
@@ -78,3 +80,13 @@ def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
     f.fechaFin=fechafin
     session.merge(f)
     session.commit()
+    
+def getFasesPaginadas(pagina=None,tam_pagina=None, p=None):
+    """
+    Devuelve una lista de fases de tamanio tam_pagina de la pagina pagina, la pagina empieza en 0
+    """
+    query = session.query(Fase).filter(Fase.delproyecto==p).order_by(Fase.id)
+    if pagina and tam_pagina:
+        query = query.offset(pagina*tam_pagina)
+    return query.limit(tam_pagina)
+

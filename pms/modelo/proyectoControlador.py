@@ -107,7 +107,7 @@ def getCantProyectos():
     """
     return session.query(Proyecto).count()
         
-def main():
+'''def main():
     page_size=3
     page=2
     query=getProyectosPaginados(0,3)
@@ -116,4 +116,4 @@ def main():
         print q.nombre
         
 if __name__ == "__main__":
-    main()   
+    main()   '''

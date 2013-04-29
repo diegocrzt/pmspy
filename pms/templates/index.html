@@ -22,7 +22,8 @@
         <strong>Usuario:</strong> {{session['username']}}
         <hr>
         <form action="{{url_for('index')}}" method="post">
-            <input type="submit" name="logout" value="logout" />
+            <p><input class="btn btn-danger" type="submit" name="logout" value="logout" />
+            <a class="btn btn-inverse" href="/admproyecto/">Cancelar</a></p>
         </form>
  	</div>	
 	</div>
@@ -53,15 +54,17 @@
             <input type="text" name="username" /></p>
             <p>Clave:<br />
             <input type="password" name="passwd" /></p>
+            {% with messages = get_flashed_messages() %}
+	        	{% for message in messages %}
+	            	<small class="text-error">{{ message }}</small>	
+	            	<br/>
+	        	{% endfor %}
+	    	{% endwith %}
             <hr>
-            <p><input type="submit" value="submit" /></p>
+            <p><input class="btn btn-success" type="submit" value="Login" /></p>
         </form>
+        
     {% endif %}
      </div>
     </div>
-    {% with messages = get_flashed_messages() %}
-        {% for message in messages %}
-            {{message}}
-        {% endfor %}
-    {% endwith %}
 {% endblock %}
