@@ -50,16 +50,33 @@
         <strong>El logueo es necesario:</strong>
         <p></p>
         <form action="{{url_for('index')}}" method="post">
-            <p>Nombre de usuario:<br />
-            <input type="text" name="username" /></p>
-            <p>Clave:<br />
+            <p>Nombre de usuario:
+             {%  with messages = get_flashed_messages(category_filter=["usuario"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            <br />
+            <input type="text" name="username" value="{{session['aux1']}}" /></p>
+            <p>Clave:
+             {%  with messages = get_flashed_messages(category_filter=["clave"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
+            <br />
             <input type="password" name="passwd" /></p>
-            {% with messages = get_flashed_messages() %}
-	        	{% for message in messages %}
-	            	<small class="text-error">{{ message }}</small>	
-	            	<br/>
-	        	{% endfor %}
-	    	{% endwith %}
+             {%  with messages = get_flashed_messages(category_filter=["incorrecto"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}
             <hr>
             <p><input class="btn btn-success" type="submit" value="Login" /></p>
         </form>
