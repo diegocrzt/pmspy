@@ -2,6 +2,8 @@ from flask import Flask
 
 app = Flask(__name__)
 app.secret_key = "bacon"
+app.default_user = 'admin'
+app.default_password = '123456'
 
 import vista.proyectoVista
 import vista.required

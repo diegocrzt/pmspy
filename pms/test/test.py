@@ -10,9 +10,6 @@ from pms.modelo.entidad import Proyecto
 from pms.modelo.proyectoControlador import getProyecto
 
 class PMSTestSuite(unittest.TestCase):
-    
-    default_user = 'admin'
-    default_password = '123456'
 
     def setUp(self):
         pms.app.config['TESTING'] = True
@@ -21,7 +18,12 @@ class PMSTestSuite(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def login(self, username, password):
+    def login(self, username=None, password=None):
+        if username == None:
+            username = pms.app.default_user
+        if password == None:
+            password = pms.app.default_password
+            
         return self.app.post('/', data=dict(
             username=username,
             passwd=password
@@ -36,20 +38,20 @@ class PMSTestSuite(unittest.TestCase):
         print 'Proyect initial page [OK]'
 
     def testIniciarCerrarSesion(self):
-        rv = self.login('trudy', self.default_password)
+        rv = self.login(username='trudy')
         assert 'Nombre de usuario no existe o clave incorrecta' in rv.data
         
-        rv = self.login(self.default_user, '123465trudy')
+        rv = self.login(password='123465trudy')
         assert 'Nombre de usuario no existe o clave incorrecta' in rv.data
         
-        rv = self.login(self.default_user, self.default_password)
+        rv = self.login()
         assert 'Listado de Proyectos' in rv.data
         
         rv = self.logout()
         assert 'El logueo es necesario:' in rv.data
         
         # Repetir el proceso
-        rv = self.login(self.default_user, self.default_password)
+        rv = self.login()
         assert 'Listado de Proyectos' in rv.data
         
         rv = self.logout()
@@ -63,7 +65,7 @@ class PMSTestSuite(unittest.TestCase):
         password = 'dummy'
         
         #Login
-        rv = self.login(self.default_user, self.default_password)
+        rv = self.login()
         assert 'Listado de Proyectos' in rv.data 
         
         #Crear Usuario
@@ -95,7 +97,7 @@ class PMSTestSuite(unittest.TestCase):
         rv = self.logout()
         assert 'El logueo es necesario:' in rv.data
         
-        rv = self.login(self.default_user, self.default_password)
+        rv = self.login()
         assert 'Listado de Proyectos' in rv.data 
         
         #Eliminar Usuario
@@ -116,7 +118,7 @@ class PMSTestSuite(unittest.TestCase):
         lider = '1'
         
         #Login
-        rv = self.login(self.default_user, self.default_password)
+        rv = self.login()
         assert 'Listado de Proyectos' in rv.data 
         
         #Crear Usuario
