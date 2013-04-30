@@ -15,7 +15,11 @@ def admTipo(f=None):
     flask.session.pop('aux1',None)
     flask.session.pop('aux2',None)
     flask.session.pop('aux3',None)
-    flask.session.pop('aux4',None)  
+    flask.session.pop('aux4',None) 
+    flask.session['aux1']=""
+    flask.session['aux2']=""
+    flask.session['aux3']=""
+    flask.session['aux4']="" 
     if request.method == "GET":
         fase=getFaseId(f)
         flask.session.pop('faseid',None)
@@ -35,10 +39,12 @@ class Creartipo(flask.views.MethodView):
     """
     @pms.vista.required.login_required
     def get(self,atributos=None):
+        atributos=[]
         return flask.render_template('crearTipo.html',atributos=atributos)
     @pms.vista.required.login_required
     def post(self,atributos=None):
         if 'CrearA' in flask.request.form :
+            print "pruebaaaa"
             flask.session['aux3']=flask.request.form['nombreatributo']
             flask.session['aux4']=flask.request.form['tipodato']
             if(flask.request.form['nombreatributo']==""):
@@ -50,8 +56,8 @@ class Creartipo(flask.views.MethodView):
             if comprobarAtributo(flask.request.form['nombre'],flask.session['faseid']):
                 flask.flash("El atributo ya existe")
                 return flask.render_template('crearTipo.html',atributos=atributos)
-            a=Atributo(flask.request.form['nombreatributo'],flask.request.form['tipodato'],None)
-            atributos.append(a)
+            at=Atributo(flask.request.form['nombreatributo'],flask.request.form['tipodato'],None)
+            atributos.append(at)
             flask.session.pop('aux3',None)
             flask.session.pop('aux4',None)
             return flask.render_template('crearTipo.html',atributos=atributos)
@@ -66,8 +72,8 @@ class Creartipo(flask.views.MethodView):
                 return flask.render_template('crearTipo.html',atributos=atributos)
             crearTipoItem(flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
             idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
-            for a in atributos:
-                crearAtributo(a.nombre,a.tipoDato,flask.session['faseid'])
+            for at in atributos:
+                crearAtributo(at.nombre,at.tipoDato,flask.session['faseid'])
             flask.session.pop('aux1',None)
             flask.session.pop('aux2',None)
             flask.session.pop('aux3',None)
