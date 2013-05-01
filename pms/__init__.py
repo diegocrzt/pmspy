@@ -10,6 +10,7 @@ import vista.tipoVista
 import vista.atributoVista
 
 
+
 app.add_url_rule('/admproyecto/',
                  view_func=vista.proyectoVista.AdmProyecto.as_view('admproyecto'),
                  methods=["GET", "POST"])
@@ -58,7 +59,7 @@ app.add_url_rule('/admfase/eliminarfase/',
                  view_func=vista.faseVista.Eliminarfase.as_view('eliminarfase'),
                  methods=["GET", "POST"])
 
-app.add_url_rule('/admfase/eliminarusuario/',
+app.add_url_rule('/admusuario/eliminarusuario/',
                  view_func=vista.usuarioVista.Eliminarusuario.as_view('eliminarusuario'),
                  methods=["GET", "POST"])
 

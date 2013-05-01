@@ -5,19 +5,10 @@ Created on 18/04/2013
 '''
 
 from initdb import db_session, init_db
-from entidad import Fase, Proyecto
+from entidad import Fase
 import proyectoControlador
 
-
 session = db_session()
-
-def getProyectoId(idp=None):
-    """
-    recupera un proyecto por su id
-    """
-    if(idp):
-            res=session.query(Proyecto).filter(Proyecto.id==idp).first()
-            return res
 
 def getFases(p=None):
     """Obtener fases
@@ -36,9 +27,8 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", delproyecto=proy)
     session.add(fa)
     session.commit()
-    p=fa.proyecto
-    p.cantFase=p.cantFase+1
-    session.merge(p)
+    fa.proyecto.cantFase=fa.proyecto.cantFase+1
+    session.merge(fa.proyecto)
     session.commit()
    
 def getFase(numero=None, proy=None):
@@ -64,11 +54,9 @@ def eliminarFase(fase=None, proy=None):
     elimina una fase
     """
     if(fase and proy):
-        p=getProyectoId(proy)
+        fa=getFaseId(fase)
+        fa.proyecto.cantFase=fa.proyecto.cantFase-1
         session.query(Fase).filter(Fase.id==fase).delete()
-        session.commit()
-        p.cantFase=p.cantFase-1
-        session.merge(p)
         session.commit()
         
        
@@ -92,3 +80,13 @@ def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
     f.fechaFin=fechafin
     session.merge(f)
     session.commit()
+    
+def getFasesPaginadas(pagina=None,tam_pagina=None, p=None):
+    """
+    Devuelve una lista de fases de tamanio tam_pagina de la pagina pagina, la pagina empieza en 0
+    """
+    query = session.query(Fase).filter(Fase.delproyecto==p).order_by(Fase.id)
+    if pagina and tam_pagina:
+        query = query.offset(pagina*tam_pagina)
+    return query.limit(tam_pagina)
+

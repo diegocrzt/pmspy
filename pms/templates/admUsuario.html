@@ -43,10 +43,10 @@
         <h2> Listado de Usuarios </h2>
         <table class="table table-striped table-bordered">
           <tr>
-            <th>Id</th>
-            <th>Nombre Usuario</th>
-            <th>Nombre </th>
-            <th>Administrador?</th>
+            <th>Nro</th>
+            <th>Nombre</th>
+            <th>Nombre Usuario </th>
+            <th>Administrador</th>
             <th>Eliminar</th>
             <th>Editar</th>
           </tr>
@@ -54,9 +54,13 @@
           <tr>
           <form></form>
             <td>{{u.id}}</td>
-            <td>{{u.nombredeusuario}}</td>
             <td>{{u.nombre}}</td>
-            <td>{{u.isAdmin}}</td>
+            <td>{{u.nombredeusuario}}</td>
+            {% if u.isAdmin %}
+            <td>Si</td>
+            {% else %}
+            <td>No </td>
+			{% endif %}
             <td>
             {% if u.nombredeusuario != "admin" %}
             <a class="btn btn-danger" href="/admusuario/eliminarusuario/{{u.nombredeusuario}}">Eliminar</a>

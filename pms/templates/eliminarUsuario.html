@@ -32,7 +32,7 @@
 <div class="container" align="left">
     <h3>Eliminar Usuario <em>{{u.nombre}}</em></h3>
     <hr>
-    <p class="text-info">	La elminación de un usuario es <strong>irreversible</strong>.</p>
+    <p class="text-info">	La eliminación de un usuario es <strong>irreversible</strong>.</p>
     <p>	<strong>Nombre: </strong> {{u.nombre}}</p>
     <p>	<strong>Nombre de Usuario: </strong> {{u.nombredeusuario}}</p>
     {% if u.isAdmin==True %}
@@ -40,10 +40,11 @@
     {% else %}
     	<p><strong>Administrador: </strong>No<p>
     {% endif %}
-    <p>Esta seguro que desea eliminar? </p>
+    <br>
     <div>
 	    <form action="{{url_for('eliminarusuario')}}" method="post">        
-	    	<p><input type="submit" value="Eliminar" /></p>
+	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
+	    	<a class="btn btn-inverse" href="/admusuario/">Cancelar</a></p>
 	    </form>
    	</div>
 </div>

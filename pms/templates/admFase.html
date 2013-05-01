@@ -26,22 +26,21 @@
               
 {%endblock%}
 
-{%block mensaje%}
-        {% with messages = get_flashed_messages() %}
-          {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-          {% endif %}
-        {% endwith %}
-{%endblock%}
-
 {%block content%}
 <div class="fases">
 		{% set hayf = True %}
-        <h4 class="muted"> Proyecto: {{session['proyectombre']}}</h4>
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}}</h3>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+		  </div>
+          {% endif %}
+        {% endwith %}
         <div class="row" >
                 <div class="span12">
                         <h2> Listado de Fases </h2>
@@ -83,7 +82,7 @@
                                         </td>
                                         {% else %}
                                         <td>
-                                        <a class="btn" href="/admtipo/{{f.id}}">Ir>></a>
+                                        <a class="btn" href="#">Ir>></a>
                                         </td>
                                         <td>
                                         <a class="btn" href="#">Ir>></a>
@@ -91,12 +90,20 @@
                                         {% endif %}
                         </tr>
                                 {% else %}
-                        
                                 <tr>
                                         No se han creado fases aun
                                 </tr>
                                 {% endfor %}
                 </table>
+                    <div class="conainer" align="right">
+                	<a class="muted">{{infopag}}</a>
+                	{% if session['hayprev']==True %}
+                	<a class="btn btn-mini" href="/admfase/prevfase/">&laquo; Anterior</a>
+                	{% endif %}
+                	{% if session['haynext']==True %}
+                	<a class="btn btn-mini" href="/admfase/nextfase/"> Siguiente &raquo;</a>
+                	{% endif %}
+                	</div>
         </div>
 	      <div class="span3 bs-docs-sidebar">
         	<ul class="nav nav-list bs-docs-sidenav">
@@ -109,5 +116,6 @@
 				  <li><a href="#"><i class="icon-chevron-right"></i> Consultar Fase</a></li>
 				</ul>
 			</div>
+	</div>
 </div>
 {%endblock%}
