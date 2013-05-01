@@ -7,6 +7,7 @@ import vista.usuarioVista
 import vista.faseVista
 import vista.logVista
 import vista.tipoVista
+import vista.atributoVista
 
 
 app.add_url_rule('/admproyecto/',
@@ -63,4 +64,8 @@ app.add_url_rule('/admfase/eliminarusuario/',
 
 app.add_url_rule('/admtipo/creartipo/',
                  view_func=vista.tipoVista.Creartipo.as_view('creartipo'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admatributo/crearatributo/',
+                 view_func=vista.atributoVista.Crearatributo.as_view('crearatributo'),
                  methods=["GET", "POST"])

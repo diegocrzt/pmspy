@@ -51,7 +51,7 @@ def crearAtributo(nom=None, td=None, ta=None):
     """
     init_db()
     session = db_session()
-    att = Atributo(nombre=nom,TipoDato=td, pertenece=ta)
+    att = Atributo(nombre=nom,tipoDato=td, pertenece=ta)
     session.add(att)
     session.commit()
     

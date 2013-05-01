@@ -13,7 +13,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admtipo/{{session['faseid']}}">Administrar Tipo de Item</a></li>
+              <li><a href="/admatributo/{{session['tipoid']}}">Administrar Atributo</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -40,13 +40,13 @@
 
 {%block content%}
 <div class="container">
-	<h3>Crear Tipo</h3>
-	<p>Complete los datos del Tipo</p>
-		<form action="{{url_for('creartipo')}}" method="post">
+	<h3>Crear Atributo</h3>
+	<p>Complete los datos del Atributo</p>
+		<form action="{{url_for('crearatributo')}}" method="post">
             <p>Nombre:<br/>
             <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
-            <p>Comentario:<br/>
-            <input type="text" name="comentario" value="{{session['aux2']}}"/></p>
+            <p>Tipo del dato a almacenar:<br/>
+            <input type="text" name="tipoDato" value="{{session['aux2']}}"/></p>
             <p><input type="submit" value="Crear" /></p>
         </form>
 </div> 
