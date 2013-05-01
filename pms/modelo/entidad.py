@@ -19,7 +19,8 @@ class Usuario(Base):
         Define la clase Usuario y la mapea con la tabla usuario
     """
     __tablename__ = 'usuario'
-    id = Column(Integer, primary_key=True)
+
+    id = Column(Integer,primary_key = True)
     nombre = Column(Unicode(20))
     nombredeusuario = Column(Unicode(20), unique=True)
     clave = Column(Unicode(41))
@@ -33,9 +34,9 @@ class Usuario(Base):
         self.clave = clave
         self.isAdmin = isAdmin
     
+
     def __repr__(self):
         return 'Usuario { ' + self.nombre + '(' + self.nombredeusuario + ')}'
-    
         
 class Proyecto(Base):
     """
@@ -48,9 +49,10 @@ class Proyecto(Base):
     fechaInicio = Column(DateTime)
     fechaFin = Column(DateTime)
     fechaUltMod = Column(DateTime)
-    delider = Column(Integer, ForeignKey('usuario.id'))
+    delider = Column(Integer, ForeignKey('usuario.id') )
     estado = Column(Unicode(10))
-    fases = relationship("Fase", order_by="Fase.id", backref="proyecto")
+    fases = relationship("Fase",order_by="Fase.id",backref="proyecto")
+
     
     
     def __init__(self, nombre, cantFase, fechaInicio, fechaFin, fechaUltMod, delider, estado):
@@ -61,9 +63,11 @@ class Proyecto(Base):
         self.fechaUltMod = fechaUltMod
         self.delider = delider
         self.estado = estado
+
     
     def __repr__(self):
         return 'Proyecto { ' + self.nombre + ')}'
+
         
 
 
@@ -201,7 +205,6 @@ class ValorInt(Base):
         
     def __repr__(self):
         return 'ValorInt { '+ self.valor+ '}'
-        
 
 class ValorBoolean(Base):
     """
