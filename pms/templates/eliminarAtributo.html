@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+           	  <li><a href="/admatributo/{{session['tipoitemid']}}">Administrar Atributo</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="container" align="left">
+    <h3>Eliminar atributo de <em>{{session['tipoitemnombre']}}</em></h3>
+    <hr>
+    <p class="text-info">	La eliminación de un atributo es <strong>irreversible</strong>.</p>
+    <p>	<strong>Nombre:</strong> {{a.nombre}}</p>
+    <p>	<strong>Tipo de Dato:</strong> {{a.tipoDato}}</p>
+
+    <br>
+    <div>
+	    <form action="{{url_for('eliminaratributo')}}" method="post">        
+	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
+	    	<a class="btn btn-inverse" href="/admatributo/{{session['tipoitemid']}}">Cancelar</a></p>
+	    </form>
+   	</div>
+</div>
+{%endblock%}
