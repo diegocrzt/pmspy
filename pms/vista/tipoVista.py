@@ -50,4 +50,41 @@ class Creartipo(flask.views.MethodView):
         idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
+        flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
+    
+class Eliminartipo(flask.views.MethodView):
+    """
+    Vista de Eliminar Atributo
+    """
+    
+    @pms.vista.required.login_required  
+    def get(self):
+        return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
+    @pms.vista.required.login_required
+    def post(self):
+        """
+        Ejecuta la funcion de Eliminar Fase
+        """
+        if(flask.session['tipoitemid']!=None):
+            eliminarTipoItem(flask.session['tipoitemid'])
+            flask.flash(u"ELIMINACION EXITOSA","text-success")
+            return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
+        else:
+            return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
+        
+
+
+    
+@app.route('/admtipo/eliminar/<t>')
+@pms.vista.required.login_required       
+def eTipoItem(t=None): 
+    """
+    Funcion que llama a la Vista de Eliminar Tipo de Item, responde al boton de 'Eliminar' de Administrar Item
+    """
+    flask.session.pop('aux1',None)
+    flask.session.pop('aux2',None)
+    tipo=getTipoItemId(t)
+    flask.session['tipoitemid']=tipo.id
+    return flask.render_template('eliminarTipo.html',t=tipo)          
+    

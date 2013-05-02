@@ -3,8 +3,7 @@ from flask import request
 import pms.vista.required
 from pms import app
 from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
-from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo, getAtributoNombreTipo
+from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo, getAtributoNombreTipo, getAtributoId, eliminarAtributo
 from pms.modelo.entidad import Atributo
 @app.route('/admatributo/<t>')
 @pms.vista.required.login_required
@@ -56,4 +55,43 @@ class Crearatributo(flask.views.MethodView):
         idcreado=getAtributoNombreTipo(flask.request.form['nombre'][:20],flask.session['tipoitemid'])
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
+        flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect('/admatributo/'+str(flask.session['tipoitemid'])) 
+    
+class Eliminaratributo(flask.views.MethodView):
+    """
+    Vista de Eliminar Atributo
+    """
+    
+    @pms.vista.required.login_required  
+    def get(self):
+        return flask.redirect('/admatributo/'+str(flask.session['tipoitemid'])) 
+    @pms.vista.required.login_required
+    def post(self):
+        """
+        Ejecuta la funcion de Eliminar Fase
+        """
+        if(flask.session['atributoid']!=None):
+            eliminarAtributo(flask.session['atributoid'])
+            flask.flash(u"ELIMINACION EXITOSA","text-success")
+            return flask.redirect('/admatributo/'+str(flask.session['tipoitemid'])) 
+        else:
+            return flask.redirect('/admatributo/'+str(flask.session['tipoitemid'])) 
+        
+
+
+    
+@app.route('/admatributo/eliminar/<atr>')
+@pms.vista.required.login_required       
+def eAtributo(atr=None): 
+    """
+    Funcion que llama a la Vista de Eliminar Atributo, responde al boton de 'Eliminar' de Administrar Atributo
+    """
+    flask.session.pop('aux1',None)
+    flask.session.pop('aux2',None)
+    flask.session.pop('aux3',None)
+    flask.session.pop('aux4',None)
+    atributo=getAtributoId(atr)
+    flask.session['atributoid']=atributo.id
+    return flask.render_template('eliminarAtributo.html',a=atributo)           
+    
