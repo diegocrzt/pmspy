@@ -9,6 +9,7 @@ class Main(flask.views.MethodView):
         """
            Devuelve la pagina index.html 
         """
+        flask.session['filtro']=""
         return flask.render_template('index.html')
     
     def post(self):
@@ -35,13 +36,6 @@ class Main(flask.views.MethodView):
             required=True
         if required:
             return flask.redirect(flask.url_for('index'))
-        """for r in required:
-            print "for"
-            if r not in flask.request.form:
-                flask.flash("Error: {0} is required.".format(r))
-                incompleto=True
-                print "if"
-                return flask.redirect(flask.url_for('index'))"""
         username = flask.request.form['username']
         passwd = flask.request.form['passwd']
         if(incompleto==False):

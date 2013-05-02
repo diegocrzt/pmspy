@@ -245,7 +245,7 @@ def nextPageF():
         flask.session['hayprev']=True
     return flask.redirect('/admfase/'+str(flask.session['proyectoid']))   
 
-@app.route('/admfase/prev/')
+@app.route('/admfase/prevfase/')
 @pms.vista.required.admin_required
 @pms.vista.required.login_required       
 def prevPageF():

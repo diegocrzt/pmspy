@@ -8,7 +8,7 @@ Created on 14/04/2013
 from entidad import Proyecto
 from initdb import db_session, init_db
 import faseControlador
-
+from sqlalchemy import or_
 session = db_session()
 
 def getProyectos():
@@ -94,27 +94,49 @@ def inicializarProyecto(p):
     session.merge(proy)
     session.commit()
     
-def getProyectosPaginados(pagina=None,tam_pagina=None):
+def getProyectosPaginados(pagina=None,tam_pagina=None, filtro=None):
     """
     Devuelve una lista de proyectos de tamanio tam_pagina de la pagina pagina, la pagina empieza en 0
     """
-    query = session.query(Proyecto).order_by(Proyecto.id)
+    if  filtro:
+        query=getProyectosFiltrados(filtro)
+    else:
+        query = session.query(Proyecto).order_by(Proyecto.id)
     if pagina and tam_pagina:
         query = query.offset(pagina*tam_pagina)
     return query.limit(tam_pagina)
 
-def getCantProyectos():
+def getCantProyectos(filtro=None):
     """Devuelve la cantidad de proyecto existentes en la base de datos
     """
-    return session.query(Proyecto).count()
-        
-'''def main():
-    page_size=3
-    page=2
-    query=getProyectosPaginados(0,3)
-    #query=query.limit(3)
-    for q in query:
-        print q.nombre
+    if (filtro):
+        p=getProyectosFiltrados(filtro).count()
+    else:
+        p=session.query(Proyecto).count()
+    return p
+
+def getProyectosFiltrados(filtro=None):
+    """Devuelve una lista de proyectos por nombre, estado, id, y cantFases
+    """
+    if (filtro):
+        if(filtro.isdigit()):
+            query=session.query(Proyecto).filter(or_(Proyecto.id==filtro, Proyecto.cantFase==filtro, Proyecto.nombre.ilike("%"+filtro+"%"), Proyecto.estado.ilike("%"+filtro+"%")))
+        else:    
+            query=session.query(Proyecto).filter(Proyecto.nombre.ilike("%"+filtro+"%") | Proyecto.estado.ilike("%"+filtro+"%"))
+        return query
+            
+def main():
+    f="piki"
+    query=getProyectosFiltrados(f)
+    str="holta"
+    if query:
+        print "query"
+        for q in query:
+            print q.nombre
+    else:
+        print query
         
 if __name__ == "__main__":
-    main()   '''
+    main() 
+    
+    
