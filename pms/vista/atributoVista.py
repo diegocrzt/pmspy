@@ -40,14 +40,17 @@ class Crearatributo(flask.views.MethodView):
     def post(self):
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['tipoDato']
+        error=False
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
-            return flask.render_template('crearAtributo.html')
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
+            error=True
         if(flask.request.form['tipoDato']==""):
-            flask.flash("El Tipo dato no puede estar vacio")
+            flask.flash(u"El Tipo de dato no puede estar vacio","tipo")
+            error=True
+        if error:
             return flask.render_template('crearAtributo.html')
         if comprobarAtributo(flask.request.form['nombre'],flask.session['tipoitemid']):
-            flask.flash("El atributo ya existe")
+            flask.flash(u"El atributo ya existe","nombre")
             return flask.render_template('crearAtributo.html')
         crearAtributo(flask.request.form['nombre'][:20],flask.request.form['tipoDato'][:100],flask.session['tipoitemid'])
         idcreado=getAtributoNombreTipo(flask.request.form['nombre'][:20],flask.session['tipoitemid'])

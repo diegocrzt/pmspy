@@ -41,10 +41,10 @@ class Creartipo(flask.views.MethodView):
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['comentario']
         if(flask.request.form['nombre']==""):
-            flask.flash("El campo nombre no puede estar vacio")
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
             return flask.render_template('crearTipo.html')
         if comprobarTipoItem(flask.request.form['nombre'],flask.session['faseid']):
-            flask.flash("El tipo ya existe")
+            flask.flash(u"El tipo ya existe", "nombre")
             return flask.render_template('crearTipo.html')
         crearTipoItem(flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
         idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
