@@ -81,10 +81,20 @@ class Eliminartipo(flask.views.MethodView):
 def eTipoItem(t=None): 
     """
     Funcion que llama a la Vista de Eliminar Tipo de Item, responde al boton de 'Eliminar' de Administrar Item
+    recibe el id del tipo de item a eliminarce
     """
     flask.session.pop('aux1',None)
     flask.session.pop('aux2',None)
     tipo=getTipoItemId(t)
     flask.session['tipoitemid']=tipo.id
-    return flask.render_template('eliminarTipo.html',t=tipo)          
-    
+    return flask.render_template('eliminarTipo.html',t=tipo)   
+
+@app.route('/admtipo/consultartipo/<t>')
+@pms.vista.required.login_required
+def consultarTipoItem(t=None):
+    """
+    Funcion que despliega pagina de consulta de tipo de item, llama a consultarTipo.html
+    recibe el id del tipo de item a consultar
+    """
+    tipo=getTipoItemId(t)
+    return flask.render_template('consultarTipo.html',t=tipo)   

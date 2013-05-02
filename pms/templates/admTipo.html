@@ -52,6 +52,9 @@
                                         <th>Comentario</th>
 				                        <th>Atributos</th>
 				                        <th>Eliminar</th>
+				                        <th>Editar</th>
+				                        <th>Importar</th>
+				                        <th>Consultar</th>
                                 </tr>
                                 {% for t in tipos %}
                     
@@ -59,10 +62,19 @@
                                         <td>{{t.nombre}}</td>
                                         <td>{{t.comentario}}</td>
                                         <td>
-                                        <a class="btn" href="/admatributo/{{t.id}}">Atributos</a>
+                                        <a class="btn btn-primary" href="/admatributo/{{t.id}}">Atributos</a>
                                         </td>
 		                                <td>
 		                                <a class="btn btn-danger" href="/admtipo/eliminar/{{t.id}}">Eliminar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn" href="/admtipo/editartipo/{{t.id}}">Editar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-warning" href="/admtipo/importartipo/{{t.id}}">Importar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-info" href="/admtipo/consultartipo/{{t.id}}">Consultar</a>
                                         </td>
                         </tr>
                                 {% else %}
@@ -76,8 +88,6 @@
 	      <div class="span3 bs-docs-sidebar">
         	<ul class="nav nav-list bs-docs-sidenav">
 				  <li><a href="/admtipo/creartipo/"><i class="icon-chevron-right"></i> Crear Tipo de Item</a></li>
-				  <li><a href="/admtipo/importar/"><i class="icon-chevron-right"></i> Importar Tipo de Item</a></li>
-				  <li><a href="#"><i class="icon-chevron-right"></i> Consultar Tipos</a></li>
 				</ul>
 			</div>
 </div>
