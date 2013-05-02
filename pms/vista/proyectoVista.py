@@ -230,7 +230,6 @@ def eProyecto(proyecto=None):
         return flask.redirect(flask.url_for('admproyecto'))    
     
 @app.route('/admproyecto/nextproyecto/')
-@pms.vista.required.admin_required
 @pms.vista.required.login_required       
 def nextPageP():
     global CAMBIO
@@ -253,7 +252,6 @@ def nextPageP():
     return flask.redirect(flask.url_for('admproyecto'))  
 
 @app.route('/admproyecto/prevproyecto/')
-@pms.vista.required.admin_required
 @pms.vista.required.login_required       
 def prevPageP():
     global CAMBIO

@@ -4,7 +4,7 @@ Created on 05/04/2013
 @author: mpoletti
 '''
 from sqlalchemy import Table
-from pms.modelo.entidad import Usuario, Proyecto, Fase, TipoItem, Atributo, Item, ValorInt, ValorStr, ValorBoolean, ValorDate, VersionItem
+from pms.modelo.entidad import Usuario, Proyecto, Fase, TipoItem, Atributo, Item, ValorNum, ValorStr, ValorBoolean, ValorDate, VersionItem
 from pms.modelo.initdb import metadata, db_session, init_db, engine
 import hashlib
 """Puebla la base de datos con datos de pureba"""
@@ -62,11 +62,11 @@ itm = Item(tipo="1",etiqueta="p1f1i2")
 session.add(itm)
 session.commit()
 
-vitm = VersionItem(version="1", nombre="a1", estado="activo", actual="false", deitem="1")
+vitm = VersionItem(version="1", nombre="a1", estado="activo", actual="false", costo="5", dificultad="5", deitem="1")
 session.add(vitm)
-vitm2 = VersionItem(version="2", nombre="a1", estado="activo", actual="true",deitem="1")
+vitm2 = VersionItem(version="2", nombre="a1", estado="activo", actual="true", costo="5", dificultad="5",deitem="1")
 session.add(vitm2)
-vitm3 = VersionItem(version="1", nombre="a2", estado="activo", actual="true",deitem="2")
+vitm3 = VersionItem(version="1", nombre="a2", estado="activo", actual="true", costo="5", dificultad="5",deitem="2")
 session.add(vitm3)
 session.commit()
 
@@ -74,7 +74,7 @@ vl1 = ValorStr(atributo="1", item="1",valor="Pedro")
 session.add(vl1)
 vl2 = ValorStr(atributo="2",item="1", valor="Perez")
 session.add(vl2)
-vl3 = ValorInt(atributo="3",item="1", valor="24")
+vl3 = ValorNum(atributo="3",item="1", valor="24")
 session.add(vl3)
 vl4 = ValorDate(atributo="4",item="1", valor="12/01/1989")
 session.add(vl4)
@@ -82,7 +82,7 @@ vl5 = ValorStr(atributo="1",item="2", valor="Juan")
 session.add(vl5)
 vl6 = ValorStr(atributo="2",item="2", valor="Benitez")
 session.add(vl6)
-vl7 = ValorInt(atributo="3",item="2", valor="33")
+vl7 = ValorNum(atributo="3",item="2", valor="33")
 session.add(vl7)
 vl8 = ValorDate(atributo="4",item="2", valor="12/01/1980")
 session.add(vl8)

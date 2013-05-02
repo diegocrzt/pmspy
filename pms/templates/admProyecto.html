@@ -75,13 +75,11 @@
                                         {% endif %}
                                         <td>{{p.estado}}</td>
                                         <td>{{p.lider.nombre}}</td>
-                                        
-                                        <td>
                                         {% if session['isAdmin']==True and p.estado!="Iniciado" %}
+                                        <td>
                                            <a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
-                                        {% endif %}
                                         </td>
-                                        
+                                        {% endif %}
                                 		<td> 
                                         {%if session['usuarioid']==p.delider%}
                                         <a class="btn" href="/admfase/{{p.id}}"> Selec>> </a>

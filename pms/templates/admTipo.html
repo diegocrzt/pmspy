@@ -14,6 +14,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
+              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
               <li class="active"><a href="">Administrar Tipo de Item</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
@@ -26,20 +27,22 @@
 {%endblock%}
 
 {%block mensaje%}
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-              <li>{{ message }}</li>
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
             {% endfor %}
-            </ul>
+		  </div>
           {% endif %}
         {% endwith %}
 {%endblock%}
 
 {%block content%}
 <div class="fases">
-        <h4 class="muted"> Fase: {{session['fasenombre']}}</h4>
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+        </div>
         <div class="row" >
                 <div class="span12">
                         <h2> Listado de Tipos de Items </h2>
@@ -49,6 +52,9 @@
                                         <th>Comentario</th>
 				                        <th>Atributos</th>
 				                        <th>Eliminar</th>
+				                        <th>Editar</th>
+				                        <th>Importar</th>
+				                        <th>Consultar</th>
                                 </tr>
                                 {% for t in tipos %}
                     
@@ -56,16 +62,25 @@
                                         <td>{{t.nombre}}</td>
                                         <td>{{t.comentario}}</td>
                                         <td>
-                                        <a class="btn" href="/admatributo/{{t.id}}">Atributos</a>
+                                        <a class="btn btn-primary" href="/admatributo/{{t.id}}">Atributos</a>
                                         </td>
 		                                <td>
 		                                <a class="btn btn-danger" href="/admtipo/eliminar/{{t.id}}">Eliminar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn" href="/admtipo/editartipo/{{t.id}}">Editar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-warning" href="/admtipo/importartipo/{{t.id}}">Importar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-info" href="/admtipo/consultartipo/{{t.id}}">Consultar</a>
                                         </td>
                         </tr>
                                 {% else %}
                         
                                 <tr>
-                                        No se han creado tipos de items aun
+                                        No se han creado tipos de items aún
                                 </tr>
                                 {% endfor %}
                 </table>
@@ -73,8 +88,6 @@
 	      <div class="span3 bs-docs-sidebar">
         	<ul class="nav nav-list bs-docs-sidenav">
 				  <li><a href="/admtipo/creartipo/"><i class="icon-chevron-right"></i> Crear Tipo de Item</a></li>
-				  <li><a href="/admtipo/importar/"><i class="icon-chevron-right"></i> Importar Tipo de Item</a></li>
-				  <li><a href="#"><i class="icon-chevron-right"></i> Consultar Tipos</a></li>
 				</ul>
 			</div>
 </div>

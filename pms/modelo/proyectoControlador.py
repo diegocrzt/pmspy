@@ -20,7 +20,7 @@ def getProyectos():
 
 def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod=None, lider=None, estado=None):
     """Crea un proyecto
-
+    
     """
     init_db()
     session = db_session()
@@ -136,7 +136,7 @@ def main():
     else:
         print query
         
-if __name__ == "__main__":
+if __name__ == "__main__":  
     main()   
     
     
