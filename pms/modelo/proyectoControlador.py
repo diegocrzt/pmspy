@@ -136,7 +136,11 @@ def main():
     else:
         print query
         
+<<<<<<< HEAD
 if __name__ == "__main__":  
+=======
+if __name__ == "__main__":
+>>>>>>> refs/heads/master
     main()   
     
     
