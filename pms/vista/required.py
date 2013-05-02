@@ -10,7 +10,7 @@ def login_required(method):
         if 'username' in flask.session:
             return method(*args, **kwargs)
         else:
-            flask.flash("Es necesario el logueo")
+            flask.flash(u"Es necesario el logueo","text-info")
             return flask.redirect(flask.url_for('index'))
     return wrapper
 
@@ -28,6 +28,6 @@ def admin_required(method):
             else:
                 return flask.redirect(flask.url_for('admproyecto'))
         else:
-            flask.flash("no tiene permiso de admin!")
+            flask.flash(u"No tiene permiso de administrador","text-error")
             return flask.redirect(flask.url_for('admproyecto'))
     return wrapper

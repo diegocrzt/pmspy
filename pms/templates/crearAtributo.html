@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admatributo/{{session['tipoitemid']}}">Administrar Atributo</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+
+{%block mensaje%}
+
+{%endblock%}
+
+{%block content%}
+<div class="container">
+	<h3>Crear Atributo</h3>
+	<hr>
+	<p>Complete los datos del Atributo</p>
+		<form action="{{url_for('crearatributo')}}" method="post">
+            <p>Nombre<small class="text-error">(*)</small>:
+            {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+			{% endwith %}
+            <br/>
+            <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
+            <p>Tipo del dato a almacenar<small class="text-error">(*)</small>:
+           	{%  with messages = get_flashed_messages(category_filter=["tipo"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+			{% endwith %} 
+            
+            <br/>
+            {% set options = ["Cadena", "Numerico", "Fecha", "Booleano"] %}
+            <select name="tipoDato" >
+            {% for op in options  %}
+            		{%if session['aux2']==op%}
+            		<option value="{{ op }}" selected>{{op}}</option>
+            		{% else %}
+                	<option value="{{ op }}">{{op}}</option>
+                	{% endif %}
+                {% endfor %}
+            
+            </select>
+            <!--<input type="text" name="tipoDato" value="{{session['aux2']}}"/></p>  -->
+            <p><input class="btn btn-success" type="submit" value="Aceptar" />
+            <a class="btn btn-inverse" href="/admatributo/{{session['tipoid']}}">Cancelar</a></p>
+        </form>
+</div> 
+{%endblock%}
+

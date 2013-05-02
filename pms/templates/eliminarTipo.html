@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admtipo/{{session['faseid']}}">Administrar Tipo de Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="container" align="left">
+    <h3>Eliminar tipo de item de <em>{{session['fasenombre']}}</em></h3>
+    <hr>
+    <p class="text-info">	La eliminación de un tipo de item es <strong>irreversible</strong>.</p>
+    <p>	<strong>Nombre:</strong> {{t.nombre}}</p>
+    {% if t.comentario!="" %}
+    <p>	<strong>Comentario:</strong> {{t.comentario}}</p>
+    {% else %}
+    <p>	<strong>Comentario:</strong> -- </p>
+    {% endif %}
+	<p>	<strong>Atributos:</strong></p>
+	<div class="span5">
+	<table  class="table  table-bordered" >
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                 </tr>
+
+	 							{% for a in t.atributos %}
+	 							<tr >
+									<td>{{a.nombre}}</td>
+									<td>{{a.tipoDato}}</td>
+								</tr>
+								{% else %}
+								<tr>
+										<td> -No contiene Atributos-</td>
+										<td></td>
+								<tr>
+								{% endfor %}
+								
+							</table>
+		<form action="{{url_for('eliminartipo')}}" method="post">        
+	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
+	    	<a class="btn btn-inverse" href="/admtipo/{{session['faseid']}}">Cancelar</a></p>
+	    </form>
+    </div>
+</div>
+{%endblock%}
