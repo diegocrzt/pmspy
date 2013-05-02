@@ -5,7 +5,7 @@ Created on 05/04/2013
 @author: synchro, Natalia Valdez
 @author: mpoletti
 '''
-from sqlalchemy import Column, Integer, Boolean, ForeignKey, Table
+from sqlalchemy import Column, Integer, Boolean, ForeignKey, Table, Numeric, REAL, BLOB
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Unicode
 from sqlalchemy.types import DateTime
@@ -19,7 +19,8 @@ class Usuario(Base):
         Define la clase Usuario y la mapea con la tabla usuario
     """
     __tablename__ = 'usuario'
-    id = Column(Integer, primary_key=True)
+
+    id = Column(Integer,primary_key = True)
     nombre = Column(Unicode(20))
     nombredeusuario = Column(Unicode(20), unique=True)
     clave = Column(Unicode(41))
@@ -33,9 +34,9 @@ class Usuario(Base):
         self.clave = clave
         self.isAdmin = isAdmin
     
+
     def __repr__(self):
         return 'Usuario { ' + self.nombre + '(' + self.nombredeusuario + ')}'
-    
         
 class Proyecto(Base):
     """
@@ -48,9 +49,10 @@ class Proyecto(Base):
     fechaInicio = Column(DateTime)
     fechaFin = Column(DateTime)
     fechaUltMod = Column(DateTime)
-    delider = Column(Integer, ForeignKey('usuario.id'))
+    delider = Column(Integer, ForeignKey('usuario.id') )
     estado = Column(Unicode(10))
-    fases = relationship("Fase", order_by="Fase.id", backref="proyecto")
+    fases = relationship("Fase",order_by="Fase.id",backref="proyecto")
+
     
     
     def __init__(self, nombre, cantFase, fechaInicio, fechaFin, fechaUltMod, delider, estado):
@@ -61,9 +63,11 @@ class Proyecto(Base):
         self.fechaUltMod = fechaUltMod
         self.delider = delider
         self.estado = estado
+
     
     def __repr__(self):
         return 'Proyecto { ' + self.nombre + ')}'
+
         
 
 
@@ -163,8 +167,11 @@ class VersionItem(Base):
     nombre = Column(Unicode(20))
     estado = Column(Unicode(20))
     actual = Column(Boolean)
+    costo = Column(Integer)
+    dificultad =Column(Integer)
+    archivo= Column(BLOB)
     deitem = Column(Integer, ForeignKey('item.id'))
-    atributosint = relationship("ValorInt")
+    atributosint = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
@@ -180,18 +187,14 @@ class VersionItem(Base):
     def __repr__(self):
         return 'VersionItem { '+ self.nombre + '('+ self.version+ ')}'
 
-
-
-
-
-class ValorInt(Base):
+class ValorNum(Base):
     """
         Define la clase ValorInt y la mapea con la tabla valorint
     """
     __tablename__ = 'valorint'
     atributo_id = Column(Integer, ForeignKey('atributo.id'), primary_key=True)
     item_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
-    valor = Column(Integer)     
+    valor = Column(REAL)     
     atributo = relationship("Atributo")
     
     def __init__(self, atributo, item, valor):
@@ -201,7 +204,6 @@ class ValorInt(Base):
         
     def __repr__(self):
         return 'ValorInt { '+ self.valor+ '}'
-        
 
 class ValorBoolean(Base):
     """

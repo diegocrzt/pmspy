@@ -223,7 +223,6 @@ def admFase(p=None):
     
     
 @app.route('/admfase/nextfase/')
-@pms.vista.required.admin_required
 @pms.vista.required.login_required       
 def nextPageF():
     global CAMBIO
@@ -245,8 +244,7 @@ def nextPageF():
         flask.session['hayprev']=True
     return flask.redirect('/admfase/'+str(flask.session['proyectoid']))   
 
-@app.route('/admfase/prev/')
-@pms.vista.required.admin_required
+@app.route('/admfase/prevfase/')
 @pms.vista.required.login_required       
 def prevPageF():
     global CAMBIO
