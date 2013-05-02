@@ -16,7 +16,7 @@ app.add_url_rule('/admproyecto/',
                  view_func=vista.proyectoVista.AdmProyecto.as_view('admproyecto'),
                  methods=["GET", "POST"])
 
-app.add_url_rule('/admfase/eliminarproyecto/',
+app.add_url_rule('/admproyecto/eliminarproyecto/',
                  view_func=vista.proyectoVista.Eliminarproyecto.as_view('eliminarproyecto'),
                  methods=["GET", "POST"])
 
