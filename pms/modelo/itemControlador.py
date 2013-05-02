@@ -47,7 +47,7 @@ def getVersionId(id=None):
 
 def getVersionItem(idi=None):
     init_db()
-    version = session.query(VersionItem).filter(VersionItem.deitem==idi,VersionItem.actual==True).first()
+    version = session.query(VersionItem).filter(VersionItem.deitem==idi).filter(VersionItem.actual==True).first()
     return version
         
         
