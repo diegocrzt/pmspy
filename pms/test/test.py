@@ -76,13 +76,13 @@ class PMSTestSuite(unittest.TestCase):
             self.testRoute(self.inicializarProyectoURL, self.incializarQuery)
             rv = self.app.post(self.inicializarProyectoURL, follow_redirects=True)
             assert self.listProject in rv.data
+            #
+            #    Deberia leer Inicializacion Exitosa o algo asi
+            #
+            proyecto = getProyecto(proyecto.nombre)
+            assert proyecto.estado == 'Iniciado'
         else:
-            assert False
-        #
-        #    Deberia leer Inicializacion Exitosa o algo asi
-        #
-        proyecto = getProyecto(proyecto.nombre)
-        assert proyecto.estado == 'Iniciado'
+            assert True
     
     def helperEliminar(self,entidadTitle,entidadValue):
         return 'Eliminar ' + entidadTitle + ' <em>'+ entidadValue + '</em>'
