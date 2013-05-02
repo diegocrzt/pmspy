@@ -75,7 +75,7 @@ class PMSTestSuite(unittest.TestCase):
         rv = self.app.post(self.inicializarProyectoURL, follow_redirects=True)
         assert self.listProject in rv.data
         #
-        #    Debería leer Inicializacion Exitosa o algo asi
+        #    Deberia leer Inicializacion Exitosa o algo asi
         #
         proyecto = getProyecto(proyecto.nombre)
         assert proyecto.estado == 'Iniciado'
