@@ -14,7 +14,7 @@ def getTiposFase(fase=None):
     """Obtener tipos de items
     """
     init_db()
-    res = session.query(TipoItem).filter(TipoItem.defase==fase).all()
+    res = session.query(TipoItem).filter(TipoItem.defase==fase).order_by(TipoItem.id)
     return res
 
 def getTipoItemId(id=None):
@@ -65,7 +65,7 @@ def editarTipoItem(idti=None,nom=None, com=None, fa=None):
     f = getTipoItemId(idti)
     f.nombre=nom
     f.comentario=com
-    f.fase=fa
+    f.defase=fa
     session.merge(f)
     session.commit()
 

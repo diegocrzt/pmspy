@@ -67,6 +67,10 @@ app.add_url_rule('/admtipo/creartipo/',
                  view_func=vista.tipoVista.Creartipo.as_view('creartipo'),
                  methods=["GET", "POST"])
 
+app.add_url_rule('/admtipo/editartipo/',
+                 view_func=vista.tipoVista.Editartipo.as_view('editartipo'),
+                 methods=["GET", "POST"])
+
 app.add_url_rule('/admtipo/eliminartipo/',
                  view_func=vista.tipoVista.Eliminartipo.as_view('eliminartipo'),
                  methods=["GET", "POST"])

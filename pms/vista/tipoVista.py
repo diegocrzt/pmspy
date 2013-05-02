@@ -5,7 +5,7 @@ from pms import app
 from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
-from pms.modelo.entidad import Atributo
+from pms.modelo.entidad import Atributo,TipoItem
 @app.route('/admtipo/<f>')
 @pms.vista.required.login_required
 def admTipo(f=None):
@@ -52,6 +52,28 @@ class Creartipo(flask.views.MethodView):
         flask.session.pop('aux2',None)
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
+
+class Editartipo(flask.views.MethodView):
+    """
+    Gestiona la Vista de Editar Tipo de Item
+    """
+    @pms.vista.required.login_required
+    def get(self):
+        return flask.redirect('/admtipo/'+str(flask.session['faseid']))
+
+    @pms.vista.required.login_required
+    def post(self):
+        flask.session['aux1']=flask.request.form['nombre']
+        flask.session['aux2']=flask.request.form['comentario']
+        if(flask.request.form['nombre']==""):
+            flask.flash(u"El campo nombre no puede estar vacio","nombre")
+            return flask.render_template('editarTipo.html')
+        editarTipoItem(flask.session['tipoitemid'],flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
+        idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.flash(u"EDICION EXITOSA","text-success")
+        return flask.redirect('/admtipo/'+str(flask.session['faseid']))
     
 class Eliminartipo(flask.views.MethodView):
     """
@@ -74,7 +96,13 @@ class Eliminartipo(flask.views.MethodView):
             return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
         
 
-
+@app.route('/admtipo/editartipo/<t>')
+@pms.vista.required.login_required       
+def edTipoItem(t=None): 
+    tipo=getTipoItemId(t)
+    flask.session['tipoitemid']=tipo.id
+    return flask.render_template('editarTipo.html',t=tipo) 
+    
     
 @app.route('/admtipo/eliminar/<t>')
 @pms.vista.required.login_required       
