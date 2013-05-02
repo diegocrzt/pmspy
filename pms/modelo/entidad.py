@@ -5,7 +5,7 @@ Created on 05/04/2013
 @author: synchro, Natalia Valdez
 @author: mpoletti
 '''
-from sqlalchemy import Column, Integer, Boolean, ForeignKey, Table
+from sqlalchemy import Column, Integer, Boolean, ForeignKey, Table, Numeric, REAL, BLOB
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Unicode
 from sqlalchemy.types import DateTime
@@ -167,8 +167,11 @@ class VersionItem(Base):
     nombre = Column(Unicode(20))
     estado = Column(Unicode(20))
     actual = Column(Boolean)
+    costo = Column(Integer)
+    dificultad =Column(Integer)
+    archivo= Column(BLOB)
     deitem = Column(Integer, ForeignKey('item.id'))
-    atributosint = relationship("ValorInt")
+    atributosint = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
@@ -184,18 +187,14 @@ class VersionItem(Base):
     def __repr__(self):
         return 'VersionItem { '+ self.nombre + '('+ self.version+ ')}'
 
-
-
-
-
-class ValorInt(Base):
+class ValorNum(Base):
     """
         Define la clase ValorInt y la mapea con la tabla valorint
     """
     __tablename__ = 'valorint'
     atributo_id = Column(Integer, ForeignKey('atributo.id'), primary_key=True)
     item_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
-    valor = Column(Integer)     
+    valor = Column(REAL)     
     atributo = relationship("Atributo")
     
     def __init__(self, atributo, item, valor):
