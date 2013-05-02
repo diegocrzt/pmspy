@@ -136,7 +136,7 @@ def main():
     else:
         print query
         
-if __name__ == "__main__":
-    main() 
+if __name__ == "__main__":  
+    main()   
     
     
