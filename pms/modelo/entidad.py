@@ -13,6 +13,7 @@ from initdb import init_db
 from initdb import Base
 
 
+
 class Usuario(Base):
 
     """
@@ -170,7 +171,7 @@ class VersionItem(Base):
     costo = Column(Integer)
     dificultad =Column(Integer)
     deitem = Column(Integer, ForeignKey('item.id'))
-    atributosint = relationship("ValorNum")
+    atributosnum = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")

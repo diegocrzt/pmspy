@@ -46,12 +46,14 @@ class CrearItem(flask.views.MethodView):
     """
     @pms.vista.required.login_required
     def get(self):
-        return flask.render_template('crearItem.html')
+        tipos=getTiposFase(flask.session['faseid'])
+        return flask.render_template('crearItem.html',tipos=tipos)
     @pms.vista.required.login_required
     def post(self):
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['costo']
         flask.session['aux3']=flask.request.form['dificultad']
+        flask.session['aux4']=flask.request.form['tipo']
         if(flask.request.form['nombre']==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
             return flask.render_template('crearItem.html')
@@ -61,15 +63,67 @@ class CrearItem(flask.views.MethodView):
         if(flask.request.form['dificultad']==""):
             flask.flash(u"El campo dificultad no puede estar vacio","dificultad")
             return flask.render_template('crearItem.html')
-        if comprobarTipoItem(flask.request.form['nombre'],flask.session['faseid']):
+        if comprobarItem(flask.request.form['nombre'],flask.session['faseid']):
             flask.flash(u"El item ya existe", "nombre")
             return flask.render_template('crearTipo.html')
-        crearTipoItem(flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
-        idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
+        tipos=getTiposFase(flask.session['faseid'])
+        c=1
+        for t in tipos:
+            for i in t.instancias:
+                for v in i.version:
+                    c=c+1
+        etiqueta=str(flask.session['proyectoid'])+str(flask.session['faseid'])+str(c)
+        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"activo",flask.request.form['costo'],flask.request.form['dificultad'])
+        tipo=getTipoItemId(flask.request.form['tipo'])
+        creado=getItemEtiqueta(etiqueta)
+        version=getVersionItem(creado.id)
+        for a in tipo.atributos:
+            crearValor(a.id,version.id,None)
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None)
         flask.flash(u"CREACION EXITOSA","text-success")
-        return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
+        return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
+    
+class CompletarAtributo(flask.views.MethodView):
+    """
+    Gestiona la Vista de Completar Atributo
+    """
+    @pms.vista.required.login_required
+    def get(self):
+        return flask.redirect('/admitem/'+str(flask.session['faseid']))
+
+    @pms.vista.required.login_required
+    def post(self):
+        itm=getVersionItem(flask.session['itemid'])
+        editarItem(flask.session['itemid'],itm.nombre,itm.estado,itm.costo,itm.dificultad)
+        itm=getVersionItem(flask.session['itemid'])
+        tipo=getTipoItemId(flask.session['tipoitemid'])
+        for at in tipo.atributos:
+            crearValor(at.id,itm.id,flask.request.form[at.nombre])
+        flask.flash(u"EDICION EXITOSA","text-success")
+        return flask.redirect('/admitem/'+str(flask.session['faseid']))    
+
+@app.route('/admitem/atributo/<i>')
+@pms.vista.required.login_required       
+def complAtributosItem(i=None): 
+    ver=getVersionId(i)
+    item=getItemId(ver.deitem)
+    tipo=getTipoItemId(item.tipo)
+    atr=tipo.atributos
+    flask.session['tipoitemid']=tipo.id
+    flask.session['itemid']=item.id
+    val=[]
+    for at in ver.atributosnum:
+        val.append(at)
+    for at in ver.atributosstr:
+        val.append(at)
+    for at in ver.atributosbool:
+        val.append(at)
+    for at in ver.atributosdate:
+        val.append(at)
+    return flask.render_template('completarAtributo.html',atributos=atr,valores=val) 
 '''
 class Editartipo(flask.views.MethodView):
     """

@@ -45,13 +45,15 @@
         </div>
         <div class="row" >
                 <div class="span12">
-                        <h2> Listado de Tipos de Items </h2>
+                        <h2> Listado de Items </h2>
                         <table class="table table-striped table-bordered">
                                 <tr>
                                         <th>Nombre</th>
                                         <th>Estado</th>
 				                        <th>Costo</th>
 				                        <th>Dificultad</th>
+				                        <th>Tipo</th>
+				                        <th>Completar Atributos</th>
 				                        <th>Editar</th>
 				                        <th>Eliminar</th>
 				                        <th>Consultar</th>
@@ -63,6 +65,14 @@
                                         <td>{{i.estado}}</td>
                                         <td>{{i.costo}}</td>
                                         <td>{{i.dificultad}}</td>
+                                        <td>{{i.item.tipoitem.nombre}}</td>
+                                        <td>
+                                        {% if i.item.tipoitem.atributos %}
+                                        <a class="btn" href="/admitem/atributo/{{i.id}}">Completar</a>
+                                        {% else %}
+                                        No tiene Atributos
+                                        {%endif%}
+                                        </td>
                                         <td>
                                         <a class="btn" href="/admitem/editaritem/{{i.id}}">Editar</a>
                                         </td>
