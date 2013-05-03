@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 set -e 
@@ -17,7 +18,13 @@ cp -r $PMS $TMP
 CWD=$(pwd)
 cd $TMP$PMS
 echo "borrando archivos innecesarios..."
-rm -rf doc gendoc.sh droptables.sql test
+for FILE in  doc gendoc.sh test
+do
+	if [ -e $FILE ]
+	then
+		rm -rf $FILE
+	fi
+done
 find . -name "*.pyc" -delete
 cd $CWD
 
@@ -29,8 +36,11 @@ then
 	sudo rm -rf $DEPLOYDIR$PMS
 fi
 
+echo "copiando config.py"
+sudo cp $CWD/config.py $DEPLOYDIR
+
 echo "desplegando el sistema"
-sudo cp -r $PMS $DEPLOYDIR
+sudo cp -r $TMP$PMS $DEPLOYDIR
 
 echo "iniciando apache2"
 sudo service apache2 start

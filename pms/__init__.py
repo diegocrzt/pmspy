@@ -14,7 +14,6 @@ import vista.paginar
 import vista.itemVista
 
 
-
 app.add_url_rule('/admproyecto/',
                  view_func=vista.proyectoVista.AdmProyecto.as_view('admproyecto'),
                  methods=["GET", "POST"])
@@ -105,4 +104,11 @@ app.add_url_rule('/admitem/editaritem/',
 
 app.add_url_rule('/admitem/eliminaritem/',
                  view_func=vista.itemVista.Eliminaritem.as_view('eliminaritem'),
+                 methods=["GET", "POST"])
+app.add_url_rule('/admitem/crearitem/',
+                 view_func=vista.itemVista.CrearItem.as_view('crearitem'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admitem/atributo/',
+                 view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
                  methods=["GET", "POST"])
