@@ -5,7 +5,6 @@ from datetime import datetime
 import pms.vista.required
 from pms import app
 TAM_PAGINA=5
-CAMBIO=False
 class AdmProyecto(flask.views.MethodView):
     """
     Gestiona y Ejecuta la Vista de Administrar Proyectos
@@ -16,7 +15,6 @@ class AdmProyecto(flask.views.MethodView):
         Ejecuta el template admProyecto.html
         """
         global TAM_PAGINA
-        global CAMBIO
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
@@ -24,8 +22,8 @@ class AdmProyecto(flask.views.MethodView):
         
         flask.session['filtro']=""
 
-        if CAMBIO:
-            CAMBIO=False
+        if flask.session['cambio']:
+            flask.session['cambio']=False
             p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
         else:
             flask.session['haynext']=True
@@ -232,8 +230,7 @@ def eProyecto(proyecto=None):
 @app.route('/admproyecto/nextproyecto/')
 @pms.vista.required.login_required       
 def nextPageP():
-    global CAMBIO
-    CAMBIO=True
+    flask.session['cambio']=True
     cantP=getCantProyectos()
     flask.session['pagina']=flask.session['pagina']+1
     global TAM_PAGINA
@@ -254,8 +251,7 @@ def nextPageP():
 @app.route('/admproyecto/prevproyecto/')
 @pms.vista.required.login_required       
 def prevPageP():
-    global CAMBIO
-    CAMBIO=True
+    flask.session['cambio']=True
     flask.session['pagina']=flask.session['pagina']-1
     global TAM_PAGINA
     pag=flask.session['pagina']

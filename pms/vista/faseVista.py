@@ -6,8 +6,7 @@ from datetime import timedelta
 from datetime import datetime
 import pms.vista.required
 from pms import app
-TAM_PAGINA=2
-CAMBIO=False
+TAM_PAGINA=5
 
 class Crearfase(flask.views.MethodView):
     """
@@ -41,7 +40,7 @@ class Crearfase(flask.views.MethodView):
         else:
             fechainicio = datetime.strptime(fechainicio, '%Y-%m-%d')
         if(flask.request.form['fechafin']==""):
-            fechafin=datetime.today()+timedelta(days=15)
+            fechafin=fechainicio+timedelta(days=15)
         else:
             fechafin = datetime.strptime(fechafin, '%Y-%m-%d')
         if fechafin <= fechainicio:
@@ -170,7 +169,6 @@ def admFase(p=None):
     recibe p que contiene el id del proyecto al que se ingreso
     """
     global TAM_PAGINA
-    global CAMBIO
     flask.session.pop('aux1',None)
     flask.session.pop('aux2',None)
     flask.session.pop('aux3',None)
@@ -180,8 +178,8 @@ def admFase(p=None):
             flask.session.pop('faseid',None)
             flask.session['proyectoid']=p
             flask.session['proyectonombre']=getProyectoId(p).nombre
-            if CAMBIO:
-                CAMBIO=False
+            if flask.session['cambio']:
+                flask.session['cambio']=False
             else:
                 flask.session['haynext']=True
                 flask.session['hayprev']=False
@@ -225,8 +223,7 @@ def admFase(p=None):
 @app.route('/admfase/nextfase/')
 @pms.vista.required.login_required       
 def nextPageF():
-    global CAMBIO
-    CAMBIO=True
+    flask.session['cambio']=True
     cantF=getFases(flask.session['proyectoid']).count()
     flask.session['pagina']=flask.session['pagina']+1
     global TAM_PAGINA
@@ -247,8 +244,7 @@ def nextPageF():
 @app.route('/admfase/prevfase/')
 @pms.vista.required.login_required       
 def prevPageF():
-    global CAMBIO
-    CAMBIO=True
+    flask.session['cambio']=True
     flask.session['pagina']=flask.session['pagina']-1
     global TAM_PAGINA
     pag=flask.session['pagina']

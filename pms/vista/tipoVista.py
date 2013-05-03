@@ -2,30 +2,89 @@ import flask.views
 from flask import request
 import pms.vista.required
 from pms import app
-from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
+from pms.modelo.tipoItemControlador import getTiposItemFiltrados,getTiposItemPaginados, getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.entidad import Atributo,TipoItem
-@app.route('/admtipo/<f>')
-@pms.vista.required.login_required
-def admTipo(f=None):
+from pms.vista.paginar import calculoDeAnterior
+from pms.vista.paginar import calculoDeSiguiente
+from pms.vista.paginar import calculoPrimeraPag
+TAM_PAGINA=3
+
+
+class AdmTipo(flask.views.MethodView):
     """
     Funcion que llama a la Vista de Administrar Tipo de Item, responde al boton de 'Selec>>' de Administrar Fase
     """
-    flask.session.pop('aux1',None)
-    flask.session.pop('aux2',None)
-    flask.session.pop('aux3',None)
-    flask.session.pop('aux4',None) 
-    if request.method == "GET":
-        fase=getFaseId(f)
-        flask.session.pop('faseid',None)
-        flask.session.pop('fasenombre',None)
-        flask.session['faseid']=fase.id
-        flask.session['fasenombre']=fase.nombre
-        t=fase.tipos
-        return flask.render_template('admTipo.html',tipos=t)
-    else:
-        return flask.redirect(flask.url_for('admfase'))
+    @pms.vista.required.login_required
+    def get(self):
+        if flask.session['faseid']!=None:
+            flask.session.pop('aux1',None)
+            flask.session.pop('aux2',None)
+            flask.session.pop('aux3',None)
+            flask.session.pop('aux4',None) 
+            if request.method == "GET":
+                fase=getFaseId(flask.session['faseid'])
+                flask.session.pop('faseid',None)
+                flask.session.pop('fasenombre',None)
+                flask.session['faseid']=fase.id
+                flask.session['fasenombre']=fase.nombre
+                flask.session['filtro']=""
+                #t=fase.tipos
+                if flask.session['cambio']:
+                    flask.session['cambio']=False
+                else:
+                    flask.session['haynext']=True
+                    flask.session['hayprev']=False
+                    flask.session['pagina']=1
+                tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
+                c=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id).count()
+                if(c!=0):
+                    cant=getTiposFase(fase.id).count()
+                    t=cant/TAM_PAGINA
+                    mod=cant%TAM_PAGINA
+                    if mod>0:
+                        t=int(t)+1#Total de paginas
+                    else:
+                        t=int(t+mod)
+                    m=flask.session['pagina']#Pagina en la que estoy
+                    infopag="Pagina "+ str(m) +" de " + str(t)
+                    if m<t:
+                        flask.session['haynext']=True
+                    else:
+                        flask.session['haynext']=False
+                    if m==1:
+                        flask.session['hayprev']=False
+                    else:
+                        flask.session['hayprev']=True
+                else:
+                    flask.session['haynext']=False
+                    flask.session['hayprev']=False
+                    infopag="Pagina 1 de 1"
+                
+                return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False)
+    
+    @pms.vista.required.login_required
+    def post(self):
+        if flask.request.form['fil']!="":
+            global TAM_PAGINA
+            flask.session['filtro']=flask.request.form['fil']
+            cant=getTiposItemFiltrados(flask.session['filtro'],flask.session['faseid']).count()
+            if 'buscar' in flask.request.form:
+                
+                flask.session['pagina']=1
+                p=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,flask.session['faseid'], flask.request.form['fil'])
+                infopag=calculoPrimeraPag(cant)
+            elif 'sgte' in flask.request.form:
+                infopag=calculoDeSiguiente(cant)
+                p=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,flask.session['faseid'], flask.request.form['fil'])
+            elif 'anterior' in flask.request.form:
+                infopag=calculoDeAnterior(cant)
+                p=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,flask.session['faseid'], flask.request.form['fil'])
+                    
+            return flask.render_template('admTipo.html',tipos=p,infopag=infopag,buscar=True)
+        else:
+            return flask.redirect('/admtipo/')
     
     
     
@@ -95,6 +154,16 @@ class Eliminartipo(flask.views.MethodView):
         else:
             return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
         
+@app.route('/admtipo/<f>')
+@pms.vista.required.login_required
+def admTipo(f=None):
+    fase=getFaseId(f)
+    flask.session.pop('faseid',None)
+    flask.session.pop('fasenombre',None)
+    flask.session['faseid']=fase.id
+    flask.session['fasenombre']=fase.nombre
+    return flask.redirect('/admtipo/')
+    
 
 @app.route('/admtipo/editartipo/<t>')
 @pms.vista.required.login_required       
@@ -126,3 +195,40 @@ def consultarTipoItem(t=None):
     """
     tipo=getTipoItemId(t)
     return flask.render_template('consultarTipo.html',t=tipo)   
+
+
+@app.route('/admtipo/nexttipo/')
+@pms.vista.required.login_required       
+def nextPageT():
+    
+    flask.session['cambio']=True
+    cantT=getTiposFase(flask.session['faseid']).count()
+    flask.session['pagina']=flask.session['pagina']+1
+    global TAM_PAGINA
+    sobran=cantT-flask.session['pagina']* TAM_PAGINA
+    if sobran>0:
+        flask.session['haynext']=True
+    else:
+        flask.session['haynext']=False
+    if flask.session['pagina']==1:
+        flask.session['hayprev']=False
+    else:
+        flask.session['hayprev']=True
+    return flask.redirect('/admtipo/'+str(flask.session['faseid']))   
+
+@app.route('/admtipo/prevtipo/')
+@pms.vista.required.login_required       
+def prevPageT():
+    flask.session['cambio']=True
+    flask.session['pagina']=flask.session['pagina']-1
+    global TAM_PAGINA
+    pag=flask.session['pagina']
+    if pag==1:
+        flask.session['hayprev']=False
+    else:
+        flask.session['hayprev']=True
+    if getTiposFase(flask.session['faseid']).count()>(pag*TAM_PAGINA):
+            flask.session['haynext']=True
+    return flask.redirect('/admtipo/'+str(flask.session['faseid']))
+
+

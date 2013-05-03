@@ -47,4 +47,5 @@ class Main(flask.views.MethodView):
                 flask.session['usuarioid']=u.id
             else:
                 flask.flash(u"Nombre de usuario no existe o clave incorrecta","incorrecto")
+        flask.session['cambio']=False
         return flask.redirect(flask.url_for('admproyecto'))

@@ -8,6 +8,7 @@ import vista.faseVista
 import vista.logVista
 import vista.tipoVista
 import vista.atributoVista
+import vista.paginar
 
 
 
@@ -81,4 +82,8 @@ app.add_url_rule('/admatributo/crearatributo/',
 
 app.add_url_rule('/admatributo/eliminaratributo/',
                  view_func=vista.atributoVista.Eliminaratributo.as_view('eliminaratributo'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admtipo/',
+                 view_func=vista.tipoVista.AdmTipo.as_view('admtipo'),
                  methods=["GET", "POST"])
