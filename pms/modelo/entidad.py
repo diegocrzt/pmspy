@@ -5,7 +5,7 @@ Created on 05/04/2013
 @author: synchro, Natalia Valdez
 @author: mpoletti
 '''
-from sqlalchemy import Column, Integer, Boolean, ForeignKey, Table, Numeric, REAL, BLOB
+from sqlalchemy import Column, Integer, Boolean, ForeignKey, Table, Numeric, REAL
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.types import Unicode
 from sqlalchemy.types import DateTime
