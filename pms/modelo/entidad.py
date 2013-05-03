@@ -13,6 +13,7 @@ from initdb import init_db
 from initdb import Base
 
 
+
 class Usuario(Base):
 
     """
@@ -148,7 +149,7 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     tipo = Column(Integer, ForeignKey('tipoitem.id'))
     etiqueta = Column(Unicode(60), unique=True)
-    version = relationship("VersionItem", uselist=False, backref="item")
+    version = relationship("VersionItem", backref="item")
     
     def __init__(self, tipo, etiqueta):
         self.tipo = tipo
@@ -169,19 +170,20 @@ class VersionItem(Base):
     actual = Column(Boolean)
     costo = Column(Integer)
     dificultad =Column(Integer)
-    archivo= Column(BLOB)
     deitem = Column(Integer, ForeignKey('item.id'))
-    atributosint = relationship("ValorNum")
+    atributosnum = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
 
     
-    def __init__(self, version, nombre, estado, actual, deitem):
+    def __init__(self, version, nombre, estado, actual, costo, dificultad, deitem):
         self.version = version
         self.nombre = nombre
         self.estado = estado
         self.actual = actual
+        self.costo =costo
+        self.dificultad=dificultad
         self.deitem = deitem
         
     def __repr__(self):
@@ -220,6 +222,9 @@ class ValorBoolean(Base):
         self.item_id = item
         self.valor = valor
         
+    def __repr__(self):
+        return 'ValorBoolean { '+ self.valor+ '}'
+        
 class ValorStr(Base):
     """
         Define la clase ValorStr y la mapea con la tabla valorstr
@@ -235,6 +240,9 @@ class ValorStr(Base):
         self.item_id = item
         self.valor = valor
         
+    def __repr__(self):
+        return 'ValorStr { '+ self.valor+ '}'
+        
 class ValorDate(Base):
     """
         Define la clase ValorDate y la mapea con la tabla valordate
@@ -249,6 +257,9 @@ class ValorDate(Base):
         self.atributo_id = atributo
         self.item_id = item
         self.valor = valor
+        
+    def __repr__(self):
+        return 'ValorDate { '+ self.valor+ '}'
 '''
 todavia no...
 class Relacion(Base):
