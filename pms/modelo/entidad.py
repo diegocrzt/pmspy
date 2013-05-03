@@ -13,6 +13,7 @@ from initdb import init_db
 from initdb import Base
 
 
+
 class Usuario(Base):
 
     """
@@ -148,7 +149,7 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     tipo = Column(Integer, ForeignKey('tipoitem.id'))
     etiqueta = Column(Unicode(60), unique=True)
-    version = relationship("VersionItem", uselist=False, backref="item")
+    version = relationship("VersionItem", backref="item")
     
     def __init__(self, tipo, etiqueta):
         self.tipo = tipo
@@ -170,7 +171,7 @@ class VersionItem(Base):
     costo = Column(Integer)
     dificultad =Column(Integer)
     deitem = Column(Integer, ForeignKey('item.id'))
-    atributosint = relationship("ValorNum")
+    atributosnum = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")

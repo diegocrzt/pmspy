@@ -8,6 +8,9 @@ from entidad import Item, VersionItem, Atributo, ValorStr, ValorNum, ValorBoolea
 from initdb import db_session, init_db
 from tipoItemControlador import getTiposFase
 from atributoControlador import getAtributosTipo, getAtributoId
+from datetime import timedelta
+from datetime import datetime
+
 
 session = db_session()
 
@@ -42,16 +45,16 @@ def getVersionId(id=None):
     
     """
     init_db()
-    item = session.query(VersionItem).filter(VersionItem.deitem==id).first()
+    item = session.query(VersionItem).filter(VersionItem.id==id).first()
     return item
 
 def getVersionItem(idi=None):
     init_db()
-    version = session.query(VersionItem).filter(VersionItem.deitem==idi,VersionItem.actual==True).first()
+    version = session.query(VersionItem).filter(VersionItem.deitem==idi).filter(VersionItem.actual==True).first()
     return version
         
         
-def comprobarItem(nombre=None, fase=None, etiqueta=None):
+def comprobarItem(nombre=None, fase=None):
     """
     valida si ya existe un item con ese nombre en esa fase
     """
@@ -59,7 +62,7 @@ def comprobarItem(nombre=None, fase=None, etiqueta=None):
     for t in tipos:
         for i in t.instancias:
             for v in i.version:
-                if(v.actual==True and (v.nombre==nombre or i.etiqueta == etiqueta)):
+                if(v.actual==True and (v.nombre==nombre)):
                     return True
                 else:
                     return False                
@@ -75,7 +78,7 @@ def crearItem(ti=None,etiq=None,nom=None, est=None, cos=None, dif=None):
     session.add(itm)
     session.commit()
     i=getItemEtiqueta(etiq)
-    ver=VersionItem(nombre=nom,version=1,estado=est,actual=True, costo=cos, dificultad=dif,deitem=i.id)
+    ver=VersionItem(nombre=nom,version=0,estado=est,actual=True, costo=cos, dificultad=dif,deitem=i.id)
     session.add(ver)
     session.commit()
     
@@ -119,18 +122,26 @@ def eliminarItem(idi=None):
 def crearValor(ida=None,idv=None,val=None):
     atr=getAtributoId(ida)
     if atr.tipoDato =="Cadena":
+        if val== None:
+            val=""
         v= ValorStr(atributo=ida,item=idv,valor=val)
         session.add(v)
         session.commit()
     elif atr.tipoDato =="Numerico":
+        if val== None:
+            val=0
         v= ValorNum(atributo=ida,item=idv,valor=val)
         session.add(v)
         session.commit()
     elif atr.tipoDato =="Fecha":
+        if val== None:
+            val=datetime.today()
         v= ValorDate(atributo=ida,item=idv,valor=val)
         session.add(v)
         session.commit()
     elif atr.tipoDato =="Booleano":
+        if val== None:
+            val=False
         v= ValorBoolean(atributo=ida,item=idv,valor=val)
         session.add(v)
         session.commit()
