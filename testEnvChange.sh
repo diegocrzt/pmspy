@@ -30,7 +30,7 @@ then
 fi
 
 echo "desplegando el sistema"
-sudo cp -r $PMS $DEPLOYDIR
+sudo cp -r $TMP$PMS $DEPLOYDIR
 
 echo "iniciando apache2"
 sudo service apache2 start
