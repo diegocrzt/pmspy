@@ -126,11 +126,11 @@ def getProyectosFiltrados(filtro=None):
         return query
             
 def main():
-    f="piki"
+    f="o"
     query=getProyectosFiltrados(f)
     str="holta"
     if query:
-        print "query"
+        print query.count()
         for q in query:
             print q.nombre
     else:

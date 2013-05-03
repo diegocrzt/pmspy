@@ -10,7 +10,7 @@ def calculoPrimeraPag(cant):
         mod=cant%TAM_PAGINA
         if mod>0:
             t=int(t)+1#Total de paginas
-        else:
+        elif int(t)==0:
             t=1
         m=flask.session['pagina']#Pagina en la que estoy
         infopag="Pagina "+ str(m) +" de " + str(t)
@@ -33,7 +33,7 @@ def calculoDeSiguiente(cant):
     mod=cant%TAM_PAGINA
     if mod>0:
         t=int(t)+1#Total de paginas
-    else:
+    elif int(t)==0:
         t=1
     flask.session['pagina']=flask.session['pagina']+1
     sobran=cant-flask.session['pagina']* TAM_PAGINA
@@ -50,11 +50,11 @@ def calculoDeSiguiente(cant):
     return infopag
 
 def calculoDeAnterior(cant):
-    t=cant/TAM_PAGINA
-    mod=cant%TAM_PAGINA
-    if mod>0:
-        t=int(t)+1#Total de paginas
-    else:
+    t=cant/TAM_PAGINA #Saber cuantas paginas se necesitan
+    mod=cant%TAM_PAGINA #modulo
+    if mod>0: #si el mod no es cero, la division no es perfecta
+        t=int(t)+1#la cantidad de paginas necesarias es la parte entera de la division mas 1
+    elif int(t)==0:
         t=1
     flask.session['pagina']=flask.session['pagina']-1
     pag=flask.session['pagina']

@@ -22,47 +22,23 @@ class AdmTipo(flask.views.MethodView):
             flask.session.pop('aux1',None)
             flask.session.pop('aux2',None)
             flask.session.pop('aux3',None)
-            flask.session.pop('aux4',None) 
-            if request.method == "GET":
-                fase=getFaseId(flask.session['faseid'])
-                flask.session.pop('faseid',None)
-                flask.session.pop('fasenombre',None)
-                flask.session['faseid']=fase.id
-                flask.session['fasenombre']=fase.nombre
-                flask.session['filtro']=""
-                #t=fase.tipos
-                if flask.session['cambio']:
-                    flask.session['cambio']=False
-                else:
-                    flask.session['haynext']=True
-                    flask.session['hayprev']=False
-                    flask.session['pagina']=1
+            flask.session.pop('aux4',None)
+            fase=getFaseId(flask.session['faseid'])
+            flask.session.pop('faseid',None)
+            flask.session.pop('fasenombre',None)
+            flask.session['faseid']=fase.id
+            flask.session['fasenombre']=fase.nombre 
+            flask.session['filtro']=""
+
+            if flask.session['cambio']:
+                flask.session['cambio']=False
                 tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
-                c=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id).count()
-                if(c!=0):
-                    cant=getTiposFase(fase.id).count()
-                    t=cant/TAM_PAGINA
-                    mod=cant%TAM_PAGINA
-                    if mod>0:
-                        t=int(t)+1#Total de paginas
-                    else:
-                        t=int(t+mod)
-                    m=flask.session['pagina']#Pagina en la que estoy
-                    infopag="Pagina "+ str(m) +" de " + str(t)
-                    if m<t:
-                        flask.session['haynext']=True
-                    else:
-                        flask.session['haynext']=False
-                    if m==1:
-                        flask.session['hayprev']=False
-                    else:
-                        flask.session['hayprev']=True
-                else:
-                    flask.session['haynext']=False
-                    flask.session['hayprev']=False
-                    infopag="Pagina 1 de 1"
-                
-                return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False)
+                infopag=flask.session['infopag']
+            else:
+                flask.session['pagina']=1
+                tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
+                infopag=calculoPrimeraPag(getTiposFase(fase.id).count())
+            return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False)
     
     @pms.vista.required.login_required
     def post(self):
@@ -203,32 +179,14 @@ def nextPageT():
     
     flask.session['cambio']=True
     cantT=getTiposFase(flask.session['faseid']).count()
-    flask.session['pagina']=flask.session['pagina']+1
-    global TAM_PAGINA
-    sobran=cantT-flask.session['pagina']* TAM_PAGINA
-    if sobran>0:
-        flask.session['haynext']=True
-    else:
-        flask.session['haynext']=False
-    if flask.session['pagina']==1:
-        flask.session['hayprev']=False
-    else:
-        flask.session['hayprev']=True
+    flask.session['infopag']=calculoDeSiguiente(cantT)
     return flask.redirect('/admtipo/'+str(flask.session['faseid']))   
 
 @app.route('/admtipo/prevtipo/')
 @pms.vista.required.login_required       
 def prevPageT():
     flask.session['cambio']=True
-    flask.session['pagina']=flask.session['pagina']-1
-    global TAM_PAGINA
-    pag=flask.session['pagina']
-    if pag==1:
-        flask.session['hayprev']=False
-    else:
-        flask.session['hayprev']=True
-    if getTiposFase(flask.session['faseid']).count()>(pag*TAM_PAGINA):
-            flask.session['haynext']=True
+    flask.session['infopag']=calculoDeAnterior(getTiposFase(flask.session['faseid']).count())
     return flask.redirect('/admtipo/'+str(flask.session['faseid']))
 
 

@@ -4,6 +4,7 @@ from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPa
 from datetime import datetime
 import pms.vista.required
 from pms import app
+from pms.vista.paginar import calculoDeSiguiente, calculoDeAnterior, calculoPrimeraPag
 TAM_PAGINA=5
 class AdmProyecto(flask.views.MethodView):
     """
@@ -25,31 +26,11 @@ class AdmProyecto(flask.views.MethodView):
         if flask.session['cambio']:
             flask.session['cambio']=False
             p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
+            infopag=flask.session['infopag']
         else:
-            flask.session['haynext']=True
-            flask.session['hayprev']=False
             flask.session['pagina']=1
             p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA)
-        if(p!=None):
-            t=getCantProyectos()/TAM_PAGINA
-            mod=getCantProyectos()%TAM_PAGINA
-            if mod>0:
-                t=int(t)+1#Total de paginas
-            else:
-                t=int(t+mod)
-            m=flask.session['pagina']#Pagina en la que estoy
-            infopag="Pagina "+ str(m) +" de " + str(t)
-            if m<t:
-                flask.session['haynext']=True
-            else:
-                flask.session['haynext']=False
-            if m==1:
-                flask.session['hayprev']=False
-            else:
-                flask.session['hayprev']=True
-        else:
-            flask.session['haynext']=False
-            flask.session['hayprev']=False
+            infopag=calculoPrimeraPag(getCantProyectos())
         
         return flask.render_template('admProyecto.html',proyectos=p, infopag=infopag, buscar=False)
     @pms.vista.required.login_required
@@ -60,70 +41,16 @@ class AdmProyecto(flask.views.MethodView):
         if flask.request.form['fil']!="":
             infopag=""
             if 'buscar' in flask.request.form:
-                flask.session['haynext']=True
-                flask.session['hayprev']=False
                 flask.session['pagina']=1
                 p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.request.form['fil'])
                 flask.session['filtro']=flask.request.form['fil']
-                print "post"
-                aux=flask.session['filtro']
                 if(p!=None):#Si devolvio algo
-                    t=getCantProyectos(aux)/TAM_PAGINA
-                    mod=getCantProyectos(aux)%TAM_PAGINA
-                    if mod>0:
-                        t=int(t)+1#Total de paginas
-                    else:
-                        t=int(t+mod)
-                    m=flask.session['pagina']#Pagina en la que estoy
-                    infopag="Pagina "+ str(m) +" de " + str(t)
-                    if m<t:
-                        flask.session['haynext']=True
-                    else:
-                        flask.session['haynext']=False
-                    if m==1:
-                        flask.session['hayprev']=False
-                    else:
-                        flask.session['hayprev']=True
-                else:#si no pantalla vacia sin botones siguiente ni anterior
-                    flask.session['haynext']=False
-                    flask.session['hayprev']=False
-            global TAM_PAGINA
-            cantP=getCantProyectos(flask.session['filtro'])
-            t=cantP/TAM_PAGINA
-            mod=cantP%TAM_PAGINA
-            if mod>0:
-                t=int(t)+1#Total de paginas
-            else:
-                t=int(t+mod)
+                    infopag=calculoPrimeraPag(getProyectosFiltrados(flask.session['filtro']).count())
             if 'sgte' in flask.request.form:
-                flask.session['pagina']=flask.session['pagina']+1
-                sobran=cantP-flask.session['pagina']* TAM_PAGINA
-                print "=============================================================================+"
-                
-                if sobran>0:
-                    flask.session['haynext']=True
-                else:
-                    flask.session['haynext']=False
-                if flask.session['pagina']==1:
-                    flask.session['hayprev']=False
-                else:
-                    flask.session['hayprev']=True
-                m=flask.session['pagina']
-                infopag="Pagina "+ str(m) +" de " + str(t)
+                infopag=calculoDeSiguiente(getCantProyectos(flask.session['filtro']))
                 p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
             if 'anterior' in flask.request.form:
-                print "anterior de post"
-                flask.session['pagina']=flask.session['pagina']-1
-                pag=flask.session['pagina']
-                if pag==1:
-                    flask.session['hayprev']=False
-                else:
-                    flask.session['hayprev']=True
-                if cantP>(pag*TAM_PAGINA):
-                    flask.session['haynext']=True
-                
-                m=flask.session['pagina']#Pagina en la que estoy
-                infopag="Pagina "+ str(m) +" de " + str(t)
+                infopag=calculoDeAnterior(getCantProyectos(flask.session['filtro']))
                 p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
                     
             return flask.render_template('admProyecto.html',proyectos=p,infopag=infopag,buscar=True)
@@ -234,35 +161,14 @@ def eProyecto(proyecto=None):
 def nextPageP():
     flask.session['cambio']=True
     cantP=getCantProyectos()
-    flask.session['pagina']=flask.session['pagina']+1
-    global TAM_PAGINA
-    sobran=cantP-flask.session['pagina']* TAM_PAGINA
-    print "Pagina:"
-    print flask.session['pagina']
-    print sobran
-    if sobran>0:
-        flask.session['haynext']=True
-    else:
-        flask.session['haynext']=False
-    if flask.session['pagina']==1:
-        flask.session['hayprev']=False
-    else:
-        flask.session['hayprev']=True
+    flask.session['infopag']=calculoDeSiguiente(cantP)
     return flask.redirect(flask.url_for('admproyecto'))  
 
 @app.route('/admproyecto/prevproyecto/')
 @pms.vista.required.login_required       
 def prevPageP():
     flask.session['cambio']=True
-    flask.session['pagina']=flask.session['pagina']-1
-    global TAM_PAGINA
-    pag=flask.session['pagina']
-    if pag==1:
-        flask.session['hayprev']=False
-    else:
-        flask.session['hayprev']=True
-    if getCantProyectos()>(pag*TAM_PAGINA):
-            flask.session['haynext']=True
+    flask.session['infopag']=calculoDeAnterior(getCantProyectos())
     return flask.redirect(flask.url_for('admproyecto'))  
  
     
