@@ -1,0 +1,87 @@
+Documentar todo lo que se hizo
+
+Instalar el módulo para apache2 
+	sudo apt-get install libapache2-mod-wsgi
+
+Directorio de la aplicación
+	mkdir /var/www/pmspy
+
+Script para la aplicación wsgi
+	sudo vi /var/www/pmspy/pmspy.wsgi
+
+Contenido del script
+==============================================
+	import os
+	import sys
+	
+	sys.path.insert(0, "/var/www/pmspy/")
+	
+	from pms import app as application
+==============================================
+
+Establecer los permisos adecuados para el script wsgi
+	sudo chmod :www-data /var/www/pmspy/pmspy.wsgi
+
+Ficheros de Configuración del apache2
+/etc/apache2/httpd.conf
+==============================================
+	ServerName probook4530s
+==============================================
+
+/etc/apach2/sites-enabled/probook4530s
+============================================================================================
+	<VirtualHost *:80>
+		ServerAdmin syncrhonous@gmail.com
+		ServerName probook4530s
+	
+		WSGIDaemonProcess pmspy user=www-data group=www-data threads=5
+		WSGIScriptAlias / /var/www/pmspy/pmspy.wsgi
+		<Directory /var/www/pmspy>
+			WSGIProcessGroup pmspy
+			WSGIApplicationGroup %{GLOBAL}
+			Order deny,allow
+			Allow from all
+		</Directory>
+	
+		ErrorLog /var/www/logs/apache2/error.log
+	
+		# Possible values include: debug, info, notice, warn, error, crit,
+		# alert, emerg.
+		LogLevel warn
+		#LogLevel info
+	
+		CustomLog /var/www/logs/apache2/access.log combined
+	</VirtualHost>
+============================================================================================
+
+Crear directorios para logs de la aplicación wsgi
+	mkdir /var/www/logs/apache2/
+
+Activar el módulo
+	sudo a2enmod wsgi
+
+Activar el sitio
+	sudo a2ensite probook4530s
+
+Desactivar el sitio por defecto del apache
+	sudo a2dissite default
+
+Copiar el paquete de la aplicación flask a su directorio final
+	sudo cp -r /home/synchro/workspace/pydev/pmspy/pms /var/www/pmspy/
+
+Reiniciar el apache2
+	sudo service apache2 restart
+
+Cambiar de bases de datos 
+
+Para crear la base de datos se usa el script testDatabase.sh que hace el trabajo de 
+crear la base de datos del ambiente de pruebas, e insertar un solo usuario, el admin
+
+Para levantar la aplicación wsgi se usa el script testEnvChange.sh que se encarga de
+para el demonio apache2, copiar los archivos y reiniciar el demonio web otra vez
+
+
+OBS para el script que carga la base de datos tiene que existir el usuario postgres (por defecto, 
+esto es así, por lo que no debería haber problemas
+
+Terminar Testing

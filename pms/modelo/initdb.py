@@ -1,3 +1,4 @@
+# -*- coding: utf8 -*-
 '''
 Created on 05/04/2013
 
@@ -6,7 +7,13 @@ Created on 05/04/2013
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/pms', echo=True)
+from pms import app
+if app.config['DEV'] == True:
+    engine = create_engine('postgresql://postgres:postgres@localhost:5432/pms',echo=True)
+    print 'Ambiente de Desarrollo'
+else:
+    engine = create_engine('postgresql://postgres:postgres@localhost:5432/pmstest')
+    print 'Ambiente de Pruebas'
 metadata = MetaData()
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 Base = declarative_base()
