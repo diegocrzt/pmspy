@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="container" align="left">
+    <h3>Consulta de item</h3>
+    <hr>
+    <p>	<strong>Nombre:</strong> {{i.nombre}}</p>
+    <p>	<strong>Comentario:</strong> {{i.estado}}</p>
+    <p>	<strong>Costo:</strong> {{i.costo}} </p>
+    <p>	<strong>Difucultad:</strong> {{i.dificultad}} </p>
+    <p>	<strong>Version:</strong> {{i.version}} </p>
+    <div class="span5">
+    <p align="center">	<strong>Atributos</strong></p>	
+	<table  class="table  table-bordered" >
+								<tr>
+                                    <th>Atributo</th>
+                                    <th>Valor</th>
+                                 </tr>
+
+					           {% for a in atributos %}
+					           <tr>
+					            	<td>{{a.nombre}}</td>
+					            	{% for v in valores %}
+					            		{% if v.atributo_id == a.id %}
+					            			<td>{{v.valor }}</td>
+					            		{% endif %}
+					            		
+					            	{% endfor%}
+					            </tr>
+					            {% else %}
+								<tr>
+									<td> -No contiene Atributos-</td>
+									<td></td>
+								</tr>					
+            					{% endfor %}
+           </table>
+
+    <a class="btn btn-success" href="/admitem/{{session['faseid']}}">Aceptar</a>
+    </div>
+</div>
+
+{%endblock%}

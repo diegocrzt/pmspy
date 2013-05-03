@@ -62,15 +62,16 @@
                                         <th>Estado</th>
                                  </tr>
 
-	 							{% for i in t.instancias %}
+	 							{% for i in versiones %}
 	 							<tr >
-									<td>{{i.version.version}}</td>
-									<td>{{i.version.nombre}}</td>
-									<td>{{i.version.estado}}</td>
+									<td>{{i.version}}</td>
+									<td>{{i.nombre}}</td>
+									<td>{{i.estado}}</td>
 								</tr>
 								{% else %}
 								<tr>
 										<td> -No contiene Instancias-</td>
+										<td></td>
 										<td></td>
 								<tr>
 								{% endfor %}

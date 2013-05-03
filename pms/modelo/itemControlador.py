@@ -115,7 +115,7 @@ def eliminarItem(idi=None):
         v.actual=False
         session.merge(v)
         session.commit()
-        ver=VersionItem(nombre=v.nombre,version=(v.version+1),estado="Eliminado",actual=True, costo=v.costo, dificultad = v.dificultad,item=idi)
+        ver=VersionItem(nombre=v.nombre,version=(v.version+1),estado="Eliminado",actual=True, costo=v.costo, dificultad = v.dificultad,deitem=idi)
         session.add(ver)
         session.commit()
         
@@ -145,4 +145,15 @@ def crearValor(ida=None,idv=None,val=None):
         v= ValorBoolean(atributo=ida,item=idv,valor=val)
         session.add(v)
         session.commit()
+        
+def copiarValores(idvante=None,idvnueva=None):
+    version=getVersionId(idvante)
+    for at in version.atributosnum:
+        crearValor(at.atributo_id,idvnueva,at.valor)
+    for at in version.atributosstr:
+        crearValor(at.atributo_id,idvnueva,at.valor)
+    for at in version.atributosbool:
+        crearValor(at.atributo_id,idvnueva,at.valor)
+    for at in version.atributosdate:
+        crearValor(at.atributo_id,idvnueva,at.valor)
     

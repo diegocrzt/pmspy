@@ -6,6 +6,7 @@ from pms.modelo.tipoItemControlador import getTiposItemFiltrados,getTiposItemPag
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.entidad import Atributo,TipoItem
+from pms.modelo.itemControlador import getVersionItem
 from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
@@ -170,7 +171,10 @@ def consultarTipoItem(t=None):
     recibe el id del tipo de item a consultar
     """
     tipo=getTipoItemId(t)
-    return flask.render_template('consultarTipo.html',t=tipo)   
+    versiones=[]
+    for i in tipo.instancias:
+        versiones.append(getVersionItem(i.id))
+    return flask.render_template('consultarTipo.html',t=tipo, versiones=versiones)   
 
 
 @app.route('/admtipo/nexttipo/')

@@ -64,13 +64,25 @@
                                         <td>{{t.nombre}}</td>
                                         <td>{{t.comentario}}</td>
                                         <td>
-                                        <a class="btn btn-primary" href="/admatributo/{{t.id}}">Atributos</a>
+                                        {%if t.instancias %}
+		                                 No se puede adm Atributos
+		                                {%else%}
+		                                <a class="btn btn-primary" href="/admatributo/{{t.id}}">Atributos</a>
+		                                {%endif%}
                                         </td>
 		                                <td>
+		                                {%if t.instancias %}
+		                                 No se puede Borrar
+		                                {%else%}
 		                                <a class="btn btn-danger" href="/admtipo/eliminar/{{t.id}}">Eliminar</a>
+		                                {%endif%}
                                         </td>
                                         <td>
-                                        <a class="btn" href="/admtipo/editartipo/{{t.id}}">Editar</a>
+                                        {%if t.instancias %}
+                                         No se puede Editar
+                                        {%else%}
+		                               <a class="btn" href="/admtipo/editartipo/{{t.id}}">Editar</a>
+		                                {%endif%}
                                         </td>
                                         <td>
                                         <a class="btn btn-info" href="/admtipo/consultartipo/{{t.id}}">Consultar</a>
@@ -103,6 +115,8 @@
                 	{% endif %}
                 </div>
                </form>
+				<p><strong class="text-info">--</strong> Los Tipos de Item que contienen instancias no pueden ser <strong>editados</strong>  ni <strong>eliminados</strong>.
+				Tampoco pueden ser editados su atributos <strong class="text-info">--</strong></p>
           </div>
 	      <div class="span3 bs-docs-sidebar">
         	<ul class="nav nav-list bs-docs-sidenav">

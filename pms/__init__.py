@@ -11,6 +11,7 @@ import vista.logVista
 import vista.tipoVista
 import vista.atributoVista
 import vista.paginar
+import vista.itemVista
 
 
 
@@ -89,11 +90,19 @@ app.add_url_rule('/admatributo/eliminaratributo/',
 app.add_url_rule('/admtipo/',
                  view_func=vista.tipoVista.AdmTipo.as_view('admtipo'),
                  methods=["GET", "POST"])
-# NO EXISTE LA ENTIDAD itemVista AUN
-#app.add_url_rule('/admitem/crearitem/',
-#                 view_func=vista.itemVista.CrearItem.as_view('crearitem'),
-#                 methods=["GET", "POST"])
-#
-#app.add_url_rule('/admitem/atributo/',
-#                 view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
-#                 methods=["GET", "POST"])
+
+app.add_url_rule('/admitem/crearitem/',
+                 view_func=vista.itemVista.CrearItem.as_view('crearitem'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admitem/atributo/',
+                 view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admitem/editaritem/',
+                 view_func=vista.itemVista.EditarItem.as_view('editaritem'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admitem/eliminaritem/',
+                 view_func=vista.itemVista.Eliminaritem.as_view('eliminaritem'),
+                 methods=["GET", "POST"])
