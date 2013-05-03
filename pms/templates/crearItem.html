@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+
+{%block mensaje%}
+{%endblock%}
+
+{%block content%}
+<div class="container">
+	<h3>Crear Item</h3>
+	<hr>
+	<p>Complete los datos del Item</p>
+		<form action="{{url_for('crearitem')}}" method="post">
+            <p>Nombre<small class="text-error">(*)</small>:
+            {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+			{% endwith %}
+            <br/>
+            <input type="text" name="nombre" value="{{session['aux1']}}"/></p>
+            <p>Costo<small class="text-error">(*)</small>:       
+            {%  with messages = get_flashed_messages(category_filter=["costo"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+			{% endwith %}<br/>
+            <input type="text" name="costo" value="{{session['aux2']}}"/></p>
+            <p>Dificultad<small class="text-error">(*)</small>:       
+            {%  with messages = get_flashed_messages(category_filter=["dificultad"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+			{% endwith %}<br/>
+            <input type="text" name="dificultad" value="{{session['aux3']}}"/></p>
+            <p>Tipo de Item<small class="text-error">(*)</small>:
+           	{%  with messages = get_flashed_messages(category_filter=["tipo"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+			{% endwith %} 
+            
+            <br/>
+            <select name="tipo" >
+            {% for op in tipos  %}
+            		{%if session['aux4']==op%}
+            		<option value="{{ op.id }}" selected>{{op.nombre}}</option>
+            		{% else %}
+                	<option value="{{ op.id }}">{{op.nombre}}</option>
+                	{% endif %}
+                {% endfor %}
+            
+            </select>
+            <p><input class="btn btn-success" type="submit" value="Aceptar" />
+            <a class="btn btn-inverse" href="/admitem/{{session['faseid']}}">Cancelar</a></p>
+        </form>
+</div> 
+{%endblock%}
+
