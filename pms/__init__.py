@@ -10,6 +10,7 @@ import vista.faseVista
 import vista.logVista
 import vista.tipoVista
 import vista.atributoVista
+#import vista.itemVista
 
 
 app.add_url_rule('/admproyecto/',
@@ -83,3 +84,11 @@ app.add_url_rule('/admatributo/crearatributo/',
 app.add_url_rule('/admatributo/eliminaratributo/',
                  view_func=vista.atributoVista.Eliminaratributo.as_view('eliminaratributo'),
                  methods=["GET", "POST"])
+# NO EXISTE LA ENTIDAD itemVista AUN
+#app.add_url_rule('/admitem/crearitem/',
+#                 view_func=vista.itemVista.CrearItem.as_view('crearitem'),
+#                 methods=["GET", "POST"])
+#
+#app.add_url_rule('/admitem/atributo/',
+#                 view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
+#                 methods=["GET", "POST"])
