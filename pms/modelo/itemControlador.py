@@ -144,5 +144,6 @@ def crearValor(ida=None,idv=None,val=None):
             val=False
         v= ValorBoolean(atributo=ida,item=idv,valor=val)
         session.add(v)
-        session.commit()
-    
+        
+
+        

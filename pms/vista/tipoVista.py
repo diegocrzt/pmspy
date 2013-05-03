@@ -23,6 +23,7 @@ def admTipo(f=None):
         flask.session['faseid']=fase.id
         flask.session['fasenombre']=fase.nombre
         t=fase.tipos
+        
         return flask.render_template('admTipo.html',tipos=t)
     else:
         return flask.redirect(flask.url_for('admfase'))

@@ -87,7 +87,7 @@ class Fase(Base):
     delproyecto = Column(Integer, ForeignKey('proyecto.id'))
     
     tipos = relationship("TipoItem", backref="fase")
-    
+    roles = relationship("Rol",backref="fase")
     
     def __init__(self, nombre, numero, fechaInicio, fechaFin, fechaUltMod, estado, delproyecto):
         self.nombre = nombre
@@ -157,7 +157,9 @@ class Item(Base):
     
     def __repr__(self):
         return 'Item { '+ self.etiqueta + '('+ self.version+ ')}'
-        
+
+    
+  
 class VersionItem(Base):
     """
         Define la clase VersionItem y la mapea con la tabla vitem
@@ -188,6 +190,23 @@ class VersionItem(Base):
         
     def __repr__(self):
         return 'VersionItem { '+ self.nombre + '('+ self.version+ ')}'
+    
+class Relacion(Base):
+    """
+        Define la clase Relacion y la mapea con la tabla item
+    """
+    __tablename__ = 'relacion'
+    id = Column(Integer,primary_key=True)
+    ante_id = Column(Integer, ForeignKey('vitem.id'))
+    post_id = Column(Integer, ForeignKey('vitem.id'))
+    tipo = Column(Unicode(10))
+    ante = relationship("VersionItem", backref="ante_list",  primaryjoin=(VersionItem.id == ante_id))
+    post = relationship("VersionItem", backref="post_list",  primaryjoin=(VersionItem.id == post_id))
+    
+    def __init__(self, ante_id,post_id,tipo):
+        self.ante_id = ante_id
+        self.post_id = post_id
+        self.tipo =tipo
 
 class ValorNum(Base):
     """
@@ -260,21 +279,46 @@ class ValorDate(Base):
         
     def __repr__(self):
         return 'ValorDate { '+ self.valor+ '}'
-'''
-todavia no...
-class Relacion(Base):
-    """
-        Define la clase Relacion y la mapea con la tabla relacion
-    """
-    __tablename__ = 'relacion'
-    id = Column(Integer,primary_key=True)
-    pre = Column(Integer,ForeignKey('vitem.id'))
-    post = Column(Integer,ForeignKey('vitem.id'))
-    tipo = Column(Unicode(15))     
     
-    def __init__(self, pre, post, tipo):
-        self.pre = pre
-        self.post = post
-        self.tipo = tipo
-'''
+    
+class Rol(Base):
+    """
+        Define la clase Rol y la mapea con la tabla valorstr
+    """
+    __tablename__ = 'rol'
+    id = Column(Integer, primary_key=True)
+    fase_id = Column(Integer, ForeignKey('fase.id'))
+    nombre=Column(Unicode(30))
+    codigoTipo = Column(Integer)
+    codigoItem = Column(Integer)
+    codigoLB = Column(Integer)
+    usuarios = relationship("User_Rol",backref="rol")
+        
+    def __init__(self, fase_id, nombre,codigoTipo,codigoItem,codigoLB):
+        self.fase_id = fase_id
+        self.nombre = nombre
+        self.codigoTipo = codigoTipo
+        self.codigoItem = codigoItem
+        self.codigoLB = codigoLB
+        
+    def __repr__(self):
+        return 'Rol { '+ self.fase_id + self.nombre + self.codigoTipo + self.codigoItem + self.codigoLB + '}'   
+
+class User_Rol(Base):
+    """
+        Define la tabla entre el rol y el usuario y la mapea con la tabla valorstr
+    """
+    __tablename__ = 'user_rol'
+    usuario_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
+    rol_id = Column(Integer, ForeignKey('rol.id'),primary_key=True)
+    usuario = relationship("Usuario",backref="elrol")
+        
+    def __init__(self, usuario_id, rol_id):
+        self.usuario_id = usuario_id
+        self.rol_id = rol_id
+        
+    def __repr__(self):
+        return 'User_Rol { '+ self.usuario_id+ self.rol_id + '}'
+
+
 init_db()

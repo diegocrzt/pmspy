@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admrol/{{session['faseid']}}">Administrar Rol</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+{%block content%}
+<div class="container" align="left">
+    <h3>Eliminar Fase de Proyecto <em>{{session['proyectonombre']}}</em></h3>
+    <hr>
+    <p class="text-info">	La eliminación de una fase es <strong>irreversible</strong>.</p>
+    <p>	<strong>Nombre:</strong> {{r.nombre}}</p>
+    <p>	<strong>Permiso de Tipo de Item:</strong> </p>
+    {%if r.codigoTipo%10==1 %}
+    <p>Crear,Editar</p>
+    
+    {%endif%}
+    	<form action="{{url_for('eliminarrol')}}" method="post">        
+	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
+	    	<a class="btn btn-inverse" href="/admrol/{{session['faseid']}}">Cancelar</a></p>
+	    </form>
+    
+</div>
+{%endblock%}
