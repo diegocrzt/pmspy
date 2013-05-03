@@ -9,7 +9,7 @@ from pms.modelo.entidad import Atributo,TipoItem
 from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
-TAM_PAGINA=3
+TAM_PAGINA=5
 
 
 class AdmTipo(flask.views.MethodView):

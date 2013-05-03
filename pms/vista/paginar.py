@@ -1,14 +1,8 @@
 import flask.views
 from flask import request
-import pms.vista.required
-from pms import app
-from pms.modelo.proyectoControlador import getCantProyectos
-from pms.modelo.tipoItemControlador import getTiposItemPaginados, getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
-from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
-from pms.modelo.entidad import Atributo,TipoItem
-import tipoVista
-TAM_PAGINA=3
+
+
+TAM_PAGINA=5
 
 def calculoPrimeraPag(cant):
     if(cant!=0):#Si devolvio algo

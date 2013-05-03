@@ -57,76 +57,78 @@ class AdmProyecto(flask.views.MethodView):
         """
         Ejecuta el template admProyecto.html
         """
-        infopag=""
-        if 'buscar' in flask.request.form:
-            flask.session['haynext']=True
-            flask.session['hayprev']=False
-            flask.session['pagina']=1
-            p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.request.form['fil'])
-            flask.session['filtro']=flask.request.form['fil']
-            print "post"
-            aux=flask.session['filtro']
-            if(p!=None):#Si devolvio algo
-                t=getCantProyectos(aux)/TAM_PAGINA
-                mod=getCantProyectos(aux)%TAM_PAGINA
-                if mod>0:
-                    t=int(t)+1#Total de paginas
-                else:
-                    t=int(t+mod)
-                m=flask.session['pagina']#Pagina en la que estoy
-                infopag="Pagina "+ str(m) +" de " + str(t)
-                if m<t:
+        if flask.request.form['fil']!="":
+            infopag=""
+            if 'buscar' in flask.request.form:
+                flask.session['haynext']=True
+                flask.session['hayprev']=False
+                flask.session['pagina']=1
+                p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.request.form['fil'])
+                flask.session['filtro']=flask.request.form['fil']
+                print "post"
+                aux=flask.session['filtro']
+                if(p!=None):#Si devolvio algo
+                    t=getCantProyectos(aux)/TAM_PAGINA
+                    mod=getCantProyectos(aux)%TAM_PAGINA
+                    if mod>0:
+                        t=int(t)+1#Total de paginas
+                    else:
+                        t=int(t+mod)
+                    m=flask.session['pagina']#Pagina en la que estoy
+                    infopag="Pagina "+ str(m) +" de " + str(t)
+                    if m<t:
+                        flask.session['haynext']=True
+                    else:
+                        flask.session['haynext']=False
+                    if m==1:
+                        flask.session['hayprev']=False
+                    else:
+                        flask.session['hayprev']=True
+                else:#si no pantalla vacia sin botones siguiente ni anterior
+                    flask.session['haynext']=False
+                    flask.session['hayprev']=False
+            global TAM_PAGINA
+            cantP=getCantProyectos(flask.session['filtro'])
+            t=cantP/TAM_PAGINA
+            mod=cantP%TAM_PAGINA
+            if mod>0:
+                t=int(t)+1#Total de paginas
+            else:
+                t=int(t+mod)
+            if 'sgte' in flask.request.form:
+                flask.session['pagina']=flask.session['pagina']+1
+                sobran=cantP-flask.session['pagina']* TAM_PAGINA
+                print "=============================================================================+"
+                
+                if sobran>0:
                     flask.session['haynext']=True
                 else:
                     flask.session['haynext']=False
-                if m==1:
+                if flask.session['pagina']==1:
                     flask.session['hayprev']=False
                 else:
                     flask.session['hayprev']=True
-            else:#si no pantalla vacia sin botones siguiente ni anterior
-                flask.session['haynext']=False
-                flask.session['hayprev']=False
-        global TAM_PAGINA
-        cantP=getCantProyectos(flask.session['filtro'])
-        t=cantP/TAM_PAGINA
-        mod=cantP%TAM_PAGINA
-        if mod>0:
-            t=int(t)+1#Total de paginas
-        else:
-            t=int(t+mod)
-        if 'sgte' in flask.request.form:
-            flask.session['pagina']=flask.session['pagina']+1
-            sobran=cantP-flask.session['pagina']* TAM_PAGINA
-            print "=============================================================================+"
-            
-            if sobran>0:
-                flask.session['haynext']=True
-            else:
-                flask.session['haynext']=False
-            if flask.session['pagina']==1:
-                flask.session['hayprev']=False
-            else:
-                flask.session['hayprev']=True
-            m=flask.session['pagina']
-            infopag="Pagina "+ str(m) +" de " + str(t)
-            p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
-        if 'anterior' in flask.request.form:
-            print "anterior de post"
-            flask.session['pagina']=flask.session['pagina']-1
-            pag=flask.session['pagina']
-            if pag==1:
-                flask.session['hayprev']=False
-            else:
-                flask.session['hayprev']=True
-            if cantP>(pag*TAM_PAGINA):
-                flask.session['haynext']=True
-            
-            m=flask.session['pagina']#Pagina en la que estoy
-            infopag="Pagina "+ str(m) +" de " + str(t)
-            p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
+                m=flask.session['pagina']
+                infopag="Pagina "+ str(m) +" de " + str(t)
+                p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
+            if 'anterior' in flask.request.form:
+                print "anterior de post"
+                flask.session['pagina']=flask.session['pagina']-1
+                pag=flask.session['pagina']
+                if pag==1:
+                    flask.session['hayprev']=False
+                else:
+                    flask.session['hayprev']=True
+                if cantP>(pag*TAM_PAGINA):
+                    flask.session['haynext']=True
                 
-        return flask.render_template('admProyecto.html',proyectos=p,infopag=infopag,buscar=True)
-
+                m=flask.session['pagina']#Pagina en la que estoy
+                infopag="Pagina "+ str(m) +" de " + str(t)
+                p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
+                    
+            return flask.render_template('admProyecto.html',proyectos=p,infopag=infopag,buscar=True)
+        else:
+            return flask.redirect(flask.url_for('admproyecto'))
 
     
 class Crearproyecto(flask.views.MethodView):
