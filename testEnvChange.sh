@@ -17,7 +17,13 @@ cp -r $PMS $TMP
 CWD=$(pwd)
 cd $TMP$PMS
 echo "borrando archivos innecesarios..."
-rm -rf doc gendoc.sh pms.database.sql test testDatabase.sql
+for FILE in  doc gendoc.sh test
+do
+	if [ -e $FILE ]
+	then
+		rm -rf $FILE
+	fi
+done
 find . -name "*.pyc" -delete
 cd $CWD
 
