@@ -73,4 +73,15 @@ Reiniciar el apache2
 	sudo service apache2 restart
 
 Cambiar de bases de datos 
+
+Para crear la base de datos se usa el script testDatabase.sh que hace el trabajo de 
+crear la base de datos del ambiente de pruebas, e insertar un solo usuario, el admin
+
+Para levantar la aplicación wsgi se usa el script testEnvChange.sh que se encarga de
+para el demonio apache2, copiar los archivos y reiniciar el demonio web otra vez
+
+
+OBS para el script que carga la base de datos tiene que existir el usuario postgres (por defecto, 
+esto es así, por lo que no debería haber problemas
+
 Terminar Testing

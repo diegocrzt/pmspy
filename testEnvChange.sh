@@ -17,7 +17,7 @@ cp -r $PMS $TMP
 CWD=$(pwd)
 cd $TMP$PMS
 echo "borrando archivos innecesarios..."
-rm -rf doc gendoc.sh droptables.sql test
+rm -rf doc gendoc.sh pms.database.sql test testDatabase.sql
 find . -name "*.pyc" -delete
 cd $CWD
 
@@ -28,6 +28,9 @@ then
 	echo "$DEPLOYDIR$PMS borrando anterior..."
 	sudo rm -rf $DEPLOYDIR$PMS
 fi
+
+echo "copiando config.py"
+sudo cp $CWD/config.py $DEPLOYDIR
 
 echo "desplegando el sistema"
 sudo cp -r $TMP$PMS $DEPLOYDIR
