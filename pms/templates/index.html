@@ -11,7 +11,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admproyecto/">Administrar proyecto</a></li>
+              <li><a href="{{url_for(admproyecto)}}">Administrar proyecto</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
           </div>
@@ -23,7 +23,7 @@
         <hr>
         <form action="{{url_for('index')}}" method="post">
             <p><input class="btn btn-danger" type="submit" name="logout" value="logout" />
-            <a class="btn btn-inverse" href="/admproyecto/">Cancelar</a></p>
+            <a class="btn btn-inverse" href="{{url_for(admproyecto)}}">Cancelar</a></p>
         </form>
  	</div>	
 	</div>
