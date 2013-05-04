@@ -23,13 +23,13 @@
          </div>
         </div>
 </div>
-              
+             
 {%endblock%}
 
 {%block content%}
 <div class="fases">
-		{% set hayf = True %}
-		<div class="container" align="center">
+                {% set hayf = True %}
+                <div class="container" align="center">
         <h3 class="muted">{{session['proyectonombre']}}</h3>
         </div>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -38,7 +38,7 @@
             {% for category, message in messages %}
               <h4 class="{{ category }}">{{ message }}</h4>
             {% endfor %}
-		  </div>
+                  </div>
           {% endif %}
         {% endwith %}
         <div class="row" >
@@ -54,14 +54,15 @@
                                         <th>Estado</th>
                                         {% if session['proyectoiniciado']==False %}
                                         <th>Eliminar</th>
-				                        <th>Editar</th>
-				                        {% else %}
-				                        <th>Tipos de Items</th>
-				                        <th>Items</th>
-				                        {% endif %}
+                                                        <th>Editar</th>
+                                                        {% else %}
+                                                        <th>Tipos de Items</th>
+                                                        <th>Items</th>
+                                                        <th>Roles</th>
+                                                        {% endif %}
                                 </tr>
                                 {% for f in fases %}
-                    
+                   
                                 <tr>
                                         <td>{{f.numero}}</td>
                                         <td>{{f.nombre}}</td>
@@ -77,8 +78,8 @@
                                         <td>
                                         <a class="btn btn-danger" href="/admfase/eliminarfase/{{f.id}}">Eliminar</a>
                                         </td>
-		                                <td>
-		                                <a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
+                                                <td>
+                                                <a class="btn" href="/admfase/editarfase/{{f.id}}">Editar</a>
                                         </td>
                                         {% else %}
                                         <td>
@@ -86,6 +87,9 @@
                                         </td>
                                         <td>
                                         <a class="btn" href="/admitem/{{f.id}}">Ir>></a>
+                                        </td>
+                                        <td>
+                                        <a class="btn" href="/admrol/{{f.id}}">Ir>></a>
                                         </td>
                                         {% endif %}
                         </tr>
@@ -96,26 +100,26 @@
                                 {% endfor %}
                 </table>
                     <div class="conainer" align="right">
-                	<a class="muted">{{infopag}}</a>
-                	{% if session['hayprev']==True %}
-                	<a class="btn btn-mini" href="/admfase/prevfase/">&laquo; Anterior</a>
-                	{% endif %}
-                	{% if session['haynext']==True %}
-                	<a class="btn btn-mini" href="/admfase/nextfase/"> Siguiente &raquo;</a>
-                	{% endif %}
-                	</div>
+                        <a class="muted">{{infopag}}</a>
+                        {% if session['hayprev']==True %}
+                        <a class="btn btn-mini" href="/admfase/prevfase/">&laquo; Anterior</a>
+                        {% endif %}
+                        {% if session['haynext']==True %}
+                        <a class="btn btn-mini" href="/admfase/nextfase/"> Siguiente &raquo;</a>
+                        {% endif %}
+                        </div>
         </div>
-	      <div class="span3 bs-docs-sidebar">
-        	<ul class="nav nav-list bs-docs-sidenav">
-        	{% if session['proyectoiniciado']==False %}
-				  <li><a href="/admfase/crearfase/"><i class="icon-chevron-right"></i> Crear Fase</a></li>
-				{% if hay == True %}
-				  <li><a href="/admfase/inicializarproyecto/"><i class="icon-chevron-right"></i> Inicializar Proyecto</a></li>
-				{% endif %}	
-			{% endif %}
-				  <li><a href="#"><i class="icon-chevron-right"></i> Consultar Fase</a></li>
-				</ul>
-			</div>
-	</div>
+              <div class="span3 bs-docs-sidebar">
+                <ul class="nav nav-list bs-docs-sidenav">
+                {% if session['proyectoiniciado']==False %}
+                                  <li><a href="/admfase/crearfase/"><i class="icon-chevron-right"></i> Crear Fase</a></li>
+                                {% if hay == True %}
+                                  <li><a href="/admfase/inicializarproyecto/"><i class="icon-chevron-right"></i> Inicializar Proyecto</a></li>
+                                {% endif %}    
+                        {% endif %}
+                                  <li><a href="#"><i class="icon-chevron-right"></i> Consultar Fase</a></li>
+                                </ul>
+                        </div>
+        </div>
 </div>
 {%endblock%}
