@@ -1,8 +1,11 @@
+DROP TABLE IF EXISTS user_rol CASCADE;
 DROP TABLE IF EXISTS usuario CASCADE;
 DROP TABLE IF EXISTS proyecto CASCADE;
+DROP TABLE IF EXISTS rol CASCADE; -- relaciona fase
 DROP TABLE IF EXISTS fase CASCADE;
 DROP TABLE IF EXISTS tipoitem CASCADE; --relaciona atributo
 DROP TABLE IF EXISTS atributo CASCADE; --relaciona valordate, valorbool, valorint, valorstr
+DROP TABLE IF EXISTS relacion CASCADE; --relaciona vitem
 DROP TABLE IF EXISTS vitem CASCADE; --relaciona valordate, valorbool, valorint, valorstr
 DROP TABLE IF EXISTS item CASCADE;
 DROP TABLE IF EXISTS valorbool, valordate, valorint, valorstr CASCADE;
@@ -77,6 +80,52 @@ WITH (
 );
 ALTER TABLE fase
   OWNER TO postgres;
+  
+  -- Table: rol
+
+-- DROP TABLE rol;
+
+CREATE TABLE rol
+(
+  id serial NOT NULL,
+  fase_id integer,
+  nombre character varying(30),
+  "codigoTipo" integer,
+  "codigoItem" integer,
+  "codigoLB" integer,
+  CONSTRAINT rol_pkey PRIMARY KEY (id ),
+  CONSTRAINT rol_fase_id_fkey FOREIGN KEY (fase_id)
+      REFERENCES fase (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE rol
+  OWNER TO postgres;
+
+-- Table: user_rol
+
+-- DROP TABLE user_rol;
+
+CREATE TABLE user_rol
+(
+  usuario_id integer NOT NULL,
+  rol_id integer NOT NULL,
+  CONSTRAINT user_rol_pkey PRIMARY KEY (usuario_id , rol_id ),
+  CONSTRAINT user_rol_rol_id_fkey FOREIGN KEY (rol_id)
+      REFERENCES rol (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT user_rol_usuario_id_fkey FOREIGN KEY (usuario_id)
+      REFERENCES usuario (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE user_rol
+  OWNER TO postgres;
+
 
 -- Table: tipoitem
 
@@ -144,6 +193,31 @@ WITH (
 );
 ALTER TABLE vitem
   OWNER TO postgres;
+  
+-- Table: relacion
+
+-- DROP TABLE relacion;
+
+CREATE TABLE relacion
+(
+  id serial NOT NULL,
+  ante_id integer,
+  post_id integer,
+  tipo character varying(10),
+  CONSTRAINT relacion_pkey PRIMARY KEY (id ),
+  CONSTRAINT relacion_ante_id_fkey FOREIGN KEY (ante_id)
+      REFERENCES vitem (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT relacion_post_id_fkey FOREIGN KEY (post_id)
+      REFERENCES vitem (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE relacion
+  OWNER TO postgres;
+
 
 -- Table: atributo
 
