@@ -5,7 +5,9 @@ from pms import app
 from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
-from pms.modelo.entidad import Atributo,TipoItem
+from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
+from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
+from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 
 
@@ -26,6 +28,19 @@ def admItem(f=None):
         flask.session.pop('fasenombre',None)
         flask.session['faseid']=fase.id
         flask.session['fasenombre']=fase.nombre
+        roles = getRolesFase(fase.id)
+        pI1=False
+        pI2=False
+        pI3=False
+        for r in roles:
+            if not comprobarUser_Rol(r.id, flask.session['usuarioid']):
+                aux=r.codigoItem
+                if aux%10>=1:
+                    pI1=True
+                if aux%100>=10:
+                    pI2=True
+                if aux>=100:
+                    pI3=True
         t=fase.tipos
         i=[]
         for ti in t:
@@ -35,7 +50,7 @@ def admItem(f=None):
                 if aux.estado!="Eliminado":
                     i.append(aux)
         
-        return flask.render_template('admItem.html',items=i)
+        return flask.render_template('admItem.html',items=i,pI1=pI1,pI2=pI2,pI3=pI3)
     else:
         return flask.redirect(flask.url_for('admfase'))
     
@@ -240,3 +255,33 @@ def consultarItem(i=None):
     for at in ver.atributosdate:
         val.append(at)
     return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val)   
+
+@app.route('/admitem/asignarhijo/<vid>')
+@pms.vista.required.login_required
+def aHijo(vid=None): 
+    """
+    Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
+    """
+    flask.session['padre']=vid
+    fase=getFaseId(flask.session['faseid'])
+    t=fase.tipos
+    i=[]
+    for ti in t:
+        itms=ti.instancias
+        for it in itms:
+            aux=getVersionItem(it.id)
+            if aux.estado!="Eliminado":
+                if not comprobarRelacion(vid,aux.id):
+                    if not comprobarRelacion(aux.id,vid):
+                        i.append(aux)
+    return flask.render_template('crearRelacionHijo.html',items=i)   
+
+
+@app.route('/admitem/asignar/<vid>')
+@pms.vista.required.login_required
+def auHijo(vid=None): 
+    """
+    Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
+    """
+    crearRelacion(flask.session['padre'],vid)
+    return flask.redirect('/admitem/asignarhijo/'+str(flask.session['padre']))

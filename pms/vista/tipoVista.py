@@ -4,8 +4,9 @@ import pms.vista.required
 from pms import app
 from pms.modelo.tipoItemControlador import getTiposItemFiltrados,getTiposItemPaginados, getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
+from pms.modelo.rolControlador import getRolesFase,  comprobarUser_Rol
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
-from pms.modelo.entidad import Atributo,TipoItem
+from pms.modelo.entidad import Atributo,TipoItem, Rol
 from pms.modelo.itemControlador import getVersionItem
 from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
@@ -29,8 +30,18 @@ class AdmTipo(flask.views.MethodView):
             flask.session.pop('fasenombre',None)
             flask.session['faseid']=fase.id
             flask.session['fasenombre']=fase.nombre 
+            roles = getRolesFase(fase.id)
+            pT1=False
+            pT2=False
+            for r in roles:
+                if not comprobarUser_Rol(r.id, flask.session['usuarioid']):
+                    aux=r.codigoTipo
+                    if aux%10>=1:
+                        pT1=True
+                    if aux>=10:
+                        pT2=True
             flask.session['filtro']=""
-
+            
             if flask.session['cambio']:
                 flask.session['cambio']=False
                 tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
@@ -39,7 +50,7 @@ class AdmTipo(flask.views.MethodView):
                 flask.session['pagina']=1
                 tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
                 infopag=calculoPrimeraPag(getTiposFase(fase.id).count())
-            return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False)
+            return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False,pT1=pT1,pT2=pT2)
     
     @pms.vista.required.login_required
     def post(self):
