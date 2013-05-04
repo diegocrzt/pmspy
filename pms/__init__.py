@@ -13,7 +13,7 @@ import vista.tipoVista
 import vista.atributoVista
 import vista.paginar
 import vista.itemVista
-
+import vista.rolVista
 
 app.add_url_rule('/admproyecto/',
                  view_func=vista.proyectoVista.AdmProyecto.as_view('admproyecto'),

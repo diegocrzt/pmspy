@@ -4,7 +4,7 @@ Created on 05/04/2013
 @author: mpoletti
 '''
 from sqlalchemy import Table
-from pms.modelo.entidad import Usuario, Proyecto, Fase, TipoItem, Atributo, Item, ValorNum, ValorStr, ValorBoolean, ValorDate, VersionItem
+from pms.modelo.entidad import Usuario, Proyecto, Fase, TipoItem, Atributo, Item, ValorNum, ValorStr, ValorBoolean, ValorDate, VersionItem, Rol, User_Rol, Relacion
 from pms.modelo.initdb import metadata, db_session, init_db, engine
 import hashlib
 """Puebla la base de datos con datos de pureba"""
@@ -86,4 +86,26 @@ vl7 = ValorNum(atributo="3",item="2", valor="33")
 session.add(vl7)
 vl8 = ValorDate(atributo="4",item="2", valor="12/01/1980")
 session.add(vl8)
+session.commit()
+
+rol=Rol(fase_id="1",nombre="todo",codigoItem="1",codigoTipo="111",codigoLB="0")
+session.add(rol)
+rol2=Rol(fase_id="1",nombre="TnoI",codigoItem="1",codigoTipo="000",codigoLB="0")
+session.add(rol2)
+rol3=Rol(fase_id="1",nombre="nada",codigoItem="0",codigoTipo="000",codigoLB="0")
+session.add(rol3)
+rol4=Rol(fase_id="1",nombre="cIT",codigoItem="1",codigoTipo="001",codigoLB="0")
+session.add(rol4)
+session.commit()
+
+ur=User_Rol(usuario_id="1",rol_id="1")
+session.add(ur)
+ur2=User_Rol(usuario_id="2",rol_id="2")
+session.add(ur2)
+ur3=User_Rol(usuario_id="3",rol_id="3")
+session.add(ur3)
+session.commit()
+
+rel=Relacion(ante_id="2",post_id="3",tipo="P-H")
+session.add(rel)
 session.commit()

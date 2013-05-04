@@ -3,7 +3,7 @@ Created on 05/04/2013
 
 @author: Martin Poletti, Natalia Valdez
 '''
-from entidad import Usuario, Proyecto
+from entidad import Usuario, Proyecto, User_Rol
 from initdb import db_session, init_db
 import hashlib
 
@@ -47,6 +47,8 @@ def eliminarUsuario(username=None):
     elimina un usuario
     """
     if(username):
+        u=getUsuario(username)
+        #session.query(User_Rol).filter(User_Rol.usuario_id==u.id).delete()
         session.query(Usuario).filter(Usuario.nombredeusuario==username).delete()
         session.commit()
     else:
