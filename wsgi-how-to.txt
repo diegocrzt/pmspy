@@ -20,7 +20,7 @@ Contenido del script
 ==============================================
 
 Establecer los permisos adecuados para el script wsgi
-	sudo chmod :www-data /var/www/pmspy/pmspy.wsgi
+	sudo chown :www-data /var/www/pmspy/pmspy.wsgi
 
 Ficheros de Configuración del apache2
 /etc/apache2/httpd.conf
@@ -28,7 +28,7 @@ Ficheros de Configuración del apache2
 	ServerName probook4530s
 ==============================================
 
-/etc/apach2/sites-enabled/probook4530s
+/etc/apache2/sites-available/probook4530s
 ============================================================================================
 	<VirtualHost *:80>
 		ServerAdmin syncrhonous@gmail.com
@@ -76,10 +76,15 @@ Cambiar de bases de datos
 
 Para crear la base de datos se usa el script testDatabase.sh que hace el trabajo de 
 crear la base de datos del ambiente de pruebas, e insertar un solo usuario, el admin
+	chmod +x testDatabase.sh
+	./testDatabase.sh
 
 Para levantar la aplicación wsgi se usa el script testEnvChange.sh que se encarga de
 para el demonio apache2, copiar los archivos y reiniciar el demonio web otra vez
+	chmod +x testEnvChange.sh
+	./testEnvChange.sh
 
+Hecho esto probar http://probook4530s/ o http://localhost/
 
 OBS para el script que carga la base de datos tiene que existir el usuario postgres (por defecto, 
 esto es así, por lo que no debería haber problemas

@@ -333,4 +333,11 @@ ALTER TABLE valorstr
   OWNER TO postgres;
 
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
-VALUES ('Administrador','admin','7c4a8d09ca3762af61e59520943dc26494f8941b','true')
+	VALUES ('Administrador','admin','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
+INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
+	VALUES ('Auditor','auditor','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
+
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Levithas', '0', '2013-05-20', '2014-05-20', null, 1, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Sunflare', '1', '2013-04-20', '2014-05-20', '2013-05-03', 1, 'Iniciado');
