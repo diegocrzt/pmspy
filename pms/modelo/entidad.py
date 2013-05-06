@@ -99,7 +99,7 @@ class Fase(Base):
         self.delproyecto = delproyecto
     
     def __repr__(self):
-        return 'Fase { ' + self.numero + '-' + self.nombre + ')}'
+        return 'Fase { ' + self.numero.__str__() + '-' + self.nombre + ')}'
         
         
 class TipoItem(Base):

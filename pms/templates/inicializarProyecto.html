@@ -31,10 +31,11 @@
     <hr>
     <p class="text-info">	La Inicializacion de un proyecto es <strong>irreversible</strong>. No se podrá crear ni editar más fases.</p>
     <p class="text-info">	Los número de las fases serán reasignados para que sean secuenciales, pero el orden será el mismo</p>
-    <p>Esta seguro que desea Inicializar? </p>
     <div>
-	    <form action="{{url_for('inicializarproyecto')}}" method="post">        
-	    	<p><input type="submit" value="Inicializar" /></p>
+	    <form action="{{url_for('inicializarproyecto')}}" method="post">   
+	    <br/>     
+	    	<p><input type="submit" class="btn btn-success" value="Inicializar" />
+	    	<a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}">Cancelar</a></p>
 	    </form>
    	</div>
 </div>

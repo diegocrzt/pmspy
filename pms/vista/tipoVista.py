@@ -2,31 +2,77 @@ import flask.views
 from flask import request
 import pms.vista.required
 from pms import app
-from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
+from pms.modelo.tipoItemControlador import getTiposItemFiltrados,getTiposItemPaginados, getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
+from pms.modelo.rolControlador import getRolesFase,  comprobarUser_Rol
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
-from pms.modelo.entidad import Atributo,TipoItem
-@app.route('/admtipo/<f>')
-@pms.vista.required.login_required
-def admTipo(f=None):
+from pms.modelo.entidad import Atributo,TipoItem, Rol
+from pms.modelo.itemControlador import getVersionItem
+from pms.vista.paginar import calculoDeAnterior
+from pms.vista.paginar import calculoDeSiguiente
+from pms.vista.paginar import calculoPrimeraPag
+TAM_PAGINA=5
+
+
+class AdmTipo(flask.views.MethodView):
     """
     Funcion que llama a la Vista de Administrar Tipo de Item, responde al boton de 'Selec>>' de Administrar Fase
     """
-    flask.session.pop('aux1',None)
-    flask.session.pop('aux2',None)
-    flask.session.pop('aux3',None)
-    flask.session.pop('aux4',None) 
-    if request.method == "GET":
-        fase=getFaseId(f)
-        flask.session.pop('faseid',None)
-        flask.session.pop('fasenombre',None)
-        flask.session['faseid']=fase.id
-        flask.session['fasenombre']=fase.nombre
-        t=fase.tipos
-        
-        return flask.render_template('admTipo.html',tipos=t)
-    else:
-        return flask.redirect(flask.url_for('admfase'))
+    @pms.vista.required.login_required
+    def get(self):
+        if flask.session['faseid']!=None:
+            flask.session.pop('aux1',None)
+            flask.session.pop('aux2',None)
+            flask.session.pop('aux3',None)
+            flask.session.pop('aux4',None)
+            fase=getFaseId(flask.session['faseid'])
+            flask.session.pop('faseid',None)
+            flask.session.pop('fasenombre',None)
+            flask.session['faseid']=fase.id
+            flask.session['fasenombre']=fase.nombre 
+            roles = getRolesFase(fase.id)
+            pT1=False
+            pT2=False
+            for r in roles:
+                if not comprobarUser_Rol(r.id, flask.session['usuarioid']):
+                    aux=r.codigoTipo
+                    if aux%10>=1:
+                        pT1=True
+                    if aux>=10:
+                        pT2=True
+            flask.session['filtro']=""
+            
+            if flask.session['cambio']:
+                flask.session['cambio']=False
+                tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
+                infopag=flask.session['infopag']
+            else:
+                flask.session['pagina']=1
+                tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
+                infopag=calculoPrimeraPag(getTiposFase(fase.id).count())
+            return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False,pT1=pT1,pT2=pT2)
+    
+    @pms.vista.required.login_required
+    def post(self):
+        if flask.request.form['fil']!="":
+            global TAM_PAGINA
+            flask.session['filtro']=flask.request.form['fil']
+            cant=getTiposItemFiltrados(flask.session['filtro'],flask.session['faseid']).count()
+            if 'buscar' in flask.request.form:
+                
+                flask.session['pagina']=1
+                p=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,flask.session['faseid'], flask.request.form['fil'])
+                infopag=calculoPrimeraPag(cant)
+            elif 'sgte' in flask.request.form:
+                infopag=calculoDeSiguiente(cant)
+                p=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,flask.session['faseid'], flask.request.form['fil'])
+            elif 'anterior' in flask.request.form:
+                infopag=calculoDeAnterior(cant)
+                p=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,flask.session['faseid'], flask.request.form['fil'])
+                    
+            return flask.render_template('admTipo.html',tipos=p,infopag=infopag,buscar=True)
+        else:
+            return flask.redirect('/admtipo/')
     
     
     
@@ -96,6 +142,16 @@ class Eliminartipo(flask.views.MethodView):
         else:
             return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
         
+@app.route('/admtipo/<f>')
+@pms.vista.required.login_required
+def admTipo(f=None):
+    fase=getFaseId(f)
+    flask.session.pop('faseid',None)
+    flask.session.pop('fasenombre',None)
+    flask.session['faseid']=fase.id
+    flask.session['fasenombre']=fase.nombre
+    return flask.redirect('/admtipo/')
+    
 
 @app.route('/admtipo/editartipo/<t>')
 @pms.vista.required.login_required       
@@ -126,4 +182,26 @@ def consultarTipoItem(t=None):
     recibe el id del tipo de item a consultar
     """
     tipo=getTipoItemId(t)
-    return flask.render_template('consultarTipo.html',t=tipo)   
+    versiones=[]
+    for i in tipo.instancias:
+        versiones.append(getVersionItem(i.id))
+    return flask.render_template('consultarTipo.html',t=tipo, versiones=versiones)   
+
+
+@app.route('/admtipo/nexttipo/')
+@pms.vista.required.login_required       
+def nextPageT():
+    
+    flask.session['cambio']=True
+    cantT=getTiposFase(flask.session['faseid']).count()
+    flask.session['infopag']=calculoDeSiguiente(cantT)
+    return flask.redirect('/admtipo/'+str(flask.session['faseid']))   
+
+@app.route('/admtipo/prevtipo/')
+@pms.vista.required.login_required       
+def prevPageT():
+    flask.session['cambio']=True
+    flask.session['infopag']=calculoDeAnterior(getTiposFase(flask.session['faseid']).count())
+    return flask.redirect('/admtipo/'+str(flask.session['faseid']))
+
+

@@ -7,6 +7,7 @@ Created on 14/04/2013
 from entidad import TipoItem
 from initdb import db_session, init_db
 from atributoControlador import getAtributosTipo, eliminarAtributo
+from sqlalchemy import or_
 
 session = db_session()
 
@@ -82,3 +83,40 @@ def eliminarTipoItem(idti=None):
             eliminarAtributo(a.id)
         session.query(TipoItem).filter(TipoItem.id==idti).delete()
         session.commit()
+
+def getTiposItemPaginados(pagina=None,tam_pagina=None, faseid=None, filtro=None):
+    """
+    Devuelve una lista de proyectos de tamanio tam_pagina de la pagina pagina, la pagina empieza en 0
+    """
+    if faseid:
+        if  filtro:
+            query=getTiposItemFiltrados(filtro,faseid)
+        else:
+            query = session.query(TipoItem).filter(TipoItem.defase==faseid).order_by(TipoItem.id)
+        if pagina and tam_pagina:
+            query = query.offset(pagina*tam_pagina)
+        return query.limit(tam_pagina)
+
+def getTiposItemFiltrados(filtro=None,faseid=None):
+    """Devuelve una lista de proyectos por nombre, estado, id, y cantFases
+    """
+    if (filtro and faseid):
+        if(filtro.isdigit()):
+            query=session.query(TipoItem).filter(TipoItem.defase==faseid).filter(or_(TipoItem.id==filtro, TipoItem.nombre.ilike("%"+filtro+"%"), TipoItem.comentario.ilike("%"+filtro+"%")))
+        else:
+            query=session.query(TipoItem).filter(TipoItem.defase==faseid).filter(TipoItem.nombre.ilike("%"+filtro+"%") | TipoItem.comentario.ilike("%"+filtro+"%"))
+        return query
+    
+def main():
+    query=getTiposItemPaginados(0,5,2)
+    if query:
+        print query.count()
+        for q in query:
+            print q.nombre
+    else:
+        print query
+        
+if __name__ == "__main__":  
+    main()   
+    
+
