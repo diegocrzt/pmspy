@@ -50,11 +50,10 @@
                                 <tr>
                                         <th>Nombre</th>
                                         <th>Estado</th>
-				                        <th>Costo</th>
-				                        <th>Dificultad</th>
 				                        <th>Tipo</th>
+				                        <th>Version</th>
 				                        {% if pI1 %}
-				                        <th>Completar Atributos</th>
+				                        <th>Atributos</th>
 				                        <th>Editar</th>
 				                        {%endif%}
 				                        {% if pI3 %}
@@ -62,15 +61,23 @@
 				                        {%endif%}
 				                        <th>Consultar</th>
 				                        <th>AsignarHijo</th>
+				                        <th>Aprobar</th>
+				                        <th>Reversionar</th>
                                 </tr>
                                 {% for i in items %}
                     
                                 <tr>
                                         <td>{{i.nombre}}</td>
                                         <td>{{i.estado}}</td>
-                                        <td>{{i.costo}}</td>
-                                        <td>{{i.dificultad}}</td>
                                         <td>{{i.item.tipoitem.nombre}}</td>
+                                        {%if i.version is iterable%}
+                                        {%for v in i.version()%}
+                                        	{% set aux=v.version %}
+                                        	{%endfor%}
+                                        {%else%}
+                                        	{% set aux=i.version %}
+                                        {%endif%}
+                                        <td>{{aux}}</td>
                                         {% if pI1 %}
                                         <td>
                                         {% if i.item.tipoitem.atributos %}
@@ -94,6 +101,12 @@
                                         <td>
                                         <a class="btn btn-warning" href="/admitem/asignarhijo/{{i.id}}">Asignar</a>
                                         </td>
+                                        <td>
+                                        <a class="btn btn-success" href="/admitem/aprobaritem/{{i.id}}">Aprobar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-inverse" href="/admitem/reversionaritem/{{i.id}}">Reversionar</a>
+                                        </td>
                         </tr>
                                 {% else %}
                         
@@ -108,7 +121,7 @@
         	<ul class="nav nav-list bs-docs-sidenav">
 
 				  <li><a href="/admitem/crearitem/"><i class="icon-chevron-right"></i> Crear Item</a></li>
-				  
+				  <li><a href="/admitem/reviviritem/"><i class="icon-chevron-right"></i> Revivir Item</a></li>
 				</ul>
 			</div>
 			{%endif%}
