@@ -55,13 +55,20 @@ class CrearRol(flask.views.MethodView):
             a=flask.request.form['crearT']
         if (a):
             codt=codt+1
+        a = 'editarT'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['editarT']
+        if (a):
+            codt=codt+10
         a = 'eliminarT'
         if a not in flask.request.form:
             a=False
         else:
             a=flask.request.form['eliminarT']
         if (a):
-            codt=codt+10
+            codt=codt+100
         codi=0
         a = 'crearI'
         if a not in flask.request.form:
@@ -70,29 +77,70 @@ class CrearRol(flask.views.MethodView):
             a=flask.request.form['crearI']
         if (a):
             codi=codi+1
-        a = 'aprobarI'
+        a = 'editarI'
         if a not in flask.request.form:
             a=False
         else:
-            a=flask.request.form['aprobarI']
+            a=flask.request.form['editarI']
         if (a):
             codi=codi+10
-            
         a = 'eliminarI'
         if a not in flask.request.form:
             a=False
         else:
             a=flask.request.form['eliminarI']
         if (a):
-            codi=codi+100
-        codlb=0
-        a = 'lb'
+            codi=codi+100    
+        a = 'aprobarI'
         if a not in flask.request.form:
             a=False
         else:
-            a=flask.request.form['lb']
+            a=flask.request.form['aprobarI']
+        if (a):
+            codi=codi+1000
+        a = 'revivirI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['revivirI']
+        if (a):
+            codi=codi+10000
+        a = 'reversionarI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['reversionarI']
+        if (a):
+            codi=codi+100000
+        a = 'asignarpadreI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['asignarpadreI']
+        if (a):
+            codi=codi+1000000
+        a = 'asignarantecesorI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['asignarantecesorI']
+        if (a):
+            codi=codi+10000000
+        codlb=0
+        a = 'crearLB'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['crearLB']
         if(a):
             codlb=codlb+1
+        a = 'eliminarLB'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['eliminarLB']
+        if(a):
+            codlb=codlb+10
         crearRol(flask.session['faseid'],flask.request.form['nombre'][:20],codi,codt,codlb)
         flask.session.pop('aux1',None)
         flask.flash(u"CREACION EXITOSA","text-success")
@@ -110,10 +158,7 @@ class EditarRol(flask.views.MethodView):
         flask.session['aux1']=flask.request.form['nombre']
         if(flask.request.form['nombre']==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
-            return flask.render_template('crearRol.html')
-        if comprobarRol(flask.request.form['nombre'],flask.session['faseid']):
-            flask.flash(u"El rol ya existe","nombre")
-            return flask.render_template('crearRol.html')
+            return flask.redirect('/admrol/editarrol/'+str(flask.session['rolid'])) 
         codt=0
         a = 'crearT'
         if a not in flask.request.form:
@@ -122,13 +167,20 @@ class EditarRol(flask.views.MethodView):
             a=flask.request.form['crearT']
         if (a):
             codt=codt+1
+        a = 'editarT'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['editarT']
+        if (a):
+            codt=codt+10
         a = 'eliminarT'
         if a not in flask.request.form:
             a=False
         else:
             a=flask.request.form['eliminarT']
         if (a):
-            codt=codt+10
+            codt=codt+100
         codi=0
         a = 'crearI'
         if a not in flask.request.form:
@@ -137,32 +189,73 @@ class EditarRol(flask.views.MethodView):
             a=flask.request.form['crearI']
         if (a):
             codi=codi+1
-        a = 'aprobarI'
+        a = 'editarI'
         if a not in flask.request.form:
             a=False
         else:
-            a=flask.request.form['aprobarI']
+            a=flask.request.form['editarI']
         if (a):
             codi=codi+10
-            
         a = 'eliminarI'
         if a not in flask.request.form:
             a=False
         else:
             a=flask.request.form['eliminarI']
         if (a):
-            codi=codi+100
-        codlb=0
-        a = 'lb'
+            codi=codi+100    
+        a = 'aprobarI'
         if a not in flask.request.form:
             a=False
         else:
-            a=flask.request.form['lb']
+            a=flask.request.form['aprobarI']
+        if (a):
+            codi=codi+1000
+        a = 'revivirI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['revivirI']
+        if (a):
+            codi=codi+10000
+        a = 'reversionarI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['reversionarI']
+        if (a):
+            codi=codi+100000
+        a = 'asignarpadreI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['asignarpadreI']
+        if (a):
+            codi=codi+1000000
+        a = 'asignarantecesorI'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['asignarantecesorI']
+        if (a):
+            codi=codi+10000000
+        codlb=0
+        a = 'crearLB'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['crearLB']
         if(a):
             codlb=codlb+1
+        a = 'eliminarLB'
+        if a not in flask.request.form:
+            a=False
+        else:
+            a=flask.request.form['eliminarLB']
+        if(a):
+            codlb=codlb+10
         editarRol(flask.session['rolid'],flask.request.form['nombre'][:20],codi,codt,codlb)
         flask.session.pop('aux1',None)
-        flask.flash(u"CREACION EXITOSA","text-success")
+        flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admrol/'+str(flask.session['faseid'])) 
         
 class Eliminarrol(flask.views.MethodView):
@@ -196,7 +289,9 @@ def eRol(r=None):
     rol=getRolId(r)
     flask.session['rolid']=rol.id
     #No controlo que sea Lider
-    return flask.render_template('eliminarRol.html',r=rol)   
+    rl=[]
+    rl.append(rol)
+    return flask.render_template('eliminarRol.html',rol=rol,r=rl)   
 
 @app.route('/admrol/editarrol/<r>')
 @pms.vista.required.login_required
@@ -207,8 +302,11 @@ def edRol(r=None):
    
     rol=getRolId(r)
     flask.session['rolid']=rol.id
+    nombre=rol.nombre
+    r=[]
+    r.append(rol)
     #No controlo que sea Lider
-    return flask.render_template('editarRol.html',r=rol)              
+    return flask.render_template('editarRol.html',r=r,nombre=nombre)              
 
 
 @app.route('/admrol/asignarrol/<u>')
@@ -240,3 +338,48 @@ def aRol(r=None):
         if comprobarUser_Rol(rol.id,u.id):
             usuarios.append(u)
     return flask.render_template('asignarRol.html',usuarios=usuarios)   
+
+
+@app.route('/admrol/consultarrol/<r>')
+@pms.vista.required.login_required
+def consultarRol(r=None): 
+    """
+    Funcion que llama a la Vista de Consultar Rol, responde al boton de 'Consultar' de Administrar Rol
+    """
+   
+    rol=getRolId(r)
+    flask.session['rolid']=rol.id
+    #No controlo que sea Lider
+    rl=[]
+    rl.append(rol)
+    return flask.render_template('consultarRol.html',rol=rol,r=rl) 
+
+@app.route('/admrol/desasignar/<r>')
+@pms.vista.required.login_required
+def iradesaRol(r=None):
+    """
+    Funcion que llama a la Vista de Desasignar Rol, responde al boton de 'Desasignar' de Administrar Rol
+    """
+    rol=getRolId(r)
+    flask.session['rolid']=rol.id
+    usuarios=[]
+    usr=getUsuarios()
+    for u in usr:
+        if not comprobarUser_Rol(rol.id,u.id):
+            usuarios.append(u)
+    return flask.render_template('desasignarRol.html',usuarios=usuarios)   
+
+@app.route('/admrol/desasignarrol/<u>')
+@pms.vista.required.login_required
+def desauRol(u=None): 
+    """
+    Funcion que llama a la Vista de Desasignar Rol, responde al boton de 'Desasignar' de Desasignar Rol
+    """
+    eliminarUser_Rol(flask.session['rolid'],u)
+    rol=getRolId(flask.session['rolid'])
+    usuarios=[]
+    usr=getUsuarios()
+    for u in usr:
+        if not comprobarUser_Rol(rol.id,u.id):
+            usuarios.append(u)
+    return flask.render_template('desasignarRol.html',usuarios=usuarios) 

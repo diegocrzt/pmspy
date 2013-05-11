@@ -4,7 +4,7 @@ Created on 18/04/2013
 @author: Natalia Valdez
 '''
 
-from initdb import db_session, init_db
+from initdb import db_session, init_db, shutdown_session
 from entidad import Fase
 import proyectoControlador
 
@@ -15,6 +15,7 @@ def getFases(p=None):
     """
     init_db()
     fases = session.query(Fase).filter(Fase.delproyecto==p).order_by(Fase.numero)
+    shutdown_session()
     return fases
 
 
@@ -30,6 +31,7 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     fa.proyecto.cantFase=fa.proyecto.cantFase+1
     session.merge(fa.proyecto)
     session.commit()
+    shutdown_session()
    
 def getFase(numero=None, proy=None):
     """
@@ -37,6 +39,7 @@ def getFase(numero=None, proy=None):
     """
     if(numero and proy):
             res=session.query(Fase).filter(Fase.numero==numero).filter(Fase.delproyecto==proy).first()
+            shutdown_session()
             return res
 
 def comprobarFase(numero=None, proy=None):
@@ -54,10 +57,12 @@ def eliminarFase(fase=None, proy=None):
     elimina una fase
     """
     if(fase and proy):
+        init_db()
         fa=getFaseId(fase)
         fa.proyecto.cantFase=fa.proyecto.cantFase-1
         session.query(Fase).filter(Fase.id==fase).delete()
         session.commit()
+        shutdown_session()
         
        
 def getFaseId(id=None):
@@ -65,8 +70,10 @@ def getFaseId(id=None):
     recupera una fase por su id
     """
     if(id):
-            res=session.query(Fase).filter(Fase.id==id).first()
-            return res      
+        init_db()
+        res=session.query(Fase).filter(Fase.id==id).first()
+        shutdown_session()
+        return res      
          
 def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
     """
@@ -80,13 +87,16 @@ def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
     f.fechaFin=fechafin
     session.merge(f)
     session.commit()
+    shutdown_session()
     
 def getFasesPaginadas(pagina=None,tam_pagina=None, p=None):
     """
     Devuelve una lista de fases de tamanio tam_pagina de la pagina pagina, la pagina empieza en 0
     """
+    init_db()
     query = session.query(Fase).filter(Fase.delproyecto==p).order_by(Fase.id)
     if pagina and tam_pagina:
         query = query.offset(pagina*tam_pagina)
+        shutdown_session()
     return query.limit(tam_pagina)
 

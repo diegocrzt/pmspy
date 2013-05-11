@@ -40,7 +40,7 @@
 <div class="proyectos">
         <div class="row" >
                 <div class="span12">
-                        <h2> Listado de Proyectos </h2>
+                        <h2> Listado de Proyectos {{clever_function(2)}}</h2>
                         <form class="form-search" action="{{url_for('admproyecto')}}" method="post" >
                         <p align="right">
   						<input type="text" class="input-medium search-query" name="fil" value="{{session['filtro']}}">

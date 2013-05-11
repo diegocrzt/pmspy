@@ -61,26 +61,9 @@
 					{% endif %}
 			{% endwith %}<br/>
             <input type="text" name="dificultad" value="{{i.dificultad}}"/></p>
-            <p>Tipo de Item<small class="text-error">(*)</small>:
-           	{%  with messages = get_flashed_messages(category_filter=["tipo"]) %}
-		  			{% if messages %}
-		  				{% for message in messages %}
-	   						<small class="text-error">{{ message }}</small>	
-	   					{% endfor %}    					
-					{% endif %}
-			{% endwith %} 
-            
-            <br/><!-- 
-            <select name="tipo" >
-            {% for op in tipos  %}
-            		{%if session['aux4']==op%}
-            		<option value="{{ op.id }}" selected>{{op.nombre}}</option>
-            		{% else %}
-                	<option value="{{ op.id }}">{{op.nombre}}</option>
-                	{% endif %}
-                {% endfor %}
-            
-            </select> -->
+
+            <br/>
+
             <p><input class="btn btn-success" type="submit" value="Aceptar" />
             <a class="btn btn-inverse" href="/admitem/{{session['faseid']}}">Cancelar</a></p>
         </form>

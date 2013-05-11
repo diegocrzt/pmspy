@@ -60,13 +60,13 @@
             <td>No </td>
 			{% endif %}
             <td>
-            <a class="btn" href="/admrol/asignarrol/{{u.id}}">Asignar</a>
+            <a class="btn" href="/admrol/desasignarrol/{{u.id}}">Desasignar</a>
             </td>
           </tr>
           
           {% else %}
           	<tr>
-          		No se puede asignar el rol a ningun usuario
+          		No hay usuarios que posean el rol
           	</tr>
           {% endfor %}
           

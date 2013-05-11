@@ -14,7 +14,16 @@ import vista.atributoVista
 import vista.paginar
 import vista.itemVista
 import vista.rolVista
+import modelo.rolControlador
+def clever_function(s=None):
+    s=s+1
+    return s
 
+app.jinja_env.globals.update(clever_function=clever_function)
+app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)
+app.jinja_env.globals.update(permisoTipo=modelo.rolControlador.getPermisosStringTipoItem)
+app.jinja_env.globals.update(permisoLB=modelo.rolControlador.getPermisosStringLB)
+app.jinja_env.globals.update(permisoItem=modelo.rolControlador.getPermisosStringItem)
 app.add_url_rule('/admproyecto/',
                  view_func=vista.proyectoVista.AdmProyecto.as_view('admproyecto'),
                  methods=["GET", "POST"])
@@ -118,7 +127,15 @@ app.add_url_rule('/admrol/crearrol/',
                  view_func=vista.rolVista.CrearRol.as_view('crearrol'),
                  methods=["GET", "POST"])
 
+app.add_url_rule('/admrol/editarrol/',
+                 view_func=vista.rolVista.EditarRol.as_view('editarrol'),
+                 methods=["GET", "POST"])
+
+
 app.add_url_rule('/admrol/eliminarrol/',
                  view_func=vista.rolVista.Eliminarrol.as_view('eliminarrol'),
                  methods=["GET", "POST"])
 
+app.add_url_rule('/admrol/importartipo/',
+                 view_func=vista.tipoVista.ImportarTipo.as_view('importartipo'),
+                 methods=["GET", "POST"])

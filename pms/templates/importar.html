@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
+              <li class="active"><a href="">Administrar Tipo de Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Contact</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+</div>
+              
+{%endblock%}
+
+{%block mensaje%}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+		  </div>
+          {% endif %}
+        {% endwith %}
+{%endblock%}
+
+
+{%block content%}
+<div class="tipos">
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+        </div>
+        <div class="row" >
+                <div class="span12">
+                        <h2> Tipos de Items para Importar </h2>
+                        
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Comentario</th>
+                                        <th>Consultar</th>
+				                        <th>Importar</th>
+				                        
+                                </tr>
+                                {% for t in tipos %}
+                                <tr>
+                                        <td>{{t.nombre}}</td>
+                                        <td>{{t.comentario}}</td>
+                                         <td>
+                                        <a class="btn btn-info" href="/admtipo/consultartipo/{{t.id}}">Consultar</a>
+                                        </td>
+			                             <td>
+			                             <a class="btn btn-warning" href="/admtipo/importartipo/{{t.id}}">Importar</a>
+	                                     </td>
+                                       
+                       			 </tr>
+                                {% else %}
+                                <tr>
+                                        No se han creado tipos de items aún
+                                </tr>
+                                {% endfor %}
+                </table>
+                <h2> Tipos de Items para copiar </h2>
+                        
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Comentario</th>
+                                        <th>Consultar</th>
+				                        <th>Copiar</th>
+				                        
+                                </tr>
+                                {% for t in tiposcopiar %}
+                                <tr>
+                                        <td>{{t.nombre}}</td>
+                                        <td>{{t.comentario}}</td>
+                                         <td>
+                                        <a class="btn btn-info" href="/admtipo/consultartipo/{{t.id}}">Consultar</a>
+                                        </td>
+			                             <td>
+			                             <a class="btn btn-warning" href="/admtipo/importartipo/{{t.id}}">Copiar</a>
+	                                     </td>
+                                       
+                       			 </tr>
+                                {% else %}
+                                <tr>
+                                        No se han creado tipos de items aún
+                                </tr>
+                                {% endfor %}
+                </table>
+				<p><strong class="text-info">--</strong> Los Tipos de Item que contienen instancias no pueden ser <strong>editados</strong>  ni <strong>eliminados</strong>.
+				Tampoco pueden ser editados su atributos <strong class="text-info">--</strong></p>
+          </div>
+	      <div class="span3 bs-docs-sidebar">
+        	<ul class="nav nav-list bs-docs-sidenav">
+        	{% if pT1 %}
+				  <li><a href="/admtipo/creartipo/"><i class="icon-chevron-right"></i> Crear Tipo de Item</a></li>
+			{%endif%}
+				  <li><a href="/admtipo/importartipo/{{session['faseid']}}"><i class="icon-chevron-right"></i> Importar Tipo de Item</a>
+				</ul>
+		 </div>
+	</div>
+</div>
+{%endblock%}

@@ -13,7 +13,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="/admrol/{{session['faseid']}}">Administrar Rol</a></li>
+              <li class="active" ><a href="/admrol/{{session['faseid']}}">Administrar Rol</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -24,9 +24,8 @@
 {%endblock%}
 {%block content%}
 <div class="container" align="left">
-    <h3>Eliminar rol de <em>{{session['proyectonombre']}}</em></h3>
+    <h3>Consulta de rol</h3>
     <hr>
-    <p class="text-info">	La eliminación de un rol es <strong>irreversible</strong>.</p>
     <p>	<strong>Nombre:</strong> {{rol.nombre}}</p>
     <div class="span4">
     		<p align="center">	<strong>Permisos sobre Tipo de Item</strong></p>	
@@ -119,11 +118,8 @@
            		{%else%}
            		<p>-No hay usuarios con este rol</p>
             {%endfor%}
-            
-    	<form action="{{url_for('eliminarrol')}}" method="post">        
-	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
-	    	<a class="btn btn-inverse" href="/admrol/{{session['faseid']}}">Cancelar</a></p>
-	    </form>
+	    	<a class="btn btn-success" href="/admrol/{{session['faseid']}}">Aceptar</a>
+
 	    
     
 </div>

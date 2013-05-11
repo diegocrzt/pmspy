@@ -13,7 +13,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admrol/{{session['faseid']}}">Administrar Rol</a></li>
+              <li class="active"><a href="/admrol/{{session['faseid']}}">Administrar Rol</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -28,8 +28,9 @@
 <div class="container">
 	<h3>Crear Rol</h3>
 	<hr>
-	<p>Complete los datos delRol:</p>
+	<p>Complete los datos del Rol:</p>
         <form action="{{url_for('crearrol')}}" method="post">
+        <div class="span12">
             <p>Nombre<small class="text-error">(*)</small>:
             {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
 	  			{% if messages %}
@@ -40,20 +41,53 @@
 			{% endwith %}         
 	    	<br/>
 	    	<p><input type="text" name="nombre" /></p>
-	    	<p>Permisos sobre Tipo de Item</p>
-            <p><input type="checkbox" name="crearT" /> Crear</p>
-            <p><input type="checkbox" name="eliminarT" /> Eliminar</p>
-            <p></p>
-            <p>Permisos sobre Item</p>
-            <p><input type="checkbox" name="crearI" /> Crear, Editar, Reversionar</p>
-            <p><input type="checkbox" name="aprobarI" /> Aprobar</p>
-            <p><input type="checkbox" name="eliminarI" /> Eliminar, Revivir</p>
-            <p></p>
-            <p>Permisos sobre Linea Base</p>
-            <p><input type="checkbox" name="lb" /> Permiso</p>
-            <p></p>
+	    	</div>
+	    	<div class="span4">
+    		<p align="center">	<strong>Permisos sobre Tipo de Item</strong></p>	
+			<table  class="table" >
+	    	<tr class="info">
+            <td><input type="checkbox" name="crearT" />Crear</td>
+            <td><input type="checkbox" name="editarT" /> Editar</td>
+            <td><input type="checkbox" name="eliminarT" /> Eliminar</td> 
+            </tr>
+            </table>
+            </div>
+            <div class="span4">
+            <p align="center"><strong>Permisos sobre Linea Base</strong></p>
+            <table  class="table" >
+            <tr class="error">
+            <td><input type="checkbox" name="crearLB" /> Crear</td>
+            <td><input type="checkbox" name="eliminarLB" /> Eliminar</td>
+            </tr>
+            </table>
+            </div>
+            <br></br>
+            <div class="span7" align="center">
+            <p align="center"><strong>Permisos sobre Item</strong></p>
+            <table  class="table" >
+            <tr class="success">
+            <td><input type="checkbox" name="crearI" /> Crear</td>
+            <td><input type="checkbox" name="editarI" /> Editar</td>
+            <td><input type="checkbox" name="eliminarI" /> Eliminar</td>
+            </tr>
+            <tr class="success">
+            <td><input type="checkbox" name="aprobarI" /> Aprobar</td>
+            <td><input type="checkbox" name="revivirI" />Revivir</td>
+            <td><input type="checkbox" name="reversionarI" /> Reversionar</td>
+            </tr>
+            <tr class="success">
+            <td><input type="checkbox" name="asignarpadreI" /> Asignar Padre</td>
+            <td><input type="checkbox" name="asignarantecesorI" /> Asignar Antecesor</td>
+            <td></td>
+            </tr>
+            </table>
+            
+           </div>
+           <div class="span7">
             <p><input class="btn btn-success" type="submit" value="Aceptar" />
             <a class="btn btn-inverse" href="/admrol/{{session['faseid']}}">Cancelar</a></p>
+            </div>
         </form>
+        
 </div>
 {%endblock%}

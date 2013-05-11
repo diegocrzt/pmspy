@@ -9,4 +9,4 @@ Created on 03/05/2013
     ambiente de desarrollo
 """
 
-DEV = False
+DEV = True

@@ -2,7 +2,7 @@ import flask.views
 from flask import request
 import pms.vista.required
 from pms import app
-from pms.modelo.tipoItemControlador import getTiposItemFiltrados,getTiposItemPaginados, getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
+from pms.modelo.tipoItemControlador import getAllTiposItem, getTiposItemFiltrados,getTiposItemPaginados, getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
 from pms.modelo.rolControlador import getRolesFase,  comprobarUser_Rol
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
@@ -34,7 +34,7 @@ class AdmTipo(flask.views.MethodView):
             pT1=False
             pT2=False
             for r in roles:
-                if not comprobarUser_Rol(r.id, flask.session['usuarioid']):
+                if not comprobarUser_Rol(r.id, flask.session['usuarioid']):#si es su rol(comprobar devuelve false si el usuario posee el rol)
                     aux=r.codigoTipo
                     if aux%10>=1:
                         pT1=True
@@ -114,7 +114,7 @@ class Editartipo(flask.views.MethodView):
         flask.session['aux2']=flask.request.form['comentario']
         if(flask.request.form['nombre']==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
-            return flask.render_template('editarTipo.html')
+            return flask.redirect('/admtipo/editartipo/'+str(flask.session['tipoitemid']))
         editarTipoItem(flask.session['tipoitemid'],flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
         idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
         flask.session.pop('aux1',None)
@@ -204,4 +204,28 @@ def prevPageT():
     flask.session['infopag']=calculoDeAnterior(getTiposFase(flask.session['faseid']).count())
     return flask.redirect('/admtipo/'+str(flask.session['faseid']))
 
+@app.route('/admtipo/importar/<f>')
+@pms.vista.required.login_required   
+def importar(f=None):
+    flask.session['faseid']=f
+    tipos=getAllTiposItem(flask.session['faseid'])
+    tiposcopiar=getTiposFase(flask.session['faseid'])
+    return flask.render_template('importar.html',tipos=tipos, tiposcopiar=tiposcopiar)
 
+@app.route('/admtipo/importartipo/<t>')
+@pms.vista.required.login_required   
+def cambiarNombreTipo(t=None):
+    """Llama al importarTipoItem.html para cambiar el nombre del tipo de item que se desea importar o copiar
+    """ 
+    tipo=getTipoItemId(t)
+    return flask.render_template('importarTipoItem.html',tipo=tipo)
+    
+    
+
+class ImportarTipo(flask.views.MethodView):
+    
+    @pms.vista.required.login_required
+    def post(self):
+        
+        tipos=getAllTiposItem(flask.session['faseid'])
+        return flask.render_template('importar.html',tipos=tipos)

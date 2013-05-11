@@ -49,21 +49,22 @@
                         <table class="table table-striped table-bordered">
                                 <tr>
                                         <th>Nombre</th>
-                                        <th>Permiso Item</th>
-				                        <th>Permiso Tipo</th>
+                                        <th>Permiso Tipo</th>
+				                        <th>Permiso Item</th>
 				                        <th>Permiso LB</th>
 				                        <th>Editar</th>
 				                        <th>Eliminar</th>
-				                        <th>Asignar</th>
 				                        <th>Consultar</th>
+				                        <th>Asignar</th>
+				                        <th>Desasignar</th>
                                 </tr>
                                 {% for r in roles %}
                     
                                 <tr>
                                         <td>{{r.nombre}}</td>
-                                        <td>{{r.codigoItem}}</td>
-                                        <td>{{r.codigoTipo}}</td>
-                                        <td>{{r.codigoLB}}</td>
+                                        <td>{{permisoTipo(r)}}</td>
+                                        <td>{{permisoItem(r)}}</td>
+                                        <td>{{permisoLB(r)}}</td>
                                         <td>
                                         <a class="btn" href="/admrol/editarrol/{{r.id}}">Editar</a>
                                         </td>
@@ -71,10 +72,13 @@
 		                                <a class="btn btn-danger" href="/admrol/eliminarrol/{{r.id}}">Eliminar</a>
                                         </td>
                                         <td>
-                                        <a class="btn btn-info" href="/admrol/consultarrol{{r.id}}">Consultar</a>
+                                        <a class="btn btn-info" href="/admrol/consultarrol/{{r.id}}">Consultar</a>
                                         </td>
                                         <td>
                                         <a class="btn btn-warning" href="/admrol/asignar/{{r.id}}">Asignar</a>
+                                        </td>
+                                         <td>
+                                        <a class="btn btn-inverse" href="/admrol/desasignar/{{r.id}}">Desasignar</a>
                                         </td>
                         </tr>
                                 {% else %}
@@ -89,6 +93,45 @@
         	<ul class="nav nav-list bs-docs-sidenav">
 				  <li><a href="/admrol/crearrol/"><i class="icon-chevron-right"></i> Crear Rol</a></li>
 				</ul>
-			</div>
+				<br/>
+				</div>
+			<div class="span3" align="right">
+			<table class="table table-bordered">
+				<caption><strong class="text-info">Legenda</strong></caption>
+				<tr>
+				<td> Cr</td>
+				<td>Crear</td>
+				</tr>
+				<tr>
+				<td>Ed </td>
+				<td> Editar</td>
+				</tr>
+				<tr>
+				<td>El</td> 
+				<td>Eliminar</td>
+				</tr>
+				<tr>
+				<td>Ap</td>
+				<td>Aprobar</td>
+				</tr>
+				<tr>
+				<td>Rir </td>
+				<td> Revivir</td>
+				</tr>
+				<tr>
+				<td>Rar </td>
+				<td> Reversionar</td>
+				</tr>
+				<tr>
+				<td>Asp </td>
+				<td>Asignar Padre</td>
+				</tr>
+				<tr>
+				<td>Asa </td>
+				<td> Asignar Antecesor</td>
+				</tr>
+			</table>	
+				
+		</div>
 </div>
 {%endblock%}
