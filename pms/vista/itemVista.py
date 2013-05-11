@@ -421,4 +421,4 @@ def bRevivir(vid=None):
         crearRelacion(vvieja.id,version.id,rel.tipo)
     for rel in vvieja.post_list:
         crearRelacion(version.id,vvieja.id,rel.tipo)
-    return flask.redirect('/admitem/'+str(flask.session['faseid']))
+    return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
