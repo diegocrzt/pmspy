@@ -13,7 +13,6 @@ session = db_session()
 def getFases(p=None):
     """Obtener fases
     """
-    init_db()
     fases = session.query(Fase).filter(Fase.delproyecto==p).order_by(Fase.numero)
     shutdown_session()
     return fases
@@ -23,8 +22,6 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     """Crea una fase
 
     """
-    init_db()
-    session = db_session()
     fa = Fase(nombre=nom,numero=num, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, estado="Abierta", delproyecto=proy)
     session.add(fa)
     session.commit()
@@ -79,7 +76,6 @@ def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
     """
     permite editar una fase existente
     """
-    init_db()
     f = getFaseId(id)
     f.nombre=nom
     f.numero= numero

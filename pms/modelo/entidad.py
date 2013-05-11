@@ -200,8 +200,8 @@ class Relacion(Base):
     ante_id = Column(Integer, ForeignKey('vitem.id'))
     post_id = Column(Integer, ForeignKey('vitem.id'))
     tipo = Column(Unicode(10))
-    ante = relationship("VersionItem", backref="ante_list",  primaryjoin=(VersionItem.id == ante_id))
-    post = relationship("VersionItem", backref="post_list",  primaryjoin=(VersionItem.id == post_id))
+    ante = relationship("VersionItem", backref="post_list",  primaryjoin=(VersionItem.id == ante_id))
+    post = relationship("VersionItem", backref="ante_list",  primaryjoin=(VersionItem.id == post_id))
     
     def __init__(self, ante_id,post_id,tipo):
         self.ante_id = ante_id

@@ -15,7 +15,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
-              <li class="active"><a href="">Administrar Item</a></li>
+              <li class="active"><a href="">Reversionar Item</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Contact</a></li>
               </ul>
@@ -53,10 +53,11 @@
 				                        <th>Costo</th>
 				                        <th>Dificultad</th>
 				                        <th>Tipo</th>
-				                        <th>Asignar</th>
+				                        <th>Consultar</th>
+				                        <th>Reversionar</th>
 				                       
                                 </tr>
-                                {% for i in items %}
+                                {% for i in versiones %}
                     
                                 <tr>
                                         <td>{{i.nombre}}</td>
@@ -65,17 +66,20 @@
                                         <td>{{i.dificultad}}</td>
                                         <td>{{i.item.tipoitem.nombre}}</td>
                                         <td>
-                                        <a class="btn btn-info" href="/admitem/asignar/{{i.id}}">Asignar</a>
+                                        <a class="btn btn-info" href="/admitem/consultar/{{i.id}}">Consultar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-info" href="/admitem/reversionarb/{{i.id}}">Reversionar</a>
                                         </td>
                         		</tr>
                                 {% else %}
                         
                                 <tr>
-                                        No hay hijo posibles para la signacion
+                                        No hay versiones del item
                                 </tr>
                                 {% endfor %}
                 </table>
         </div>
 	</div>
 </div>
-{%endblock%} 
+{%endblock%}

@@ -156,4 +156,7 @@ def copiarValores(idvante=None,idvnueva=None):
         crearValor(at.atributo_id,idvnueva,at.valor)
     for at in version.atributosdate:
         crearValor(at.atributo_id,idvnueva,at.valor)
+        
+
+    
     
