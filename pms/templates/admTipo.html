@@ -46,7 +46,7 @@
         <div class="row" >
                 <div class="span12">
                         <h2> Listado de Tipos de Items </h2>
-                        <form class="form-search" action="{{url_for('admtipo')}}" method="post" >
+                        <form class="form-search" action="{{url_for('admimportartipo')}}" method="post" >
                         <p align="right">
   						<input type="text" class="input-medium search-query" name="fil" value="{{session['filtro']}}">
   						<button type="submit" class="btn" name="buscar">Buscar</button></p>
@@ -136,7 +136,7 @@
         	{%  if tienePermiso(roles,"crearT") %}
 				  <li><a href="/admtipo/creartipo/"><i class="icon-chevron-right"></i> Crear Tipo de Item</a></li>
 			
-				  <li><a href="/admtipo/importar/{{session['faseid']}}"><i class="icon-chevron-right"></i> Importar Tipo de Item</a>
+				  <li><a href="{{url_for('admimportartipo')}}"><i class="icon-chevron-right"></i> Importar Tipo de Item</a>
 			{%endif%}
 				</ul>
 		 </div>

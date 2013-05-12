@@ -5,7 +5,7 @@ Created on 14/04/2013
 @author: synchro, Natalia Valdez
 @author: mpoletti
 '''
-from entidad import Proyecto
+from entidad import Proyecto, Usuario
 from initdb import db_session, init_db, shutdown_session
 import faseControlador
 from sqlalchemy import or_
@@ -138,7 +138,7 @@ def getProyectosFiltrados(filtro=None):
         if(filtro.isdigit()):
             query=session.query(Proyecto).filter(or_(Proyecto.id==filtro, Proyecto.cantFase==filtro, Proyecto.nombre.ilike("%"+filtro+"%"), Proyecto.estado.ilike("%"+filtro+"%")))
         else:
-            query=session.query(Proyecto).filter(Proyecto.nombre.ilike("%"+filtro+"%") | Proyecto.estado.ilike("%"+filtro+"%") )
+            query=session.query(Proyecto).join(Usuario).filter(Usuario.nombre.ilike("%"+filtro+"%") |Proyecto.nombre.ilike("%"+filtro+"%") | Proyecto.estado.ilike("%"+filtro+"%"))
         shutdown_session()
         return query
             

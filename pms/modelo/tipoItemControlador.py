@@ -4,7 +4,7 @@ Created on 14/04/2013
 @author: mpoletti
 
 '''
-from entidad import TipoItem
+from entidad import TipoItem, Proyecto, Fase
 from initdb import db_session, init_db, shutdown_session
 from atributoControlador import getAtributosTipo, eliminarAtributo
 from sqlalchemy import or_
@@ -118,11 +118,26 @@ def getTiposItemFiltrados(filtro=None,faseid=None):
             query=session.query(TipoItem).filter(TipoItem.defase==faseid).filter(TipoItem.nombre.ilike("%"+filtro+"%") | TipoItem.comentario.ilike("%"+filtro+"%"))
         shutdown_session()
         return query
-def getAllTiposItem(faseid=None):
-    """Devuelve todos los tipos de items que existen y no se encuentran en la fase del id recibido
+    
+def getAllTiposItem():
+    init_db()
+    query=session.query(TipoItem)
+    shutdown_session()
+    return query 
+    
+def getAllTiposItemPaginados(pagina=None,tam_pagina=None, filtro=None):
+    """Devuelve todos los tipos de items que existen
     """
-    if(faseid):
-        init_db()
-        query=session.query(TipoItem).filter(TipoItem.defase!=faseid)
-        shutdown_session()
+    init_db()
+    query=session.query(TipoItem)
+    if(filtro):
+        query=getAllTipoFiltrados(filtro)
+    if pagina and tam_pagina:
+        query = query.offset(pagina*tam_pagina)
+    shutdown_session()
+    return query.limit(tam_pagina)
+
+def getAllTipoFiltrados(filtro=None):
+    if(filtro):
+        query=session.query(TipoItem).join(Fase).join(Proyecto).filter(TipoItem.nombre.ilike("%"+filtro+"%") | Proyecto.nombre.ilike("%"+filtro+"%") | Fase.nombre.ilike("%"+filtro+"%"))
         return query
