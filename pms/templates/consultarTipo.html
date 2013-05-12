@@ -78,7 +78,7 @@
 								
 		</table>
 		{%if session['enimportar']%}
-			<a class="btn btn-success" href="/admtipo/importar/{{session['faseid']}}">Aceptar</a>
+			<a class="btn btn-success" href="{{url_for('admimportartipo')}}">Aceptar</a>
 		{%else%}
 	    	<a class="btn btn-success" href="/admtipo/{{session['faseid']}}">Aceptar</a>
     	{%endif%}

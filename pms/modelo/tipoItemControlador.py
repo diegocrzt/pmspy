@@ -129,7 +129,7 @@ def getAllTiposItemPaginados(pagina=None,tam_pagina=None, filtro=None):
     """Devuelve todos los tipos de items que existen
     """
     init_db()
-    query=session.query(TipoItem)
+    query=session.query(TipoItem).join(Fase).join(Proyecto).order_by(Proyecto.nombre)
     if(filtro):
         query=getAllTipoFiltrados(filtro)
     if pagina and tam_pagina:
