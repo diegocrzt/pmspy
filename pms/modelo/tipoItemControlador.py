@@ -16,6 +16,7 @@ def getTiposFase(fase=None):
     """
     init_db()
     res = session.query(TipoItem).filter(TipoItem.defase==fase).order_by(TipoItem.id)
+    shutdown_session()
     return res
 
 def getTipoItemId(id=None):
@@ -25,6 +26,7 @@ def getTipoItemId(id=None):
     """
     init_db()
     tipoitem = session.query(TipoItem).filter(TipoItem.id==id).first()
+    shutdown_session()
     return tipoitem
 
 def getTipoItemNombre(nombre=None,fase=None):
@@ -33,8 +35,10 @@ def getTipoItemNombre(nombre=None,fase=None):
     
     """
     if(nombre and fase):
-            res=session.query(TipoItem).filter(TipoItem.nombre==nombre).filter(TipoItem.defase==fase).first()
-            return res
+        init_db()
+        res=session.query(TipoItem).filter(TipoItem.nombre==nombre).filter(TipoItem.defase==fase).first()
+        shutdown_session()
+        return res
         
         
 def comprobarTipoItem(nombre=None, fase=None):
@@ -52,7 +56,6 @@ def crearTipoItem(nom=None, com=None, fa=None):
 
     """
     init_db()
-    session = db_session()
     titem = TipoItem(nombre=nom,comentario=com, defase=fa)
     session.add(titem)
     session.commit()
@@ -80,11 +83,13 @@ def eliminarTipoItem(idti=None):
     elimina un tipo de item
     """
     if(idti):
+        init_db()
         at = getAtributosTipo(idti)        
         for a in at:
             eliminarAtributo(a.id)
         session.query(TipoItem).filter(TipoItem.id==idti).delete()
         session.commit()
+        shutdown_session()
 
 def getTiposItemPaginados(pagina=None,tam_pagina=None, faseid=None, filtro=None):
     """
@@ -121,16 +126,3 @@ def getAllTiposItem(faseid=None):
         query=session.query(TipoItem).filter(TipoItem.defase!=faseid)
         shutdown_session()
         return query
-def main():
-    query=getAllTiposItem(1)
-    if query:
-        print query.count()
-        for q in query:
-            print q.nombre
-    else:
-        print query
-        
-if __name__ == "__main__":  
-    main()   
-    
-

@@ -8,6 +8,7 @@ from pms.modelo.rolControlador import getRolesFase,  comprobarUser_Rol
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.entidad import Atributo,TipoItem, Rol
 from pms.modelo.itemControlador import getVersionItem
+from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
@@ -30,16 +31,8 @@ class AdmTipo(flask.views.MethodView):
             flask.session.pop('fasenombre',None)
             flask.session['faseid']=fase.id
             flask.session['fasenombre']=fase.nombre 
-            roles = getRolesFase(fase.id)
-            pT1=False
-            pT2=False
-            for r in roles:
-                if not comprobarUser_Rol(r.id, flask.session['usuarioid']):#si es su rol(comprobar devuelve false si el usuario posee el rol)
-                    aux=r.codigoTipo
-                    if aux%10>=1:
-                        pT1=True
-                    if aux>=10:
-                        pT2=True
+            roles=getRolesDeUsuarioEnFase(flask.session['usuarioid'], flask.session['faseid'])
+           
             flask.session['filtro']=""
             
             if flask.session['cambio']:
@@ -50,7 +43,7 @@ class AdmTipo(flask.views.MethodView):
                 flask.session['pagina']=1
                 tipos=getTiposItemPaginados(flask.session['pagina']-1,TAM_PAGINA,fase.id)
                 infopag=calculoPrimeraPag(getTiposFase(fase.id).count())
-            return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False,pT1=pT1,pT2=pT2)
+            return flask.render_template('admTipo.html',tipos=tipos,infopag=infopag, buscar=False, roles=roles)
     
     @pms.vista.required.login_required
     def post(self):

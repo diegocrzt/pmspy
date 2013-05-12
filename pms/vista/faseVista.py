@@ -2,6 +2,7 @@ import flask.views
 from flask import request
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas
 from pms.modelo.proyectoControlador import getProyectoId
+from pms.modelo.rolControlador import getProyectosDeUsuario
 from datetime import timedelta
 from datetime import datetime
 import pms.vista.required
@@ -174,7 +175,14 @@ def admFase(p=None):
     flask.session.pop('aux3',None)
     flask.session.pop('aux4',None)  
     if request.method == "GET":
-        if(getProyectoId(p).lider.id==flask.session['usuarioid']):
+        lp=getProyectosDeUsuario(flask.session['usuarioid'])
+        p2=int(p)
+        if getProyectoId(p).delider==int(flask.session['usuarioid']):
+            flask.session['islider']=True
+        else:
+            flask.session['islider']=False
+        
+        if(getProyectoId(p).lider.id==flask.session['usuarioid'] or (p2 in lp)):
             flask.session.pop('faseid',None)
             flask.session['proyectoid']=p
             flask.session['proyectonombre']=getProyectoId(p).nombre
@@ -213,7 +221,7 @@ def admFase(p=None):
             tienefases=True
             if(getProyectoId(p).cantFase==0):
                 tienefases=False
-            return flask.render_template('admFase.html',fases=f, hay=tienefases,infopag=infopag)
+            return flask.render_template('admFase.html',fases=f, hay=tienefases,infopag=infopag,p=getProyectoId(p))
         else:
             return flask.redirect(flask.url_for('admproyecto'))
     else:

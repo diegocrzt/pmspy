@@ -15,11 +15,7 @@ import vista.paginar
 import vista.itemVista
 import vista.rolVista
 import modelo.rolControlador
-def clever_function(s=None):
-    s=s+1
-    return s
 
-app.jinja_env.globals.update(clever_function=clever_function)
 app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)
 app.jinja_env.globals.update(permisoTipo=modelo.rolControlador.getPermisosStringTipoItem)
 app.jinja_env.globals.update(permisoLB=modelo.rolControlador.getPermisosStringLB)

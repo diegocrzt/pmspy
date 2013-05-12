@@ -4,14 +4,9 @@ Created on 14/04/2013
 @author: mpoletti
 @author: Natalia Valdez
 '''
-from entidad import Fase, Usuario, Rol, User_Rol
+from entidad import Rol, User_Rol
 from initdb import db_session, init_db, shutdown_session
-from tipoItemControlador import getTiposFase
-from atributoControlador import getAtributosTipo, getAtributoId
-from usuarioControlador import getUsuario,getUsuarioById,getUsuarios
-from faseControlador import getFase, getFaseId, getFases
-
-
+from faseControlador import getFaseId
 
 session = db_session()
 
@@ -255,4 +250,23 @@ def getPermisosStringLB(r=None):
         if(r.codigoLB>=10):
             permi=permi+" El"
     return permi
+
+def getProyectosDeUsuario(idu=None):
+    """Devuele una lista de ids de proyectos en los que participa el usuario, recibe el id del usuario
+    """
+    init_db()
+    roles=session.query(Rol).all()
+    res=[]
+    print "9999999999"
+    for r in roles:
+        print "33333333"
+        if not comprobarUser_Rol(r.id, idu):
+            print "1111111"
+            res.append(getFaseId(r.fase_id).proyecto.id)
+    shutdown_session()
+    return res
+
+#if __name__=="__main__":
+
+    
         

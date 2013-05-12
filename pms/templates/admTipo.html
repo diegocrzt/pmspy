@@ -54,13 +54,13 @@
                                 <tr>
                                         <th>Nombre</th>
                                         <th>Comentario</th>
-                                        {% if pT1 %}
+                                        {% if tienePermiso(roles,"editarT") %}
 				                        <th>Atributos</th>
 				                        {%endif%}
-				                        {% if pT2 %}
+				                        {%  if tienePermiso(roles,"eliminart")%}
 				                        <th>Eliminar</th>
 				                        {%endif%}
-				                        {% if pT1 %}
+				                        {% if tienePermiso(roles,"editarT") %}
 				                        <th>Editar</th>
 				                        {%endif%}
 				                        
@@ -70,7 +70,7 @@
                                 <tr>
                                         <td>{{t.nombre}}</td>
                                         <td>{{t.comentario}}</td>
-                                        {% if pT1 %}
+                                         {%if tienePermiso(roles,"editarT")%}
 	                                        <td>
 	                                        {%if t.instancias %}
 			                                 No se puede adm Atributos
@@ -79,7 +79,7 @@
 			                                {%endif%}
 	                                        </td>
                                         {%endif%}
-                                        {% if pT2 %}
+                                        {% if tienePermiso(roles,"eliminarT") %}
 			                                <td>
 			                                {%if t.instancias %}
 			                                 No se puede Borrar
@@ -88,7 +88,7 @@
 			                                {%endif%}
 	                                        </td>
                                         {%endif%}
-                                        {% if pT1 %}
+                                        {% if tienePermiso(roles,"editarT") %}
 	                                        <td>
 	                                        {%if t.instancias %}
 	                                         No se puede Editar
@@ -133,10 +133,11 @@
           </div>
 	      <div class="span3 bs-docs-sidebar">
         	<ul class="nav nav-list bs-docs-sidenav">
-        	{% if pT1 %}
+        	{%  if tienePermiso(roles,"crearT") %}
 				  <li><a href="/admtipo/creartipo/"><i class="icon-chevron-right"></i> Crear Tipo de Item</a></li>
-			{%endif%}
+			
 				  <li><a href="/admtipo/importar/{{session['faseid']}}"><i class="icon-chevron-right"></i> Importar Tipo de Item</a>
+			{%endif%}
 				</ul>
 		 </div>
 	</div>

@@ -4,11 +4,10 @@ Created on 14/04/2013
 @author: mpoletti
 
 '''
-from entidad import Item, VersionItem, Atributo, ValorStr, ValorNum, ValorBoolean, ValorDate
-from initdb import db_session, init_db
+from entidad import Item, VersionItem, ValorStr, ValorNum, ValorBoolean, ValorDate
+from initdb import db_session, init_db, shutdown_session
 from tipoItemControlador import getTiposFase
-from atributoControlador import getAtributosTipo, getAtributoId
-from datetime import timedelta
+from atributoControlador import getAtributoId
 from datetime import datetime
 
 
@@ -19,6 +18,7 @@ def getItemsTipo(tipo=None):
     """
     init_db()
     res = session.query(Item).filter(Item.tipo==tipo).all()
+    shutdown_session()
     return res
 
 def getItemEtiqueta(etiqueta=None):
@@ -28,6 +28,7 @@ def getItemEtiqueta(etiqueta=None):
     """
     init_db()
     item = session.query(Item).filter(Item.etiqueta==etiqueta).first()
+    shutdown_session()
     return item
 
 def getItemId(id=None):
@@ -37,6 +38,7 @@ def getItemId(id=None):
     """
     init_db()
     item = session.query(Item).filter(Item.id==id).first()
+    shutdown_session()
     return item
 
 def getVersionId(id=None):
@@ -46,11 +48,13 @@ def getVersionId(id=None):
     """
     init_db()
     item = session.query(VersionItem).filter(VersionItem.id==id).first()
+    shutdown_session()
     return item
 
 def getVersionItem(idi=None):
     init_db()
     version = session.query(VersionItem).filter(VersionItem.deitem==idi).filter(VersionItem.actual==True).first()
+    shutdown_session()
     return version
         
         
@@ -73,7 +77,6 @@ def crearItem(ti=None,etiq=None,nom=None, est=None, cos=None, dif=None):
 
     """
     init_db()
-    session = db_session()
     itm = Item(tipo=ti, etiqueta=etiq)
     session.add(itm)
     session.commit()
@@ -81,6 +84,7 @@ def crearItem(ti=None,etiq=None,nom=None, est=None, cos=None, dif=None):
     ver=VersionItem(nombre=nom,version=0,estado=est,actual=True, costo=cos, dificultad=dif,deitem=i.id)
     session.add(ver)
     session.commit()
+    shutdown_session()
     
 def editarItem(idi=None,nom=None, est=None, cos=None, dif=None):
     """
@@ -102,6 +106,7 @@ def editarItem(idi=None,nom=None, est=None, cos=None, dif=None):
     ver=VersionItem(nombre=nom,version=(v.version+1),estado=est,actual=True,costo=cos, dificultad=dif,deitem=idi)
     session.add(ver)
     session.commit()
+    shutdown_session()
 
 
 
@@ -118,6 +123,7 @@ def eliminarItem(idi=None):
         ver=VersionItem(nombre=v.nombre,version=(v.version+1),estado="Eliminado",actual=True, costo=v.costo, dificultad = v.dificultad,deitem=idi)
         session.add(ver)
         session.commit()
+        shutdown_session()
         
 def crearValor(ida=None,idv=None,val=None):
     atr=getAtributoId(ida)

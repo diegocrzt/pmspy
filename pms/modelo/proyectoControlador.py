@@ -5,8 +5,8 @@ Created on 14/04/2013
 @author: synchro, Natalia Valdez
 @author: mpoletti
 '''
-from entidad import Proyecto, Usuario
-from initdb import db_session, init_db
+from entidad import Proyecto
+from initdb import db_session, init_db, shutdown_session
 import faseControlador
 from sqlalchemy import or_
 session = db_session()
@@ -16,6 +16,7 @@ def getProyectos():
     """
     init_db()
     proyectos = session.query(Proyecto).all()
+    shutdown_session()
     return proyectos
 
 def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod=None, lider=None, estado=None):
@@ -27,14 +28,17 @@ def crearProyecto(nom=None, cant=None, fechainicio=None, fechafin=None, fechamod
     pro = Proyecto(nombre=nom,cantFase=cant, fechaInicio=fechainicio, fechaFin=fechafin,fechaUltMod=fechamod, delider=lider, estado="Pendiente")
     session.add(pro)
     session.commit()
+    shutdown_session()
    
 def getProyecto(nombre=None):
     """
     Recupera un proyecto por su nombre
     """
     if(nombre):
-            res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
-            return res
+        init_db()
+        res=session.query(Proyecto).filter(Proyecto.nombre==nombre).first()
+        shutdown_session()
+        return res
        
        
 def getProyectoId(idp=None):
@@ -42,8 +46,10 @@ def getProyectoId(idp=None):
     Recupera un proyecto por su id
     """
     if(idp):
-            res=session.query(Proyecto).filter(Proyecto.id==idp).first()
-            return res
+        init_db()
+        res=session.query(Proyecto).filter(Proyecto.id==idp).first()
+        shutdown_session()
+        return res
 def comprobarProyecto(nombre=None):
     """
     Comprueba si un proyecto ya existe
@@ -62,9 +68,11 @@ def eliminarProyecto(proyecto=None):
         p=getProyectoId(proyecto)
         for f in p.fases:
             faseControlador.eliminarFase(f.id)
-            p.cantFase=p.cantFase-1   
+            p.cantFase=p.cantFase-1 
+        init_db()  
         session.query(Proyecto).filter(Proyecto.id==proyecto).delete()
         session.commit()
+        shutdown_session()
 
 def actualizarCantFases(idp=None, aumentar=None):
     """
@@ -78,11 +86,13 @@ def actualizarCantFases(idp=None, aumentar=None):
         p.cantFase = p.cantFase-1
     session.merge(p)
     session.commit()
+    shutdown_session()
 
 def inicializarProyecto(p):
     """ 
     Inicializa el proyecto estableciendo su estado a Iniciado
     """
+    init_db()
     proy=getProyectoId(p)
     n=1
     for f in proy.fases:
@@ -93,50 +103,42 @@ def inicializarProyecto(p):
     proy.estado="Iniciado"
     session.merge(proy)
     session.commit()
+    shutdown_session()
     
 def getProyectosPaginados(pagina=None,tam_pagina=None, filtro=None):
     """
     Devuelve una lista de proyectos de tamanio tam_pagina de la pagina pagina, la pagina empieza en 0
     """
+    init_db()
     if  filtro:
         query=getProyectosFiltrados(filtro)
     else:
         query = session.query(Proyecto).order_by(Proyecto.id)
     if pagina and tam_pagina:
         query = query.offset(pagina*tam_pagina)
+    shutdown_session()
     return query.limit(tam_pagina)
 
 def getCantProyectos(filtro=None):
     """Devuelve la cantidad de proyecto existentes en la base de datos
     """
+    init_db()
     if (filtro):
         p=getProyectosFiltrados(filtro).count()
     else:
         p=session.query(Proyecto).count()
+    shutdown_session()
     return p
 
 def getProyectosFiltrados(filtro=None):
     """Devuelve una lista de proyectos por nombre, estado, id, y cantFases
     """
     if (filtro):
+        init_db()
         if(filtro.isdigit()):
             query=session.query(Proyecto).filter(or_(Proyecto.id==filtro, Proyecto.cantFase==filtro, Proyecto.nombre.ilike("%"+filtro+"%"), Proyecto.estado.ilike("%"+filtro+"%")))
         else:
             query=session.query(Proyecto).filter(Proyecto.nombre.ilike("%"+filtro+"%") | Proyecto.estado.ilike("%"+filtro+"%") )
+        shutdown_session()
         return query
             
-def main():
-    f="o"
-    query=getProyectosFiltrados(f)
-    str="holta"
-    if query:
-        print query.count()
-        for q in query:
-            print q.nombre
-    else:
-        print query
-        
-if __name__ == "__main__":  
-    main()   
-    
-    

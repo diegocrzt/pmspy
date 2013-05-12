@@ -1,30 +1,28 @@
-from entidad import Fase, Usuario, Rol, User_Rol, Relacion,Proyecto
-from initdb import db_session, init_db
-from tipoItemControlador import getTiposFase
+from entidad import Relacion
+from initdb import db_session, init_db, shutdown_session
 from itemControlador import getVersionId
-from atributoControlador import getAtributosTipo, getAtributoId
-from usuarioControlador import getUsuario,getUsuarioById,getUsuarios
-from faseControlador import getFase, getFaseId, getFases
 from proyectoControlador import getProyectoId
 session = db_session()
 
 def getRelacionesCAnte(ante_id=None):
     init_db()
     res = session.query(Relacion).filter(Relacion.ante_id==ante_id).all()
+    shutdown_session()
     return res
 
 def crearRelacion(ante_id=None,post_id=None,t=None):
-    init_db()
-    session = db_session()
+    
     ver=getVersionId(ante_id)
     itm=ver.item
     tipo=itm.tipoitem
     fase=tipo.fase
     proyecto=fase.proyecto
     if pruebaArista(ante_id,post_id,proyecto.id):
+        init_db()
         rel = Relacion(ante_id=ante_id, post_id=post_id,tipo=t)
         session.add(rel)
         session.commit()
+        shutdown_session()
         return True
     else:
         return False

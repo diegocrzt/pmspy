@@ -5,7 +5,7 @@ Created on 14/04/2013
 
 '''
 from entidad import Atributo
-from initdb import db_session, init_db
+from initdb import db_session, init_db, shutdown_session
 
 session = db_session()
 
@@ -14,6 +14,7 @@ def getAtributosTipo(tipoI=None):
     """
     init_db()
     res = session.query(Atributo).filter(Atributo.pertenece==tipoI).all()
+    shutdown_session()
     return res
 
 def getAtributoId(id=None):
@@ -23,6 +24,7 @@ def getAtributoId(id=None):
     """
     init_db()
     res = session.query(Atributo).filter(Atributo.id==id).first()
+    shutdown_session()
     return res
 
 def getAtributoNombreTipo(nombre=None,tipo=None):
@@ -31,7 +33,9 @@ def getAtributoNombreTipo(nombre=None,tipo=None):
     
     """
     if(nombre and tipo):
+            init_db()
             res=session.query(Atributo).filter(Atributo.nombre==nombre).filter(Atributo.pertenece==tipo).first()
+            shutdown_session()
             return res
         
         
@@ -50,10 +54,10 @@ def crearAtributo(nom=None, td=None, ta=None):
 
     """
     init_db()
-    session = db_session()
     att = Atributo(nombre=nom,tipoDato=td, pertenece=ta)
     session.add(att)
     session.commit()
+    shutdown_session()
     
     
 def editarAtributo(idat=None,nom=None, td=None, ta=None):
@@ -67,6 +71,7 @@ def editarAtributo(idat=None,nom=None, td=None, ta=None):
     at.pertenece=ta
     session.merge(at)
     session.commit()
+    shutdown_session()
 
 
 
@@ -76,5 +81,7 @@ def eliminarAtributo(idat=None):
     elimina un tipo de item
     """
     if(idat):
+        init_db()
         session.query(Atributo).filter(Atributo.id==idat).delete()
         session.commit()
+        shutdown_session()

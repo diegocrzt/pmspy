@@ -17,7 +17,7 @@
               <li><a href="/admproyecto/">Administrar Proyecto</a></li>
               <li class="active"><a href="">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
               </ul>
           </div>
          </div>
@@ -54,12 +54,14 @@
                                         <th>Estado</th>
                                         {% if session['proyectoiniciado']==False %}
                                         <th>Eliminar</th>
-                                                        <th>Editar</th>
-                                                        {% else %}
-                                                        <th>Tipos de Items</th>
-                                                        <th>Items</th>
-                                                        <th>Roles</th>
-                                                        {% endif %}
+                                        <th>Editar</th>
+                                        {% else %}
+                                        <th>Tipos de Items</th>
+                                        <th>Items</th>
+                                        {%if session['islider']==True%}
+                                        <th>Roles</th>
+                                        {% endif %}
+                                        {% endif %}
                                 </tr>
                                 {% for f in fases %}
                    
@@ -88,9 +90,10 @@
                                         <td>
                                         <a class="btn" href="/admitem/{{f.id}}">Ir>></a>
                                         </td>
+                                        {%if session['islider']==True%}
                                         <td>
                                         <a class="btn" href="/admrol/{{f.id}}">Ir>></a>
-                                        </td>
+                                        </td>{% endif %}
                                         {% endif %}
                         </tr>
                                 {% else %}

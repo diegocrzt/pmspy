@@ -13,9 +13,9 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
+              <li class="active"><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
               <li><a href="/">Logout</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
               </ul>
           </div>
        </div>

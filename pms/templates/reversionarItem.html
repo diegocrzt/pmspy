@@ -17,7 +17,7 @@
               <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
               <li class="active"><a href="">Reversionar Item</a></li>
               <li><a href="/">Logout</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
               </ul>
           </div>
          </div>
@@ -66,7 +66,7 @@
                                         <td>{{i.dificultad}}</td>
                                         <td>{{i.item.tipoitem.nombre}}</td>
                                         <td>
-                                        <a class="btn btn-info" href="/admitem/consultar/{{i.id}}">Consultar</a>
+                                        <a class="btn btn-info" href="/admitem/consultaritem/{{i.id}}">Consultar</a>
                                         </td>
                                         <td>
                                         <a class="btn btn-info" href="/admitem/reversionarb/{{i.id}}">Reversionar</a>

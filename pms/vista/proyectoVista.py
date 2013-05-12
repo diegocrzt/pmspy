@@ -3,6 +3,7 @@ from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario,
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto
 from datetime import datetime
 import pms.vista.required
+from pms.modelo.rolControlador import getProyectosDeUsuario
 from pms import app
 from pms.vista.paginar import calculoDeSiguiente, calculoDeAnterior, calculoPrimeraPag
 TAM_PAGINA=5
@@ -31,8 +32,8 @@ class AdmProyecto(flask.views.MethodView):
             flask.session['pagina']=1
             p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA)
             infopag=calculoPrimeraPag(getCantProyectos())
-        
-        return flask.render_template('admProyecto.html',proyectos=p, infopag=infopag, buscar=False)
+        lp=getProyectosDeUsuario(flask.session['usuarioid'])
+        return flask.render_template('admProyecto.html',proyectos=p, infopag=infopag, buscar=False, lp=lp)
     @pms.vista.required.login_required
     def post(self):
         """

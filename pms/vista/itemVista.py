@@ -9,7 +9,7 @@ from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
-
+from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 
 
 @app.route('/admitem/<f>')
@@ -29,19 +29,7 @@ def admItem(f=None):
         flask.session['faseid']=fase.id
         flask.session['fasenumero']=fase.numero
         flask.session['fasenombre']=fase.nombre
-        roles = getRolesFase(fase.id)
-        pI1=False
-        pI2=False
-        pI3=False
-        for r in roles:
-            if not comprobarUser_Rol(r.id, flask.session['usuarioid']):
-                aux=r.codigoItem
-                if aux%10>=1:
-                    pI1=True
-                if aux%100>=10:
-                    pI2=True
-                if aux>=100:
-                    pI3=True
+        roles = getRolesDeUsuarioEnFase(flask.session['usuarioid'], flask.session['faseid'])
         t=fase.tipos
         i=[]
         for ti in t:
@@ -50,8 +38,8 @@ def admItem(f=None):
                 aux=getVersionItem(it.id)
                 if aux.estado!="Eliminado":
                     i.append(aux)
-        
-        return flask.render_template('admItem.html',items=i,pI1=pI1,pI2=pI2,pI3=pI3)
+        flask.session.pop('itemid',None)
+        return flask.render_template('admItem.html',items=i,roles=roles)
     else:
         return flask.redirect(flask.url_for('admfase'))
     
