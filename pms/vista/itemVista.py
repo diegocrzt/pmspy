@@ -7,7 +7,7 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
-from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable, desAprobarAdelante, desAprobar
+from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 
@@ -257,7 +257,29 @@ def consultarItem(i=None):
         val.append(at)
     for at in ver.atributosdate:
         val.append(at)
-    return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val)   
+    padres=[]
+    antecesores=[]
+    for n in ver.ante_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                padres.append(aux)
+        else:
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                antecesores.append(aux)
+    hijos=[]
+    posteriores=[]
+    for n in ver.post_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                hijos.append(aux)
+        else:
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                posteriores.append(aux)
+    return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores)   
 
 @app.route('/admitem/asignarhijo/<vid>')
 @pms.vista.required.login_required

@@ -29,18 +29,23 @@ def crearRelacion(ante_id=None,post_id=None,t=None):
         return False
     
 def eliminarRelacion(ante_id=None,post_id=None):
+    init_db()
     session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).delete()
     session.commit()
+    shutdown_session()
 
 def comprobarRelacion(ante_id=None,post_id=None):
     init_db()
     if int(ante_id) != int(post_id):   
         res = session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).first()
         if res:
+            shutdown_session()
             return True
         else:
+            shutdown_session()
             return False
     else:
+        shutdown_session()
         return True
 
 class nodo():
