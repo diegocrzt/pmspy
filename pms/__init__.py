@@ -132,6 +132,10 @@ app.add_url_rule('/admrol/eliminarrol/',
                  view_func=vista.rolVista.Eliminarrol.as_view('eliminarrol'),
                  methods=["GET", "POST"])
 
-app.add_url_rule('/admrol/importartipo/',
+app.add_url_rule('/admtipo/importartipo/',
                  view_func=vista.tipoVista.ImportarTipo.as_view('importartipo'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admtipo/admimportartipo/',
+                 view_func=vista.tipoVista.AdmImportar.as_view('admimportartipo'),
                  methods=["GET", "POST"])
