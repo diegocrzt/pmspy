@@ -7,7 +7,7 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
-from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable
+from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable, desAprobarAdelante, desAprobar
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 
@@ -108,6 +108,7 @@ class CompletarAtributo(flask.views.MethodView):
         for at in tipo.atributos:
             crearValor(at.id,itm.id,flask.request.form[at.nombre])
         copiarRelacionesEstable(itm1.id,itm.id)
+        desAprobarAdelante(itm.id)
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admitem/'+str(flask.session['faseid']))    
 
@@ -146,16 +147,20 @@ class EditarItem(flask.views.MethodView):
         flask.session['aux3']=flask.request.form['dificultad']
         if(flask.request.form['nombre']==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
-            return flask.render_template('editarItem.html')
+            v=getVersionItem(flask.session['itemid'])
+            return flask.render_template('editarItem.html',i=v)
         if(flask.request.form['costo']==""):
+            v=getVersionItem(flask.session['itemid'])
             flask.flash(u"El campo costo no puede estar vacio","costo")
-            return flask.render_template('editarItem.html')
+            return flask.render_template('editarItem.html',i=v)
         if(flask.request.form['dificultad']==""):
+            v=getVersionItem(flask.session['itemid'])
             flask.flash(u"El campo dificultad no puede estar vacio","dificultad")
-            return flask.render_template('editarItem.html')
+            return flask.render_template('editarItem.html',i=v)
         if comprobarItem(flask.request.form['nombre'],flask.session['faseid']):
+            v=getVersionItem(flask.session['itemid'])
             flask.flash(u"El item ya existe", "nombre")
-            return flask.render_template('editarItem.html')
+            return flask.render_template('editarItem.html',i=v)
         vvieja=getVersionItem(flask.session['itemid'])
         editarItem(flask.session['itemid'],flask.request.form['nombre'],"activo",flask.request.form['costo'],flask.request.form['dificultad'])
         item=getItemId(flask.session['itemid'])
@@ -166,6 +171,7 @@ class EditarItem(flask.views.MethodView):
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
+        desAprobarAdelante(version.id)
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
     
@@ -198,6 +204,7 @@ class Eliminaritem(flask.views.MethodView):
             version=getVersionItem(item.id)
             copiarValores(vvieja.id,version.id)
             copiarRelacionesEstable(vvieja.id,version.id)
+            desAprobarAdelante(version.id)
             flask.flash(u"ELIMINACION EXITOSA","text-success")
             return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
         else:
@@ -281,6 +288,8 @@ def auHijo(vid=None):
     """
     if crearRelacion(vid,flask.session['hijo'],"P-H"):
         flask.flash(u"Relacion creada con exito")
+        desAprobar(flask.session['hijo'])
+        desAprobarAdelante(flask.session['hijo'])
         return flask.redirect('/admitem/asignarhijo/'+str(flask.session['hijo']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -318,6 +327,8 @@ def auAntecesor(vid=None):
     """
     if crearRelacion(vid,flask.session['antecesor'],"A-S"):
         flask.flash(u"Relacion creada con exito")
+        desAprobar(flask.session['antecesor'])
+        desAprobarAdelante(flask.session['antecesor'])
         return flask.redirect('/admitem/asignarantecesor/'+str(flask.session['antecesor']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -352,6 +363,7 @@ def bReversionar(vid=None):
         crearRelacion(vvieja.id,version.id,rel.tipo)
     for rel in vvieja.post_list:
         crearRelacion(version.id,vvieja.id,rel.tipo)
+    desAprobarAdelante(version.id)
     return flask.redirect('/admitem/reversionar/'+str(flask.session['itemid']))
 
 
@@ -400,6 +412,7 @@ def bRevivir(vid=None):
         crearRelacion(vvieja.id,version.id,rel.tipo)
     for rel in vvieja.post_list:
         crearRelacion(version.id,vvieja.id,rel.tipo)
+    desAprobarAdelante(version.id)
     return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
 
 

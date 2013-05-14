@@ -163,4 +163,3 @@ def copiarValores(idvante=None,idvnueva=None):
         
 
     
-    

@@ -150,3 +150,31 @@ def copiarRelacionesEstable(idvieja=None,idnueva=None):
         session.commit()
     shutdown_session()
     
+def desAprobarAdelante(idvcambio=None):
+    ver=getVersionId(idvcambio)
+    ver.estado="activo"
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    desAprobarAdelanteG(idvcambio,grafo)
+    
+def desAprobarAdelanteG(idvcambio=None,grafo=None):
+    ver=getVersionId(idvcambio)
+    nA=grafo[0]
+    for n in grafo:
+        if int(n.version)==int(idvcambio):
+            nA=n
+    for n in nA.salientes:
+        if n.estado=="aprobado" or n.estado=="bloqueado":
+            desAprobar(n.version)
+            desAprobarAdelanteG(n.version,grafo)
+            
+    
+def desAprobar(idv=None):
+    init_db()
+    ver=getVersionId(idv)
+    ver.estado="revision"
+    session.merge(ver)
+    session.commit()
+    shutdown_session()
