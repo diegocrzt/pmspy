@@ -7,7 +7,7 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
-from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion, comprobarAprobar,copiarRelacionesEstable
+from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 
