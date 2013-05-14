@@ -1,5 +1,6 @@
 from entidad import Relacion
 from initdb import db_session, init_db, shutdown_session
+from faseControlador import getFaseId
 from itemControlador import getVersionId
 from proyectoControlador import getProyectoId
 session = db_session()
@@ -43,13 +44,14 @@ def comprobarRelacion(ante_id=None,post_id=None):
         return True
 
 class nodo():
-    def __init__(self, etiqueta, costo, dificultad,version):
+    def __init__(self, etiqueta, costo, dificultad,version,estado):
         self.entrantes = []
         self.salientes = []
         self.etiqueta = etiqueta
         self.costo =costo
         self.dificultad=dificultad
         self.version=version
+        self.estado=estado
         self.marca=False
     def addEntrante(self, nodo):
         self.entrantes.append(nodo)
@@ -71,7 +73,7 @@ def crearGrafoProyecto(pr=None):
             for item in tipo.instancias:
                 for v in item.version:
                     if v.actual:
-                        grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id))
+                        grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado))
     for n in grafo:
         relaciones=getRelacionesCAnte(n.version)
         for r in relaciones:
@@ -114,3 +116,37 @@ def pruebaArista(idvinicio=None,idvfin=None,proyecto=None):
         return False
     else:
         return True
+    
+def comprobarAprobar(idv=None):
+    ver=getVersionId(idv)
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    nA=grafo[1]
+    cantentrantes=0
+    for n in grafo:
+        if int(n.version)==int(idv):
+            nA=n
+    for n in nA.entrantes:
+        cantentrantes=cantentrantes+1
+        if n.estado!="aprobado" and n.estado!="bloqueado":
+            return False
+    if fase.numero>1 and cantentrantes==0:
+        return False
+    return True
+
+def copiarRelacionesEstable(idvieja=None,idnueva=None):
+    init_db()
+    res = session.query(Relacion).filter(Relacion.ante_id==idvieja).all()
+    for r in res:
+        rel = Relacion(ante_id=idnueva, post_id=r.post_id,tipo=r.tipo)
+        session.add(rel)
+        session.commit()
+    res = session.query(Relacion).filter(Relacion.post_id==idvieja).all()
+    for r in res:
+        rel = Relacion(ante_id=r.ante_id, post_id=idnueva,tipo=r.tipo)
+        session.add(rel)
+        session.commit()
+    shutdown_session()
+    

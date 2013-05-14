@@ -140,8 +140,6 @@ def crearValor(ida=None,idv=None,val=None):
         session.add(v)
         session.commit()
     elif atr.tipoDato =="Fecha":
-        if val== None:
-            val=datetime.today()
         v= ValorDate(atributo=ida,item=idv,valor=val)
         session.add(v)
         session.commit()

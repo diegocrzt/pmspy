@@ -7,7 +7,7 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
-from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion
+from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion, comprobarAprobar,copiarRelacionesEstable
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 
@@ -107,10 +107,7 @@ class CompletarAtributo(flask.views.MethodView):
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
             crearValor(at.id,itm.id,flask.request.form[at.nombre])
-        for rel in itm1.ante_list:
-            crearRelacion(itm1.id,itm.id,rel.tipo)
-        for rel in itm1.post_list:
-            crearRelacion(itm.id,itm1.id,rel.tipo)
+        copiarRelacionesEstable(itm1.id,itm.id)
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admitem/'+str(flask.session['faseid']))    
 
@@ -164,10 +161,7 @@ class EditarItem(flask.views.MethodView):
         item=getItemId(flask.session['itemid'])
         version=getVersionItem(item.id)
         copiarValores(vvieja.id,version.id)
-        for rel in vvieja.ante_list:
-            crearRelacion(vvieja.id,version.id,rel.tipo)
-        for rel in vvieja.post_list:
-            crearRelacion(version.id,vvieja.id,rel.tipo)
+        copiarRelacionesEstable(vvieja.id,version.id)
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
@@ -203,10 +197,7 @@ class Eliminaritem(flask.views.MethodView):
             item=getItemId(flask.session['itemid'])
             version=getVersionItem(item.id)
             copiarValores(vvieja.id,version.id)
-            for rel in vvieja.ante_list:
-                crearRelacion(vvieja.id,version.id,rel.tipo)
-            for rel in vvieja.post_list:
-                crearRelacion(version.id,vvieja.id,rel.tipo)
+            copiarRelacionesEstable(vvieja.id,version.id)
             flask.flash(u"ELIMINACION EXITOSA","text-success")
             return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
         else:
@@ -410,3 +401,21 @@ def bRevivir(vid=None):
     for rel in vvieja.post_list:
         crearRelacion(version.id,vvieja.id,rel.tipo)
     return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
+
+
+@app.route('/admitem/aprobaritem/<vid>')
+@pms.vista.required.login_required
+def aprobarItem(vid=None): 
+    """
+    Funcion que llama a la Vista de Aprobar item
+    """
+    vvieja=getVersionId(vid)
+    item=vvieja.item
+    if comprobarAprobar(vid):
+        editarItem(item.id,vvieja.nombre,"aprobado",vvieja.costo,vvieja.dificultad)
+        version=getVersionItem(item.id)
+        copiarValores(vvieja.id,version.id)
+        copiarRelacionesEstable(vvieja.id,version.id)
+        return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
+    else:
+        return flask.redirect('/admitem/'+str(flask.session['faseid']))
