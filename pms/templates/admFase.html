@@ -61,6 +61,7 @@
                                         {%if session['islider']==True%}
                                         <th>Roles</th>
                                         {% endif %}
+                                        <th>Linea Base</th>
                                         {% endif %}
                                 </tr>
                                 {% for f in fases %}
@@ -85,15 +86,16 @@
                                         </td>
                                         {% else %}
                                         <td>
-                                        <a class="btn" href="/admtipo/{{f.id}}">Ir>></a>
+                                        <a class="btn btn-primary" href="/admtipo/{{f.id}}">Ir>></a>
                                         </td>
                                         <td>
-                                        <a class="btn" href="/admitem/{{f.id}}">Ir>></a>
+                                        <a class="btn btn-success" href="/admitem/{{f.id}}">Ir>></a>
                                         </td>
                                         {%if session['islider']==True%}
                                         <td>
-                                        <a class="btn" href="/admrol/{{f.id}}">Ir>></a>
+                                        <a class="btn btn-info" href="/admrol/{{f.id}}">Ir>></a>
                                         </td>{% endif %}
+                                        <td><a class="btn btn-warning" href="/admlinea/{{f.id}}">Ir>></a></td>
                                         {% endif %}
                         </tr>
                                 {% else %}
@@ -120,7 +122,7 @@
                                   <li><a href="/admfase/inicializarproyecto/"><i class="icon-chevron-right"></i> Inicializar Proyecto</a></li>
                                 {% endif %}    
                         {% endif %}
-                                  <li><a href="#"><i class="icon-chevron-right"></i> Consultar Fase</a></li>
+                                  <li><a href="#"><i class="icon-chevron-right"></i> Finalizar Proyecto</a></li>
                                 </ul>
                         </div>
         </div>

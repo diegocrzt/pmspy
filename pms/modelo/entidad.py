@@ -28,6 +28,7 @@ class Usuario(Base):
     isAdmin = Column(Boolean)
     
     esLider = relationship("Proyecto", backref="lider")
+    lineas = relationship("LineaBase",backref="creador")
     
     def __init__(self, nombre, nombredeusuario, clave, isAdmin):
         self.nombre = nombre
@@ -88,6 +89,7 @@ class Fase(Base):
     
     tipos = relationship("TipoItem", backref="fase")
     roles = relationship("Rol",backref="fase")
+    lineas = relationship("LineaBase",order_by="LineaBase.numero", backref="fase")
     
     def __init__(self, nombre, numero, fechaInicio, fechaFin, fechaUltMod, estado, delproyecto):
         self.nombre = nombre
@@ -150,8 +152,10 @@ class Item(Base):
     tipo = Column(Integer, ForeignKey('tipoitem.id'))
     etiqueta = Column(Unicode(60), unique=True)
     version = relationship("VersionItem", backref="item")
+    linea_id=Column(Integer, ForeignKey('lineabase.id'))
     
-    def __init__(self, tipo, etiqueta):
+    def __init__(self, tipo, etiqueta,linea_id=None):
+        self.linea_id=linea_id
         self.tipo = tipo
         self.etiqueta = etiqueta 
     
@@ -319,6 +323,27 @@ class User_Rol(Base):
         
     def __repr__(self):
         return 'User_Rol { '+ self.usuario_id+ self.rol_id + '}'
-
+    
+class LineaBase(Base):
+    """
+        Define la clase Linea Base y la mapea a la tabla lineabase
+    """
+    __tablename__='lineabase'
+    id = Column(Integer, primary_key=True)
+    creador_id= Column(Integer, ForeignKey('usuario.id'))
+    fechaCreacion=Column(DateTime)
+    numero=Column(Integer)
+    comentario=Column(Unicode(100))
+    fase_id = Column(Integer, ForeignKey('fase.id'))
+    items = relationship("Item",backref="lineabase")
+    
+    def __init__(self, creador_id, fechaCreacion, numero, fase_id):
+        self.creador_id=creador_id
+        self.fechaCreacion=fechaCreacion
+        self.numero=numero
+        self.fase_id=fase_id
+        
+    def __repr__(self):
+        return 'LineaBase { '+ self.numero+ self.fase_id + self.creador_id + self.fechaCreacion +'}' 
 
 init_db()

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/admlinea/cancelarcreacion/">Administrar Linea Base</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+</div>
+              
+{%endblock%}
+
+{%block mensaje%}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+		  </div>
+          {% endif %}
+        {% endwith %}
+{%endblock%}
+
+{%block content%}
+<div class="items">
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}} </h3>
+        <h3 class="muted">Linea base: {{session['numerolb']}} </h3>
+        </div>
+        <div class="row" >
+                <div class="span10">
+                        <h2> Listado de Items </h2>
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+				                        <th>Tipo</th>
+				                        <th>Version</th>
+				                        <th>Agregar</th>
+				                        <th>Quitar</th>
+				                    </tr>    
+				                  {%for v in vitems%}
+				                   <tr>
+                                        <td>{{v.nombre}}</td>
+                                        <td>{{v.estado}}</td>
+                                        <td>{{v.item.tipoitem.nombre}}</td>
+                                        <td>{{v.version}}</td>
+                                        {% if v.estado!="Bloqueado"%}
+                                        <td>
+		                                <a class="btn btn-warning" href="/admlinea/agregar/{{v.id}}">Agregar</a>
+                                        </td>
+                                        <td></td>
+                                        {%else%}
+                                        <td></td>
+                                        <td>
+		                                <a class="btn btn-danger" href="/admlinea/quitar/{{v.id}}">Quitar</a>
+                                        </td>
+                                        {%endif%}
+                                    </tr>
+                                  {% else %}
+	                                <tr>
+	                                        No se hay items apronados
+	                                </tr>
+                                  {% endfor %}
+				                  </table>
+				                 <p><a class="btn btn-success" href="/admlinea/confirmarcreacion/">Aceptar</a>
+				                	<a class="btn btn-inverse" href="/admlinea/cancelarcreacion/">Cancelar</a></p>
+				       </div>
+	           </div>
+	  </div>
+{%endblock%}
+	                    

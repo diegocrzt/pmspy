@@ -14,6 +14,7 @@ import vista.atributoVista
 import vista.paginar
 import vista.itemVista
 import vista.rolVista
+import vista.lineaBaseVista
 import modelo.rolControlador
 
 app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)
@@ -138,4 +139,12 @@ app.add_url_rule('/admtipo/importartipo/',
 
 app.add_url_rule('/admtipo/admimportartipo/',
                  view_func=vista.tipoVista.AdmImportar.as_view('admimportartipo'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admlinea/',
+                 view_func=vista.lineaBaseVista.AdmLineaBase.as_view('admlinea'),
+                 methods=["GET"])
+
+app.add_url_rule('/admlinea/eliminarlinea/',
+                 view_func=vista.lineaBaseVista.EliminarLineaBase.as_view('eliminarlinea'),
                  methods=["GET", "POST"])
