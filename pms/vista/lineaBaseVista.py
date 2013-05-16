@@ -20,7 +20,7 @@ class AdmLineaBase(flask.views.MethodView):
         """Devuelve la lista paginada de todos los Tipos de Items de la fase 
         """
         if flask.session['faseid']!=None:
-            
+            flask.session['numerolb']=None
             fase=getFaseId(flask.session['faseid'])
             lineas=fase.lineas
             for l in lineas:
@@ -45,11 +45,15 @@ class EliminarLineaBase(flask.views.MethodView):
 @app.route('/admlinea/crear/')    
 @pms.vista.required.login_required
 def CrearLineaBase():
-    fase=getFaseId(flask.session['faseid'])
-    lineas=fase.lineas
-    for l in lineas:
-        if(len(l.items)==0):
-            eliminarLB(l.id)
+    if flask.session['numerolb']:
+        fase=getFaseId(flask.session['faseid'])
+        lineas=fase.lineas
+        e=len(lineas)
+        n=0
+        for l in lineas:
+            n=n+1
+            if(n==e):
+                eliminarLB(l.id)
     flask.session['lineaid']=crearLB(flask.session['usuarioid'], None, flask.session['faseid'])
     l=getLineaBaseId(flask.session['lineaid'])
     flask.session['numerolb']=l.numero
