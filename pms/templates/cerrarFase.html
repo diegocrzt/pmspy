@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
+              <li class="active"><a href="">Administrar Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+</div>
+              
+{%endblock%}
+
+{%block mensaje%}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+		  </div>
+          {% endif %}
+        {% endwith %}
+{%endblock%}
+
+{%block content%}
+<div class="fases">
+		<table>
+		<tr>
+		<td width="950px">
+		<div align="center" >
+        <h3 class="muted" >{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+        </div>
+      	</td>
+		</tr>
+		</table>
+        <div class="row" >
+                <div class="span14">
+                        <h2> Listado de Items </h2>
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+				                        <th>Tipo</th>
+				                        <th>Version</th>
+                                </tr>
+                                {% for i in items %}
+                    
+                                <tr>
+                                        <td>{{i.nombre}}</td>
+                                        <td>{{i.estado}}</td>
+                                        <td>{{i.item.tipoitem.nombre}}</td>
+                                        <td>{{i.version}}</td>
+                        </tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No tiene items y no se podra cerrar la fase
+                                </tr>
+                                {% endfor %}
+                </table>
+      	  </div>
+      	  
+      	  <div class="span3 bs-docs-sidebar">
+                <ul class="nav nav-list bs-docs-sidenav">
+                                  <li><a href="/admfase/cerrarfaseb/{{session['faseid']}}"><i class="icon-chevron-right"></i> Cerrar Fase</a></li>
+                                </ul>
+                        </div>
+      </div>
+</div>
+{%endblock%} 
