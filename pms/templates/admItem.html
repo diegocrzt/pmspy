@@ -62,7 +62,7 @@
 			</tr>
 		</table>
         <div class="row" >
-                <div class="span10">
+                <div class="span14">
                         <h2> Listado de Items </h2>
                         <table class="table table-striped table-bordered">
                                 <tr>
@@ -100,14 +100,7 @@
                                         <td>{{i.nombre}}</td>
                                         <td>{{i.estado}}</td>
                                         <td>{{i.item.tipoitem.nombre}}</td>
-                                        {%if i.version is iterable%}
-                                        {%for v in i.version()%}
-                                        	{% set aux=v.version %}
-                                        	{%endfor%}
-                                        {%else%}
-                                        	{% set aux=i.version %}
-                                        {%endif%}
-                                        <td>{{aux}}</td>
+                                        <td>{{i.version}}</td>
                                         {% if tienePermiso(roles,"editarI")%}
                                         <td>
                                         {% if i.item.tipoitem.atributos %}
