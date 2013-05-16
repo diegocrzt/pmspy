@@ -7,7 +7,7 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
-from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar
+from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 
@@ -78,7 +78,7 @@ class CrearItem(flask.views.MethodView):
                 for v in i.version:
                     c=c+1
         etiqueta=str(flask.session['proyectoid'])+"-"+str(flask.session['faseid'])+"-"+str(c)
-        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"activo",flask.request.form['costo'],flask.request.form['dificultad'])
+        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'])
         tipo=getTipoItemId(flask.request.form['tipo'])
         creado=getItemEtiqueta(etiqueta)
         version=getVersionItem(creado.id)
@@ -162,7 +162,7 @@ class EditarItem(flask.views.MethodView):
             flask.flash(u"El item ya existe", "nombre")
             return flask.render_template('editarItem.html',i=v)
         vvieja=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],flask.request.form['nombre'],"activo",flask.request.form['costo'],flask.request.form['dificultad'])
+        editarItem(flask.session['itemid'],flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'])
         item=getItemId(flask.session['itemid'])
         version=getVersionItem(item.id)
         copiarValores(vvieja.id,version.id)
@@ -378,7 +378,7 @@ def bReversionar(vid=None):
     """
     vvieja=getVersionId(vid)
     item=vvieja.item
-    editarItem(item.id,vvieja.nombre,"activo",vvieja.costo,vvieja.dificultad)
+    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
@@ -427,7 +427,7 @@ def bRevivir(vid=None):
     """
     vvieja=getVersionId(vid)
     item=vvieja.item
-    editarItem(item.id,vvieja.nombre,"activo",vvieja.costo,vvieja.dificultad)
+    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
@@ -447,10 +447,65 @@ def aprobarItem(vid=None):
     vvieja=getVersionId(vid)
     item=vvieja.item
     if comprobarAprobar(vid):
-        editarItem(item.id,vvieja.nombre,"aprobado",vvieja.costo,vvieja.dificultad)
+        editarItem(item.id,vvieja.nombre,"Aprobado",vvieja.costo,vvieja.dificultad)
         version=getVersionItem(item.id)
         copiarValores(vvieja.id,version.id)
         copiarRelacionesEstable(vvieja.id,version.id)
         return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
     else:
         return flask.redirect('/admitem/'+str(flask.session['faseid']))
+    
+@app.route('/admitem/eliminarrel/<vid>')
+@pms.vista.required.login_required
+def eliminarRel(vid=None): 
+    """
+    Funcion que llama a la Vista de Eliminar Relacion
+    """
+    flask.session['idver']=vid
+    version=getVersionId(vid)
+    entrantes=version.ante_list
+    salientes=version.post_list
+    padres=[]
+    antecesores=[]
+    for rel in entrantes:
+        itm=getVersionId(rel.ante_id)
+        if itm.actual:
+            if rel.tipo=="P-H":
+                padres.append(itm)
+            else:
+                antecesores.append(itm)
+    hijos=[]
+    sucesores=[]
+    for rel in salientes:
+        itm=getVersionId(rel.post_id)
+        if itm.actual:
+            if rel.tipo=="P-H":
+                hijos.append(itm)
+            else:
+                sucesores.append(itm)
+    return flask.render_template('eliminarRelacion.html',padres=padres,antecesores=antecesores,hijos=hijos,sucesores=sucesores)   
+       
+
+@app.route('/admitem/eliminarrelb/<vid>')
+@pms.vista.required.login_required
+def eliminarRelb(vid=None): 
+    """
+
+    """
+    eliminarRelacion(flask.session['idver'],vid)
+    desAprobar(vid)
+    desAprobarAdelante(vid)
+    flask.flash(u"Relacion eliminada con exito")
+    return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
+
+@app.route('/admitem/eliminarrelc/<vid>')
+@pms.vista.required.login_required
+def eliminarRelc(vid=None): 
+    """
+
+    """
+    eliminarRelacion(vid,flask.session['idver'])
+    desAprobar(flask.session['idver'])
+    desAprobarAdelante(flask.session['idver'])
+    flask.flash(u"Relacion eliminada con exito")
+    return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))

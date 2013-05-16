@@ -84,6 +84,9 @@
 				                        {%if tienePermiso(roles,"asignarantecesori")%}
 				                        <th>Asignar</th>
 				                        {%endif%}
+				                        {%if tienePermiso(roles,"asignarantecesori") or tienePermiso(roles,"asignarpadrei")%}
+				                        <th>Relaciones</th>
+				                        {%endif%}
 										{%if tienePermiso(roles,"aprobari")%}
 				                        <th>Aprobar</th>
 				                        {%endif%}
@@ -133,6 +136,11 @@
                                         {%if tienePermiso(roles,"asignarantecesori")%}
                                         <td>
                                         <a class="btn btn-warning" href="/admitem/asignarantecesor/{{i.id}}">Antecesor</a>
+                                        </td>
+                                        {%endif%}
+                                        {%if tienePermiso(roles,"asignarantecesori") or tienePermiso(roles,"asignarpadrei")%}
+                                        <td>
+                                        <a class="btn btn-warning" href="/admitem/eliminarrel/{{i.id}}">Eliminar</a>
                                         </td>
                                         {%endif%}
                                         {%if tienePermiso(roles,"aprobari")%}
