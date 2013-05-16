@@ -30,7 +30,6 @@ def admRol(f=None):
         return flask.redirect(flask.url_for('admfase'))
     
     
-    
 class CrearRol(flask.views.MethodView):
     """
     Gestiona la Vista de Crear rol
@@ -40,7 +39,35 @@ class CrearRol(flask.views.MethodView):
         return flask.render_template('crearRol.html')
     @pms.vista.required.login_required
     def post(self):
-        flask.session['aux1']=flask.request.form['nombre']
+        print "1"
+        print "2"
+        flask.session['aux']=flask.request.form['nombre']
+        if 'crearT' in flask.request.form:
+            flask.session['aux1']=True
+        if 'editarT' in flask.request.form:
+            flask.session['aux2']=True
+        if 'eliminarT' in flask.request.form:
+            flask.session['aux3']=True
+        if 'crearLB' in flask.request.form:
+            flask.session['aux4']=True
+        if 'eliminarLB' in flask.request.form:
+            flask.session['aux5']=True
+        if 'crearI' in flask.request.form:
+            flask.session['aux6']=True
+        if 'editarI' in flask.request.form:
+            flask.session['aux7']=True
+        if 'eliminarI' in flask.request.form:
+            flask.session['aux8']=True
+        if 'aprobarI' in flask.request.form:
+            flask.session['aux9']=True
+        if 'revivirI' in flask.request.form:
+            flask.session['aux10']=True
+        if 'reversionarI' in flask.request.form:
+            flask.session['aux11']=True
+        if 'asignarpadreI' in flask.request.form:
+            flask.session['aux12']=True
+        if 'asignarantecesorI' in flask.request.form:
+            flask.session['aux13']=True
         if(flask.request.form['nombre']==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
             return flask.render_template('crearRol.html')
