@@ -3,7 +3,7 @@ from flask import request
 import pms.vista.required
 from pms import app
 from pms.modelo.tipoItemControlador import getAllTipoFiltrados, getAllTiposItem, getAllTiposItemPaginados, getTiposItemFiltrados,getTiposItemPaginados, getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase,actualizarFecha
 from pms.modelo.rolControlador import getRolesFase,  comprobarUser_Rol
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.entidad import Atributo,TipoItem, Rol
@@ -101,6 +101,7 @@ class Creartipo(flask.views.MethodView):
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
         flask.flash(u"CREACION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
 
 class Editartipo(flask.views.MethodView):
@@ -134,6 +135,7 @@ class Editartipo(flask.views.MethodView):
         idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
         flask.session.pop('aux1',None)
         flask.flash(u"EDICION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admtipo/'+str(flask.session['faseid']))
     
 class Eliminartipo(flask.views.MethodView):
@@ -152,6 +154,7 @@ class Eliminartipo(flask.views.MethodView):
         if(flask.session['tipoitemid']!=None):
             eliminarTipoItem(flask.session['tipoitemid'])
             flask.flash(u"ELIMINACION EXITOSA","text-success")
+            actualizarFecha(flask.session['faseid'])
             return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
         else:
             return flask.redirect('/admtipo/'+str(flask.session['faseid'])) 
@@ -179,6 +182,7 @@ class ImportarTipo(flask.views.MethodView):
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
         flask.flash(u"IMPORTACION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admtipo/importar/'+str(flask.session['faseid']))         
 
 class AdmImportar(flask.views.MethodView):

@@ -1,6 +1,6 @@
 import flask.views
 from flask import request
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas, controlCerrarFase, cerrarFase
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas, controlCerrarFase, cerrarFase,actualizarFecha
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.rolControlador import getProyectosDeUsuario
 from datetime import timedelta
@@ -296,6 +296,7 @@ def cerrarFaseB(f=None):
         print "cerrar faseeee"
         cerrarFase(f)
         flask.flash(u"FASE CERRADA EXITOSAMENTE","text-success")
+        actualizarFecha(f)
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
     else:
         flask.flash(u"LA FASE NO SE PUEDE CERRAR")

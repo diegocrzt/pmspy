@@ -5,6 +5,7 @@ from pms import app
 from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo, getAtributoNombreTipo, getAtributoId, eliminarAtributo
 from pms.modelo.entidad import Atributo
+from pms.modelo.faseControlador import actualizarFecha
 @app.route('/admatributo/<t>')
 @pms.vista.required.login_required
 def admAtributo(t=None):
@@ -55,6 +56,7 @@ class Crearatributo(flask.views.MethodView):
         idcreado=getAtributoNombreTipo(flask.request.form['nombre'][:20],flask.session['tipoitemid'])
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
+        actualizarFecha(flask.session['faseid'])
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect('/admatributo/'+str(flask.session['tipoitemid'])) 
     
@@ -73,6 +75,7 @@ class Eliminaratributo(flask.views.MethodView):
         """
         if(flask.session['atributoid']!=None):
             eliminarAtributo(flask.session['atributoid'])
+            actualizarFecha(flask.session['faseid'])
             flask.flash(u"ELIMINACION EXITOSA","text-success")
             return flask.redirect('/admatributo/'+str(flask.session['tipoitemid'])) 
         else:

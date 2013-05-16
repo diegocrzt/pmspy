@@ -6,6 +6,8 @@ Created on 18/04/2013
 
 from initdb import db_session, init_db, shutdown_session
 from entidad import Fase
+from datetime import timedelta
+from datetime import datetime
 
 session = db_session()
 
@@ -116,6 +118,14 @@ def cerrarFase(idf=None):
     init_db()
     f = getFaseId(idf)
     f.estado="Cerrada"
+    session.merge(f)
+    session.commit()
+    shutdown_session()
+    
+def actualizarFecha(idf=None):
+    init_db()
+    f=getFaseId(idf)
+    f.fechaUltMod=datetime.today()
     session.merge(f)
     session.commit()
     shutdown_session()

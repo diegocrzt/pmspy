@@ -3,7 +3,7 @@ from flask import request
 import pms.vista.required
 from pms import app
 from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase,actualizarFecha
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
@@ -89,6 +89,7 @@ class CrearItem(flask.views.MethodView):
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
         flask.flash(u"CREACION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
     
 class CompletarAtributo(flask.views.MethodView):
@@ -110,6 +111,7 @@ class CompletarAtributo(flask.views.MethodView):
         copiarRelacionesEstable(itm1.id,itm.id)
         desAprobarAdelante(itm.id)
         flask.flash(u"EDICION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/'+str(flask.session['faseid']))    
 
 @app.route('/admitem/atributo/<i>')
@@ -173,6 +175,7 @@ class EditarItem(flask.views.MethodView):
         flask.session.pop('aux4',None)
         desAprobarAdelante(version.id)
         flask.flash(u"EDICION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
     
 @app.route('/admitem/editaritem/<t>')
@@ -206,6 +209,7 @@ class Eliminaritem(flask.views.MethodView):
             copiarRelacionesEstable(vvieja.id,version.id)
             desAprobarAdelante(version.id)
             flask.flash(u"ELIMINACION EXITOSA","text-success")
+            actualizarFecha(flask.session['faseid'])
             return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
         else:
             return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
@@ -312,6 +316,7 @@ def auHijo(vid=None):
         flask.flash(u"Relacion creada con exito")
         desAprobar(flask.session['hijo'])
         desAprobarAdelante(flask.session['hijo'])
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/asignarhijo/'+str(flask.session['hijo']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -351,6 +356,7 @@ def auAntecesor(vid=None):
         flask.flash(u"Relacion creada con exito")
         desAprobar(flask.session['antecesor'])
         desAprobarAdelante(flask.session['antecesor'])
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/asignarantecesor/'+str(flask.session['antecesor']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -386,6 +392,7 @@ def bReversionar(vid=None):
     for rel in vvieja.post_list:
         crearRelacion(version.id,vvieja.id,rel.tipo)
     desAprobarAdelante(version.id)
+    actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/reversionar/'+str(flask.session['itemid']))
 
 
@@ -435,6 +442,7 @@ def bRevivir(vid=None):
     for rel in vvieja.post_list:
         crearRelacion(version.id,vvieja.id,rel.tipo)
     desAprobarAdelante(version.id)
+    actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
 
 
@@ -451,6 +459,7 @@ def aprobarItem(vid=None):
         version=getVersionItem(item.id)
         copiarValores(vvieja.id,version.id)
         copiarRelacionesEstable(vvieja.id,version.id)
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
     else:
         return flask.redirect('/admitem/'+str(flask.session['faseid']))
@@ -496,6 +505,7 @@ def eliminarRelb(vid=None):
     desAprobar(vid)
     desAprobarAdelante(vid)
     flask.flash(u"Relacion eliminada con exito")
+    actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
 
 @app.route('/admitem/eliminarrelc/<vid>')
@@ -508,4 +518,5 @@ def eliminarRelc(vid=None):
     desAprobar(flask.session['idver'])
     desAprobarAdelante(flask.session['idver'])
     flask.flash(u"Relacion eliminada con exito")
+    actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
