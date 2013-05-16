@@ -29,18 +29,23 @@ def crearRelacion(ante_id=None,post_id=None,t=None):
         return False
     
 def eliminarRelacion(ante_id=None,post_id=None):
+    init_db()
     session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).delete()
     session.commit()
+    shutdown_session()
 
 def comprobarRelacion(ante_id=None,post_id=None):
     init_db()
     if int(ante_id) != int(post_id):   
         res = session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).first()
         if res:
+            shutdown_session()
             return True
         else:
+            shutdown_session()
             return False
     else:
+        shutdown_session()
         return True
 
 class nodo():
@@ -150,3 +155,31 @@ def copiarRelacionesEstable(idvieja=None,idnueva=None):
         session.commit()
     shutdown_session()
     
+def desAprobarAdelante(idvcambio=None):
+    ver=getVersionId(idvcambio)
+    ver.estado="activo"
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    desAprobarAdelanteG(idvcambio,grafo)
+    
+def desAprobarAdelanteG(idvcambio=None,grafo=None):
+    ver=getVersionId(idvcambio)
+    nA=grafo[0]
+    for n in grafo:
+        if int(n.version)==int(idvcambio):
+            nA=n
+    for n in nA.salientes:
+        if n.estado=="aprobado" or n.estado=="bloqueado":
+            desAprobar(n.version)
+            desAprobarAdelanteG(n.version,grafo)
+            
+    
+def desAprobar(idv=None):
+    init_db()
+    ver=getVersionId(idv)
+    ver.estado="revision"
+    session.merge(ver)
+    session.commit()
+    shutdown_session()
