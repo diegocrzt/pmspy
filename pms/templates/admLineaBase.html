@@ -47,32 +47,31 @@
 				                        <th>Fecha Creación</th>
 				                        <th>Creador</th>
 				                        <th>Consultar</th>
+				                        {% if tienePermiso(roles,"eliminarLB") %}
 				                        <th>Eliminar</th>
-				                        <th>items</th>
+				                        {%endif%}
                                 </tr>
                                 {% for l in lineas %}
                     
                                 <tr>
                                         <td>{{l.numero}}</td>
-                                        <td>{{l.comentario}}</td>
+                                        <td>{%if l.comentario==None%}
+                                        	-
+                                        	{%else%}
+	                                        {{l.comentario}}
+	                                        {%endif%}
+	                                    </td>
                                         <td>{{l.fechaCreacion.strftime('%Y/%m/%d')}}</td>
                                         <td>{{l.creador.nombre}}</td>
                                         <td>
-                                        <a class="btn btn-info" href="/admlinea/consultarlinea/{{l.id}}">Consultar</a>
+                                        <a class="btn btn-info" href="/admlinea/concultar/{{l.id}}">Consultar</a>
                                         </td>
+                                        {% if tienePermiso(roles,"eliminarLB") %}
 		                                <td>
 		                                <a class="btn btn-danger" href="/admlinea/eliminar/{{l.id}}">Eliminar</a>
                                         </td>
-                                        <td>
-                                        {%for i in l.items%}
-                                        -{{i.etiqueta}}
-                                        
-                                        {%else%}
-                                        {%if l.items==None%}
-                                        {{None}}
                                         {%endif%}
-                                        {%endfor%}
-                                        </td>
+                                        
                         		</tr>
                                 {% else %}
                         
@@ -85,7 +84,9 @@
               </div>
               <div class="span3 bs-docs-sidebar">
                 <ul class="nav nav-list bs-docs-sidenav">
+                					{% if tienePermiso(roles,"crearLB") %}
                                   <li><a href="/admlinea/crear/"><i class="icon-chevron-right"></i> Crear Linea base</a></li>
+                                	{%endif%}
                                 </ul>
                         </div>
         </div>

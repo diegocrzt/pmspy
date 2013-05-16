@@ -78,8 +78,11 @@
 	                                </tr>
                                   {% endfor %}
 				                  </table>
-				                 <p><a class="btn btn-success" href="/admlinea/confirmarcreacion/">Aceptar</a>
+				                 <form action="/admlinea/confirmarcreacion/" method="post">   
+				                 <p><strong>Comentario: </strong><input type="text" name="comentario" value="{{session['aux1']}}"/> </p>
+				                 <p><input class="btn btn-success" type="submit" value="Agregar" />
 				                	<a class="btn btn-inverse" href="/admlinea/cancelarcreacion/">Cancelar</a></p>
+				                </form>
 				       </div>
 	           </div>
 	  </div>

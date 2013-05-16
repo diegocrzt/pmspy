@@ -23,7 +23,7 @@
 {%endblock%}
 {%block content%}
 <div class="container" align="left">
-    <h3>Eliminar linea base de <em>{{session['proyectonombre']}} - {{session['fasenombre']}}</em></h3>
+    <h3>Consultar linea base de <em>{{session['proyectonombre']}} - {{session['fasenombre']}}</em></h3>
     <hr>
     <p>	<strong>Numero:</strong> {{linea.numero}}</p>
     <p> <strong>Comentario:</strong> {%if linea.comentario %} {{linea.comentario}} {%else%} - {%endif%}</p>
@@ -49,10 +49,7 @@
 			</tr>
 		{%endfor%}
 		</table>
-		<form action="{{url_for('eliminarlinea')}}" method="post">        
-	    	<p><input class="btn btn-danger" type="submit" value="Eliminar" />
-	    	<a class="btn btn-inverse" href="/admlinea/{{session['faseid']}}">Cancelar</a>
-	    </form>
+	    	<a class="btn btn-success" href="/admlinea/{{session['faseid']}}">Aceptar</a>
     </div>
 </div>
 {%endblock%}

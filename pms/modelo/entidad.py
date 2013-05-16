@@ -114,7 +114,7 @@ class TipoItem(Base):
     comentario = Column(Unicode(100))
     defase = Column(Integer, ForeignKey('fase.id')) 
     atributos = relationship("Atributo", backref="tipoitem")
-    instancias = relationship("Item", backref="tipoitem")
+    instancias = relationship("Item",order_by="Item.id", backref="tipoitem")
     
     def __init__(self, nombre, comentario, defase):
         self.nombre = nombre

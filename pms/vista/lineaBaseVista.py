@@ -11,7 +11,7 @@ from pms import app
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.faseControlador import getFaseId
-from pms.modelo.lineaBaseControlador import crearLB, agregarItemLB, quitarItemLB, eliminarLB, getLineaBaseId
+from pms.modelo.lineaBaseControlador import crearLB, agregarItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
 
 class AdmLineaBase(flask.views.MethodView):
     
@@ -27,7 +27,8 @@ class AdmLineaBase(flask.views.MethodView):
                 if(len(l.items)==0):
                     eliminarLB(l.id)
             lineas=fase.lineas
-            return flask.render_template('admLineaBase.html',lineas=lineas)
+            roles=getRolesDeUsuarioEnFase(flask.session['usuarioid'], flask.session['faseid'])
+            return flask.render_template('admLineaBase.html',lineas=lineas, roles=roles)
 
 class EliminarLineaBase(flask.views.MethodView):
     
@@ -97,19 +98,24 @@ def admfase(f=None):
 @pms.vista.required.login_required   
 def eliminarLineaBase(l=None):
     linea=getLineaBaseId(l)
-    flask.session['lineaid']=l
-    versiones=[]
-    for i in linea.items:
-        v=getVersionItem(i.id)
-        versiones.append(v)
-    
-    return flask.render_template('eliminarLineaBase.html', linea=linea, versiones=versiones)
+    if(linea):
+        flask.session['lineaid']=l
+        versiones=[]
+        for i in linea.items:
+            v=getVersionItem(i.id)
+            versiones.append(v)
+        return flask.render_template('eliminarLineaBase.html', linea=linea, versiones=versiones)
+    else:
+        return flask.redirect('/admlinea/')
 
-@app.route('/admlinea/confirmarcreacion/')
+@app.route('/admlinea/confirmarcreacion/', methods=['POST'])
 @pms.vista.required.login_required   
 def confirmarCreacion():
-    flask.flash(u"CREACION EXITOSA","text-success")
-    return flask.redirect('/admlinea/')
+    if request.method == "POST":
+        if flask.request.form['comentario']!="":
+            agregarComentarioLB(flask.session['lineaid'], flask.request.form['comentario'][:100])
+        flask.flash(u"CREACION EXITOSA","text-success")
+        return flask.redirect('/admlinea/')
 
 @app.route('/admlinea/cancelarcreacion/')
 @pms.vista.required.login_required   
@@ -117,4 +123,18 @@ def cancelarCreacion():
     eliminarLB(flask.session['lineaid'])
     flask.flash(u"CREACION CANCELADA","text-error")
     return flask.redirect('/admlinea/')
+
+@app.route('/admlinea/concultar/<l>')
+@pms.vista.required.login_required 
+def consultarLineaBase(l=None):
+    linea=getLineaBaseId(l)
+    if(linea):
+        versiones=[]
+        for i in linea.items:
+            v=getVersionItem(i.id)
+            versiones.append(v)
+        return flask.render_template('consultarLineaBase.html', linea=linea, versiones=versiones)
+    else:
+        return flask.redirect('/admlinea/')
+    
     

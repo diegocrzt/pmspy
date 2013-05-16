@@ -85,4 +85,11 @@ def quitarItemLB(idv=None, idlb=None):
         session.commit()
         shutdown_session()
 
-        
+def agregarComentarioLB(idlb=None, comentario=None):
+    if(idlb and comentario):
+        linea=getLineaBaseId(idlb)  
+        linea.comentario=comentario
+        init_db()
+        session.merge(linea)
+        session.commit()
+        shutdown_session()
