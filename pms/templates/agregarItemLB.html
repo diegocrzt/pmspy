@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block menu %}
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+</div>
+{%endblock%}
+{%block content%}
+<div class="container" align="left">
+    <h3>Agregar item a <em>{{session['proyectonombre']}}</em> - <em> {{session['fasenombre']}} </em>- LB: <em>{{session['numerolb']}}</em></h3>
+    <hr>
+    <form action="/admlinea/agregar/{{session['itemid']}}" method="POST">  
+    {%if padres%}
+    <p>Para agregar este item se debe/n agregar previamente a su/s padre/s a una linea base.</p>
+    {%endif%}
+    <p>	<strong>Nombre:</strong> {{version.nombre}}</p>
+    <p>	<strong>Comentario:</strong> {{version.estado}}</p>
+    <p>	<strong>Costo:</strong> {{version.costo}} </p>
+    <p>	<strong>Difucultad:</strong> {{version.dificultad}} </p>
+    <p>	<strong>Version:</strong> {{version.version}} </p>
+    <p>	<strong>Tipo:</strong> {{version.item.tipoitem.nombre}} </p>
+	{%if not padres%}
+    <p><input class="btn btn-success" type="submit" value="Aceptar" name="Aceptar"/>
+	<input class="btn btn-inverse" type="submit" value="Cancelar" name="CancelarA" /></p>
+	{%endif%}
+	{%if padres%}
+	<div class="span7">
+    <p align="center">	<strong>Padres</strong></p>	
+	<table  class="table  table-bordered" >
+		<tr>
+	        <th>Nombre</th>
+	        <th>Estado</th>
+	        <th>Version</th>
+	        <th>LB</th>
+	     </tr>
+	
+	     {% for n in padres%}
+		     <tr>
+		      	<td>{{n.nombre}}</td>
+		      	<td>{{n.estado}}</td>
+		      	<td>{{n.version }}</td>
+		      	{%if n.item.linea_id %}
+		      	<td>{{n.item.lineabase.numero}}</td>
+		      	{%else%}
+		      	<td>-</td>
+		      	{%endif%}
+		      </tr>
+		  {% else %}
+			<tr>
+				<td></td>
+				<td> -No tiene Padres-</td>
+				<td></td>
+			</tr>			
+	     {% endfor %}
+	</table>
+    <p><input class="btn btn-inverse" type="submit" value="Cancelar" name="Cancelar" />
+	</p>
+	</div>
+	{%endif%}
+	
+	</form> 
+</div>
+{%endblock%}

@@ -11,7 +11,7 @@ from pms import app
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.faseControlador import getFaseId
-from pms.modelo.lineaBaseControlador import crearLB, agregarItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
+from pms.modelo.lineaBaseControlador import desBloquearAdelante, comprobarBloquear, crearLB, aItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
 
 class AdmLineaBase(flask.views.MethodView):
     
@@ -73,25 +73,72 @@ def listaItemsLinea():
     return flask.render_template('crearLineaBase.html', vitems=vitems)
 
 
-@app.route('/admlinea/agregar/<i>')
+@app.route('/admlinea/agregar/<i>', methods=['POST', 'GET'])
 @pms.vista.required.login_required         
 def agregarItem(i=None):
-    idl=flask.session['lineaid']
-    version=getVersionId(i)
-    
-    agregarItemLB(int(i),idl)
-    return flask.redirect('/admlinea/crearlinea/')
+    if request.method == "GET":
+        version=getVersionId(i)
+        flask.session['itemid']=i
+        if(comprobarBloquear(version)):
+            padres=[]
+            return flask.render_template('agregarItemLB.html', version=version, padres=None)
+        else:
+            padres=[]
+            for n in version.ante_list:
+                if n.tipo=="P-H":
+                    aux=getVersionId(n.ante_id)
+                    if aux.actual==True:
+                        padres.append(aux)
+            return flask.render_template('agregarItemLB.html', version=version, padres=padres)
+            
+    if request.method == "POST":
+        if "Aceptar" in flask.request.form:
+            r=aItemLB(int(flask.session['itemid']),flask.session['lineaid'])
+            if r:
+                flask.flash(u"AGREGACION EXITOSA","text-success")
+            flask.session.pop('itemid',None)
+            return flask.redirect('/admlinea/crearlinea/')
+        elif "Cancelar" in flask.request.form:
+            flask.flash(u"NO SE PUDO AGREGAR","text-error")
+            flask.session.pop('itemid',None)
+            return flask.redirect('/admlinea/crearlinea/')
+        elif "CancelarA" in flask.request.form:
+            flask.flash(u"AGREGACION CANCELADA","text-error")
+            return flask.redirect('/admlinea/crearlinea/')
 
-@app.route('/admlinea/quitar/<i>')
+@app.route('/admlinea/quitar/<i>', methods=['POST', 'GET'])
 @pms.vista.required.login_required         
 def quitarItem(i=None):
-    quitarItemLB(int(i),flask.session['lineaid'])
-    return flask.redirect('/admlinea/crearlinea/')
-
+    if request.method == "GET":
+        flask.session['itemid']=i
+        ver=getVersionId(i)
+        hijos=[]
+        for n in ver.post_list:
+            if n.tipo=="P-H":
+                aux=getVersionId(n.post_id)
+                if aux.actual==True:
+                    hijos.append(aux)
+        if len(hijos)>0:
+            return flask.render_template('quitarItemLB.html', version=ver, hijos=hijos)
+        else:
+            return flask.render_template('quitarItemLB.html', version=ver, hijos=None)
+        
+    if request.method == "POST":
+        if "Aceptar" in flask.request.form:
+            desBloquearAdelante(int(i))
+            flask.flash(u"DESAGREGACION EXITOSA","text-success")
+            flask.session.pop('itemid',None)
+            return flask.redirect('/admlinea/crearlinea/')
+        elif "Cancelar" in flask.request.form:
+            flask.flash(u"DESAGREGACION CANCELADA","text-error")
+            flask.session.pop('itemid',None)
+            return flask.redirect('/admlinea/crearlinea/')
+            
 @app.route('/admlinea/<f>')
 @pms.vista.required.login_required   
 def admfase(f=None):
     flask.session['faseid']=f
+    flask.session['fasenombre']=getFaseId(f).nombre
     return flask.redirect('/admlinea/')
 
 @app.route('/admlinea/eliminar/<l>')
@@ -113,9 +160,13 @@ def eliminarLineaBase(l=None):
 def confirmarCreacion():
     if request.method == "POST":
         if flask.request.form['comentario']!="":
+            flask.session['aux1']=flask.request.form['comentario']
             agregarComentarioLB(flask.session['lineaid'], flask.request.form['comentario'][:100])
-        flask.flash(u"CREACION EXITOSA","text-success")
-        return flask.redirect('/admlinea/')
+        if "Aceptar" in flask.request.form:
+            flask.flash(u"CREACION EXITOSA","text-success")
+            return flask.redirect('/admlinea/')
+        else:
+            return flask.redirect('/admlinea/crearlinea/')
 
 @app.route('/admlinea/cancelarcreacion/')
 @pms.vista.required.login_required   
@@ -137,4 +188,5 @@ def consultarLineaBase(l=None):
     else:
         return flask.redirect('/admlinea/')
     
+
     
