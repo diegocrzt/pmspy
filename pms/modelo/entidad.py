@@ -88,7 +88,7 @@ class Fase(Base):
     delproyecto = Column(Integer, ForeignKey('proyecto.id'))
     
     tipos = relationship("TipoItem", backref="fase")
-    roles = relationship("Rol",backref="fase")
+    roles = relationship("Rol", order_by="Rol.id", backref="fase")
     lineas = relationship("LineaBase",order_by="LineaBase.numero", backref="fase")
     
     def __init__(self, nombre, numero, fechaInicio, fechaFin, fechaUltMod, estado, delproyecto):

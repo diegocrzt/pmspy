@@ -45,7 +45,11 @@
 					            	<td>{{a.nombre}}</td>
 					            	{% for v in valores %}
 					            		{% if v.atributo_id == a.id %}
-					            			<td>{{v.valor }}</td>
+						            		{% if a.tipoDato == "Fecha" %}
+						            			<td>{{v.valor.strftime('%Y-%m-%d')}}</td>
+						            		{%else%}
+						            			<td>{{v.valor }}</td>
+					            			{%endif%}
 					            		{% endif %}
 					            		
 					            	{% endfor%}

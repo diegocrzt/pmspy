@@ -271,6 +271,7 @@ def cerrFase(f=None):
     Funcion que llama a la Vista de Cerrar Fase
     """
     if request.method == "GET":
+        f=int(f)
         flask.session['faseid']=f
         fas=getFaseId(f)
         tipos=fas.tipos
@@ -280,6 +281,9 @@ def cerrFase(f=None):
                 for ver in ins.version:
                     if ver.actual:
                         itm.append(ver)
+        if not controlCerrarFase(fas.id):
+            flask.flash(u"LA FASE NO SE PUEDE CERRAR", "text-error")
+            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
         return flask.render_template('cerrarFase.html',items=itm)   
     else:
         return flask.redirect(flask.url_for('admproyecto'))
@@ -287,17 +291,14 @@ def cerrFase(f=None):
 @app.route('/admfase/cerrarfaseb/<f>', methods=["POST", "GET"])
 @pms.vista.required.login_required
 def cerrarFaseB(f=None):
-    """
+    """ 
     Funcion que cierra la fase
     """
     f=int(f)
     if controlCerrarFase(f):
-        print "!!!!!!!"
-        print "cerrar faseeee"
         cerrarFase(f)
         flask.flash(u"FASE CERRADA EXITOSAMENTE","text-success")
         actualizarFecha(f)
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
     else:
-        flask.flash(u"LA FASE NO SE PUEDE CERRAR")
-        return flask.redirect(flask.url_for('admproyecto'))   
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))

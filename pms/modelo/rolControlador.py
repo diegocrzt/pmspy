@@ -4,6 +4,7 @@ Created on 14/04/2013
 @author: mpoletti
 @author: Natalia Valdez
 '''
+import flask
 from entidad import Rol, User_Rol
 from initdb import db_session, init_db, shutdown_session
 from faseControlador import getFaseId
@@ -144,6 +145,9 @@ def tienePermiso(roles=None,permiso=""):
     """
     posee=False
     permiso=permiso.lower()
+    fase=getFaseId(flask.session['faseid'])
+    if fase.estado=="Cerrada":
+        return False
     if permiso:
         if permiso=="creart":
             for r in roles:

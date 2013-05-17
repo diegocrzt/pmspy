@@ -58,11 +58,12 @@
                                         {% else %}
                                         <th>Tipos de Items</th>
                                         <th>Items</th>
+                                        <th>Linea Base</th>
                                         {%if session['islider']==True%}
                                         <th>Roles</th>
                                         <th>Cerrar Fase</th>
                                         {% endif %}
-                                        <th>Linea Base</th>
+                                        
                                         {% endif %}
                                 </tr>
                                 {% for f in fases %}
@@ -73,7 +74,7 @@
                                         <td>{{f.fechaInicio.strftime('%Y/%m/%d')}}</td>
                                         <td>{{f.fechaFin.strftime('%Y/%m/%d')}}</td>
                                         {% if f.fechaUltMod!=None %}
-                                        <td>{{f.fechaUltMod}}</td>
+                                        <td>{{f.fechaUltMod.strftime('%Y/%m/%d - %H:%M')}}</td>
                                         {% else %}
                                         <td>----</td>
                                         {% endif %}
@@ -92,15 +93,16 @@
                                         <td>
                                         <a class="btn btn-success" href="/admitem/{{f.id}}">Ir>></a>
                                         </td>
+                                        <td><a class="btn btn-warning" href="/admlinea/{{f.id}}">Ir>></a></td>
                                         {%if session['islider']==True%}
                                         <td>
                                         <a class="btn btn-info" href="/admrol/{{f.id}}">Ir>></a>
                                         </td>
                                         <td>
-                                        <a class="btn btn-info" href="/admfase/cerrarfase/{{f.id}}">Cerrar</a>
+                                        <a class="btn btn-inverse" href="/admfase/cerrarfase/{{f.id}}">Cerrar</a>
                                         </td>
                                         {% endif %}
-                                        <td><a class="btn btn-warning" href="/admlinea/{{f.id}}">Ir>></a></td>
+                                        
                                         {% endif %}
                         </tr>
                                 {% else %}

@@ -69,7 +69,7 @@
                                         <a class="btn btn-info" href="/admitem/consultaritem/{{i.id}}">Consultar</a>
                                         </td>
                                         <td>
-                                        <a class="btn btn-info" href="/admitem/reversionarb/{{i.id}}">Reversionar</a>
+                                        <a class="btn btn-inverse" href="/admitem/reversionarb/{{i.id}}">Reversionar</a>
                                         </td>
                         		</tr>
                                 {% else %}
@@ -79,6 +79,7 @@
                                 </tr>
                                 {% endfor %}
                 </table>
+                <a class="btn btn-success" href="/admitem/{{session['faseid']}}">Aceptar</a>
         </div>
 	</div>
 </div>

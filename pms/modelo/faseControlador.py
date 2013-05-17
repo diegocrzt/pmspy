@@ -107,7 +107,7 @@ def controlCerrarFase(idf=None):
         for i in t.instancias:
             for v in i.version:
                 cont=cont+1
-                if v.actual and v.estado!="Bloqueado":
+                if (v.actual and (v.estado!="Bloqueado" and v.estado!="Eliminado")):
                     return False
     if cont>0:
         return True

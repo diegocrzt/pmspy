@@ -14,8 +14,7 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
-              <li class="active"><a href="">Administrar Item</a></li>
+              <li class="active"><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Usuario: {{session['username']}}</a></li>
               </ul>
@@ -39,16 +38,11 @@
 {%endblock%}
 
 {%block content%}
-<div class="fases">
-		<table>
-		<tr>
-		<td width="950px">
-		<div align="center" >
-        <h3 class="muted" >{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+<div class="items">
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+        <h2>Cerrar Fase</h2>
         </div>
-      	</td>
-		</tr>
-		</table>
         <div class="row" >
                 <div class="span14">
                         <h2> Listado de Items </h2>
@@ -74,13 +68,9 @@
                                 </tr>
                                 {% endfor %}
                 </table>
+                <a class="btn btn-success" href="/admfase/cerrarfaseb/{{session['faseid']}}"> Cerrar Fase</a>
+                <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}"> Cancelar </a>
       	  </div>
-      	  
-      	  <div class="span3 bs-docs-sidebar">
-                <ul class="nav nav-list bs-docs-sidenav">
-                                  <li><a href="/admfase/cerrarfaseb/{{session['faseid']}}"><i class="icon-chevron-right"></i> Cerrar Fase</a></li>
-                                </ul>
-                        </div>
       </div>
 </div>
 {%endblock%} 

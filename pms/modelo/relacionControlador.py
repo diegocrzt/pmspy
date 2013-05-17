@@ -133,8 +133,11 @@ def comprobarAprobar(idv=None):
     itm= ver.item
     fase=itm.tipoitem.fase
     proyecto=fase.proyecto
-    grafo=crearGrafoProyecto(proyecto.id)
-    nA=grafo[1]
+    grafo=[]
+    grafo1=crearGrafoProyecto(proyecto.id)
+    for g in grafo1:
+        grafo.append(g)
+    nA=grafo[0]
     cantentrantes=0
     for n in grafo:
         if int(n.version)==int(idv):
@@ -163,7 +166,6 @@ def copiarRelacionesEstable(idvieja=None,idnueva=None):
     
 def desAprobarAdelante(idvcambio=None):
     ver=getVersionId(idvcambio)
-    ver.estado="Activo"
     itm= ver.item
     fase=itm.tipoitem.fase
     proyecto=fase.proyecto

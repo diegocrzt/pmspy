@@ -314,8 +314,9 @@ def auHijo(vid=None):
     """
     if crearRelacion(vid,flask.session['hijo'],"P-H"):
         flask.flash(u"Relacion creada con exito")
-        desAprobar(flask.session['hijo'])
-        desAprobarAdelante(flask.session['hijo'])
+        if getVersionId(flask.session['hijo']).estado=="Aprobado":
+            desAprobar(flask.session['hijo'])
+            desAprobarAdelante(flask.session['hijo'])
         actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/asignarhijo/'+str(flask.session['hijo']))
     else:
@@ -354,8 +355,9 @@ def auAntecesor(vid=None):
     """
     if crearRelacion(vid,flask.session['antecesor'],"A-S"):
         flask.flash(u"Relacion creada con exito")
-        desAprobar(flask.session['antecesor'])
-        desAprobarAdelante(flask.session['antecesor'])
+        if getVersionId(flask.session['antecesor']).estado=="Aprobado":
+            desAprobar(flask.session['antecesor'])
+            desAprobarAdelante(flask.session['antecesor'])
         actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/asignarantecesor/'+str(flask.session['antecesor']))
     else:
@@ -446,23 +448,48 @@ def bRevivir(vid=None):
     return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
 
 
-@app.route('/admitem/aprobaritem/<vid>')
+@app.route('/admitem/aprobaritem/<vid>', methods=['POST', 'GET'])
 @pms.vista.required.login_required
 def aprobarItem(vid=None): 
     """
     Funcion que llama a la Vista de Aprobar item
     """
+    
     vvieja=getVersionId(vid)
     item=vvieja.item
-    if comprobarAprobar(vid):
-        editarItem(item.id,vvieja.nombre,"Aprobado",vvieja.costo,vvieja.dificultad)
-        version=getVersionItem(item.id)
-        copiarValores(vvieja.id,version.id)
-        copiarRelacionesEstable(vvieja.id,version.id)
-        actualizarFecha(flask.session['faseid'])
-        return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
-    else:
-        return flask.redirect('/admitem/'+str(flask.session['faseid']))
+    if request.method == "GET":
+        flask.session['itemid']=vid
+        padres=[]
+        antecesores=[]
+        entrantes=vvieja.ante_list
+        for rel in entrantes:
+            itm=getVersionId(rel.ante_id)
+            if itm.actual:
+                if rel.tipo=="P-H":
+                    padres.append(itm)
+                else:
+                    antecesores.append(itm)
+        if comprobarAprobar(vid):
+            return flask.render_template('aprobarItem.html',version=vvieja, padres=padres, ante=antecesores, a=True)
+        else:
+            return flask.render_template('aprobarItem.html',version=vvieja, padres=padres, ante=antecesores, a=False)
+    if request.method == "POST":
+        if "Aceptar" in flask.request.form:
+            editarItem(item.id,vvieja.nombre,"Aprobado",vvieja.costo,vvieja.dificultad)
+            version=getVersionItem(item.id)
+            copiarValores(vvieja.id,version.id)
+            copiarRelacionesEstable(vvieja.id,version.id)
+            actualizarFecha(flask.session['faseid'])
+            flask.flash(u"APROBACION EXITOSA","text-success")
+            flask.session.pop('itemid',None)
+            return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
+        if "Cancelar" in flask.request.form:
+            flask.flash(u"APROBACION CANCELADA","text-error")
+            flask.session.pop('itemid',None)
+            return flask.redirect('/admitem/'+str(flask.session['faseid']))
+        if "CancelarA" in flask.request.form:
+            flask.session.pop('itemid',None)
+            return flask.redirect('/admitem/'+str(flask.session['faseid']))
     
 @app.route('/admitem/eliminarrel/<vid>')
 @pms.vista.required.login_required
@@ -502,8 +529,9 @@ def eliminarRelb(vid=None):
 
     """
     eliminarRelacion(flask.session['idver'],vid)
-    desAprobar(vid)
-    desAprobarAdelante(vid)
+    if getVersionId(vid).estado=="Aprobado":
+        desAprobar(vid)
+        desAprobarAdelante(vid)
     flask.flash(u"Relacion eliminada con exito")
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
@@ -515,8 +543,9 @@ def eliminarRelc(vid=None):
 
     """
     eliminarRelacion(vid,flask.session['idver'])
-    desAprobar(flask.session['idver'])
-    desAprobarAdelante(flask.session['idver'])
+    if getVersionId(flask.session['idver']).estado=="Aprobado":
+        desAprobar(flask.session['idver'])
+        desAprobarAdelante(flask.session['idver'])
     flask.flash(u"Relacion eliminada con exito")
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
