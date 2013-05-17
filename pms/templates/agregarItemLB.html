@@ -24,7 +24,7 @@
     <hr>
     <form action="/admlinea/agregar/{{session['itemid']}}" method="POST">  
     {%if padres%}
-    <p>Para agregar este item se debe/n agregar previamente a su/s padre/s a una linea base</p>
+    <p>Para agregar este item se debe/n agregar previamente a su/s padre/s a una linea base.</p>
     {%endif%}
     <p>	<strong>Nombre:</strong> {{version.nombre}}</p>
     <p>	<strong>Comentario:</strong> {{version.estado}}</p>
@@ -34,15 +34,17 @@
     <p>	<strong>Tipo:</strong> {{version.item.tipoitem.nombre}} </p>
 	{%if not padres%}
     <p><input class="btn btn-success" type="submit" value="Aceptar" name="Aceptar"/>
-	<a class="btn btn-inverse" href="/admlinea/crearlinea/">Cancelar</a></p>
+	<input class="btn btn-inverse" type="submit" value="Cancelar" name="CancelarA" /></p>
 	{%endif%}
 	{%if padres%}
+	<div class="span7">
     <p align="center">	<strong>Padres</strong></p>	
 	<table  class="table  table-bordered" >
 		<tr>
 	        <th>Nombre</th>
 	        <th>Estado</th>
 	        <th>Version</th>
+	        <th>LB</th>
 	     </tr>
 	
 	     {% for n in padres%}
@@ -50,6 +52,11 @@
 		      	<td>{{n.nombre}}</td>
 		      	<td>{{n.estado}}</td>
 		      	<td>{{n.version }}</td>
+		      	{%if n.item.linea_id %}
+		      	<td>{{n.item.lineabase.numero}}</td>
+		      	{%else%}
+		      	<td>-</td>
+		      	{%endif%}
 		      </tr>
 		  {% else %}
 			<tr>
@@ -60,7 +67,8 @@
 	     {% endfor %}
 	</table>
     <p><input class="btn btn-inverse" type="submit" value="Cancelar" name="Cancelar" />
-
+	</p>
+	</div>
 	{%endif%}
 	
 	</form> 

@@ -52,7 +52,7 @@
 				                        <th>Tipo</th>
 				                        <th>Version</th>
 				                        <th>Agregar</th>
-				                        <th>Quitar</th>
+				                        <th>Desagregar</th>
 				                    </tr>    
 				                  {%for v in vitems%}
 				                   <tr>
@@ -68,7 +68,7 @@
                                         {%else%}
                                         <td></td>
                                         <td>
-		                                <a class="btn btn-danger" href="/admlinea/quitar/{{v.id}}">Quitar</a>
+		                                <a class="btn btn-danger" href="/admlinea/quitar/{{v.id}}">Desagregar</a>
                                         </td>
                                         {%endif%}
                                     </tr>
