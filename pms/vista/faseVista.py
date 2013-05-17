@@ -1,6 +1,6 @@
 import flask.views
 from flask import request
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas, controlCerrarFase, cerrarFase,actualizarFecha
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.rolControlador import getProyectosDeUsuario
 from datetime import timedelta
@@ -264,3 +264,40 @@ def prevPageF():
             flask.session['haynext']=True
     return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
     
+@app.route('/admfase/cerrarfase/<f>', methods=["POST", "GET"])
+@pms.vista.required.login_required
+def cerrFase(f=None):
+    """
+    Funcion que llama a la Vista de Cerrar Fase
+    """
+    if request.method == "GET":
+        flask.session['faseid']=f
+        fas=getFaseId(f)
+        tipos=fas.tipos
+        itm=[]
+        for t in tipos:
+            for ins in t.instancias:
+                for ver in ins.version:
+                    if ver.actual:
+                        itm.append(ver)
+        return flask.render_template('cerrarFase.html',items=itm)   
+    else:
+        return flask.redirect(flask.url_for('admproyecto'))
+    
+@app.route('/admfase/cerrarfaseb/<f>', methods=["POST", "GET"])
+@pms.vista.required.login_required
+def cerrarFaseB(f=None):
+    """
+    Funcion que cierra la fase
+    """
+    f=int(f)
+    if controlCerrarFase(f):
+        print "!!!!!!!"
+        print "cerrar faseeee"
+        cerrarFase(f)
+        flask.flash(u"FASE CERRADA EXITOSAMENTE","text-success")
+        actualizarFecha(f)
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+    else:
+        flask.flash(u"LA FASE NO SE PUEDE CERRAR")
+        return flask.redirect(flask.url_for('admproyecto'))   

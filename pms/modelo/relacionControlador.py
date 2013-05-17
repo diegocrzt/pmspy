@@ -11,6 +11,12 @@ def getRelacionesCAnte(ante_id=None):
     shutdown_session()
     return res
 
+def getRelacion(ante_id=None,post_id=None):
+    init_db()
+    res = session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).all()
+    shutdown_session()
+    return res
+
 def crearRelacion(ante_id=None,post_id=None,t=None):
     
     ver=getVersionId(ante_id)
@@ -135,7 +141,7 @@ def comprobarAprobar(idv=None):
             nA=n
     for n in nA.entrantes:
         cantentrantes=cantentrantes+1
-        if n.estado!="aprobado" and n.estado!="bloqueado":
+        if n.estado!="Aprobado" and n.estado!="Bloqueado":
             return False
     if fase.numero>1 and cantentrantes==0:
         return False
@@ -157,7 +163,7 @@ def copiarRelacionesEstable(idvieja=None,idnueva=None):
     
 def desAprobarAdelante(idvcambio=None):
     ver=getVersionId(idvcambio)
-    ver.estado="activo"
+    ver.estado="Activo"
     itm= ver.item
     fase=itm.tipoitem.fase
     proyecto=fase.proyecto
@@ -171,7 +177,7 @@ def desAprobarAdelanteG(idvcambio=None,grafo=None):
         if int(n.version)==int(idvcambio):
             nA=n
     for n in nA.salientes:
-        if n.estado=="aprobado" or n.estado=="bloqueado":
+        if n.estado=="Aprobado" or n.estado=="Bloqueado":
             desAprobar(n.version)
             desAprobarAdelanteG(n.version,grafo)
             
@@ -179,7 +185,7 @@ def desAprobarAdelanteG(idvcambio=None,grafo=None):
 def desAprobar(idv=None):
     init_db()
     ver=getVersionId(idv)
-    ver.estado="revision"
+    ver.estado="Revision"
     session.merge(ver)
     session.commit()
     shutdown_session()

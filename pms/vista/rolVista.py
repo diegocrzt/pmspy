@@ -1,6 +1,6 @@
 import flask.views
 from flask import request
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas,actualizarFecha
 from pms.modelo.usuarioControlador import getUsuario,getUsuarioById,getUsuarios
 from pms.modelo.rolControlador import comprobarRol,comprobarUser_Rol,crearRol,crearUser_Rol,editarRol,eliminarRol,eliminarUser_Rol,getRelRol,getRolesFase,getRolId,getRolNombre,getRolUser
 import pms.vista.required
@@ -168,6 +168,7 @@ class CrearRol(flask.views.MethodView):
         crearRol(flask.session['faseid'],flask.request.form['nombre'][:20],codi,codt,codlb)
         flask.session.pop('aux1',None)
         flask.flash(u"CREACION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admrol/'+str(flask.session['faseid'])) 
     
 class EditarRol(flask.views.MethodView):
@@ -280,6 +281,7 @@ class EditarRol(flask.views.MethodView):
         editarRol(flask.session['rolid'],flask.request.form['nombre'][:20],codi,codt,codlb)
         flask.session.pop('aux1',None)
         flask.flash(u"EDICION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admrol/'+str(flask.session['faseid'])) 
         
 class Eliminarrol(flask.views.MethodView):
@@ -299,6 +301,7 @@ class Eliminarrol(flask.views.MethodView):
         if(flask.session['rolid']!=None):
             eliminarRol(flask.session['rolid'])
             flask.flash(u"ELIMINACION EXITOSA","text-success")
+            actualizarFecha(flask.session['faseid'])
             return flask.redirect('/admrol/'+str(flask.session['faseid']))
         else:
             return flask.redirect('/admrol/'+str(flask.session['faseid']))    

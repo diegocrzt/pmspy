@@ -6,6 +6,8 @@ Created on 18/04/2013
 
 from initdb import db_session, init_db, shutdown_session
 from entidad import Fase
+from datetime import timedelta
+from datetime import datetime
 
 session = db_session()
 
@@ -98,3 +100,32 @@ def getFasesPaginadas(pagina=None,tam_pagina=None, p=None):
     shutdown_session()
     return query.limit(tam_pagina)
 
+def controlCerrarFase(idf=None):
+    f = getFaseId(idf)
+    cont=0
+    for t in f.tipos:
+        for i in t.instancias:
+            for v in i.version:
+                cont=cont+1
+                if v.actual and v.estado!="Bloqueado":
+                    return False
+    if cont>0:
+        return True
+    else:
+        return False
+
+def cerrarFase(idf=None):
+    init_db()
+    f = getFaseId(idf)
+    f.estado="Cerrada"
+    session.merge(f)
+    session.commit()
+    shutdown_session()
+    
+def actualizarFecha(idf=None):
+    init_db()
+    f=getFaseId(idf)
+    f.fechaUltMod=datetime.today()
+    session.merge(f)
+    session.commit()
+    shutdown_session()

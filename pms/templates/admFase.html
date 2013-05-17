@@ -60,6 +60,7 @@
                                         <th>Items</th>
                                         {%if session['islider']==True%}
                                         <th>Roles</th>
+                                        <th>Cerrar Fase</th>
                                         {% endif %}
                                         <th>Linea Base</th>
                                         {% endif %}
@@ -94,7 +95,11 @@
                                         {%if session['islider']==True%}
                                         <td>
                                         <a class="btn btn-info" href="/admrol/{{f.id}}">Ir>></a>
-                                        </td>{% endif %}
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-info" href="/admfase/cerrarfase/{{f.id}}">Cerrar</a>
+                                        </td>
+                                        {% endif %}
                                         <td><a class="btn btn-warning" href="/admlinea/{{f.id}}">Ir>></a></td>
                                         {% endif %}
                         </tr>
