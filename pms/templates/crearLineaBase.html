@@ -78,9 +78,14 @@
 	                                </tr>
                                   {% endfor %}
 				                  </table>
-				                 <form action="/admlinea/confirmarcreacion/" method="post">   
-				                 <p><strong>Comentario: </strong><input type="text" name="comentario" value="{{session['aux1']}}" /> </p>
-				                 <p><input class="btn btn-success" type="submit" value="Aceptar" />
+				                 <form action="/admlinea/confirmarcreacion/" method="post" class="form-search">   
+				                 
+				                <p> <strong>Comentario: </strong></p>
+								<div class="input-append">
+								    <input type="text" class="span6 search-query" name="comentario" value="{{session['aux1']}}">
+								    <button type="submit" class="btn btn-primary" name="Agregar">Agregar</button></p>
+								  </div>
+				                 <p><input class="btn btn-success" type="submit" value="Aceptar" name="Aceptar"/>
 				                	<a class="btn btn-inverse" href="/admlinea/cancelarcreacion/">Cancelar</a></p>
 				                </form>
 				       </div>

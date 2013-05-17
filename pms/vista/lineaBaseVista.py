@@ -92,10 +92,6 @@ def agregarItem(i=None):
             return flask.render_template('agregarItemLB.html', version=version, padres=padres)
             
     if request.method == "POST":
-        print "-------------"
-        print i
-        print "++++++++++++"
-        print flask.session['lineaid']
         if "Aceptar" in flask.request.form:
             r=aItemLB(int(flask.session['itemid']),flask.session['lineaid'])
             if r:
@@ -138,9 +134,13 @@ def eliminarLineaBase(l=None):
 def confirmarCreacion():
     if request.method == "POST":
         if flask.request.form['comentario']!="":
+            flask.session['aux1']=flask.request.form['comentario']
             agregarComentarioLB(flask.session['lineaid'], flask.request.form['comentario'][:100])
-        flask.flash(u"CREACION EXITOSA","text-success")
-        return flask.redirect('/admlinea/')
+        if "Aceptar" in flask.request.form:
+            flask.flash(u"CREACION EXITOSA","text-success")
+            return flask.redirect('/admlinea/')
+        else:
+            return flask.redirect('/admlinea/crearlinea/')
 
 @app.route('/admlinea/cancelarcreacion/')
 @pms.vista.required.login_required   
