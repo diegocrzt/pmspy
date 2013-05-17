@@ -183,7 +183,7 @@ class ImportarTipo(flask.views.MethodView):
         flask.session.pop('aux2',None)
         flask.flash(u"IMPORTACION EXITOSA","text-success")
         actualizarFecha(flask.session['faseid'])
-        return flask.redirect('/admtipo/importar/'+str(flask.session['faseid']))         
+        return flask.redirect(flask.url_for('admimportartipo'))         
 
 class AdmImportar(flask.views.MethodView):
     """Vista de Importar Tipo, pagina y filtra los Tipos de de Item
