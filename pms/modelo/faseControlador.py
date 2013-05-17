@@ -52,11 +52,11 @@ def comprobarFase(numero=None, proy=None):
     else:
         return True
    
-def eliminarFase(fase=None, proy=None):
+def eliminarFase(fase=None):
     """
     elimina una fase
     """
-    if(fase and proy):
+    if(fase):
         init_db()
         fa=getFaseId(fase)
         fa.proyecto.cantFase=fa.proyecto.cantFase-1

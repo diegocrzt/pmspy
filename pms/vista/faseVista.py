@@ -115,7 +115,7 @@ class Eliminarfase(flask.views.MethodView):
         Ejecuta la funcion de Eliminar Fase
         """
         if(flask.session['faseid']!=None):
-            eliminarFase(flask.session['faseid'],flask.session['proyectoid'])
+            eliminarFase(flask.session['faseid'])
             flask.flash(u"ELIMINACION EXITOSA","text-success")
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
         else:
