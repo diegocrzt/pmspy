@@ -46,7 +46,7 @@
                 <div class="span10">
                         <h2> Listado de Items </h2>
                         <table class="table table-striped table-bordered">
-                                <tr>
+                               		<tr>
                                         <th>Nombre</th>
                                         <th>Estado</th>
 				                        <th>Tipo</th>
@@ -79,8 +79,8 @@
                                   {% endfor %}
 				                  </table>
 				                 <form action="/admlinea/confirmarcreacion/" method="post">   
-				                 <p><strong>Comentario: </strong><input type="text" name="comentario" value="{{session['aux1']}}"/> </p>
-				                 <p><input class="btn btn-success" type="submit" value="Agregar" />
+				                 <p><strong>Comentario: </strong><input type="text" name="comentario" value="{{session['aux1']}}" /> </p>
+				                 <p><input class="btn btn-success" type="submit" value="Aceptar" />
 				                	<a class="btn btn-inverse" href="/admlinea/cancelarcreacion/">Cancelar</a></p>
 				                </form>
 				       </div>

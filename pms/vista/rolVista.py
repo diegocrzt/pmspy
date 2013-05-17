@@ -5,7 +5,7 @@ from pms.modelo.usuarioControlador import getUsuario,getUsuarioById,getUsuarios
 from pms.modelo.rolControlador import comprobarRol,comprobarUser_Rol,crearRol,crearUser_Rol,editarRol,eliminarRol,eliminarUser_Rol,getRelRol,getRolesFase,getRolId,getRolNombre,getRolUser
 import pms.vista.required
 from pms import app
-
+import pms.vista.funcionpop as pop
 
 @app.route('/admrol/<f>')
 @pms.vista.required.login_required
@@ -13,10 +13,7 @@ def admRol(f=None):
     """
     Funcion que llama a la Vista de Administrar Rol, responde al boton de 'Selec>>' de Administrar Fase
     """
-    flask.session.pop('aux1',None)
-    flask.session.pop('aux2',None)
-    flask.session.pop('aux3',None)
-    flask.session.pop('aux4',None) 
+    pop.pop13aux()
     if request.method == "GET":
         fase=getFaseId(f)
         flask.session.pop('faseid',None)

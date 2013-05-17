@@ -61,7 +61,7 @@ def crearLB(creadorid=None, comentario=None, faseid=None):
         return linea.id
         shutdown_session()
         
-def agregarItemLB(idv=None, idlb=None):
+def aItemLB(idv=None, idlb=None):
     if(idv and idlb):
         version=getVersionId(idv)
         init_db()
@@ -69,12 +69,15 @@ def agregarItemLB(idv=None, idlb=None):
         item.linea_id=idlb
         version.estado="Bloqueado"
         session.merge(version)
+        session.commit()
         session.merge(item)
         session.commit()
         shutdown_session()
+        return True
+    return False
         
-def quitarItemLB(idv=None, idlb=None):
-    if(idv and idlb):
+def quitarItemLB(idv=None):
+    if(idv):
         version=getVersionId(idv)
         init_db()
         item=version.item
@@ -93,3 +96,21 @@ def agregarComentarioLB(idlb=None, comentario=None):
         session.merge(linea)
         session.commit()
         shutdown_session()
+        
+def comprobarBloquear(version=None):
+    anteriores=version.ante_list
+    for a in anteriores:
+        ant=getVersionId(a.ante_id)
+        if ant.estado!="Bloqueado" and ant.actual:
+            return False
+    return True    
+
+def desBloquearAdelante(idvcambio=None):
+    ver=getVersionId(idvcambio)
+    lista=[]
+    lista.append(ver)
+    for l in lista:
+        ante=l.post_list
+        for a in ante:
+            lista.append(getVersionId(a.post_id))
+        quitarItemLB(l.id)
