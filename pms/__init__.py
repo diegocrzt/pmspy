@@ -18,7 +18,6 @@ import vista.lineaBaseVista
 import modelo.rolControlador
 import vista.funcionpop
 
-app.jinja_env.globals.update(pop=vista.funcionpop.pop13aux)
 app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)
 app.jinja_env.globals.update(permisoTipo=modelo.rolControlador.getPermisosStringTipoItem)
 app.jinja_env.globals.update(permisoLB=modelo.rolControlador.getPermisosStringLB)
