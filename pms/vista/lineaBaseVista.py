@@ -10,7 +10,7 @@ import pms.vista.required
 from pms import app
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
-from pms.modelo.faseControlador import getFaseId
+from pms.modelo.faseControlador import getFaseId,actualizarFecha
 from pms.modelo.lineaBaseControlador import desBloquearAdelante, comprobarBloquear, crearLB, aItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
 
 class AdmLineaBase(flask.views.MethodView):
@@ -187,6 +187,7 @@ def confirmarCreacion():
             linea=getLineaBaseId(flask.session['lineaid'])
             if linea.items:
                 flask.flash(u"CREACION EXITOSA","text-success")
+                actualizarFecha(flask.session['faseid'])
                 return flask.redirect('/admlinea/')
             else:
                 flask.flash(u"La linea base debe contener al menos un item","text-error")

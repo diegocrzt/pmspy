@@ -6,19 +6,27 @@ from proyectoControlador import getProyectoId
 session = db_session()
 
 def getRelacionesCAnte(ante_id=None):
+    """
+    Devuelve una lista que contenga a la version designada como parametro
+    """
     init_db()
     res = session.query(Relacion).filter(Relacion.ante_id==ante_id).all()
     shutdown_session()
     return res
 
 def getRelacion(ante_id=None,post_id=None):
+    """
+    Devuelve una relacion dados los id del item anterior y el posterior
+    """
     init_db()
     res = session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).all()
     shutdown_session()
     return res
 
 def crearRelacion(ante_id=None,post_id=None,t=None):
-    
+    """
+    Crea una nueva relacion que tiene como dados los id de el item anterior y el posterior
+    """
     ver=getVersionId(ante_id)
     itm=ver.item
     tipo=itm.tipoitem
@@ -35,12 +43,18 @@ def crearRelacion(ante_id=None,post_id=None,t=None):
         return False
     
 def eliminarRelacion(ante_id=None,post_id=None):
+    """
+    Elimina una relacion dados los id de los participantes
+    """
     init_db()
     session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).delete()
     session.commit()
     shutdown_session()
 
 def comprobarRelacion(ante_id=None,post_id=None):
+    """
+    Comprueba si ya existe una relacion entre dos items
+    """
     init_db()
     if int(ante_id) != int(post_id):   
         res = session.query(Relacion).filter(Relacion.ante_id==ante_id).filter(Relacion.post_id==post_id).first()
@@ -55,6 +69,9 @@ def comprobarRelacion(ante_id=None,post_id=None):
         return True
 
 class nodo():
+    """
+    clase utilizada para reperesentar los nodos de un grafo
+    """
     def __init__(self, etiqueta, costo, dificultad,version,estado):
         self.entrantes = []
         self.salientes = []
@@ -77,6 +94,9 @@ class nodo():
         nodo.entrantes.append(self)
 
 def crearGrafoProyecto(pr=None):
+    """
+    Crea un grafo que reperesenta los items y sus relaciones dado el id de un proyecto 
+    """
     proyecto = getProyectoId(pr)
     grafo=[]
     for fase in proyecto.fases:
@@ -94,6 +114,9 @@ def crearGrafoProyecto(pr=None):
     return grafo
 
 def buscarCiclo(grafo=None,n1=None,n2=None):
+    """
+    Detecta si se produce un ciclo en un grafo buscando un camino desde el nodo n1 hasta el n2
+    """
     for n in grafo:
         n.marca=False
     listanodos=[]
@@ -114,6 +137,9 @@ def buscarCiclo(grafo=None,n1=None,n2=None):
     return False
     
 def pruebaArista(idvinicio=None,idvfin=None,proyecto=None):
+    """
+    Realiza la comprobacion de que la arista a ser insertada no genere un ciclo en el grafo
+    """
     grafo=crearGrafoProyecto(proyecto)
     nA=grafo[1]
     nB=grafo[1]
@@ -129,6 +155,9 @@ def pruebaArista(idvinicio=None,idvfin=None,proyecto=None):
         return True
     
 def comprobarAprobar(idv=None):
+    """
+    Comprueba que un item en estado de Revision o Activo pueda ser Aprobado
+    """
     ver=getVersionId(idv)
     itm= ver.item
     fase=itm.tipoitem.fase
@@ -151,6 +180,9 @@ def comprobarAprobar(idv=None):
     return True
 
 def copiarRelacionesEstable(idvieja=None,idnueva=None):
+    """
+    Copia relaciones de una version de un item a otra sin hacer los controles de ciclos por que se asume que las relaciones no causaran ninguna inconcistencia
+    """
     init_db()
     res = session.query(Relacion).filter(Relacion.ante_id==idvieja).all()
     for r in res:
@@ -165,6 +197,9 @@ def copiarRelacionesEstable(idvieja=None,idnueva=None):
     shutdown_session()
     
 def desAprobarAdelante(idvcambio=None):
+    """
+    Revierte el estado de todos los items que tengan relacion de dependencia con el item seleccionados a un estado de Revision desde un estado Aprobado
+    """
     ver=getVersionId(idvcambio)
     itm= ver.item
     fase=itm.tipoitem.fase
@@ -173,6 +208,9 @@ def desAprobarAdelante(idvcambio=None):
     desAprobarAdelanteG(idvcambio,grafo)
     
 def desAprobarAdelanteG(idvcambio=None,grafo=None):
+    """
+    Funcione recursiva que prueba la reversion de estado de un nodo a Revision y  continua con todos sus dependientes
+    """
     ver=getVersionId(idvcambio)
     nA=grafo[0]
     for n in grafo:
@@ -185,6 +223,9 @@ def desAprobarAdelanteG(idvcambio=None,grafo=None):
             
     
 def desAprobar(idv=None):
+    """
+    Revierte el estado de un item de Aprobado a Revision
+    """
     init_db()
     ver=getVersionId(idv)
     ver.estado="Revision"

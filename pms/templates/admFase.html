@@ -99,7 +99,11 @@
                                         <a class="btn btn-info" href="/admrol/{{f.id}}">Ir>></a>
                                         </td>
                                         <td>
+                                        {%if f.estado=="Abierta"%}
                                         <a class="btn btn-inverse" href="/admfase/cerrarfase/{{f.id}}">Cerrar</a>
+                                        {% else %}
+                                        <p class="muted">Cerrada</p>
+                                        {% endif %}
                                         </td>
                                         {% endif %}
                                         
