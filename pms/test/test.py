@@ -7,10 +7,11 @@ import pms
 import unittest
 from pms.modelo import proyectoControlador
 from pms.modelo.entidad import Proyecto
-from pms.modelo.proyectoControlador import getProyecto, eliminarProyecto, \
-    getProyectoId
-from pms.modelo.faseControlador import getFase
+from pms.modelo.proyectoControlador import getProyecto, eliminarProyecto, getProyectoId
+from pms.modelo.faseControlador import getFase, eliminarFase
 from pms.modelo.rolControlador import getRolNombre
+from pms.modelo.usuarioControlador import getUsuario
+from pms.modelo.tipoItemControlador import getTipoItemNombre, eliminarTipoItem
 
 class PMSTestSuite(unittest.TestCase):
     index = '/'
@@ -18,9 +19,13 @@ class PMSTestSuite(unittest.TestCase):
     crearOK = 'CREACION EXITOSA'
     editarOK = 'EDICION EXITOSA'
     eliminarOK = 'ELIMINACION EXITOSA'
+    importarOK = 'IMPORTACION EXITOSA'
+    consultaRol = 'Consulta de rol'
     listProject = 'Listado de Proyectos'
     listUser = 'Listado de Usuarios'
     listFase = 'Listado de Fases'
+    listTipo = 'Listado de Tipos de Items'
+    listAtributo = 'Listado de los Atributos'
     editarUsuarioTitle = 'Editar Usuario'
     editarFaseTitle = 'Editar Fase'
     editarRolTitle = 'Editar Rol'
@@ -47,7 +52,17 @@ class PMSTestSuite(unittest.TestCase):
     crearRolURL = rolURL + 'crearrol/'
     editarRolURL = rolURL + 'editarrol/'
     eliminarRolURL = rolURL + 'eliminarrol/'
-    
+    asignarRolURL = rolURL + 'asignar/'
+    asignarRolActionURL = rolURL + 'asignarrol/'
+    desasignarRolURL = rolURL + 'desasignar/'
+    desasignarRolActionURL = rolURL + 'desasignarrol/'
+    consultarRolURL = rolURL + 'consultarrol/'
+    tipoURL = '/admtipo/'
+    crearTipoURL = tipoURL + 'creartipo/'
+    atributoURL = 'admatributo/'
+    crearAtributoURL = atributoURL + 'crearatributo/'
+    importarTipoURL = tipoURL + 'admimportartipo/'
+    importarTipoActionURL = tipoURL + 'importartipo/'
     
     def setUp(self):
         pms.app.config['TESTING'] = True
@@ -79,6 +94,7 @@ class PMSTestSuite(unittest.TestCase):
            
         rv = self.app.get(url, follow_redirects=True)
         assert assertion in rv.data
+        print 'Route [OK]'
    
     def inicializarProyecto(self, proyecto=None):
         id = proyecto.id
@@ -477,3 +493,267 @@ class PMSTestSuite(unittest.TestCase):
        
         print 'CRUD Rol [OK]'
         
+    def testADCRol(self):
+        # Dummy data
+        nombreFase = 'Dummy Fase'
+        fechaInicioFase = '2014-10-11'
+        fechaFinFase = '2015-12-11'
+        numeroFase = '1'
+        # Crear Proyecto
+        nombreProyecto = 'Dummy Project'
+        fechaInicioProyecto = '2014-10-10'
+        fechaFinProyecto = '2015-10-10'
+        liderProyecto = '1'
+       
+        # Login
+        rv = self.login()
+        assert self.listProject in rv.data
+       
+        # Crear Proyecto
+        rv = self.app.post(self.crearProyectoURL, data=dict(nombre=nombreProyecto,
+                                                                fechainicio=fechaInicioProyecto,
+                                                                fechafin=fechaFinProyecto,
+                                                                lider=liderProyecto),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+       
+        # Crear Fase
+        self.testRoute(self.faseURL + getProyecto(nombreProyecto).id.__str__(), nombreProyecto)
+       
+        # Crea Una Fase
+        rv = self.app.post(self.crearFaseURL, data=dict(nombre=nombreFase,
+                                                                fechainicio=fechaInicioFase,
+                                                                fechafin=fechaFinFase,
+                                                                numero=numeroFase),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+              
+        # Inicializar proyecto
+        self.inicializarProyecto(getProyecto(nombreProyecto))
+        
+        #Crear rol
+        nombreRol='Rol1'
+        crearT='on'
+        
+        self.testRoute(self.rolURL + getFase(numeroFase, getProyecto(nombreProyecto).id).id.__str__(), nombreFase)
+        
+        rv = self.app.post(self.crearRolURL,data=dict(nombre=nombreRol,
+                                                      crearT=crearT),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        
+        #Asignar un rol
+        id_rol = getRolNombre(nombreRol).id.__str__()
+        id_user = getUsuario(pms.app.default_user).id.__str__()
+        
+        nombre_user = getUsuario(pms.app.default_user).nombre
+        
+        self.testRoute(self.asignarRolURL + id_rol,self.listUser)
+        rv = self.app.get(self.asignarRolActionURL + id_user ,follow_redirects=True)
+
+        #Consultar        
+        rv = self.app.get(self.consultarRolURL + id_rol, follow_redirects=True)
+        assert nombre_user in rv.data
+        
+        #Desasignar
+        self.testRoute(self.desasignarRolURL + id_rol, self.listUser)
+        rv = self.app.get(self.desasignarRolActionURL + id_user,follow_redirects=True)
+        
+        #Consultar (que ya no esta en la lista)
+        rv = self.app.get(self.consultarRolURL + id_rol, follow_redirects=True)
+        assert nombre_user not in rv.data
+        
+        #Eliminar rol
+        self.testRoute(self.eliminarRolURL + getRolNombre(nombreRol).id.__str__() , 'Eliminar')
+        rv = self.app.post(self.eliminarRolURL, follow_redirects=True)
+        assert self.eliminarOK in rv.data
+        
+        # Eliminar el proyecto y todas sus fases
+        assert self.testBorrarProyecto(nombreProyecto)
+        
+        rv = self.logout()
+        assert self.logoutMessage in rv.data
+       
+        print 'Asignar/Consultar/Desasignar Rol [OK]'
+
+    def testOpItem(self):
+        # Dummy data
+        nombreFase = 'Dummy Fase'
+        fechaInicioFase = '2014-10-11'
+        fechaFinFase = '2015-12-11'
+        numeroFase = '1'
+        nombreFase2 = 'Dummy Fase2'
+        fechaInicioFase2 = '2014-11-11'
+        fechaFinFase2 = '2015-12-11'
+        numeroFase2 = '2'
+        # Crear Proyecto
+        nombreProyecto = 'Dummy Project'
+        fechaInicioProyecto = '2014-10-10'
+        fechaFinProyecto = '2015-10-10'
+        liderProyecto = '1'
+       
+        # Login
+        rv = self.login()
+        assert self.listProject in rv.data
+       
+        # Crear Proyecto
+        rv = self.app.post(self.crearProyectoURL, data=dict(nombre=nombreProyecto,
+                                                                fechainicio=fechaInicioProyecto,
+                                                                fechafin=fechaFinProyecto,
+                                                                lider=liderProyecto),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+       
+        # Crear Fase
+        self.testRoute(self.faseURL + getProyecto(nombreProyecto).id.__str__(), nombreProyecto)
+       
+        # Crea Una Fase
+        rv = self.app.post(self.crearFaseURL, data=dict(nombre=nombreFase,
+                                                                fechainicio=fechaInicioFase,
+                                                                fechafin=fechaFinFase,
+                                                                numero=numeroFase),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        
+        # Crear Fase (segunda)
+        self.testRoute(self.faseURL + getProyecto(nombreProyecto).id.__str__(), nombreProyecto)
+       
+        # Crea otra Fase
+        rv = self.app.post(self.crearFaseURL, data=dict(nombre=nombreFase2,
+                                                                fechainicio=fechaInicioFase2,
+                                                                fechafin=fechaFinFase2,
+                                                                numero=numeroFase2),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+              
+        # Inicializar proyecto
+        self.inicializarProyecto(getProyecto(nombreProyecto))
+        
+        #Crear rol
+        nombreRol='Rol1'
+        nombreRol2='Rol2'
+        crearT='on'
+        editarT='on'
+        eliminarT='on'
+        crearLB='on'
+        eliminarLB='on'
+        crearI='on'
+        editarI='on'
+        eliminarI='on'
+        aprobarI='on'
+        revivirI='on'
+        reversionarI='on'
+        asignarpadreI='on'
+        asignarantecesorI='on'
+        
+        # Rol para la fase 1
+        self.testRoute(self.rolURL + getFase(numeroFase, getProyecto(nombreProyecto).id).id.__str__(), nombreFase)
+        
+        rv = self.app.post(self.crearRolURL,data=dict(nombre=nombreRol,
+                                                      crearT=crearT,
+                                                      editarT=editarT,
+                                                      eliminarT=eliminarT,
+                                                      crearLB=crearLB,
+                                                      eliminarLB=eliminarLB,
+                                                      crearI=crearI,
+                                                      editarI=editarI,
+                                                      eliminarI=eliminarI,
+                                                      aprobarI=aprobarI,
+                                                      revivirI=revivirI,
+                                                      reversionarI=reversionarI,
+                                                      asignarpadreI=asignarpadreI,
+                                                      asignarantecesorI=asignarantecesorI),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        
+        # Rol para la fase 2
+        self.testRoute(self.rolURL + getFase(numeroFase2, getProyecto(nombreProyecto).id).id.__str__(), nombreFase2)
+        
+        rv = self.app.post(self.crearRolURL,data=dict(nombre=nombreRol2,
+                                                      crearT=crearT,
+                                                      editarT=editarT,
+                                                      eliminarT=eliminarT,
+                                                      crearLB=crearLB,
+                                                      eliminarLB=eliminarLB,
+                                                      crearI=crearI,
+                                                      editarI=editarI,
+                                                      eliminarI=eliminarI,
+                                                      aprobarI=aprobarI,
+                                                      revivirI=revivirI,
+                                                      reversionarI=reversionarI,
+                                                      asignarpadreI=asignarpadreI,
+                                                      asignarantecesorI=asignarantecesorI),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        
+        #Asignar un rol
+        id_rol = getRolNombre(nombreRol).id.__str__()
+        id_rol2 = getRolNombre(nombreRol2).id.__str__()
+        id_user = getUsuario(pms.app.default_user).id.__str__()
+        
+        #nombre_user = getUsuario(pms.app.default_user).nombre
+        
+        #Rol1
+        self.testRoute(self.asignarRolURL + id_rol,self.listUser)
+        rv = self.app.get(self.asignarRolActionURL + id_user ,follow_redirects=True)
+        #Rol2
+        self.testRoute(self.asignarRolURL + id_rol2,self.listUser)
+        rv = self.app.get(self.asignarRolActionURL + id_user ,follow_redirects=True)
+        
+        
+        #crear tipo item
+        self.testRoute(self.faseURL + getProyecto(nombreProyecto).id.__str__(), self.listFase)
+        self.testRoute(self.tipoURL + getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__(),self.listTipo)
+        self.testRoute(self.crearTipoURL, 'Crear Tipo')
+        
+        #Tipo Item
+        nombreTipo = 'Madera'
+        comentarioTipo = 'Tipo de Item madera'
+        rv = self.app.post(self.crearTipoURL, data=dict(nombre=nombreTipo,
+                                                        comentario=comentarioTipo),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        
+        #Atributo
+        nombreAtributo = 'Peso'
+        tipoDatoAtributo = 'Numerico'
+        rv = self.app.get(self.atributoURL + getTipoItemNombre(nombreTipo, getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__()).id.__str__(),follow_redirects=True)
+        self.testRoute(self.atributoURL + getTipoItemNombre(nombreTipo, getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__()).id.__str__(), self.listAtributo)
+        self.testRoute(self.crearAtributoURL,'Crear Atributo')
+        rv = self.app.post(self.crearAtributoURL,data=dict(nombre=nombreAtributo,
+                                                           tipoDato=tipoDatoAtributo),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        
+        #Para la segunda fase
+        self.testRoute(self.faseURL + getProyecto(nombreProyecto).id.__str__(), self.listFase)
+        self.testRoute(self.tipoURL + getFase(numeroFase2,getProyecto(nombreProyecto).id.__str__()).id.__str__(),self.listTipo)
+        #Importar tipo de la primera fase
+        nombreTipo2 = 'Madera Petrificada'
+        comentarioTipo2 = 'Tipo de Item madera petrificada'
+        self.testRoute(self.importarTipoURL, 'para importar o copiar')
+        self.testRoute(self.importarTipoActionURL + getTipoItemNombre(nombreTipo, getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__()).id.__str__(), 'nombre del Tipo')
+        rv = self.app.post(self.importarTipoActionURL, data=dict(nombre=nombreTipo2,
+                                                                 comentario=comentarioTipo2),
+                           follow_redirects=True)
+        assert self.importarOK in rv.data
+        
+        #Eliminar rol (ambos)
+        self.testRoute(self.eliminarRolURL + getRolNombre(nombreRol).id.__str__() , 'Eliminar')
+        rv = self.app.post(self.eliminarRolURL, follow_redirects=True)
+        assert self.eliminarOK in rv.data
+        
+        self.testRoute(self.eliminarRolURL + getRolNombre(nombreRol2).id.__str__() , 'Eliminar')
+        rv = self.app.post(self.eliminarRolURL, follow_redirects=True)
+        assert self.eliminarOK in rv.data
+        
+        eliminarTipoItem(getTipoItemNombre(nombreTipo, getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__()).id)
+        eliminarTipoItem(getTipoItemNombre(nombreTipo2, getFase(numeroFase2,getProyecto(nombreProyecto).id.__str__()).id.__str__()).id)
+        
+        # Eliminar el proyecto y todas sus fases
+        assert self.testBorrarProyecto(nombreProyecto)
+        
+        rv = self.logout()
+        assert self.logoutMessage in rv.data
+       
+        print 'Operaciones con Items [OK]'

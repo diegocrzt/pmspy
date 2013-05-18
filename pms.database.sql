@@ -368,7 +368,7 @@ INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin")
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
 	VALUES ('Auditor','auditor','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
-	VALUES ('Elmer Homero','elmeromero','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
+	VALUES ('Elmer Homero','usuario','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
 	VALUES ('Anna Dyst','anna','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 

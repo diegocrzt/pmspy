@@ -36,8 +36,6 @@ class CrearRol(flask.views.MethodView):
         return flask.render_template('crearRol.html')
     @pms.vista.required.login_required
     def post(self):
-        print "1"
-        print "2"
         flask.session['aux']=flask.request.form['nombre']
         if 'crearT' in flask.request.form:
             flask.session['aux1']=True
