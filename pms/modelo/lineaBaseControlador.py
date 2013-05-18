@@ -19,6 +19,8 @@ def getLineaBaseId(lbid=None):
         return query
     
 def getLineaBaseDeFase(faseid=None,numero=None):
+    """Devuelve la linea base de una fase, recibe el id de la fase y el numero de linea base
+    """
     if(faseid and numero):
         init_db()
         query=session.query(LineaBase).filter(LineaBase.fase_id==faseid).filter(LineaBase.numero==numero).first()
@@ -26,8 +28,8 @@ def getLineaBaseDeFase(faseid=None,numero=None):
         return query
     
 def eliminarLB(idl=None):
-    print "id para eliminar"
-    print idl
+    """Elimina la linea base, recibe el id de la linea base que se desea eliminar
+    """
     if idl:
         linea=getLineaBaseId(idl)
         init_db()
@@ -41,7 +43,6 @@ def eliminarLB(idl=None):
                 session.commit()
                 session.merge(i)
                 session.commit()
-        print "=======eliminarcontrolador======="
         session.delete(linea)
         session.commit()
         shutdown_session()
@@ -62,6 +63,8 @@ def crearLB(creadorid=None, comentario=None, faseid=None):
         shutdown_session()
         
 def aItemLB(idv=None, idlb=None):
+    """Agrega un item a una linea base, recie el ide la de la version del item y el id de la linea base
+    """
     if(idv and idlb):
         version=getVersionId(idv)
         init_db()
@@ -77,6 +80,8 @@ def aItemLB(idv=None, idlb=None):
     return False
         
 def quitarItemLB(idv=None):
+    """Extrae un item de su linea base, recibe el id de la version del item
+    """
     if(idv):
         version=getVersionId(idv)
         init_db()
@@ -89,6 +94,8 @@ def quitarItemLB(idv=None):
         shutdown_session()
 
 def agregarComentarioLB(idlb=None, comentario=None):
+    """Agrega el comentatio a la linea base, recibe el id de la linea base y el comentario
+    """
     if(idlb and comentario):
         linea=getLineaBaseId(idlb)  
         linea.comentario=comentario
@@ -98,6 +105,8 @@ def agregarComentarioLB(idlb=None, comentario=None):
         shutdown_session()
         
 def comprobarBloquear(version=None):
+    """Comprueba que un item pueda ser bloqueado, recibe el id de la version del item
+    """
     anteriores=version.ante_list
     for a in anteriores:
         ant=getVersionId(a.ante_id)
@@ -106,6 +115,8 @@ def comprobarBloquear(version=None):
     return True    
 
 def desBloquearAdelante(idvcambio=None):
+    """Desbloquea el item y sus hijos, recibe el ide de la version del item a desbloquearse
+    """
     ver=getVersionId(idvcambio)
     lista=[]
     lista.append(ver)
