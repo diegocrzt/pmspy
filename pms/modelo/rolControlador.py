@@ -12,7 +12,7 @@ from faseControlador import getFaseId
 session = db_session()
 
 def getRolesFase(fase=None):
-    """Obtener tipos de items
+    """Devuelve los roles de una fase, recibe el id de la fase
     """
     init_db()
     res = session.query(Rol).filter(Rol.fase_id==fase).all()
@@ -21,8 +21,7 @@ def getRolesFase(fase=None):
 
 def getRolNombre(nombre=None):
     """
-    recupera un tipo por su id
-    
+    Devuelve un rol por su nombre, recibe el nombre
     """
     init_db()
     res = session.query(Rol).filter(Rol.nombre==nombre).first()
@@ -31,8 +30,7 @@ def getRolNombre(nombre=None):
 
 def getRolId(id=None):
     """
-    recupera un tipo por su id
-    
+    Devuelve un rol por su id, recibe el id
     """
     init_db()
     res = session.query(Rol).filter(Rol.id==id).first()
@@ -42,8 +40,7 @@ def getRolId(id=None):
 
 def getRolUser(idr=None,idu=None):
     """
-    recupera un tipo por su id
-    
+    Devuelve un rol de un ususairo, recibe el id del rol y el id del usuario
     """
     init_db()
     res = session.query(User_Rol).filter(User_Rol.usuario_id==idu).filter(User_Rol.rol_id==idr).first()
@@ -51,6 +48,8 @@ def getRolUser(idr=None,idu=None):
     return res
 
 def getRelRol(idr=None):
+    """Devuelve una relacion de rol y usuairo, recibe el id de la relacion
+    """
     init_db()
     res = session.query(User_Rol).filter(User_Rol.rol_id==idr).all()
     shutdown_session()
@@ -76,8 +75,8 @@ def comprobarUser_Rol(idr=None,idu=None):
         return False
 
 def crearRol(fa=None,nom=None,codi=None,codt=None,codlb=None):
-    """Crea un tipo de item
-
+    """Crea un rol nuevo, recibe el id de la fase, el nombre, el codigo de permisos de item, el codifo de permisos de tipo de item
+    y el codigo de permisos de linea base 
     """
     init_db()
     session = db_session()
@@ -88,7 +87,8 @@ def crearRol(fa=None,nom=None,codi=None,codt=None,codlb=None):
 
 def editarRol(idr=None,nom=None,codi=None,codt=None,codlb=None):
     """
-    Permite editar un rol existente
+    Edita un rol existente, recibe el id, el nombre, el codigo de permisos de item, el codifo de permisos de tipo de item
+    y el codigo de permisos de linea base del rol
     """
     init_db()
     rol=getRolId(idr)
@@ -115,6 +115,8 @@ def eliminarRol(idr=None):
         
         
 def crearUser_Rol(idr=None, idu=None):
+    """Crea una relacion entre un usuairo y un rol, osea asignar un rol a un usuario, recibe el ide del rol y el id del usuario
+    """
     init_db()
     rel = User_Rol(usuario_id=idu,rol_id=idr)
     session.add(rel)
@@ -122,6 +124,8 @@ def crearUser_Rol(idr=None, idu=None):
     shutdown_session()
     
 def eliminarUser_Rol(idr=None, idu=None):
+    """Elimina una relacion entre un rol y un usuario, osea desasigna un rol a un usuario, recibe el id del rol y el id del usuario
+    """
     init_db()
     session.query(User_Rol).filter(User_Rol.rol_id==idr).filter(User_Rol.usuario_id==idu).delete()
     session.commit()
@@ -141,7 +145,8 @@ def getRolesDeUsuarioEnFase(idu=None,idf=None):
         return roles     
     
 def tienePermiso(roles=None,permiso=""):
-    """Verifica si en una lista de roles se posee un permiso. Recibe la lista de roles y el permiso que se desea verificar
+    """Verifica si en una lista de roles se posee un permiso, tambien verifica si la fase esta cerrada retornando false en caso de ser asi
+    Recibe la lista de roles y el permiso que se desea verificar
     """
     posee=False
     permiso=permiso.lower()
@@ -217,6 +222,8 @@ def tienePermiso(roles=None,permiso=""):
     return posee
 
 def getPermisosStringTipoItem(r=None):
+    """Devuelve un string representativo de los permisos que posee el rol sobre tipos de items, recibe el rol
+    """
     permi=""
     if(r):
         if(r.codigoTipo%10==1):
@@ -227,6 +234,8 @@ def getPermisosStringTipoItem(r=None):
             permi=permi+ " El"
     return permi
 def getPermisosStringItem(r=None):
+    """Devuelve un string representativo de los permisos que posee el rol sobre items, recibe el rol
+    """
     permi=""
     if(r):
         if(r.codigoItem%10==1):
@@ -247,6 +256,8 @@ def getPermisosStringItem(r=None):
             permi=permi+ " Asa"
         return permi
 def getPermisosStringLB(r=None):
+    """Devuelve un string representativo de los permisos que posee el rol sobre lineas base, recibe el rol
+    """
     permi=""
     if(r):
         if(r.codigoLB%10==1):
@@ -261,11 +272,8 @@ def getProyectosDeUsuario(idu=None):
     init_db()
     roles=session.query(Rol).all()
     res=[]
-    #print "9999999999"
     for r in roles:
-        #print "33333333"
         if not comprobarUser_Rol(r.id, idu):
-            #print "1111111"
             res.append(getFaseId(r.fase_id).proyecto.id)
     shutdown_session()
     return res

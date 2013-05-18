@@ -34,7 +34,7 @@ def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None
     shutdown_session()
    
 def getFase(numero=None, proy=None):
-    """Devuelve una fase por su numero y proyecto id
+    """Devuelve una fase por su numero y el id del proyecto al que pertenece
     """
     if(numero and proy):
         init_db()
@@ -44,7 +44,7 @@ def getFase(numero=None, proy=None):
 
 def comprobarFase(numero=None, proy=None):
     """
-    comprueba si una fase ya existe
+    Comprueba si una fase ya existe, recibe el numero de la fase y el id del proyecto
     """
     a=getFase(numero, proy)
     if a == None:
@@ -54,7 +54,7 @@ def comprobarFase(numero=None, proy=None):
    
 def eliminarFase(fase=None):
     """
-    elimina una fase
+    Elimina una fase, recibe el id de la fase a eliminarse
     """
     if(fase):
         init_db()
@@ -67,7 +67,7 @@ def eliminarFase(fase=None):
        
 def getFaseId(id=None):
     """
-    recupera una fase por su id
+    Devuelve una fase por su id
     """
     if(id):
         init_db()
@@ -77,7 +77,7 @@ def getFaseId(id=None):
          
 def editarFase(id=None,nom=None, numero=None, fechaini=None, fechafin=None):
     """
-    permite editar una fase existente
+    Edita una fase existente, recibe el id, nombre, numero, fecha de inicio, fecha de fin de la fase
     """
     init_db()
     f = getFaseId(id)
@@ -101,6 +101,8 @@ def getFasesPaginadas(pagina=None,tam_pagina=None, p=None):
     return query.limit(tam_pagina)
 
 def controlCerrarFase(idf=None):
+    """Verifica que una fase se pueda cerrar, osea que todos sus items se encuentren en una linea base(bloqueados), recibe el id de la fase
+    """
     f = getFaseId(idf)
     cont=0
     for t in f.tipos:
@@ -115,6 +117,8 @@ def controlCerrarFase(idf=None):
         return False
 
 def cerrarFase(idf=None):
+    """Cierra una fase, recibe el id de la fase
+    """
     init_db()
     f = getFaseId(idf)
     f.estado="Cerrada"
@@ -123,6 +127,8 @@ def cerrarFase(idf=None):
     shutdown_session()
     
 def actualizarFecha(idf=None):
+    """Actualiza la fecha de ultima modificacion de la fase, recibe el id de la fase
+    """
     init_db()
     f=getFaseId(idf)
     f.fechaUltMod=datetime.today()

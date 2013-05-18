@@ -34,10 +34,15 @@ class EliminarLineaBase(flask.views.MethodView):
     
     @pms.vista.required.login_required
     def get(self):
+        """Esta funcion solo evita errores de url no encontrado para el caso en que se introduzca el url /admlinea/eliminarlinea/
+        el cual no devuelve ningun resultado, para ello se redirecciona a la vista de Administrar Linea Base"""
         return flask.redirect('/admlinea/'+str(flask.session['faseid']))
     
     @pms.vista.required.login_required
     def post(self):
+        """
+        Ejecuta la funcion de eliminar linea base
+        """
         if(flask.session['lineaid']):
             eliminarLB(flask.session['lineaid'])
             return flask.redirect('/admlinea/')
@@ -46,6 +51,9 @@ class EliminarLineaBase(flask.views.MethodView):
 @app.route('/admlinea/crear/')    
 @pms.vista.required.login_required
 def CrearLineaBase():
+    """Se encarga de crear el numero de linea base correcta, verifica si existen lineas bases creadas sin items y las elimina,
+        llama a listaItemsLinea
+    """
     if flask.session['numerolb']:
         fase=getFaseId(flask.session['faseid'])
         lineas=fase.lineas
@@ -63,6 +71,8 @@ def CrearLineaBase():
 @app.route('/admlinea/crearlinea/')    
 @pms.vista.required.login_required
 def listaItemsLinea():
+    """Despliega la vista de crear items pasando al hmtl la lista de items que pueden ser agregados a una linea base, osea aprobados.
+    """
     fase=getFaseId(flask.session['faseid'])
     vitems=[]
     for t in fase.tipos:
@@ -76,6 +86,8 @@ def listaItemsLinea():
 @app.route('/admlinea/agregar/<i>', methods=['POST', 'GET'])
 @pms.vista.required.login_required         
 def agregarItem(i=None):
+    """Despliega la vista de agregar item a linea base(agregarItemLB.html) y ejecuta la funcion de agregar item a linea base
+    """
     if request.method == "GET":
         version=getVersionId(i)
         flask.session['itemid']=i
@@ -109,6 +121,8 @@ def agregarItem(i=None):
 @app.route('/admlinea/quitar/<i>', methods=['POST', 'GET'])
 @pms.vista.required.login_required         
 def quitarItem(i=None):
+    """Despliega la vista de desagregar item(quitarItemLB.html) y ejecuta la funcion de quitar el item de la linea base
+    """
     if request.method == "GET":
         flask.session['itemid']=i
         ver=getVersionId(i)
@@ -137,6 +151,8 @@ def quitarItem(i=None):
 @app.route('/admlinea/<f>')
 @pms.vista.required.login_required   
 def admfase(f=None):
+    """Recibe el id de la fase y lo setea a una variable de session para luego llamar a la funcion get de la clase AdmLineaBase
+    """
     flask.session['faseid']=f
     flask.session['fasenombre']=getFaseId(f).nombre
     return flask.redirect('/admlinea/')
@@ -144,6 +160,8 @@ def admfase(f=None):
 @app.route('/admlinea/eliminar/<l>')
 @pms.vista.required.login_required   
 def eliminarLineaBase(l=None):
+    """Despliega el la vista de eliminar linea base(eliminarLineaBase.html), responde al boton eliminar de Administrar Linea Base
+    """
     linea=getLineaBaseId(l)
     if(linea):
         flask.session['lineaid']=l
@@ -158,20 +176,30 @@ def eliminarLineaBase(l=None):
 @app.route('/admlinea/confirmarcreacion/', methods=['POST'])
 @pms.vista.required.login_required   
 def confirmarCreacion():
+    """Responde al boton aceptar de Crear Linea Base, confirma la creacion de la linea base, verifica que la linea base contenga al menos un item
+    setea el comentario a la linea base
+    """
     if request.method == "POST":
         if flask.request.form['comentario']!="":
             flask.session['aux1']=flask.request.form['comentario']
             agregarComentarioLB(flask.session['lineaid'], flask.request.form['comentario'][:100])
         if "Aceptar" in flask.request.form:
-            flask.flash(u"CREACION EXITOSA","text-success")
-            actualizarFecha(flask.session['faseid'])
-            return flask.redirect('/admlinea/')
+            linea=getLineaBaseId(flask.session['lineaid'])
+            if linea.items:
+                flask.flash(u"CREACION EXITOSA","text-success")
+                actualizarFecha(flask.session['faseid'])
+                return flask.redirect('/admlinea/')
+            else:
+                flask.flash(u"La linea base debe contener al menos un item","text-error")
+                return flask.redirect('/admlinea/crearlinea/')
         else:
             return flask.redirect('/admlinea/crearlinea/')
 
 @app.route('/admlinea/cancelarcreacion/')
 @pms.vista.required.login_required   
 def cancelarCreacion():
+    """Cancela la creacion de la linea base eliminandola, responde al boton cancelar de Crear Linea Base
+    """
     eliminarLB(flask.session['lineaid'])
     flask.flash(u"CREACION CANCELADA","text-error")
     return flask.redirect('/admlinea/')
@@ -179,6 +207,8 @@ def cancelarCreacion():
 @app.route('/admlinea/concultar/<l>')
 @pms.vista.required.login_required 
 def consultarLineaBase(l=None):
+    """Despliega la vista de consultar linea base (consultarLineaBase.html), recibe el id de la linea base
+    """
     linea=getLineaBaseId(l)
     if(linea):
         versiones=[]

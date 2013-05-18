@@ -12,7 +12,7 @@ from sqlalchemy import or_
 session = db_session()
 
 def getTiposFase(fase=None):
-    """Obtener tipos de items
+    """Obtiene los tipos de item de una fase, recibe el id de la fase
     """
     init_db()
     res = session.query(TipoItem).filter(TipoItem.defase==fase).order_by(TipoItem.id)
@@ -21,8 +21,7 @@ def getTiposFase(fase=None):
 
 def getTipoItemId(id=None):
     """
-    recupera un tipo por su id
-    
+    Devuelve un tipo de item por su id
     """
     init_db()
     tipoitem = session.query(TipoItem).filter(TipoItem.id==id).first()
@@ -31,7 +30,7 @@ def getTipoItemId(id=None):
 
 def getTipoItemNombre(nombre=None,fase=None):
     """
-    recupera un tipo por su nombre
+    Devuelve un tipo de item por su nombre, recibe el nombre y el id de la fase
     
     """
     if(nombre and fase):
@@ -43,7 +42,7 @@ def getTipoItemNombre(nombre=None,fase=None):
         
 def comprobarTipoItem(nombre=None, fase=None):
     """
-    valida si ya existe un item con ese nombre en esa fase
+    Comprueba si ya existe un tipo de item con ese nombre en esa fase, recibe el nombre y el id de la fase
     """
     a=getTipoItemNombre(nombre,fase)
     if a == None:
@@ -52,8 +51,7 @@ def comprobarTipoItem(nombre=None, fase=None):
         return True
 
 def crearTipoItem(nom=None, com=None, fa=None):
-    """Crea un tipo de item
-
+    """Crea un tipo de item, recibe el nombre y el comentario del tipo de item y el id de la fase
     """
     init_db()
     titem = TipoItem(nombre=nom,comentario=com, defase=fa)
@@ -64,7 +62,7 @@ def crearTipoItem(nom=None, com=None, fa=None):
     
 def editarTipoItem(idti=None,nom=None, com=None, fa=None):
     """
-    permite editar un tipo de item existente
+    Edita un tipo de item, recibe el id, nombre y comentario del tipo de item y el id de la fase
     """
     init_db()
     f = getTipoItemId(idti)
@@ -76,11 +74,9 @@ def editarTipoItem(idti=None,nom=None, com=None, fa=None):
     shutdown_session()
 
 
-
-
 def eliminarTipoItem(idti=None):
     """
-    elimina un tipo de item
+    Elimina un tipo de item, recibe el id del tipo de item a eliminarse
     """
     if(idti):
         init_db()
@@ -93,7 +89,8 @@ def eliminarTipoItem(idti=None):
 
 def getTiposItemPaginados(pagina=None,tam_pagina=None, faseid=None, filtro=None):
     """
-    Devuelve una lista de proyectos de tamanio tam_pagina de la pagina pagina, la pagina empieza en 0
+    Devuelve una lista de tipos de item de una fase de tamanio "tam_pagina" de la pagina "pagina", 
+    la pagina empieza en 0, recibe ademas el id de la fase y el filtro
     """
     if faseid:
         init_db()
@@ -107,7 +104,7 @@ def getTiposItemPaginados(pagina=None,tam_pagina=None, faseid=None, filtro=None)
         return query.limit(tam_pagina)
 
 def getTiposItemFiltrados(filtro=None,faseid=None):
-    """Devuelve una lista de proyectos por nombre, estado, id, y cantFases
+    """Devuelve una lista de tipos de item de una fase filtrados, recibe el id de la fase y el filtro
     """
     if (filtro and faseid):
         init_db()
@@ -120,13 +117,16 @@ def getTiposItemFiltrados(filtro=None,faseid=None):
         return query
     
 def getAllTiposItem():
+    """Devuelve todos los tipos de items que existen
+    """
     init_db()
     query=session.query(TipoItem)
     shutdown_session()
     return query 
     
 def getAllTiposItemPaginados(pagina=None,tam_pagina=None, filtro=None):
-    """Devuelve todos los tipos de items que existen
+    """Devuelve todos los tipos de items que existen paginados y opcionamente filtrados, recibe la pagina,
+    el tamanio de la pagina y el filtro
     """
     init_db()
     query=session.query(TipoItem).join(Fase).join(Proyecto).order_by(Proyecto.nombre)
@@ -138,6 +138,8 @@ def getAllTiposItemPaginados(pagina=None,tam_pagina=None, filtro=None):
     return query.limit(tam_pagina)
 
 def getAllTipoFiltrados(filtro=None):
+    """Devuelve todos los tipos de items resultantes del filtro, recibe el valor por el cual se quiere filtrar
+    """
     if(filtro):
         query=session.query(TipoItem).join(Fase).join(Proyecto).filter(TipoItem.nombre.ilike("%"+filtro+"%") | Proyecto.nombre.ilike("%"+filtro+"%") | Fase.nombre.ilike("%"+filtro+"%"))
         return query
