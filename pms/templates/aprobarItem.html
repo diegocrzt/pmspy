@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+{%block content%}
+<div class="container" align="left">
+    <h3>Aprobar item de <em>{{session['proyectonombre']}}</em> - <em> {{session['fasenombre']}} </em></h3>
+    <hr>
+    <form action="/admitem/aprobaritem/{{session['itemid']}}" method="POST">  
+    {%if a==False%}
+    <p class="text-error"><strong>No es posible aprobar este item.</strong></p>
+    <p>Para aprobar este item se debe/n aprobar previamente a su/s padre/s y antecesores.</p>
+    {%endif%}
+    <p>	<strong>Nombre:</strong> {{version.nombre}}</p>
+    <p>	<strong>Comentario:</strong> {{version.estado}}</p>
+    <p>	<strong>Costo:</strong> {{version.costo}} </p>
+    <p>	<strong>Difucultad:</strong> {{version.dificultad}} </p>
+    <p>	<strong>Version:</strong> {{version.version}} </p>
+    <p>	<strong>Tipo:</strong> {{version.item.tipoitem.nombre}} </p>
+	
+	
+	<div class="span7">
+    <p align="center">	<strong>Padres</strong></p>	
+	<table  class="table  table-bordered" >
+		<tr>
+	        <th>Nombre</th>
+	        <th>Estado</th>
+	        <th>Version</th>
+	     </tr>
+	
+	     {% for n in padres%}
+		     <tr>
+		      	<td>{{n.nombre}}</td>
+		      	<td>{{n.estado}}</td>
+		      	<td>{{n.version }}</td>
+		      	
+		      </tr>
+		  {% else %}
+			<tr>
+				<td></td>
+				<td> -No tiene Padres-</td>
+				<td></td>
+			</tr>			
+	     {% endfor %}
+	</table>
+	</div>
+	<div class="span7">
+    <p align="center">	<strong>Atecesores</strong></p>	
+	<table  class="table  table-bordered" >
+		<tr>
+	        <th>Nombre</th>
+	        <th>Estado</th>
+	        <th>Version</th>
+	     </tr>
+	
+	     {% for n in ante%}
+		     <tr>
+		      	<td>{{n.nombre}}</td>
+		      	<td>{{n.estado}}</td>
+		      	<td>{{n.version }}</td>
+		      
+		      </tr>
+		  {% else %}
+			<tr>
+				<td></td>
+				<td> -No tiene Antecesores-</td>
+				<td></td>
+			</tr>			
+	     {% endfor %}
+	</table>
+	{%if a==False%}
+    <p><input class="btn btn-inverse" type="submit" value="Cancelar" name="CancelarA" />
+	</p>
+	{%endif%}
+	
+	{%if a%}
+    <p><input class="btn btn-success" type="submit" value="Aceptar" name="Aceptar"/>
+	<input class="btn btn-inverse" type="submit" value="Cancelar" name="Cancelar" /></p>
+	{%endif%}
+	</div>
+	
+	
+	</form> 
+</div>
+{%endblock%}
