@@ -261,11 +261,11 @@ def getProyectosDeUsuario(idu=None):
     init_db()
     roles=session.query(Rol).all()
     res=[]
-    print "9999999999"
+    #print "9999999999"
     for r in roles:
-        print "33333333"
+        #print "33333333"
         if not comprobarUser_Rol(r.id, idu):
-            print "1111111"
+            #print "1111111"
             res.append(getFaseId(r.fase_id).proyecto.id)
     shutdown_session()
     return res

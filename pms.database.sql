@@ -3,7 +3,8 @@ DROP TABLE IF EXISTS usuario CASCADE;
 DROP TABLE IF EXISTS proyecto CASCADE;
 DROP TABLE IF EXISTS rol CASCADE; -- relaciona fase
 DROP TABLE IF EXISTS fase CASCADE;
-DROP TABLE IF EXISTS tipoitem CASCADE; --relaciona atributo
+DROP TABLE IF EXISTS lineabase CASCADE; -- relaciona usuario y fase
+DROP TABLE IF EXISTS tipoitem CASCADE; --relaciona 
 DROP TABLE IF EXISTS atributo CASCADE; --relaciona valordate, valorbool, valorint, valorstr
 DROP TABLE IF EXISTS relacion CASCADE; --relaciona vitem
 DROP TABLE IF EXISTS vitem CASCADE; --relaciona valordate, valorbool, valorint, valorstr
@@ -81,7 +82,7 @@ WITH (
 ALTER TABLE fase
   OWNER TO postgres;
   
-  -- Table: rol
+-- Table: rol
 
 -- DROP TABLE rol;
 
@@ -102,6 +103,32 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE rol
+  OWNER TO postgres;
+
+-- Table: lineabase
+
+-- DROP TABLE lineabase;
+
+CREATE TABLE lineabase
+(
+  id serial NOT NULL,
+  creador_id integer,
+  "fechaCreacion" timestamp without time zone,
+  numero integer,
+  comentario character varying(100),
+  fase_id integer,
+  CONSTRAINT lineabase_pkey PRIMARY KEY (id ),
+  CONSTRAINT lineabase_creador_id_fkey FOREIGN KEY (creador_id)
+      REFERENCES usuario (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT lineabase_fase_id_fkey FOREIGN KEY (fase_id)
+      REFERENCES fase (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE lineabase
   OWNER TO postgres;
 
 -- Table: user_rol
@@ -157,7 +184,11 @@ CREATE TABLE item
   id serial NOT NULL,
   tipo integer,
   etiqueta character varying(60),
+  linea_id integer,
   CONSTRAINT item_pkey PRIMARY KEY (id ),
+  CONSTRAINT item_linea_id_fkey FOREIGN KEY (linea_id)
+      REFERENCES lineabase (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT item_tipo_fkey FOREIGN KEY (tipo)
       REFERENCES tipoitem (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
@@ -336,8 +367,90 @@ INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin")
 	VALUES ('Administrador','admin','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
 	VALUES ('Auditor','auditor','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
+INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
+	VALUES ('Elmer Homero','elmeromero','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
+INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
+	VALUES ('Anna Dyst','anna','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
+INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
+	VALUES ('Dan Tor','dan','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
+INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
+	VALUES ('Thomas Dwin','tommy','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
 
 INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
 	VALUES ('Levithas', '0', '2013-05-20', '2014-05-20', null, 1, 'Pendiente');
 INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('Sunflare', '1', '2013-04-20', '2014-05-20', '2013-05-03', 1, 'Iniciado');
+	VALUES ('CloudLine', '4', '2013-05-17', '2013-06-20', null, 3, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Coverity', '3', '2013-05-17', '2013-06-20', null, 3, 'Iniciado');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Celerity', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Singularity', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Black Omen', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Roc', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Kalecgos', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Altamira', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('High Sierra', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('Apicultura', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
+	VALUES ('FreeSoundCloud', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
+
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Inicialización',1,'2013-05-17','2013-05-20',null,'Abierta',2);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Desarrollo',2,'2013-05-21','2013-06-10',null,'Abierta',2);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Integración',3,'2013-05-17','2013-05-10',null,'Abierta',2);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Homologación',4,'2013-06-11','2013-06-20',null,'Abierta',2);
+
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Init',1,'2013-05-17','2013-05-20',null,'Abierta',3);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Dev',2,'2013-05-21','2013-06-10',null,'Abierta',3);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Dbg',3,'2013-05-17','2013-05-10',null,'Abierta',3);
+
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Init
+	VALUES (5, 'Analista', 111, 0, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
+	VALUES (5, 'Desarrollador', 0, 11110111, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
+	VALUES (5, 'Tester', 0, 1000, 11);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Dev
+	VALUES (6, 'Analista', 111, 0, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
+	VALUES (6, 'Desarrollador', 111, 11111111, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
+	VALUES (6, 'Tester', 0, 1000, 11);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Dbg
+	VALUES (7, 'Analista', 111, 0, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
+	VALUES (7, 'Desarrollador', 0, 11110111, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
+	VALUES (7, 'Tester', 0, 11111111, 11);
+
+INSERT INTO user_rol (usuario_id, rol_id) -- Fase Init
+	VALUES (4, 1);
+INSERT INTO user_rol (usuario_id, rol_id) 
+	VALUES (5, 2);
+INSERT INTO user_rol (usuario_id, rol_id) 
+	VALUES (6, 3);
+INSERT INTO user_rol (usuario_id, rol_id) -- Fase Dev
+	VALUES (4, 4);
+INSERT INTO user_rol (usuario_id, rol_id) 
+	VALUES (5, 5);
+INSERT INTO user_rol (usuario_id, rol_id) 
+	VALUES (6, 6);
+INSERT INTO user_rol (usuario_id, rol_id) -- Fase Dbg
+	VALUES (4, 7);
+INSERT INTO user_rol (usuario_id, rol_id) 
+	VALUES (5, 8);
+INSERT INTO user_rol (usuario_id, rol_id) 
+	VALUES (6, 9);
