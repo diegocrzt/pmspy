@@ -10,7 +10,7 @@ import pms.vista.required
 from pms import app
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
-from pms.modelo.faseControlador import getFaseId
+from pms.modelo.faseControlador import getFaseId,actualizarFecha
 from pms.modelo.lineaBaseControlador import desBloquearAdelante, comprobarBloquear, crearLB, aItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
 
 class AdmLineaBase(flask.views.MethodView):
@@ -164,6 +164,7 @@ def confirmarCreacion():
             agregarComentarioLB(flask.session['lineaid'], flask.request.form['comentario'][:100])
         if "Aceptar" in flask.request.form:
             flask.flash(u"CREACION EXITOSA","text-success")
+            actualizarFecha(flask.session['faseid'])
             return flask.redirect('/admlinea/')
         else:
             return flask.redirect('/admlinea/crearlinea/')
