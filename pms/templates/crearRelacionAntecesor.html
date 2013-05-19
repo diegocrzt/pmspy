@@ -14,8 +14,6 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
-              <li class="active"><a href="">Administrar Item</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Usuario: {{session['username']}}</a></li>
               </ul>
@@ -41,7 +39,7 @@
 {%block content%}
 <div class="fases">
 		<div class="container" align="center">
-        <h3 class="muted">{{session['proyectonombre']}}</h3>
+        <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}} - {{session['itemnombre']}}</h3>
         </div>
         <div class="row" >
                 <div class="span12">

@@ -25,7 +25,7 @@
 
 {%block content%}
 <div class="container" align="left">
-    <h3>Consulta de tipo de item</h3>
+    <h3>Consulta de tipo de item de <em> {{session['proyectonombre']}} - {{session['fasenombre']}} </em></h3>
     <hr>
     <p>	<strong>Nombre:</strong> {{t.nombre}}</p>
     {% if t.comentario!="" %}

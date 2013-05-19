@@ -26,7 +26,7 @@
 
 {%block content%}
 <div class="container">
-	<h3>Crear Rol</h3>
+	<h3>Crear Rol en {{session['proyectonombre']}} - {{session['fasenombre']}} </h3>
 	<hr>
 	<p>Complete los datos del Rol:</p>
         <form action="{{url_for('crearrol')}}" method="post">

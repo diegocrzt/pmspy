@@ -30,7 +30,7 @@
 
 {%block content%}
 <div class="container">
-	<h3>Crear Atributo</h3>
+	<h3>Crear Atributo en el Item <em>{{session['tipoitemnombre']}}</em> de <em> {{session['proyectonombre']}} - {{session['fasenombre']}} </em></h3>
 	<hr>
 	<p>Complete los datos del Atributo</p>
 		<form action="{{url_for('crearatributo')}}" method="post">

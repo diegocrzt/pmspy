@@ -39,6 +39,7 @@
 <div class="usuarios">
 	<div class="row">
       <div class="span12">
+      <h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
         <h2> Listado de Usuarios </h2>
         <table class="table table-striped table-bordered">
           <tr>
@@ -50,7 +51,6 @@
           </tr>
           {% for u in usuarios %}
           <tr>
-          <form></form>
             <td>{{u.id}}</td>
             <td>{{u.nombre}}</td>
             <td>{{u.nombredeusuario}}</td>
@@ -71,7 +71,9 @@
           {% endfor %}
           
         </table>
-      	</div>  
+        <a class="btn btn-success" href="/admrol/{{session['faseid']}}">Aceptar</a>
+      	</div>
+      </div>  
  </div>
  
 {%endblock%}

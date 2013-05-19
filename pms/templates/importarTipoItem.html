@@ -14,7 +14,6 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
               <li class="active"><a href="">Administrar Tipo de Item</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Usuario: {{session['username']}}</a></li>
@@ -28,10 +27,20 @@
 
 {%block content%}
 <div class="container">
-	<h3>Camnbiar nombre del Tipo</h3>
+	<h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+	<h3>Cambiar nombre del Tipo</h3>
 	<hr>
-	<p>Para copiar o importar Tipos de Items se tiene la opcion de cambiar el nombre,</p> 
-	<p>si ya existe un tipo de item con el mismo nombre el cambio es obligatorio.</p>
+	
+	<p class="lead">
+		{% if tipo.fase.proyecto.nombre==session['proyectonombre'] and tipo.fase.nombe==session['fasenombre']%}
+			Copiar 
+		{%else%}
+			Importar 
+		{%endif%} 
+		tipo <em class="text-info">{{tipo.nombre}}</em> de la fase <em class="text-info"> {{tipo.fase.nombre}} </em> del proyecto <em class="text-info">{{tipo.fase.proyecto.nombre}}</em>
+	</p>
+	<p>Para <strong>copiar</strong> o <strong>importar</strong> Tipos de Items se tiene la opcion de cambiar el nombre, si ya existe un Tipo de Item con el mismo nombre el cambio es <strong> obligatorio</strong>.</p>
+	
 		<form action="{{url_for('importartipo')}}" method="post">
             <p>Nombre<small class="text-error">(*)</small>:
             {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
@@ -46,6 +55,7 @@
             <p>Comentario:<br/>
             <input type="text" name="comentario" value="{{session['aux2']}}"/></p>
             <div class="span5">
+            
 			<p align="center">	<strong>Atributos</strong></p>
 			<table  class="table  table-bordered" >
                                 <tr>
@@ -68,7 +78,7 @@
 							</table>
 							
             <p><input class="btn btn-success" type="submit" value="Aceptar" />
-            <a class="btn btn-inverse" href="/admtipo/importar/{{session['faseid']}}">Cancelar</a></p>
+            <a class="btn btn-inverse" href="{{url_for('admimportartipo')}}">Cancelar</a></p>
             </div>
         </form>
 </div> 
