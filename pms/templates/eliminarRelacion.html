@@ -25,6 +25,9 @@
 
 {%block content%}
 <div class="container" align="left">
+		<h3>Eliminar relacion del Item <em> {{session['itemnombre']}} </em> de <em>{{session['proyectonombre']}} - {{session['fasenombre']}} </em></h3>
+	    <hr>
+	    <div class="span7">
 	    <p align="center">	<strong>Padres</strong></p>	
 		<table  class="table  table-bordered" >
 		<tr>
@@ -40,7 +43,7 @@
 		      	<td>{{n.estado}}</td>
 		      	<td>{{n.version }}</td>
 		      	<td>
-		      	<a class="btn btn" href="/admitem/eliminarrelc/{{n.id}}">Eliminar</a>
+		      	<a class="btn btn-danger" href="/admitem/eliminarrelc/{{n.id}}">Eliminar</a>
 		      	</td>
 		      </tr>
 		  {% else %}
@@ -69,7 +72,7 @@
 		      	<td>{{n.estado}}</td>
 		      	<td>{{n.version }}</td>
 		      	<td>
-		      	<a class="btn btn" href="/admitem/eliminarrelc/{{n.id}}">Eliminar</a>
+		      	<a class="btn btn-danger" href="/admitem/eliminarrelc/{{n.id}}">Eliminar</a>
 		      	</td>
 		      </tr>	
 		 {% else %}
@@ -98,7 +101,7 @@
 		      	<td>{{n.estado}}</td>
 		      	<td>{{n.version }}</td>
 		      	<td>
-		      	<a class="btn btn" href="/admitem/eliminarrelb/{{n.id}}">Eliminar</a>
+		      	<a class="btn btn-danger" href="/admitem/eliminarrelb/{{n.id}}">Eliminar</a>
 		      	</td>
 		      </tr>	
 		 {% else %}
@@ -107,7 +110,7 @@
 				<td> -No tiene Hijos-</td>
 				<td></td>
 				<td></td>
-			</tr>			
+			</tr>
 	     {% endfor %}
 	</table>
 	
@@ -127,7 +130,7 @@
 		      	<td>{{n.estado}}</td>
 		      	<td>{{n.version }}</td>
 		      	<td>
-		      	<a class="btn btn" href="/admitem/eliminarrelb/{{n.id}}">Eliminar</a>
+		      	<a class="btn btn-danger" href="/admitem/eliminarrelb/{{n.id}}">Eliminar</a>
 		      	</td>
 		      </tr>	
 		 {% else %}
@@ -140,12 +143,7 @@
 	     {% endfor %}
 	</table>
 	
-		{%if session['itemid']%}
 		
-		{%else%}
-	    <a class="btn btn-success" href="/admitem/{{session['faseid']}}">Aceptar</a>
-	    {%endif%}
+	    <a class="btn" href="/admitem/{{session['faseid']}}"><i class="icon-arrow-left"></i> Atras</a>
 	    </div>
-</div>
-
 {%endblock%}

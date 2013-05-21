@@ -30,6 +30,7 @@
 
 {%block content%}
 <div class="container">
+	<h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
 	<h3>Completar Atributo</h3>
 	<hr>
 	<p>Complete los datos de los Atributos</p>
@@ -56,7 +57,11 @@
 		            		<td><input type="number" name="{{a.nombre}}" value="{{aux}}"/></td>
 		            	{% endif %}
 		            	{% if a.tipoDato == "Fecha" %}
+		            		{%if aux%}
 		            		<td><input type="date" name="{{a.nombre}}" value="{{aux.strftime('%Y-%m-%d')}}"/></td>
+		            		{%else%}
+		            		<td><input type="date" name="{{a.nombre}}" value="{{aux}}"/></td>
+		            		{%endif%}
 		            	{% endif %}
 		            	{% if a.tipoDato == "Booleano" %}
 		            		{% if aux %}
@@ -69,7 +74,7 @@
             	{% endfor%}
            </tr> 
            {% else %}
-	         	<tr>
+	       <tr>
 	            <td>
 	          		El tipo de item no consta de atributos propios
 	          	</td>
@@ -79,42 +84,8 @@
         </table>
             <p><input class="btn btn-success" type="submit" value="Aceptar" />
             <a class="btn btn-inverse" href="/admitem/{{session['faseid']}}">Cancelar</a></p>
-        </form>
-    </div>
+        
+    	</div>
+    </form>
 </div>
-		
 {%endblock%}		
-		
-		<!--
-		{% set i =1%}
-            {% for a in atributos %}
-            	<p>{{a.nombre}}:
-            	{% for v in valores %}
-            		{% if v.atributo_id == a.id %}
-            			{% set aux = v.valor %}
-            			{% if a.tipoDato == "Cadena" %}
-		            		<input type="text" name="{{a.nombre}}" value="{{aux}}"/></p>
-		            	{% endif %}
-		            	{% if a.tipoDato == "Numerico" %}
-		            		<input type="number" name="{{a.nombre}}" value="{{aux}}"/>
-		            	{% endif %}
-		            	{% if a.tipoDato == "Fecha" %}
-		            		<input type="date" name="{{a.nombre}}" value="{{aux}}"/>
-		            	{% endif %}
-		            	{% if a.tipoDato == "Booleano" %}
-		            		{% if aux %}
-		            		<input type="checkbox" name="{{a.nombre}}" checked/>
-		            		{%else%}
-		            		<input type="checkbox" name="{{a.nombre}}" />
-		            		{% endif %}
-	            		{% endif %}
-            		{% endif %}
-            	{% endfor%}
-            {% else %}
-            <p>
-          		El tipo de item no consta de atributos propios
-          	</p>
-            {% endfor %}  -->
-
-
-

@@ -14,8 +14,6 @@
           <a class="brand" href="#">Project Manager System</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
-              <li class="active"><a href="">Reversionar Item</a></li>
               <li><a href="/">Logout</a></li>
               <li><a href="#contact">Usuario: {{session['username']}}</a></li>
               </ul>
@@ -47,7 +45,8 @@
                 <div class="span12">
                         <h2>Posibles items padre</h2>
                         <table class="table table-striped table-bordered">
-                                <tr>
+                                <tr>	
+                                		<th>Version</th>
                                         <th>Nombre</th>
                                         <th>Estado</th>
 				                        <th>Costo</th>
@@ -60,6 +59,7 @@
                                 {% for i in versiones %}
                     
                                 <tr>
+                                		<td>{{i.version}}</td>
                                         <td>{{i.nombre}}</td>
                                         <td>{{i.estado}}</td>
                                         <td>{{i.costo}}</td>
@@ -79,7 +79,7 @@
                                 </tr>
                                 {% endfor %}
                 </table>
-                <a class="btn btn-success" href="/admitem/{{session['faseid']}}">Aceptar</a>
+                <a class="btn" href="/admitem/{{session['faseid']}}"><i class="icon-arrow-left"></i> Atras</a>
         </div>
 	</div>
 </div>

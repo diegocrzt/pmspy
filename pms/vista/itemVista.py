@@ -292,6 +292,7 @@ def aHijo(vid=None):
     Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
     """
     flask.session['hijo']=vid
+    flask.session['itemnombre']=getVersionId(vid).nombre
     fase=getFaseId(flask.session['faseid'])
     t=fase.tipos
     i=[]
@@ -310,8 +311,9 @@ def aHijo(vid=None):
 @pms.vista.required.login_required
 def auHijo(vid=None): 
     """
-    Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
+    Funcion que ejecuta la asignacion de un hijo a un item, responde al boton de 'Asignar' de Asiganar Hijo
     """
+    flask.session.pop('itemnombre',None)
     if crearRelacion(vid,flask.session['hijo'],"P-H"):
         flask.flash(u"Relacion creada con exito")
         if getVersionId(flask.session['hijo']).estado=="Aprobado":
@@ -331,6 +333,7 @@ def aAntecesor(vid=None):
     """
     flask.session['antecesor']=vid
     if flask.session['fasenumero']>1:
+        flask.session['itemnombre']=getVersionId(vid).nombre
         fase=getFaseId(flask.session['faseid']-1)
         t=fase.tipos
         i=[]
@@ -353,6 +356,7 @@ def auAntecesor(vid=None):
     """
     Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
     """
+    flask.session.pop('itemnombre',None)
     if crearRelacion(vid,flask.session['antecesor'],"A-S"):
         flask.flash(u"Relacion creada con exito")
         if getVersionId(flask.session['antecesor']).estado=="Aprobado":
@@ -499,6 +503,7 @@ def eliminarRel(vid=None):
     """
     flask.session['idver']=vid
     version=getVersionId(vid)
+    flask.session['itemnombre']=version.nombre
     entrantes=version.ante_list
     salientes=version.post_list
     padres=[]
@@ -528,6 +533,7 @@ def eliminarRelb(vid=None):
     """
 
     """
+    flask.session.pop('itemnombre',None)
     eliminarRelacion(flask.session['idver'],vid)
     if getVersionId(vid).estado=="Aprobado":
         desAprobar(vid)

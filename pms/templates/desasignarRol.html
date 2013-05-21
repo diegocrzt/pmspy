@@ -39,6 +39,7 @@
 <div class="usuarios">
 	<div class="row">
       <div class="span12">
+      <h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
         <h2> Listado de Usuarios </h2>
         <table class="table table-striped table-bordered">
           <tr>
@@ -71,6 +72,7 @@
           {% endfor %}
           
         </table>
+        <a class="btn btn-success" href="/admrol/{{session['faseid']}}">Aceptar</a>
       	</div>  
  </div>
  
