@@ -21,8 +21,8 @@ def crearComite(proyecto=None):
     comite=Comite(proyecto)
     session.add(comite)
     session.commit()
-    com=getComiteProyecto(proyecto)
     shutdown_session()
+    com=getComiteProyecto(proyecto)
     agregarUsuario(com.id,lider)
     
 def agregarUsuario(comite=None,usuario=None):

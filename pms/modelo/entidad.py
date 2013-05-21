@@ -354,7 +354,7 @@ class Comite(Base):
     """
     __tablename__='comite'
     id = Column(Integer, primary_key=True)
-    proyecto_id= Column(Integer, ForeignKey('usuario.id'))
+    proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
     proyecto= relationship("Proyecto",backref="comite")
     
     def __init__(self, proyecto_id):
@@ -386,7 +386,7 @@ class Peticion(Base):
     __tablename__='peticion'
     id = Column(Integer, primary_key=True)
     comite_id= Column(Integer, ForeignKey('comite.id'))
-    item_id=Column(Integer,ForeignKey('version.id'))
+    item_id=Column(Integer,ForeignKey('vitem.id'))
     comentario=Column(Unicode(100))
     estado=Column(Unicode(10))
     item=relationship("VersionItem")
@@ -405,8 +405,8 @@ class Voto(Base):
         Define la clase Voto y la mapea con la tabla voto
     """
     __tablename__ = 'voto'
-    peticion_id = Column(Integer, ForeignKey('atributo.id'), primary_key=True)
-    user_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
+    peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
     valor = Column(Boolean)     
     peticion = relationship("Peticion",backref="voto")
         
