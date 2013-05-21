@@ -1,6 +1,7 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
-from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto
+from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
+from pms.modelo.peticionControlador import crearComite
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -103,6 +104,8 @@ class Crearproyecto(flask.views.MethodView):
         flask.session.pop('aux2',None)
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
+        p=getProyecto(flask.request.form['nombre'][:20])
+        crearComite(p.id)
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admproyecto'))
     

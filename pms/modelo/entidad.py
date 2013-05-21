@@ -386,7 +386,7 @@ class Peticion(Base):
     __tablename__='peticion'
     id = Column(Integer, primary_key=True)
     comite_id= Column(Integer, ForeignKey('comite.id'))
-    item_id=Column(Integer,ForeignKey('version.id'))
+    item_id=Column(Integer,ForeignKey('vitem.id'))
     comentario=Column(Unicode(100))
     estado=Column(Unicode(10))
     item=relationship("VersionItem")
