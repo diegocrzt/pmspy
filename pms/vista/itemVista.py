@@ -555,3 +555,17 @@ def eliminarRelc(vid=None):
     flask.flash(u"Relacion eliminada con exito")
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
+
+@app.route('/admitem/solicitud/<fid>')
+@pms.vista.required.login_required
+def solicitarCambio(fid=None):
+    fase=getFaseId(fid)
+    if fase:
+        items=fase.items
+        versiones=[]
+        for i in items:
+            v=getVersionItem(i.id)
+            if v.estado=="Bloquedado":
+                versiones.append(v)
+        return flask.render_template('solicitud.html', versiones=versiones)
+    
