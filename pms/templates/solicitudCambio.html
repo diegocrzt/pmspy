@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="container" align="left">
+    <h3>Solicitar cambio de item en <em> {{session['proyectonombre']}} - {{session['fasenombre']}} </em></h3>
+    <hr>
+    <p>	<strong>Nombre:</strong> {{version.nombre}}</p>
+    <p>	<strong>Comentario:</strong> {{version.comentario}}</p>
+    <p>	<strong>Costo:</strong> {{version.costo}} </p>
+    <p>	<strong>Difucultad:</strong> {{version.dificultad}} </p>
+    <p>	<strong>Version:</strong> {{version.version}} </p>
+    <p><strong class="text-info">Impacto del cambio:</strong>
+    <p> <strong><strong class="text-info">*</strong>Costo del cambio:</strong>{{costo}}</p> 
+    <p><strong><strong class="text-info">*</strong>Dificultad del cambio:</strong>{{dificultad}}
+    <div class="span6">
+	    <p align="center">	<strong>Todos sus hijos y sucesores</strong></p>	
+		<table  class="table  table-bordered" >
+			<tr>
+		        <th>Nombre</th>
+		        <th>Estado</th>
+		        <th>Fase</th>
+		        <th>Version</th>
+		        <th>Costo</th>
+		        <th>Dificultad</th>
+		     </tr>
+	
+		    {% for n in hijos%}
+			     <tr>
+			      	<td>{{n.nombre}}</td>
+			      	<td>{{n.estado}}</td>
+			      	<td>{{n.item.tipoitem.fase.numero}}</td>
+			      	<td>{{n.version }}</td>
+			      	<td>{{n.costo}}</td>
+			      	<td>{{n.dificultad}}</td>
+			      </tr>
+			 {% else %}
+				<tr>
+					<td></td>
+					<td> -No tiene Hijos-</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+		     {% endfor %}
+		</table>
+	
+		
+		<form action="/admitem/solicitarcambio/{{session['itemid']}}" method="post">
+		<p><input class="btn btn-success" type="submit" value="Aceptar" />
+            <a class="btn btn-inverse" href="/admitem/solicitud/{{session['faseid']}}">Cancelar</a></p>
+		</form>
+	</div>
+</div>
+{%endblock%}
