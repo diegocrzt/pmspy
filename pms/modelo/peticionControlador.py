@@ -1,6 +1,7 @@
 from entidad import Proyecto, Comite, Miembro, Peticion, Voto, Usuario, Item, VersionItem
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
+from pms.modelo.usuarioControlador import getUsuarioById, getUsuarios
 
 
 
@@ -32,6 +33,12 @@ def agregarUsuario(comite=None,usuario=None):
     session.commit()
     shutdown_session()
     
+def eliminarMiembro(user_id=None,comite_id=None):
+    init_db()  
+    session.query(Miembro).filter(Miembro.user_id==user_id).filter(Miembro.comite_id==comite_id).delete()
+    session.commit()
+    shutdown_session()
+    
 def comprobarMiembros(comite):
     init_db()
     res = session.query(Miembro).filter(Miembro.comite_id==comite).all()
@@ -45,17 +52,28 @@ def comprobarMiembros(comite):
         return False
 
 
-def agregarLista(lista=None,comite=None):
+def agregarLista(agregar=None,comite=None):
     c=0
-    for l in lista:
+    quitar=[]
+    for l in agregar:
         c=c+1
     if (c % 2)==0:
-        for l in lista:
-            agregarUsuario(comite.id,l.id)
-        return "usuarios agregados con exito"
+        mid=[]
+        for m in comite.miembros:
+            mid.append(m.user_id)
+            for a in agregar:
+                if a==m.user_id:
+                    agregar.remove(m.user_id)
+        us=getUsuarios()
+        for a in agregar:
+            agregarUsuario(comite.id,a)
+        for q in quitar:
+            eliminarMiembro(q,comite.id)
+        return True
     else:
-        return "No se pueden agregar usuarios impares"
-    
+        return False
+
+
 def crearPeticion(proyecto=None,idv=None,comentario=None):
     pr=getProyectoId(proyecto)
     comite=pr.comite

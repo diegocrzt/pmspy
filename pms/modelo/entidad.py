@@ -355,7 +355,8 @@ class Comite(Base):
     __tablename__='comite'
     id = Column(Integer, primary_key=True)
     proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
-    proyecto= relationship("Proyecto",backref="comite")
+    proyecto= relationship("Proyecto", backref="comite")
+    miembros = relationship("Miembro",backref="comite")
     
     def __init__(self, proyecto_id):
         self.proyecto_id=proyecto_id
@@ -370,7 +371,7 @@ class Miembro(Base):
     __tablename__ = 'miembro'
     comite_id = Column(Integer, ForeignKey('comite.id'), primary_key=True)
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
-    comite = relationship("Comite",backref="miembros")
+    
         
     def __init__(self, comite_id, user_id):
         self.comite_id=comite_id
