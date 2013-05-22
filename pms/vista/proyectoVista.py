@@ -208,7 +208,7 @@ class listaComite(flask.views.MethodView):
                     aux.append(u.nombredeusuario)
                     aux.append("False")
                 li.append(aux)
-            
+            print "adsfahsdfiuheifvkdsjgfuiewihviure"
             return flask.render_template('listaComite.html',lista=li)
         else:
             return flask.redirect('/admproyecto/')
