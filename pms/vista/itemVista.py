@@ -7,9 +7,10 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
-from pms.modelo.relacionControlador import comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
+from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
 from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
+from pms.modelo.peticionControlador import crearPeticion
 
 
 @app.route('/admitem/<f>')
@@ -555,3 +556,47 @@ def eliminarRelc(vid=None):
     flask.flash(u"Relacion eliminada con exito")
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
+
+@app.route('/admitem/solicitud/<fid>')
+@pms.vista.required.login_required
+def solicitudCambio(fid=None):
+    fase=getFaseId(fid)
+    if fase:
+        tipos=fase.tipos
+        items=[]
+        for t in tipos:
+            for i in t.instancias:
+                items.append(i)
+        versiones=[]
+        for i in items:
+            v=getVersionItem(i.id)
+            if v.estado=="Bloqueado":
+                versiones.append(v)
+        return flask.render_template('solicitud.html', versiones=versiones)
+
+@app.route('/admitem/solicitarcambio/<vid>', methods=['POST', 'GET'])
+@pms.vista.required.login_required
+def solcitarCambio(vid=None):
+    if request.method == "GET":
+        flask.session['itemid']=vid
+        version=getVersionId(vid)
+        if(version.estado=="Bloqueado"):
+            costo=version.costo
+            dificultad=version.dificultad
+            h=hijos(vid)
+            for hi in h:
+                costo=costo+hi.costo
+                dificultad=dificultad+hi.dificultad
+            return flask.render_template('solicitudCambio.html', version=version, costo=costo, dificultad=dificultad, hijos=h)
+        else:
+            return flask.redirect('/admitem/'+str(flask.session['faseid']))
+    if request.method == "POST":
+        crearPeticion(flask.session['proyectoid'], vid, flask.session['usuarioid'])
+        flask.flash(u"Peticion realizada")
+        return flask.redirect('/admitem/'+str(flask.session['faseid']))
+    
+            
+    
+    
+    
+    

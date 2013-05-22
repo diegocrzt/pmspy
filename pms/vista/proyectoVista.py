@@ -1,7 +1,6 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import crearComite, agregarLista, getComiteProyecto
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -105,7 +104,6 @@ class Crearproyecto(flask.views.MethodView):
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
         p=getProyecto(flask.request.form['nombre'][:20])
-        crearComite(p.id)
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admproyecto'))
     
@@ -175,63 +173,4 @@ def prevPageP():
     flask.session['infopag']=calculoDeAnterior(getCantProyectos())
     return flask.redirect(flask.url_for('admproyecto'))  
  
-class listaComite(flask.views.MethodView):
-    """
-    admcomite
-    """
-    
-    @pms.vista.required.login_required  
-    def get(self):
-        if(flask.session['proyectoid']!=None):
-            usuarios = getUsuarios()
-            p=getProyectoId(flask.session['proyectoid'])
-            comite = getComiteProyecto(p.id)
-            usuarios2=[]
-            for m in comite.miembros:
-                usuarios2.append(m)
-            for u in usuarios2:
-                print "+"
-            
-            li=[]
-            
-            b=False
-            
-            for u in usuarios:
-                b=False
-                aux=[]
-                for u2 in usuarios2:
-                    if u.id==u2.user_id:
-                        aux.append(u.nombredeusuario)
-                        aux.append("True")
-                        b=True
-                if b==False:
-                    aux.append(u.nombredeusuario)
-                    aux.append("False")
-                li.append(aux)
-            print "adsfahsdfiuheifvkdsjgfuiewihviure"
-            return flask.render_template('listaComite.html',lista=li)
-        else:
-            return flask.redirect('/admproyecto/')
-    @pms.vista.required.login_required
-    def post(self):
-        """
-        Ejecuta la funcion de Eliminar Fase
-        """
-        print "holadfasdfasdf"
-        if(flask.session['proyectoid']!=None):
-            usuarios=getUsuarios()
-            comite=getComiteProyecto(flask.session['proyectoid'])
-            lista=[]
-            for u in usuarios:
-                if u.nombredeusuario in flask.request.form:
-                    if flask.request.form[u.nombredeusuario]==True :
-                        lista.append(u.id)
-            if agregarLista(lista,comite):
-                flask.flash("Comite modificado con exito")
-                return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
-            else:
-                flask.flash("La cantidad de usuarios agregado debe ser par")
-                return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
-        else:
-            return flask.redirect('/admproyecto/')
     

@@ -29,8 +29,8 @@ class Usuario(Base):
     
     esLider = relationship("Proyecto", backref="lider")
     lineas = relationship("LineaBase",backref="creador")
-    comites=relationship("Miembro",backref="usuario")
     votos=relationship("Voto",backref="usuario")
+    peticiones=relationship("Peticion",backref="usuario")
     
     def __init__(self, nombre, nombredeusuario, clave, isAdmin):
         self.nombre = nombre
@@ -56,7 +56,8 @@ class Proyecto(Base):
     delider = Column(Integer, ForeignKey('usuario.id') )
     estado = Column(Unicode(10))
     fases = relationship("Fase",order_by="Fase.id",backref="proyecto")
-
+    solicitudes=relationship("Peticion",order_by="Peticion.id",backref="proyecto")
+    
     
     
     def __init__(self, nombre, cantFase, fechaInicio, fechaFin, fechaUltMod, delider, estado):
@@ -348,37 +349,6 @@ class LineaBase(Base):
     def __repr__(self):
         return 'LineaBase { '+ self.numero+ self.fase_id + self.creador_id + self.fechaCreacion +'}' 
 
-class Comite(Base):
-    """
-        Define la clase Comite y la mapea a la tabla comite
-    """
-    __tablename__='comite'
-    id = Column(Integer, primary_key=True)
-    proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
-    proyecto= relationship("Proyecto", backref="comite")
-    miembros = relationship("Miembro",backref="comite")
-    
-    def __init__(self, proyecto_id):
-        self.proyecto_id=proyecto_id
-        
-    def __repr__(self):
-        return 'Comite { '+ self.proyecto_id +'}' 
-
-class Miembro(Base):
-    """
-        Define la clase Miembro y la mapea con la tabla miembro
-    """
-    __tablename__ = 'miembro'
-    comite_id = Column(Integer, ForeignKey('comite.id'), primary_key=True)
-    user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
-    
-        
-    def __init__(self, comite_id, user_id):
-        self.comite_id=comite_id
-        self.user_id=user_id
-        
-    def __repr__(self):
-        return 'Miembro { '+ self.comite_id+self.user_id+ '}'
 
 class Peticion(Base):
     """
@@ -386,20 +356,22 @@ class Peticion(Base):
     """
     __tablename__='peticion'
     id = Column(Integer, primary_key=True)
-    comite_id= Column(Integer, ForeignKey('comite.id'))
+    proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
     item_id=Column(Integer,ForeignKey('vitem.id'))
     comentario=Column(Unicode(100))
     estado=Column(Unicode(10))
+    usuario_id=Column(Integer, ForeignKey('usuario.id'))
     item=relationship("VersionItem")
     
-    def __init__(self, comite_id,item_id,comentario,estado):
-        self.comite_id=comite_id
+    def __init__(self, proyecto_id,item_id,comentario,estado, usuario_id):
+        self.proyecto_id=proyecto_id
         self.item_id=item_id
         self.comentario=comentario
         self.estado=estado
+        self.usuario_id=usuario_id
         
     def __repr__(self):
-        return 'Peticion { '+ self.comite_id+self.item_id +self.comentario+self.estado+'}'
+        return 'Peticion { '+ self.proyecto_id+self.item_id +self.comentario+self.estado+'}'
     
 class Voto(Base):
     """

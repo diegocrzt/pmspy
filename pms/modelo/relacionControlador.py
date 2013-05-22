@@ -72,14 +72,15 @@ class nodo():
     """
     clase utilizada para reperesentar los nodos de un grafo
     """
-    def __init__(self, etiqueta, costo, dificultad,version,estado):
+    def __init__(self, nombre, costo, dificultad,version,estado, item):
         self.entrantes = []
         self.salientes = []
-        self.etiqueta = etiqueta
+        self.nombre = nombre
         self.costo =costo
         self.dificultad=dificultad
         self.version=version
         self.estado=estado
+        self.item=item
         self.marca=False
     def addEntrante(self, nodo):
         self.entrantes.append(nodo)
@@ -104,7 +105,7 @@ def crearGrafoProyecto(pr=None):
             for item in tipo.instancias:
                 for v in item.version:
                     if v.actual:
-                        grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado))
+                        grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado, v.item))
     for n in grafo:
         relaciones=getRelacionesCAnte(n.version)
         for r in relaciones:
@@ -232,3 +233,25 @@ def desAprobar(idv=None):
     session.merge(ver)
     session.commit()
     shutdown_session()
+    
+def hijos(vid=None):
+    ver=getVersionId(vid)
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    nA=grafo[0]
+    for n in grafo:
+        if int(n.version)==int(vid):
+            nA=n
+    aux=[]
+    aux=hijosRecursivo(nA, grafo)
+    return aux
+
+def hijosRecursivo(nA, grafo):
+    l=[]
+    for n in nA.salientes:
+        l=hijosRecursivo(n,grafo)
+    l.append(nA)
+    return l
+    
