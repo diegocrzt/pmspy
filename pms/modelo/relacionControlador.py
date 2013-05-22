@@ -72,7 +72,7 @@ class nodo():
     """
     clase utilizada para reperesentar los nodos de un grafo
     """
-    def __init__(self, nombre, costo, dificultad,version,estado, item):
+    def __init__(self, nombre, costo, dificultad,version,estado, item, ver):
         self.entrantes = []
         self.salientes = []
         self.nombre = nombre
@@ -81,6 +81,7 @@ class nodo():
         self.version=version
         self.estado=estado
         self.item=item
+        self.ver=ver
         self.marca=False
     def addEntrante(self, nodo):
         self.entrantes.append(nodo)
@@ -105,7 +106,7 @@ def crearGrafoProyecto(pr=None):
             for item in tipo.instancias:
                 for v in item.version:
                     if v.actual:
-                        grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado, v.item))
+                        grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado, v.item, v.version))
     for n in grafo:
         relaciones=getRelacionesCAnte(n.version)
         for r in relaciones:
@@ -251,7 +252,9 @@ def hijos(vid=None):
 def hijosRecursivo(nA, grafo):
     l=[]
     for n in nA.salientes:
-        l=hijosRecursivo(n,grafo)
+        aux=hijosRecursivo(n,grafo)
+        for e in aux:
+            l.append(e)
     l.append(nA)
     return l
     

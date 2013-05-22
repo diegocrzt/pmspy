@@ -4,7 +4,7 @@ Created on 14/04/2013
 @author: mpoletti
 
 '''
-from entidad import Item, VersionItem, ValorStr, ValorNum, ValorBoolean, ValorDate
+from entidad import Item, VersionItem, ValorStr, ValorNum, ValorBoolean, ValorDate, Peticion
 from initdb import db_session, init_db, shutdown_session
 from tipoItemControlador import getTiposFase
 from atributoControlador import getAtributoId
@@ -161,5 +161,13 @@ def copiarValores(idvante=None,idvnueva=None):
     for at in version.atributosdate:
         crearValor(at.atributo_id,idvnueva,at.valor)
         
-
+def peticionExiste(vid=None):
+    if vid:
+        init_db()
+        query=session.query(Peticion).filter(Peticion.item_id==vid).first()
+        if query:
+            return True
+        else:
+            return False
+        
     

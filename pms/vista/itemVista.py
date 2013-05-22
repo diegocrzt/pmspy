@@ -8,7 +8,7 @@ from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
-from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
+from pms.modelo.itemControlador import peticionExiste, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.peticionControlador import crearPeticion
 
@@ -570,7 +570,7 @@ def solicitudCambio(fid=None):
         versiones=[]
         for i in items:
             v=getVersionItem(i.id)
-            if v.estado=="Bloqueado":
+            if v.estado=="Bloqueado" and not peticionExiste(v.id):
                 versiones.append(v)
         return flask.render_template('solicitud.html', versiones=versiones)
 
