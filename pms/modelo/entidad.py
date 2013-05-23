@@ -55,9 +55,10 @@ class Proyecto(Base):
     fechaUltMod = Column(DateTime)
     delider = Column(Integer, ForeignKey('usuario.id') )
     estado = Column(Unicode(10))
+    
     fases = relationship("Fase",order_by="Fase.id",backref="proyecto")
     solicitudes=relationship("Peticion",order_by="Peticion.id",backref="proyecto")
-    
+    miembros=relationship("Miembro",order_by="Miembro.proyecto_id",backref="proyecto")
     
     
     def __init__(self, nombre, cantFase, fechaInicio, fechaFin, fechaUltMod, delider, estado):
@@ -390,5 +391,18 @@ class Voto(Base):
         
     def __repr__(self):
         return 'Voto { '+ self.peticion_id+self.user_id+self.valor+ '}'
+
+class Miembro(Base):
+    """
+        Define la clase Miembro y la mapea con la tabla miembro
+    """
+    __tablename__ = 'miembro'
+    proyecto_id = Column(Integer, ForeignKey('proyecto.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
+    
+    def __init__(self, proyecto_id, user_id):
+        self.proyecto_id=proyecto_id
+        self.user_id=user_id
+
 
 init_db()

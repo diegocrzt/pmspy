@@ -4,7 +4,7 @@ Created on 05/04/2013
 @author: mpoletti
 '''
 from sqlalchemy import Table
-from pms.modelo.entidad import Usuario, Proyecto, Fase, TipoItem, Atributo, Item, ValorNum, ValorStr, ValorBoolean, ValorDate, VersionItem, Rol, User_Rol, Relacion
+from pms.modelo.entidad import Usuario, Proyecto, Fase, TipoItem, Atributo, Item, ValorNum, ValorStr, ValorBoolean, ValorDate, VersionItem, Rol, User_Rol, Relacion, Miembro
 from pms.modelo.initdb import metadata, db_session, init_db, engine
 import hashlib
 """Puebla la base de datos con datos de pureba"""
@@ -21,6 +21,7 @@ valorInt = Table('valorint',metadata)
 valorBool = Table('valorbool',metadata)
 valorStr = Table('valorstr',metadata)
 valorDate = Table('valordate',metadata)
+miembro=Table('miembro',metadata)
 session = db_session()
 
 user = Usuario(nombre="Administrador", nombredeusuario="admin", clave=hashlib.sha1( "123456" ).hexdigest(), isAdmin="true")
@@ -39,13 +40,21 @@ pro3 = Proyecto(nombre="Contruccion", cantFase="1", fechaInicio="10/03/2013", fe
 session.add(pro3)
 session.commit()
 
+mie=Miembro(proyecto_id="1",user_id="3")
+session.add(mie)
+mie2=Miembro(proyecto_id="2",user_id="1")
+session.add(mie2)
+mie3=Miembro(proyecto_id="3",user_id="1")
+session.add(mie3)
+session.commit()
+
 fa = Fase(nombre="Fase 1", numero="1", fechaInicio="12/01/2013", fechaFin = "10/02/2013",
           fechaUltMod="01/02/2013", estado = "Abierta", delproyecto= "1")
 session.add(fa)
-fa2 = Fase(nombre="Fase 2", numero="2", fechaInicio="27/02/2013", fechaFin = "15/07/2013",
+fa2 = Fase(nombre="Fase 2", numero="2", fechaInicio="10/02/2013", fechaFin = "10/07/2013",
           fechaUltMod=None, estado = "Abierta", delproyecto= "1")
 session.add(fa2)
-fa3 = Fase(nombre="Fase 3", numero="3", fechaInicio="16/07/2013", fechaFin = "15/02/2014",
+fa3 = Fase(nombre="Fase 3", numero="3", fechaInicio="10/07/2013", fechaFin = "10/02/2014",
           fechaUltMod=None, estado = "Abierta", delproyecto= "1")
 session.add(fa3)
 fa4 = Fase(nombre="Comienzo", numero="1", fechaInicio="12/01/2013", fechaFin = "10/02/2013",

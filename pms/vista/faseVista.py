@@ -3,6 +3,8 @@ from flask import request
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas, controlCerrarFase, cerrarFase,actualizarFecha
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.rolControlador import getProyectosDeUsuario
+from pms.modelo.peticionControlador import getMiembros, agregarListaMiembros
+from pms.modelo.usuarioControlador import getUsuarios, getUsuarioById
 from datetime import timedelta
 from datetime import datetime
 import pms.vista.required
@@ -302,3 +304,50 @@ def cerrarFaseB(f=None):
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
     else:
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+    
+    
+class ListaMiembros(flask.views.MethodView):
+    """
+    
+    """
+    @pms.vista.required.login_required  
+    def get(self):
+        miembros=getMiembros(flask.session['proyectoid'])
+        usuarios=getUsuarios()
+        lider=getUsuarioById(flask.session['usuarioid'])
+        lista=[]
+        for u in usuarios:
+            if u.nombredeusuario!=lider.nombredeusuario:
+                bandera=False
+                for m in miembros:
+                    if m.user_id==u.id:
+                        bandera=True
+                aux=[]
+                aux.append(u.nombredeusuario)
+                if bandera==True:
+                    aux.append(True)
+                else:
+                    aux.append(False)
+                lista.append(aux)
+            
+        for l in lista:
+            print l[0]
+            print l[1]    
+        return flask.render_template('listaComite.html',batata=lista,lider=lider)   
+    @pms.vista.required.login_required
+    def post(self):
+        """
+        
+        """
+        usuarios=getUsuarios()
+        ag=[]
+        lider=getUsuarioById(flask.session['usuarioid'])
+        ag.append(lider)
+        for u in usuarios:
+            if u.nombredeusuario in flask.request.form:
+                if flask.request.form[u.nombredeusuario]:
+                    ag.append(u)
+        agregarListaMiembros(ag,flask.session['proyectoid'])            
+        
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+

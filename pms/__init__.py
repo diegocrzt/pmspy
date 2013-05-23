@@ -152,5 +152,5 @@ app.add_url_rule('/admlinea/eliminarlinea/',
 
 
 app.add_url_rule('/admfase/comite/',
-                 view_func=vista.proyectoVista.listaComite.as_view('comite'),
+                 view_func=vista.faseVista.ListaMiembros.as_view('miembros'),
                  methods=["GET", "POST"])
