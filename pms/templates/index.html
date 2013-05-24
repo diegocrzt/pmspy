@@ -18,13 +18,17 @@
          </div>
         </div>
         <div class="container">
-        <h2>Logout</h2>
+        <br/>
+        <div class="hero-unit">
+        <h1>PMS</h1>
+        <h2>Logout </h2>
         <strong>Usuario:</strong> {{session['username']}}
-        <hr>
+        <br></br>
         <form action="{{url_for('index')}}" method="post">
-            <p><input class="btn btn-danger" type="submit" name="logout" value="logout" />
-            <a class="btn btn-inverse" href="/admproyecto/">Cancelar</a></p>
+            <p><input class="btn btn-large btn-danger" type="submit" name="logout" value="logout" />
+            <a class="btn btn-large btn-inverse" href="/admproyecto/">Cancelar</a></p>
         </form>
+        </div>
  	</div>	
 	</div>
 	
@@ -44,10 +48,11 @@
          </div>
         </div>
      <div class="container">
-     	<h3>Bienvenido,</h3>
+     <br>
+     <div class="hero-unit">
+     	<h1>Bienvenido!</h1>
      	<p class="text-info">PMS es una aplicación web con la que puedes gestionar tus proyectos de manera organizada y eficiente.</p>
         <h2>Login</h2>
-        <strong>El logueo es necesario:</strong>
         <p></p>
         <form action="{{url_for('index')}}" method="post">
             <p>Nombre de usuario:
@@ -77,11 +82,11 @@
 	   					{% endfor %}    					
 					{% endif %}
 				{% endwith %}
-            <hr>
-            <p><input class="btn btn-success" type="submit" value="Login" /></p>
+            <p><input class="btn btn-large btn-success" type="submit" value="Login" /></p>
         </form>
         
     {% endif %}
+     </div>
      </div>
     </div>
 {% endblock %}
