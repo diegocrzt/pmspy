@@ -1,6 +1,7 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
+from pms.modelo.peticionControlador import agregarMiembro
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -104,6 +105,7 @@ class Crearproyecto(flask.views.MethodView):
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
         p=getProyecto(flask.request.form['nombre'][:20])
+        agregarMiembro(p.id,p.delider)
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admproyecto'))
     
@@ -173,4 +175,4 @@ def prevPageP():
     flask.session['infopag']=calculoDeAnterior(getCantProyectos())
     return flask.redirect(flask.url_for('admproyecto'))  
  
-    
+

@@ -149,3 +149,8 @@ app.add_url_rule('/admlinea/',
 app.add_url_rule('/admlinea/eliminarlinea/',
                  view_func=vista.lineaBaseVista.EliminarLineaBase.as_view('eliminarlinea'),
                  methods=["GET", "POST"])
+
+
+app.add_url_rule('/admfase/comite/',
+                 view_func=vista.faseVista.ListaMiembros.as_view('miembros'),
+                 methods=["GET", "POST"])
