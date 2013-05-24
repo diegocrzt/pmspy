@@ -33,7 +33,7 @@
     <p> <strong><strong class="text-info"> <i class="icon-chevron-right"></i> </strong>Costo del cambio:</strong> {{costo}}</p> 
     <p><strong><strong class="text-info"> <i class="icon-chevron-right"></i> </strong>Dificultad del cambio:</strong> {{dificultad}}
     <div class="span6">
-	    <p align="center">	<strong>Todos sus hijos y sucesores</strong></p>	
+	    <p align="center">	<strong>Todos sus hijos y sucesores</strong> (directos e indirectos)</p>	
 		<table  class="table  table-bordered" >
 			<tr>
 		        <th>Nombre</th>
@@ -67,6 +67,17 @@
 	
 		
 		<form action="/admitem/solicitarcambio/{{session['itemid']}}" method="post">
+		<p>Motivo de cambio<small class="text-error">(*)</small>:
+		{%  with messages = get_flashed_messages(category_filter=["comentario"]) %}
+		  			{% if messages %}
+		  				{% for message in messages %}
+	   						<small class="text-error">{{ message }}</small>	
+	   					{% endfor %}    					
+					{% endif %}
+				{% endwith %}  
+		<input type="text" class="span6 search-query" name="comentario">
+		
+		</p>
 		<p><input class="btn btn-success" type="submit" value="Aceptar" />
             <a class="btn btn-inverse" href="/admitem/solicitud/{{session['faseid']}}">Cancelar</a></p>
 		</form>

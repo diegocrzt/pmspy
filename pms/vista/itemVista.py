@@ -591,9 +591,13 @@ def solcitarCambio(vid=None):
         else:
             return flask.redirect('/admitem/'+str(flask.session['faseid']))
     if request.method == "POST":
-        crearPeticion(flask.session['proyectoid'], vid, flask.session['usuarioid'])
-        flask.flash(u"Peticion realizada")
-        return flask.redirect('/admitem/'+str(flask.session['faseid']))
+        if flask.request.form['comentario']=="":
+            flask.flash(u"El campo no puede estar vacio","comentario")
+            return flask.redirect('/admitem/solicitarcambio/'+str(vid))
+        else:
+            crearPeticion(flask.session['proyectoid'], vid, flask.request.form['comentario'], flask.session['usuarioid'])
+            flask.flash(u"Peticion realizada")
+            return flask.redirect('/admitem/'+str(flask.session['faseid']))
     
             
     

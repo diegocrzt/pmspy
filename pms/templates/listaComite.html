@@ -29,10 +29,10 @@
 
 {%block content%}
 <div class="container">
-	<h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
-	<h3>Comite</h3>
+	<h3>Miembros de comité del proyecto <em>{{session['proyectonombre']}}</em></h3>
 	<hr>
-	<p>Seleccione los miembros del comite</p>
+	
+	<p><strong class="text-info">--</strong> Debe seleccionar o desseleccionar una cantidad <strong>par</strong> de ususarios. <strong class="text-info">--</strong></p>
 	<form action="{{url_for('miembros')}}" method="POST">
 	<div class="span5">
 	<table  class="table  table-bordered" >
@@ -42,31 +42,38 @@
                                  </tr>
                                  
             <tr>
-                                    <th>{{lider.nombredeusuario}}</th>
+                                    <th>{{lider.nombre}} (lider) </th>
                                     <th><input type="checkbox" name="{{lider}}" checked disabled/></th>
-                                 </tr>                     
+                                 </tr>
             {% for l in batata %}
             <tr>   
             	<td>{{l[0]}}</td>
-            	
             		{% if l[1]==True %}
 		            		<td><input type="checkbox" name="{{l[0]}}" checked/></td>
 		           	{% else %}
 		           			<td><input type="checkbox" name="{{l[0]}}"/></td>
             		{% endif %}
-           </tr> 
+           </tr>
            {% else %}
 	       <tr>
 	            <td>
-	          		No existen usuarios(?wtf)
+	          		No existen usuarios
 	          	</td>
           		<td></td>
           	</tr>
           	{%endfor%}
         </table>
+        </div>
+        <div class="span10">
             <p><input class="btn btn-success" type="submit" value="Aceptar" />
-            <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}">Cancelar</a></p>
-        
+            <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}">Cancelar</a>
+        	{%  with messages = get_flashed_messages(category_filter=["cantidad"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<span class="text-error">{{ message }}</span></p>	
+  					{% endfor %}    					
+			{% endif %}
+	{% endwith %}
     	</div>
     </form>
 </div>

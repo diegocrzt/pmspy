@@ -323,7 +323,7 @@ class ListaMiembros(flask.views.MethodView):
                     if m.user_id==u.id:
                         bandera=True
                 aux=[]
-                aux.append(u.nombredeusuario)
+                aux.append(u.nombre)
                 if bandera==True:
                     aux.append(True)
                 else:
@@ -344,10 +344,15 @@ class ListaMiembros(flask.views.MethodView):
         lider=getUsuarioById(flask.session['usuarioid'])
         ag.append(lider)
         for u in usuarios:
-            if u.nombredeusuario in flask.request.form:
-                if flask.request.form[u.nombredeusuario]:
+            if u.nombre in flask.request.form:
+                if flask.request.form[u.nombre]:
                     ag.append(u)
-        agregarListaMiembros(ag,flask.session['proyectoid'])            
+        if len(ag)%2!=0:
+            agregarListaMiembros(ag,flask.session['proyectoid'])
+            flask.flash(u"COMITE EDITADO", "text-success")
+            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))            
+        else:
+            flask.flash(u"El numero de miembros seleccionados es impar.", "cantidad")
+            return flask.redirect("/admfase/comite/")
         
-        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
 

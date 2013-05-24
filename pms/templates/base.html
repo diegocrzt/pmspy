@@ -21,7 +21,10 @@
         <body> 
 	   
             {% block menu%}{% endblock %}
+            <div class="alert">
+  				<button type="button" class="close" data-dismiss="alert">&times;</button>
             {% block mensaje%}{% endblock %}
+            </div>
             {% block content%}{% endblock %}
 
 
