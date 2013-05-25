@@ -8,42 +8,80 @@ from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
-from pms.modelo.itemControlador import peticionExiste, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
+from pms.modelo.itemControlador import getItemsFiltrados, getItemsPaginados, peticionExiste, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.peticionControlador import crearPeticion
+from pms.vista.paginar import calculoDeAnterior
+from pms.vista.paginar import calculoDeSiguiente
+from pms.vista.paginar import calculoPrimeraPag
+TAM_PAGINA=5
 
-
-@app.route('/admitem/<f>')
+@app.route('/admitem/<f>',methods=['POST', 'GET'])
 @pms.vista.required.login_required
 def admItem(f=None):
     """
     Funcion que llama a la Vista de Administrar Item, responde al boton de 'Selec>>' de Administrar Fase
     """
-    flask.session.pop('aux1',None)
-    flask.session.pop('aux2',None)
-    flask.session.pop('aux3',None)
-    flask.session.pop('aux4',None) 
     if request.method == "GET":
-        fase=getFaseId(f)
-        flask.session.pop('faseid',None)
-        flask.session.pop('fasenombre',None)
-        flask.session['faseid']=fase.id
-        flask.session['fasenumero']=fase.numero
-        flask.session['fasenombre']=fase.nombre
-        roles = getRolesDeUsuarioEnFase(flask.session['usuarioid'], flask.session['faseid'])
-        t=fase.tipos
-        i=[]
-        for ti in t:
-            itms=ti.instancias
-            for it in itms:
-                aux=getVersionItem(it.id)
-                if aux.estado!="Eliminado":
-                    i.append(aux)
-        flask.session.pop('itemid',None)
-        return flask.render_template('admItem.html',items=i,roles=roles)
-    else:
-        return flask.redirect(flask.url_for('admfase'))
-    
+        flask.session.pop('aux1',None)
+        flask.session.pop('aux2',None)
+        flask.session.pop('aux3',None)
+        flask.session.pop('aux4',None) 
+        if request.method == "GET":
+            fase=getFaseId(f)
+            flask.session.pop('faseid',None)
+            flask.session.pop('fasenombre',None)
+            flask.session['faseid']=fase.id
+            flask.session['fasenumero']=fase.numero
+            flask.session['fasenombre']=fase.nombre
+            roles = getRolesDeUsuarioEnFase(flask.session['usuarioid'], flask.session['faseid'])
+            flask.session['filtro']=""
+            
+            cantidad=0
+            t=fase.tipos
+            for ti in t:
+                cantidad=cantidad+len(ti.instancias)
+            flask.session['cantidaditems']=cantidad       
+            if flask.session['cambio']:
+                flask.session['cambio']=False
+                items=getItemsPaginados(flask.session['pagina']-1,TAM_PAGINA,fase)
+                infopag=flask.session['infopag']
+            else:
+                flask.session['pagina']=1
+                items=getItemsPaginados(flask.session['pagina']-1,TAM_PAGINA,fase)
+                infopag=calculoPrimeraPag(cantidad)
+            
+            """t=fase.tipos
+            i=[]
+            for ti in t:
+                itms=ti.instancias
+                for it in itms:
+                    aux=getVersionItem(it.id)
+                    if aux.estado!="Eliminado":
+                        i.append(aux)"""
+            flask.session.pop('itemid',None)
+            return flask.render_template('admItem.html',items=items,roles=roles, infopag=infopag, buscar=False)
+        else:
+            return flask.redirect(flask.url_for('admfase'))
+    if request.method == "POST":
+        if flask.request.form['fil']!="":
+            global TAM_PAGINA
+            flask.session['filtro']=flask.request.form['fil']
+            cant=len(getItemsFiltrados(getFaseId(flask.session['faseid']),flask.session['filtro']))
+            if 'buscar' in flask.request.form:
+                flask.session['pagina']=1
+                items=getItemsPaginados(flask.session['pagina']-1,TAM_PAGINA,getFaseId(flask.session['faseid']), flask.request.form['fil'])
+                infopag=calculoPrimeraPag(cant)
+            elif 'sgte' in flask.request.form:
+                infopag=calculoDeSiguiente(cant)
+                items=getItemsPaginados(flask.session['pagina']-1,TAM_PAGINA,getFaseId(flask.session['faseid']), flask.request.form['fil'])
+            elif 'anterior' in flask.request.form:
+                infopag=calculoDeAnterior(cant)
+                items=getItemsPaginados(flask.session['pagina']-1,TAM_PAGINA,getFaseId(flask.session['faseid']), flask.request.form['fil'])
+            roles = getRolesDeUsuarioEnFase(flask.session['usuarioid'], flask.session['faseid'])
+            return flask.render_template('admItem.html',items=items,roles=roles, infopag=infopag, buscar=True)
+        else:
+            return flask.redirect('/admitem/'+str(flask.session['faseid']))
     
    
 class CrearItem(flask.views.MethodView):
@@ -599,7 +637,23 @@ def solcitarCambio(vid=None):
             flask.flash(u"Peticion realizada")
             return flask.redirect('/admitem/'+str(flask.session['faseid']))
     
-            
+@app.route('/admitem/nextitem/')
+@pms.vista.required.login_required       
+def nextPageI():
+    """Responde al boton 'siguiente' de la paginacion de la lista de Items de AdmItem
+    """
+    flask.session['cambio']=True
+    flask.session['infopag']=calculoDeSiguiente(flask.session['cantidaditems'])
+    return flask.redirect('/admitem/'+str(flask.session['faseid']))   
+
+@app.route('/admitem/previtem/')
+@pms.vista.required.login_required       
+def prevPageI():
+    """Responde al boton 'anterior' de la paginacion de la lista de Items de AdmItem
+    """
+    flask.session['cambio']=True
+    flask.session['infopag']=calculoDeAnterior(flask.session['cantidaditems'])
+    return flask.redirect('/admitem/'+str(flask.session['faseid']))
     
     
     

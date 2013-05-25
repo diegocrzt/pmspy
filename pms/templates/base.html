@@ -22,8 +22,11 @@
 	   
             {% block menu%}{% endblock %}
             {% block mensaje%}{% endblock %}
+            {% if session['username'] %}
             {% block content%}{% endblock %}
-
-
+			{%else%}
+			No ha iniciado sesion!
+			<a href="{{ url_for('index') }}">Login</a>
+			{%endif%}
     </body>
 </html>
