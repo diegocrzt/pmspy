@@ -12,7 +12,7 @@ from sqlalchemy import or_
 session = db_session()
 
 def getTiposFase(fase=None):
-    """Obtiene los tipos de item de una fase, recibe el id de la fase
+    """Devuelve los tipos de item de una fase, recibe el id de la fase
     """
     init_db()
     res = session.query(TipoItem).filter(TipoItem.defase==fase).order_by(TipoItem.id)
