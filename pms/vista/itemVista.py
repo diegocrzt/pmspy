@@ -146,7 +146,13 @@ class CompletarAtributo(flask.views.MethodView):
         itm=getVersionItem(flask.session['itemid'])
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
-            crearValor(at.id,itm.id,flask.request.form[at.nombre])
+            if at.tipoDato=="Booleano":
+                if at.nombre in flask.request.form:
+                    crearValor(at.id,itm.id,flask.request.form[at.nombre])
+                else:
+                    crearValor(at.id,itm.id,False)
+            else:
+                crearValor(at.id,itm.id,flask.request.form[at.nombre])
         copiarRelacionesEstable(itm1.id,itm.id)
         desAprobarAdelante(itm.id)
         flask.flash(u"EDICION EXITOSA","text-success")
