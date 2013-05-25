@@ -105,7 +105,7 @@ def crearGrafoProyecto(pr=None):
         for tipo in fase.tipos:
             for item in tipo.instancias:
                 for v in item.version:
-                    if v.actual:
+                    if v.actual and v.estado!="Eliminado":
                         grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado, v.item, v.version))
     for n in grafo:
         relaciones=getRelacionesCAnte(n.version)
