@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS user_rol CASCADE;
+﻿DROP TABLE IF EXISTS user_rol CASCADE;
 DROP TABLE IF EXISTS usuario CASCADE;
 DROP TABLE IF EXISTS proyecto CASCADE;
 DROP TABLE IF EXISTS rol CASCADE; -- relaciona fase
@@ -545,19 +545,19 @@ INSERT INTO item(id, tipo, etiqueta, linea_id)
 
 
 INSERT INTO  vitem(id, version, nombre, estado, actual, costo, dificultad, deitem)
-	VALUES (1,0,'Construcciones civiles','Activo','false', 50, 5, 1);
+	VALUES (1,0,'Construcciones','Activo','false', 50, 5, 1);
 INSERT INTO  vitem(id, version, nombre, estado, actual, costo, dificultad, deitem)
-	VALUES (1,1,'Construcciones civiles','Activo','false', 50, 5, 1);
+	VALUES (1,1,'Construcciones','Activo','false', 50, 5, 1);
 INSERT INTO  vitem(id, version, nombre, estado, actual, costo, dificultad, deitem)
-	VALUES (1,2,'Construcciones civiles','Aprobado','true', 50, 5, 1);
+	VALUES (1,2,'Construcciones','Aprobado','true', 50, 5, 1);
 
 
 INSERT INTO valorstr(atributo_id, item_id, valor)
 	VALUES (1,0,'');
 INSERT INTO valorstr(atributo_id, item_id, valor)
-	VALUES (1,1,'Materiales pesados en la construcción');
+	VALUES (1,1,'Materiales');
 INSERT Into valorstr(atributo_id, item_id, valor)
-	VALUES (1,2,'Materiales pesados en la construcción');
+	VALUES (1,2,'Materiales');
 INSERT INTO valorstr(atributo_id, item_id, valor)
 	VALUES (2,0,'');
 INSERT INTO valorstr(atributo_id, item_id, valor)
