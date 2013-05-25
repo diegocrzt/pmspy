@@ -10,6 +10,9 @@ DROP TABLE IF EXISTS relacion CASCADE; --relaciona vitem
 DROP TABLE IF EXISTS vitem CASCADE; --relaciona valordate, valorbool, valorint, valorstr
 DROP TABLE IF EXISTS item CASCADE;
 DROP TABLE IF EXISTS valorbool, valordate, valorint, valorstr CASCADE;
+DROP TABLE IF EXISTS peticion CASCADE;
+DROP TABLE IF EXISTS miembro; -- relaciona, proyecto, usuario
+DROP TABLE IF EXISTS voto CASCADE; --relaciona peticion
 
 -- Table: usuario
 
@@ -55,6 +58,28 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE proyecto
+  OWNER TO postgres;
+
+-- Table: miembro
+
+-- DROP TABLE miembro;
+
+CREATE TABLE miembro
+(
+  proyecto_id integer NOT NULL,
+  user_id integer NOT NULL,
+  CONSTRAINT miembro_pkey PRIMARY KEY (proyecto_id , user_id ),
+  CONSTRAINT miembro_proyecto_id_fkey FOREIGN KEY (proyecto_id)
+      REFERENCES proyecto (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT miembro_user_id_fkey FOREIGN KEY (user_id)
+      REFERENCES usuario (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE miembro
   OWNER TO postgres;
 
 -- Table: fase
@@ -151,6 +176,46 @@ WITH (
   OIDS=FALSE
 );
 ALTER TABLE user_rol
+  OWNER TO postgres;
+
+-- Table: peticion
+
+-- DROP TABLE peticion;
+
+CREATE TABLE peticion
+(
+  id serial NOT NULL,
+  proyecto_id integer,
+  item_id integer,
+  comentario character varying(100),
+  estado character varying(10),
+  usuario_id integer,
+  CONSTRAINT peticion_pkey PRIMARY KEY (id )
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE peticion
+  OWNER TO postgres;
+
+-- Table: voto
+
+-- DROP TABLE voto;
+
+CREATE TABLE voto
+(
+  peticion_id integer NOT NULL,
+  user_id integer NOT NULL,
+  valor boolean,
+  CONSTRAINT voto_pkey PRIMARY KEY (peticion_id , user_id ),
+  CONSTRAINT voto_peticion_id_fkey FOREIGN KEY (peticion_id)
+      REFERENCES peticion (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE voto
   OWNER TO postgres;
 
 
@@ -366,9 +431,9 @@ ALTER TABLE valorstr
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
 	VALUES ('Administrador','admin','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
-	VALUES ('Auditor','auditor','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
+	VALUES ('Martin Poletti','martin','54669547a225ff20cba8b75a4adca540eef25858','false');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
-	VALUES ('Elmer Homero','usuario','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
+	VALUES ('Natalia Valdez','natalia','7c4a8d09ca3762af61e59520943dc26494f8941b','true');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
 	VALUES ('Anna Dyst','anna','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
 INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin") 
@@ -377,64 +442,55 @@ INSERT INTO usuario (nombre, nombredeusuario, clave, "isAdmin")
 	VALUES ('Thomas Dwin','tommy','7c4a8d09ca3762af61e59520943dc26494f8941b','false');
 
 INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('Levithas', '0', '2013-05-20', '2014-05-20', null, 1, 'Pendiente');
+	VALUES ('Levithas', '3', '2013-05-20', '2014-05-20', null, 1, 'Pendiente');
 INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('CloudLine', '4', '2013-05-17', '2013-06-20', null, 3, 'Pendiente');
-INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('Coverity', '3', '2013-05-17', '2013-06-20', null, 3, 'Iniciado');
+	VALUES ('Reingenieria', '5', '2013-05-17', '2013-06-20', null, 3, 'Iniciado');
+INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)--3
+	VALUES ('Construcción', '1', '2013-05-17', '2013-06-20', null, 3, 'Iniciado');
 INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
 	VALUES ('Celerity', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
 INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
 	VALUES ('Singularity', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
 INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
 	VALUES ('Black Omen', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
-INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('Roc', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
-INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('Kalecgos', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
-INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('Altamira', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
-INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('High Sierra', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
-INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('Apicultura', '0', '2013-06-01', '2013-06-20', null, 3, 'Pendiente');
-INSERT INTO proyecto(nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado)
-	VALUES ('FreeSoundCloud', '0', '2013-06-01', '2013-06-20', null, 1, 'Pendiente');
 
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto) -- Proyecto Reingeniería
+	VALUES ('Análisis',1,'2013-05-17','2013-05-20',null,'Abierta',2);
 INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
-	VALUES ('Inicialización',1,'2013-05-17','2013-05-20',null,'Abierta',2);
+	VALUES ('Diseño Físico',2,'2013-05-21','2013-06-10',null,'Abierta',2);
 INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
-	VALUES ('Desarrollo',2,'2013-05-21','2013-06-10',null,'Abierta',2);
+	VALUES ('Construcción',3,'2013-05-17','2013-05-10',null,'Abierta',2);
 INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
-	VALUES ('Integración',3,'2013-05-17','2013-05-10',null,'Abierta',2);
+	VALUES ('Pruebas',4,'2013-06-11','2013-06-20',null,'Abierta',2);
 INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
-	VALUES ('Homologación',4,'2013-06-11','2013-06-20',null,'Abierta',2);
+	VALUES ('Implantación',5,'2013-06-11','2013-06-20',null,'Abierta',2);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto) -- Proyecto Levithas
+	VALUES ('Init',1,'2013-05-17','2013-05-20',null,'Abierta',1);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Dev',2,'2013-05-21','2013-06-10',null,'Abierta',1);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
+	VALUES ('Dbg',3,'2013-05-17','2013-05-10',null,'Abierta',1);
+INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto) -- Proyecto Construcción
+	VALUES ('Monofase',1,'2013-05-17','2013-05-10',null,'Abierta',3);
 
-INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
-	VALUES ('Init',1,'2013-05-17','2013-05-20',null,'Abierta',3);
-INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
-	VALUES ('Dev',2,'2013-05-21','2013-06-10',null,'Abierta',3);
-INSERT INTO fase (nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto)
-	VALUES ('Dbg',3,'2013-05-17','2013-05-10',null,'Abierta',3);
-
-INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Init
-	VALUES (5, 'Analista', 111, 0, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Análisis
+	VALUES (1, 'Desarrollador', 111, 0, 0);
 INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
-	VALUES (5, 'Desarrollador', 0, 11110111, 0);
+	VALUES (2, 'Tester', 101, 11111111, 11);
 INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
-	VALUES (5, 'Tester', 0, 1000, 11);
-INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Dev
-	VALUES (6, 'Analista', 111, 0, 0);
+	VALUES (3, 'Analista de Negocios', 0, 1000, 11);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Pruebas
+	VALUES (4, 'Autorizante', 111, 0, 0);
 INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
-	VALUES (6, 'Desarrollador', 111, 11111111, 0);
+	VALUES (5, 'Arquitecto', 111, 11111111, 0);
 INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
 	VALUES (6, 'Tester', 0, 1000, 11);
-INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Dbg
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Dev
 	VALUES (7, 'Analista', 111, 0, 0);
 INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
-	VALUES (7, 'Desarrollador', 0, 11110111, 0);
-INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") 
-	VALUES (7, 'Tester', 0, 11111111, 11);
+	VALUES (8, 'Desarrollador', 0, 11110111, 0);
+INSERT INTO rol (fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") -- Fase Monofase
+	VALUES (9, 'Full Control', 111, 11111111, 11);
 
 INSERT INTO user_rol (usuario_id, rol_id) -- Fase Init
 	VALUES (4, 1);
@@ -443,14 +499,68 @@ INSERT INTO user_rol (usuario_id, rol_id)
 INSERT INTO user_rol (usuario_id, rol_id) 
 	VALUES (6, 3);
 INSERT INTO user_rol (usuario_id, rol_id) -- Fase Dev
-	VALUES (4, 4);
+	VALUES (3, 4);
 INSERT INTO user_rol (usuario_id, rol_id) 
 	VALUES (5, 5);
 INSERT INTO user_rol (usuario_id, rol_id) 
-	VALUES (6, 6);
+	VALUES (1, 6);
 INSERT INTO user_rol (usuario_id, rol_id) -- Fase Dbg
-	VALUES (4, 7);
+	VALUES (2, 7);
 INSERT INTO user_rol (usuario_id, rol_id) 
-	VALUES (5, 8);
+	VALUES (4, 8);
 INSERT INTO user_rol (usuario_id, rol_id) 
-	VALUES (6, 9);
+	VALUES (3, 9);
+
+INSERT INTO tipoitem (id, nombre, comentario, defase)
+	VALUES (1, 'Libro', 'Representa un libro', 9);
+INSERT INTO tipoitem (id, nombre, comentario, defase)
+	VALUES (2, 'Lección', 'Representa una lección', 9);
+INSERT INTO tipoitem (id, nombre, comentario, defase)
+	VALUES (3, 'Capítulo', 'Representa una conclusión', 9);
+INSERT INTO tipoitem (id, nombre, comentario, defase)
+	VALUES (4, 'Relevamiento', 'Recoger datos', 1);
+INSERT INTO tipoitem (id, nombre, comentario, defase)
+	VALUES (5, 'Diseño', 'Representa una conclusión', 2);
+
+
+INSERT INTO atributo(id, nombre, "tipoDato", pertenece)
+	VALUES (1,'Titulo','Cadena',1);
+INSERT INTO atributo(id, nombre, "tipoDato", pertenece)
+	VALUES (2,'Autor','Cadena',1);
+INSERT INTO atributo(id, nombre, "tipoDato", pertenece)
+	VALUES (3,'Leido','Booleano',2);
+INSERT INTO atributo(id, nombre, "tipoDato", pertenece)
+	VALUES (4,'Leido','Booleano',3);
+INSERT INTO atributo(id, nombre, "tipoDato", pertenece)
+	VALUES (5,'Entrevistado','Cadena',4);
+INSERT INTO atributo(id, nombre, "tipoDato", pertenece)
+	VALUES (6,'Método Utilizado','Cadena',4);
+INSERT INTO atributo(id, nombre, "tipoDato", pertenece)
+	VALUES (7,'Documento aprobado','Booleano',5);
+
+
+
+INSERT INTO item(id, tipo, etiqueta, linea_id)
+	VALUES (1, 1, 3-9-1, null);
+
+
+INSERT INTO  vitem(id, version, nombre, estado, actual, costo, dificultad, deitem)
+	VALUES (1,0,'Construcciones civiles','Activo','false', 50, 5, 1);
+INSERT INTO  vitem(id, version, nombre, estado, actual, costo, dificultad, deitem)
+	VALUES (1,1,'Construcciones civiles','Activo','false', 50, 5, 1);
+INSERT INTO  vitem(id, version, nombre, estado, actual, costo, dificultad, deitem)
+	VALUES (1,2,'Construcciones civiles','Aprobado','true', 50, 5, 1);
+
+
+INSERT INTO valorstr(atributo_id, item_id, valor)
+	VALUES (1,0,'');
+INSERT INTO valorstr(atributo_id, item_id, valor)
+	VALUES (1,1,'Materiales pesados en la construcción');
+INSERT Into valorstr(atributo_id, item_id, valor)
+	VALUES (1,2,'Materiales pesados en la construcción');
+INSERT INTO valorstr(atributo_id, item_id, valor)
+	VALUES (2,0,'');
+INSERT INTO valorstr(atributo_id, item_id, valor)
+	VALUES (2,1,'Kurth Nixon');
+INSERT Into valorstr(atributo_id, item_id, valor)
+	VALUES (2,2,'Rigoberto Q. Zayas');
