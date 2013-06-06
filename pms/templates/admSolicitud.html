@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
+              <li class="active"><a href="">Administrar Solicitud</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+</div>
+              
+{%endblock%}
+
+{%block mensaje%}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+		  </div>
+          {% endif %}
+        {% endwith %}
+{%endblock%}
+
+
+{%block content%}
+<div>
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}}</h3>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+                  </div>
+          {% endif %}
+        {% endwith %}
+        <div class="row" >
+                <div class="span14">
+                        <h2> Listado de Solicitudes </h2>
+                        <form class="form-search" action="{{url_for('admsolicitud')}}" method="POST" >
+                        <p align="right">
+  						<input type="text" class="input-medium search-query" name="fil" value="{{session['filtro']}}">
+  						<button type="submit" class="btn" name="buscar">Buscar</button></p>
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Nro</th>
+                                        <th>Fecha</th>
+				                        <th>Solicitante</th>
+				                        <th>Estado</th>
+				                        <th>CantI</th>
+				                        <th>Editar</th>
+				                        <th>Eliminar</th>
+				                        <th>Consultar</th>
+				                        <th>Enviar</th>
+				                        <th>Votar</th>
+				                        <th>Ejecutar</th>
+                                </tr>
+                                {% for s in solicitudes %}
+                    
+                                <tr>
+                                		<td>s</td>
+                                		<td>2013/03/05</td>
+                                		<td>Solicitante Apellido</td>
+                                		<td>Pendiente</td>
+                                		<td>s</td>
+                                       <!--  <td>{{s.nro}}</td>
+                                        <td>{{s.fecha}}</td>
+                                        <td>{{s.solicitante}}</td>
+                                        <td>{{s.estado}}</td>
+                                        <td>{{s.cantI}}</td> -->
+                                       	<td>
+                                        <a class="btn" href="/admsolicitud/editar/{{s.id}}">Editar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-danger" href="/admsolicitud/eliminar/{{s.id}}">Eliminar</a>
+                                        </td>
+                                        <td>
+                                        <a class="btn btn-info" href="/admsolicitud/consultar/{{s.id}}">Consultar</a>
+                                        </td>
+                                        <td>
+		                                <a class="btn btn-success" href="/admsolicitud/enviar/{{s.id}}">Enviar</a>
+                                        </td>
+                                        <td>
+		                                <a class="btn btn-primary" href="/admsolicitud/votar/{{s.id}}">Votar</a>
+                                        </td>
+                                        <td>
+		                                <a class="btn btn-warning" href="/admsolicitud/ejecutar/{{s.id}}">Ejecutar>></a>
+                                        </td>
+                        	</tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No se han creado items aún
+                                </tr>
+                                {% endfor %}
+                </table>
+                <div class="conainer" align="right">
+                	{% if buscar==False %}
+	                	<a class="muted">{{infopag}}</a>
+	                	{% if session['hayprev']==True %}
+	                	<a class="btn btn-mini" href="/admitem/previtem/">&laquo; Anterior</a>
+	                	{% endif %}
+	                	{% if session['haynext']==True %}
+	                	<a class="btn btn-mini" href="/admitem/nextitem"> Siguiente &raquo;</a>
+	                	{% endif %}
+                	{% else %}
+	                	<a class="muted">{{infopag}}</a>
+	                	{% if session['hayprev']==True %}
+	                	<button type="submit" class="btn btn-mini" name="anterior">&laquo; Anterior Bus</button>
+	                	{% endif %}
+	                	{% if session['haynext']==True %}
+	                	<button type="submit" class="btn btn-mini" name="sgte">Bus Siguiente &raquo;</button>
+	                	{% endif %}
+	                	
+                	{% endif %}
+                </div>
+                		        
+		     
+                
+                </form>
+                <a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a>
+      	  </div>
+      	   <div class="span3 bs-docs-sidebar" >
+	        	<ul class="nav nav-list bs-docs-sidenav">
+					  <li><a href="{{url_for('crearsolicitud')}}"><i class="icon-chevron-right"></i> Crear Solicitud</a></li>
+					</ul>
+				</div>
+      </div>
+</div>
+{%endblock%} 

@@ -29,7 +29,7 @@
 {%block content%}
 <div class="fases">
                 {% set hayf = True %}
-                <div class="container" align="center">
+        <div class="container" align="center">
         <h3 class="muted">{{session['proyectonombre']}}</h3>
         </div>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -137,6 +137,7 @@
                         {% if p.delider == session['usuarioid']%}
                         		  <li><a href="/admfase/comite/"><i class="icon-chevron-right"></i> Editar Comité</a></li>
                         {% endif %}
+                        		<li><a href="/admsolicitud/"><i class="icon-chevron-right"></i> Solicitudes de Cambio</a></li>
                                   <li><a href="#"><i class="icon-chevron-right"></i> Finalizar Proyecto</a></li>
                                 </ul>
                         </div>

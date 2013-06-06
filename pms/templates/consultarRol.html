@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block menu %}
-	
+        
   <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -26,20 +26,20 @@
 <div class="container" align="left">
     <h3>Consulta de rol de <em> {{session['proyectonombre']}} - {{session['fasenombre']}} </em></h3>
     <hr>
-    <p>	<strong>Nombre:</strong> {{rol.nombre}}</p>
+    <p> <strong>Nombre:</strong> {{rol.nombre}}</p>
     <div class="span4">
-    		<p align="center">	<strong>Permisos sobre Tipo de Item</strong></p>	
-			<table  class="table" >
-	    	<tr class="info">
-	    	{%set tiene=false%}
-	    	{%if tienePermiso(r,"CrearT")%}
-            	<td>- Crear</td>{%set tiene=true%}
+                <p align="center">      <strong>Permisos sobre Tipo de Item</strong></p>        
+                        <table  class="table" >
+                <tr class="info">
+                {%set tiene=false%}
+                {%if tienePermiso(r,"CrearT")%}
+                <td>- Crear</td>{%set tiene=true%}
             {%endif%}
             {%if tienePermiso(r,"EditarT")%}
-            	<td>- Editar</td>{%set tiene=true%}
+                <td>- Editar</td>{%set tiene=true%}
             {%endif%}
             {%if tienePermiso(r,"EliminarT")%}
-            	<td>- Eliminar</td> {%set tiene=true%}
+                <td>- Eliminar</td> {%set tiene=true%}
             {%endif%}
             {%if tiene==false%}
             <td>No tiene permisos de Tipo de Item</td>
@@ -54,14 +54,9 @@
             <tr class="error">
             {%set tiene=false%}
             {%if tienePermiso(r,"CrearLB")%}
-            	<td>- Crear</td>{%set tiene=true%}
+                <td>- Crear</td>{%set tiene=true%}
             {%else%}
-            	<td></td>
-            {%endif%}
-            {%if tienePermiso(r,"EliminarLB")%}
-            	<td>- Eliminar</td>{%set tiene=true%}
-            {%else%}
-            	<td></td>
+                <td></td>
             {%endif%}
             {%if tiene==false%}
             <td>No tiene permisos de Linea Base</td>
@@ -77,30 +72,30 @@
             <tr class="success">
             {%set tiene=false%}
             {%if tienePermiso(r,"CrearI")%}
-            	<td>- Crear</td>{%set tiene=true%}
+                <td>- Crear</td>{%set tiene=true%}
             {%endif%}
             {%if tienePermiso(r,"EditarI")%}
-            	<td>- Editar</td>{%set tiene=true%}
+                <td>- Editar</td>{%set tiene=true%}
             {%endif%}
             {%if tienePermiso(r,"EliminarI")%}
-            	<td>- Eliminar</td>{%set tiene=true%}
+                <td>- Eliminar</td>{%set tiene=true%}
             {%endif%}
 
             {%if tienePermiso(r,"AprobarI")%}
-            	<td>- Aprobar</td>{%set tiene=true%}
+                <td>- Aprobar</td>{%set tiene=true%}
             {%endif%}
             {%if tienePermiso(r,"RevivirI")%}
-            	<td>- Revivir</td>{%set tiene=true%}
+                <td>- Revivir</td>{%set tiene=true%}
             {%endif%}
             {%if tienePermiso(r,"ReversionarI")%}
-            	<td>- Reversionar</td>{%set tiene=true%}
+                <td>- Reversionar</td>{%set tiene=true%}
             {%endif%}
 
             {%if tienePermiso(r,"AsignarPadreI")%}
-            	<td>- Asignar Padre</td>{%set tiene=true%}
+                <td>- Asignar Padre</td>{%set tiene=true%}
             {%endif%}
             {%if tienePermiso(r,"AsignarAntecesorI")%}
-            	<td>- Asignar Antecesor</td>{%set tiene=true%}
+                <td>- Asignar Antecesor</td>{%set tiene=true%}
             {%endif%}
             {%if tiene==false%}
             <td>No tiene permisos de Item</td>
@@ -114,13 +109,13 @@
             <strong>Usuarios:</strong>
             <p></p>
             {%for u in rol.usuarios%}
-           		<p>- {{u.usuario.nombre}}</p>
-           		{%else%}
-           		<p>-No hay usuarios con este rol</p>
+                        <p>- {{u.usuario.nombre}}</p>
+                        {%else%}
+                        <p>-No hay usuarios con este rol</p>
             {%endfor%}
-	    	<a class="btn btn-success" href="/admrol/{{session['faseid']}}">Aceptar</a>
+                <a class="btn btn-success" href="/admrol/{{session['faseid']}}">Aceptar</a>
 
-	    
+            
     
 </div>
 {%endblock%}

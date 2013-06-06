@@ -17,6 +17,7 @@ import vista.rolVista
 import vista.lineaBaseVista
 import modelo.rolControlador
 import vista.funcionpop
+import vista.solicitudVista
 
 app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)
 app.jinja_env.globals.update(permisoTipo=modelo.rolControlador.getPermisosStringTipoItem)
@@ -150,7 +151,14 @@ app.add_url_rule('/admlinea/eliminarlinea/',
                  view_func=vista.lineaBaseVista.EliminarLineaBase.as_view('eliminarlinea'),
                  methods=["GET", "POST"])
 
-
 app.add_url_rule('/admfase/comite/',
                  view_func=vista.faseVista.ListaMiembros.as_view('miembros'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admsolicitud/',
+                 view_func=vista.solicitudVista.AdmSolicitud.as_view('admsolicitud'),
+                 methods=["GET", "POST"])
+
+app.add_url_rule('/admsolicitud/crear/',
+                 view_func=vista.solicitudVista.Crearsolicitud.as_view('crearsolicitud'),
                  methods=["GET", "POST"])
