@@ -358,11 +358,11 @@ class Peticion(Base):
     __tablename__='peticion'
     id = Column(Integer, primary_key=True)
     proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
-    item_id=Column(Integer,ForeignKey('vitem.id'))
     comentario=Column(Unicode(100))
     estado=Column(Unicode(10))
     usuario_id=Column(Integer, ForeignKey('usuario.id'))
-    item=relationship("VersionItem")
+    cantVotos=Column(Integer)
+    cantItems=Column(Integer)
     
     def __init__(self, proyecto_id,item_id,comentario,estado, usuario_id):
         self.proyecto_id=proyecto_id
@@ -374,6 +374,19 @@ class Peticion(Base):
     def __repr__(self):
         return 'Peticion { '+ self.proyecto_id+self.item_id +self.comentario+self.estado+'}'
     
+    
+class ItemPeticion(Base):
+    """
+        Define la clase ItemPeticion y la mapea a la tabla peticion_item
+    """
+    __tablename__='peticion_item'
+    peticion_id= Column(Integer, ForeignKey('peticion.id'))
+    item_id=Column(Integer, ForeignKey('vitem.id'))
+    
+    def __init__(self, peticion_id,item_id):
+        self.peticion_id=peticion_id
+        self.item_id=item_id
+        
 class Voto(Base):
     """
         Define la clase Voto y la mapea con la tabla voto
@@ -382,7 +395,7 @@ class Voto(Base):
     peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
     valor = Column(Boolean)     
-    peticion = relationship("Peticion",backref="voto")
+    peticion = relationship("Peticion",backref="votos")
         
     def __init__(self, peticion_id, user_id, valor):
         self.peticion_id=peticion_id
@@ -399,6 +412,7 @@ class Miembro(Base):
     __tablename__ = 'miembro'
     proyecto_id = Column(Integer, ForeignKey('proyecto.id'), primary_key=True)
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
+    votos = relationship("Voto",backref="usuario")
     
     def __init__(self, proyecto_id, user_id):
         self.proyecto_id=proyecto_id

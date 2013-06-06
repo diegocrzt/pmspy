@@ -157,6 +157,9 @@ def pruebaArista(idvinicio=None,idvfin=None,proyecto=None):
         return True
     
 def copiarAristaS(listaAnte=None,listaPost=None,idv=None,proyecto=None):
+    """
+    no se usa
+    """
     grafo=crearGrafoProyecto(proyecto)
     init_db()
     for l in listaAnte:

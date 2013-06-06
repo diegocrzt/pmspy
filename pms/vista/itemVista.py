@@ -7,7 +7,7 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
-from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion,copiarAristaS
+from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
 from pms.modelo.itemControlador import peticionExiste, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.peticionControlador import crearPeticion
@@ -389,7 +389,7 @@ def aReversionar(iid=None):
 
 @app.route('/admitem/reversionarb/<vid>')
 @pms.vista.required.login_required
-def bReversionar(vid=None): 
+def bReversionar(vid=None):
     """
     Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
     """
@@ -398,22 +398,14 @@ def bReversionar(vid=None):
     editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
-    lante=[]
     for rel in vvieja.ante_list:
-        aux=[]
-        aux[0]=rel.ante_id
-        aux[1]=rel.tipo
-        lante.append(aux)
-    lpost=[]
+        crearRelacion(rel.ante_id,version.id,rel.tipo)
     for rel in vvieja.post_list:
-        aux=[]
-        aux[0]=rel.post_id
-        aux[1]=rel.tipo
-        lpost.append(aux)
-    copiarAristaS(lante,lpost,version.id,flask.session['proyectoid'])
+        crearRelacion(version.id,rel.post_id,rel.tipo)
     desAprobarAdelante(version.id)
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/reversionar/'+str(flask.session['itemid']))
+
 
 
 @app.route('/admitem/revivir/<f>')
@@ -448,7 +440,7 @@ def revivirItem(f=None):
     
 @app.route('/admitem/revivirb/<vid>')
 @pms.vista.required.login_required
-def bRevivir(vid=None): 
+def bRevivir(vid=None):
     """
     Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
     """
@@ -457,19 +449,10 @@ def bRevivir(vid=None):
     editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
-    lante=[]
     for rel in vvieja.ante_list:
-        aux=[]
-        aux[0]=rel.ante_id
-        aux[1]=rel.tipo
-        lante.append(aux)
-    lpost=[]
+        crearRelacion(rel.ante_id,version.id,rel.tipo)
     for rel in vvieja.post_list:
-        aux=[]
-        aux[0]=rel.post_id
-        aux[1]=rel.tipo
-        lpost.append(aux)
-    copiarAristaS(lante,lpost,version.id,flask.session['proyectoid'])
+        crearRelacion(version.id,rel.post_id,rel.tipo)
     desAprobarAdelante(version.id)
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/'+str(flask.session['faseid'])) 

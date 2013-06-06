@@ -4,6 +4,18 @@ from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
 session = db_session()
 
+
+
+def getPeticion(id=None):
+    """
+    recupera un usuario por su nombre de usuario
+    """
+    init_db()
+    res=session.query(Peticion).filter(Peticion.id==id).first()
+    shutdown_session()
+    return res
+    
+    
 def crearPeticion(proyecto=None,idv=None,comentario=None, idusuario=None):
     """
     Crea una Peticion, recibe el id del proyecto, el id de la version del item sobre el cual se solicita la peticion, un comentario y el id del usuario que solicita la peticioin
@@ -11,6 +23,13 @@ def crearPeticion(proyecto=None,idv=None,comentario=None, idusuario=None):
     init_db()
     peticion=Peticion(proyecto,idv,comentario,"Pendiente", idusuario)
     session.add(peticion)
+    session.commit()
+    shutdown_session()
+    
+def eliminarPeticion(id=None):
+    init_db()
+    u=getPeticion(id)
+    session.query(Peticion).filter(Peticion.id==u.id).delete()
     session.commit()
     shutdown_session()
     
