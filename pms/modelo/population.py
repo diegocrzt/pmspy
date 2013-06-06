@@ -23,6 +23,7 @@ valorStr = Table('valorstr',metadata)
 valorDate = Table('valordate',metadata)
 miembro=Table('miembro',metadata)
 session = db_session()
+
 user = Usuario(nombre="Administrador", nombredeusuario="admin", clave=hashlib.sha1( "123456" ).hexdigest(), isAdmin="true")
 session.add(user)
 user2 = Usuario(nombre="Natalia Valdez", nombredeusuario="natalia", clave=hashlib.sha1( "admin2" ).hexdigest(), isAdmin="true")
@@ -119,42 +120,18 @@ atr14 = Atributo(nombre="Numero", tipoDato="Numerico", pertenece="8")
 session.add(atr14)
 session.commit()
 
-itm = Item(tipo="2", etiqueta="1-1-1")#1
+itm = Item(tipo="2", etiqueta="1-1-1")
 session.add(itm)
-itm = Item(tipo="1",etiqueta="1-1-2")#2
+itm = Item(tipo="1",etiqueta="1-1-2")
 session.add(itm)
-itm = Item(tipo="6",etiqueta="1-2-1")#3
-session.add(itm)
-itm = Item(tipo="6",etiqueta="1-2-2")#4
-session.add(itm)
-"""itm = Item(tipo="3",etiqueta="1-6-1")#5
-session.add(itm)
-itm = Item(tipo="4",etiqueta="1-6-2")#6
-session.add(itm)
-itm = Item(tipo="5",etiqueta="1-6-3")#7
-session.add(itm)
-itm = Item(tipo="7",etiqueta="1-4-1")#8
-session.add(itm)"""
 session.commit()
 
-vitm = VersionItem(version="1", nombre="a1", estado="Activo", actual="false", costo="50", dificultad="5", deitem="1")
+vitm = VersionItem(version="1", nombre="a1", estado="Activo", actual="false", costo="5", dificultad="5", deitem="1")
 session.add(vitm)
-vitm2 = VersionItem(version="2", nombre="a1", estado="Activo", actual="true", costo="15", dificultad="55",deitem="1")
+vitm2 = VersionItem(version="2", nombre="a1", estado="Activo", actual="true", costo="5", dificultad="5",deitem="1")
 session.add(vitm2)
-vitm3 = VersionItem(version="1", nombre="a2", estado="Activo", actual="true", costo="65", dificultad="100",deitem="2")
+vitm3 = VersionItem(version="1", nombre="a2", estado="Activo", actual="true", costo="5", dificultad="5",deitem="2")
 session.add(vitm3)
-vitm4 = VersionItem(version="1", nombre="Nissan", estado="Activo", actual="true", costo="80", dificultad="50",deitem="3")
-session.add(vitm4)
-vitm5 = VersionItem(version="1", nombre="Toyota", estado="Activo", actual="true", costo="95", dificultad="50",deitem="4")
-session.add(vitm5)
-"""vitm5 = VersionItem(version="1", nombre="De cocina", estado="Activo", actual="true", costo="95", dificultad="50",deitem="5")
-session.add(vitm5)
-vitm5 = VersionItem(version="1", nombre="Principal", estado="Activo", actual="true", costo="95", dificultad="50",deitem="6")
-session.add(vitm5)
-vitm5 = VersionItem(version="1", nombre="Persiana", estado="Activo", actual="true", costo="95", dificultad="50",deitem="7")
-session.add(vitm5)
-vitm5 = VersionItem(version="1", nombre="Calculo", estado="Activo", actual="true", costo="95", dificultad="50",deitem="8")
-session.add(vitm5)"""
 session.commit()
 
 vl1 = ValorStr(atributo="1", item="1",valor="Pedro")
@@ -192,8 +169,6 @@ session.add(rol)
 rol=Rol(fase_id="4",nombre="Todo",codigoItem="11111111",codigoTipo="111",codigoLB="1")
 session.add(rol)
 rol=Rol(fase_id="5",nombre="Todo",codigoItem="11111111",codigoTipo="111",codigoLB="1")
-session.add(rol)
-rol=Rol(fase_id="6",nombre="Todo",codigoItem="11111111",codigoTipo="111",codigoLB="1")
 session.add(rol)
 session.commit()
 

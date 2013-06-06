@@ -58,6 +58,11 @@
             {%else%}
             	<td></td>
             {%endif%}
+            {%if tienePermiso(r,"EliminarLB")%}
+            	<td>- Eliminar</td>{%set tiene=true%}
+            {%else%}
+            	<td></td>
+            {%endif%}
             {%if tiene==false%}
             <td>No tiene permisos de Linea Base</td>
             {%endif%}

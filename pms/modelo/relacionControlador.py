@@ -105,7 +105,7 @@ def crearGrafoProyecto(pr=None):
         for tipo in fase.tipos:
             for item in tipo.instancias:
                 for v in item.version:
-                    if v.actual and v.estado!="Eliminado":
+                    if v.actual:
                         grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado, v.item, v.version))
     for n in grafo:
         relaciones=getRelacionesCAnte(n.version)
@@ -143,8 +143,8 @@ def pruebaArista(idvinicio=None,idvfin=None,proyecto=None):
     Realiza la comprobacion de que la arista a ser insertada no genere un ciclo en el grafo
     """
     grafo=crearGrafoProyecto(proyecto)
-    nA=grafo[1]
-    nB=grafo[1]
+    nA=grafo[0]
+    nB=grafo[0]
     for n in grafo:
         if int(n.version)==int(idvinicio):
             nA=n
@@ -156,6 +156,39 @@ def pruebaArista(idvinicio=None,idvfin=None,proyecto=None):
     else:
         return True
     
+def copiarAristaS(listaAnte=None,listaPost=None,idv=None,proyecto=None):
+    grafo=crearGrafoProyecto(proyecto)
+    init_db()
+    for l in listaAnte:
+        if pAG(l[0],idv,grafo):
+            rel = Relacion(ante_id=l[0], post_id=idv,tipo=l[1])
+            session.add(rel)
+            session.commit()
+    for l in listaPost:
+        if pAG(idv,l[0],grafo):
+            rel = Relacion( ante_id=idv,post_id=l[0],tipo=l[1])
+            session.add(rel)
+            session.commit()
+    shutdown_session()
+    
+
+def pAG(idvinicio=None,idvfin=None,grafo=None):
+    """
+    Realiza la comprobacion de que la arista a ser insertada no genere un ciclo en el grafo
+    """
+    nA=grafo[0]
+    nB=grafo[0]
+    for n in grafo:
+        if int(n.version)==int(idvinicio):
+            nA=n
+    for n2 in grafo:
+        if int(n2.version)==int(idvfin):
+            nB=n2
+    if buscarCiclo(grafo,nA,nB):
+        return False
+    else:
+        return True
+
 def comprobarAprobar(idv=None):
     """
     Comprueba que un item en estado de Revision o Activo pueda ser Aprobado
