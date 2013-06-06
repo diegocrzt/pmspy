@@ -28,13 +28,13 @@
             {% for category, message in messages %}
               <h4 class="{{ category }}">{{ message }}</h4>
             {% endfor %}
-		  </div>
+                  </div>
           {% endif %}
         {% endwith %}
 {%endblock%}
 {%block content%}
 <div class="lineas">
-		<div class="container" align="center">
+                <div class="container" align="center">
         <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
         </div>
         <div class="row" >
@@ -44,35 +44,35 @@
                                 <tr>
                                         <th>Numero</th>
                                         <th>Comentario</th>
-				                        <th>Fecha Creación</th>
-				                        <th>Creador</th>
-				                        <th>Consultar</th>
-				                        {% if tienePermiso(roles,"eliminarLB") %}
-				                        <th>Eliminar</th>
-				                        {%endif%}
+                                                        <th>Fecha Creación</th>
+                                                        <th>Creador</th>
+                                                        <th>Consultar</th>
+                                                        {% if tienePermiso(roles,"eliminarLB") %}
+                                                        <th>Eliminar</th>
+                                                        {%endif%}
                                 </tr>
                                 {% for l in lineas %}
                     
                                 <tr>
                                         <td>{{l.numero}}</td>
                                         <td>{%if l.comentario==None%}
-                                        	-
-                                        	{%else%}
-	                                        {{l.comentario}}
-	                                        {%endif%}
-	                                    </td>
+                                                -
+                                                {%else%}
+                                                {{l.comentario}}
+                                                {%endif%}
+                                            </td>
                                         <td>{{l.fechaCreacion.strftime('%Y/%m/%d')}}</td>
                                         <td>{{l.creador.nombre}}</td>
                                         <td>
                                         <a class="btn btn-info" href="/admlinea/concultar/{{l.id}}">Consultar</a>
                                         </td>
-                                        {% if tienePermiso(roles,"eliminarLB") %}
-		                                <td>
-		                                <a class="btn btn-danger" href="/admlinea/eliminar/{{l.id}}">Eliminar</a>
+                                        <!-- {% if tienePermiso(roles,"eliminarLB") %}
+                                                <td>
+                                                <a class="btn btn-danger" href="/admlinea/eliminar/{{l.id}}">Eliminar</a>
                                         </td>
-                                        {%endif%}
+                                        {%endif%} -->
                                         
-                        		</tr>
+                                        </tr>
                                 {% else %}
                         
                                 <tr>
@@ -84,9 +84,9 @@
               </div>
               <div class="span3 bs-docs-sidebar">
                 <ul class="nav nav-list bs-docs-sidenav">
-                					{% if tienePermiso(roles,"crearLB") %}
+                                                        {% if tienePermiso(roles,"crearLB") %}
                                   <li><a href="/admlinea/crear/"><i class="icon-chevron-right"></i> Crear Linea base</a></li>
-                                	{%endif%}
+                                        {%endif%}
                                 </ul>
                         </div>
         </div>

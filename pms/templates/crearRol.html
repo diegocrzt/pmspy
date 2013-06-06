@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block menu %}
-	
+        
   <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -26,40 +26,40 @@
 
 {%block content%}
 <div class="container">
-	<h3>Crear Rol en {{session['proyectonombre']}} - {{session['fasenombre']}} </h3>
-	<hr>
-	<p>Complete los datos del Rol:</p>
+        <h3>Crear Rol en {{session['proyectonombre']}} - {{session['fasenombre']}} </h3>
+        <hr>
+        <p>Complete los datos del Rol:</p>
         <form action="{{url_for('crearrol')}}" method="post">
         <div class="span12">
             <p>Nombre<small class="text-error">(*)</small>:
             {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
-	  			{% if messages %}
-	  				{% for message in messages %}
-   						<small class="text-error">{{ message }}</small>	
-   					{% endfor %}    					
-				{% endif %}
-			{% endwith %}         
-	    	<br/>
-	    	<p><input type="text" name="nombre" value="{{session['aux']}}"/></p>
-	    	</div>
-	    	<div class="span4">
-    		<p align="center">	<strong>Permisos sobre Tipo de Item</strong></p>	
-			<table  class="table" >
-	    	<tr class="info">
+                                {% if messages %}
+                                        {% for message in messages %}
+                                                <small class="text-error">{{ message }}</small> 
+                                        {% endfor %}                                            
+                                {% endif %}
+                        {% endwith %}         
+                <br/>
+                <p><input type="text" name="nombre" value="{{session['aux']}}"/></p>
+                </div>
+                <div class="span4">
+                <p align="center">      <strong>Permisos sobre Tipo de Item</strong></p>        
+                        <table  class="table" >
+                <tr class="info">
             {%if session['aux1'] == True %}
-            	<td><input type="checkbox" name="crearT" checked />Crear</td>
+                <td><input type="checkbox" name="crearT" checked />Crear</td>
             {%else%}
-            	<td><input type="checkbox" name="crearT" />Crear</td>
+                <td><input type="checkbox" name="crearT" />Crear</td>
             {%endif%}
             {%if session['aux2'] == True%}
-            	<td><input type="checkbox" name="editarT" checked />Editar</td>
+                <td><input type="checkbox" name="editarT" checked />Editar</td>
             {%else%}
-            	<td><input type="checkbox" name="editarT" /> Editar</td>
+                <td><input type="checkbox" name="editarT" /> Editar</td>
             {%endif%}
             {%if session['aux3'] == True%}
-            	<td><input type="checkbox" name="eliminarT" checked /> Eliminar</td> 
+                <td><input type="checkbox" name="eliminarT" checked /> Eliminar</td> 
             {%else%}
-            	<td><input type="checkbox" name="eliminarT" /> Eliminar</td> 
+                <td><input type="checkbox" name="eliminarT" /> Eliminar</td> 
             {%endif%}
             </tr>
             </table>
@@ -69,15 +69,15 @@
             <table  class="table" >
             <tr class="error">
             {%if session['aux4'] == True%}
-            	<td><input type="checkbox" name="crearLB" checked /> Crear</td>
+                <td><input type="checkbox" name="crearLB" checked /> Crear</td>
             {%else%}
-            	<td><input type="checkbox" name="crearLB" /> Crear</td>
+                <td><input type="checkbox" name="crearLB" /> Crear</td>
             {%endif%}
-            {%if session['aux5'] == True%}
-            	<td><input type="checkbox" name="eliminarLB" checked /> Eliminar</td>
+            <!--{%if session['aux5'] == True%}
+                <td><input type="checkbox" name="eliminarLB" checked /> Eliminar</td>
             {%else%}
-            	<td><input type="checkbox" name="eliminarLB" /> Eliminar</td>
-            {%endif%}
+                <td><input type="checkbox" name="eliminarLB" /> Eliminar</td>
+            {%endif%}  -->
             </tr>
             </table>
             </div>
@@ -87,48 +87,48 @@
             <table  class="table" >
             <tr class="success">
             {%if session['aux6'] == True%}
-            	<td><input type="checkbox" name="crearI" checked/> Crear</td>
+                <td><input type="checkbox" name="crearI" checked/> Crear</td>
             {%else%}
-            	<td><input type="checkbox" name="crearI" /> Crear</td>
+                <td><input type="checkbox" name="crearI" /> Crear</td>
             {%endif%}
             {%if session['aux7'] == True%}
-            	<td><input type="checkbox" name="editarI" checked /> Editar</td>
+                <td><input type="checkbox" name="editarI" checked /> Editar</td>
             {%else%}
-            	<td><input type="checkbox" name="editarI" /> Editar</td>
+                <td><input type="checkbox" name="editarI" /> Editar</td>
             {%endif%}
             {%if session['aux8'] == True%}
-            	<td><input type="checkbox" name="eliminarI" checked /> Eliminar</td>
+                <td><input type="checkbox" name="eliminarI" checked /> Eliminar</td>
             {%else%}
-            	<td><input type="checkbox" name="eliminarI" /> Eliminar</td>
+                <td><input type="checkbox" name="eliminarI" /> Eliminar</td>
             {%endif%}
             </tr>
             <tr class="success">
             {%if session['aux9'] == True%}
-            	<td><input type="checkbox" name="aprobarI" checked /> Aprobar</td>
+                <td><input type="checkbox" name="aprobarI" checked /> Aprobar</td>
             {%else%}
-            	<td><input type="checkbox" name="aprobarI" /> Aprobar</td>
+                <td><input type="checkbox" name="aprobarI" /> Aprobar</td>
             {%endif%}
             {%if session['aux10'] == True%}
-            	<td><input type="checkbox" name="revivirI" checked/>Revivir</td>
+                <td><input type="checkbox" name="revivirI" checked/>Revivir</td>
             {%else%}
-            	<td><input type="checkbox" name="revivirI" />Revivir</td>
+                <td><input type="checkbox" name="revivirI" />Revivir</td>
             {%endif%}
             {%if session['aux11'] == True%}
-            	<td><input type="checkbox" name="reversionarI" checked/> Reversionar</td>
+                <td><input type="checkbox" name="reversionarI" checked/> Reversionar</td>
             {%else%}
-            	<td><input type="checkbox" name="reversionarI" /> Reversionar</td>
+                <td><input type="checkbox" name="reversionarI" /> Reversionar</td>
             {%endif%}
             </tr>
             <tr class="success">
             {%if session['aux12'] == True%}
-            	<td><input type="checkbox" name="asignarpadreI" checked /> Asignar Padre</td>
+                <td><input type="checkbox" name="asignarpadreI" checked /> Asignar Padre</td>
             {%else%}
-            	<td><input type="checkbox" name="asignarpadreI" /> Asignar Padre</td>
+                <td><input type="checkbox" name="asignarpadreI" /> Asignar Padre</td>
             {%endif%}
             {%if session['aux13'] == True%}
-            	<td><input type="checkbox" name="asignarantecesorI" checked/> Asignar Antecesor</td>
+                <td><input type="checkbox" name="asignarantecesorI" checked/> Asignar Antecesor</td>
             {%else%}
-            	<td><input type="checkbox" name="asignarantecesorI" /> Asignar Antecesor</td>
+                <td><input type="checkbox" name="asignarantecesorI" /> Asignar Antecesor</td>
             {%endif%}
             <td></td>
             </tr>

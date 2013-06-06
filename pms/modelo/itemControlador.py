@@ -4,12 +4,13 @@ Created on 14/04/2013
 @author: mpoletti
 
 '''
-from entidad import Item, VersionItem, ValorStr, ValorNum, ValorBoolean, ValorDate, Peticion
+from entidad import TipoItem, Item, VersionItem, ValorStr, ValorNum, ValorBoolean, ValorDate, Peticion
 from initdb import db_session, init_db, shutdown_session
-from tipoItemControlador import getTiposFase
+from tipoItemControlador import getTiposFase, getTipoItemId
 from atributoControlador import getAtributoId
+from faseControlador import getFaseId
 from datetime import datetime
-
+from sqlalchemy import or_
 
 session = db_session()
 
@@ -169,5 +170,60 @@ def peticionExiste(vid=None):
             return True
         else:
             return False
+
+def getItemsPaginados(pagina=None, tam_pagina=None, fase=None, fil=None):
+    i=[]
+    if fil:
+        items = getItemsFiltrados(fase, fil)
+        offset=pagina*tam_pagina
+        c=0
+        of=0
+        for it in items:
+            if it.estado!="Eliminado":
+                of=of+1
+                if c==tam_pagina:
+                    return i
+                if of>offset:
+                    i.append(it)
+                    c=c+1
+    else:
+        t=fase.tipos
+        i=[]
+        offset=pagina*tam_pagina
+        c=0
+        of=0
+        for ti in t:
+            itms=ti.instancias
+            for it in itms:
+                aux=getVersionItem(it.id)
+                if aux.estado!="Eliminado":
+                    of=of+1
+                    if c==tam_pagina:
+                        return i
+                    if of>offset:
+                        i.append(aux)
+                        c=c+1
+    return i
+def getItemsFiltrados(fase=None, filtro=None):
+    if fase and filtro:
+        r=[]
+        if filtro.isdigit():
+            query=session.query(Item).join(VersionItem).filter(VersionItem.actual==True).filter(or_(VersionItem.costo==filtro, VersionItem.dificultad==filtro, VersionItem.nombre.ilike("%"+filtro+"%")) )
         
+        else:
+            query=session.query(Item).join(VersionItem).filter(VersionItem.actual==True).filter(VersionItem.nombre.ilike("%"+filtro+"%") | VersionItem.estado.ilike("%"+filtro+"%"))
+        for q in query:
+            t=getTipoItemId(q.tipo)
+            if t.defase==fase.id:
+                r.append(getVersionItem(q.id))
+        tipos=session.query(TipoItem).filter(TipoItem.defase==fase.id).filter(TipoItem.nombre.ilike("%"+filtro+"%"))
+        for t in tipos:
+            for i in t.instancias:
+                r.append(getVersionItem(i.id))
+        return r
     
+if __name__== '__main__':
+    fase=getFaseId(1)
+    query=getItemsFiltrados(fase,"1")
+    for q in query:
+        print q.nombre + " tipo:" + str(q.item.tipo)

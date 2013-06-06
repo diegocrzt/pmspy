@@ -323,7 +323,7 @@ class ListaMiembros(flask.views.MethodView):
                     if m.user_id==u.id:
                         bandera=True
                 aux=[]
-                aux.append(u.nombre)
+                aux.append(u.nombredeusuario)
                 if bandera==True:
                     aux.append(True)
                 else:
@@ -344,8 +344,8 @@ class ListaMiembros(flask.views.MethodView):
         lider=getUsuarioById(flask.session['usuarioid'])
         ag.append(lider)
         for u in usuarios:
-            if u.nombre in flask.request.form:
-                if flask.request.form[u.nombre]:
+            if u.nombredeusuario in flask.request.form:
+                if flask.request.form[u.nombredeusuario]:
                     ag.append(u)
         if len(ag)%2!=0:
             agregarListaMiembros(ag,flask.session['proyectoid'])

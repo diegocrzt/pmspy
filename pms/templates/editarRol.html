@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block menu %}
-	
+        
   <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -26,41 +26,41 @@
 
 {%block content%}
 <div class="container">
-	<h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
-	<h3>Editar Rol</h3>
-	<hr>
-	<p>Complete los datos del Rol:</p>
+        <h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+        <h3>Editar Rol</h3>
+        <hr>
+        <p>Complete los datos del Rol:</p>
         <form action="{{url_for('editarrol')}}" method="post">
         <div class="span12">
             <p>Nombre<small class="text-error">(*)</small>:
             {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
-	  			{% if messages %}
-	  				{% for message in messages %}
-   						<small class="text-error">{{ message }}</small>	
-   					{% endfor %}    					
-				{% endif %}
-			{% endwith %}         
-	    	<br/>
-	    	<p><input type="text" name="nombre" value="{{nombre}}" /></p>
-	    	</div>
-	    	<div class="span4">
-    		<p align="center">	<strong>Permisos sobre Tipo de Item</strong></p>	
-			<table  class="table" >
-	    	<tr class="info">
-	    	{%if tienePermiso(r,"CrearT")%}
-            	<td><input type="checkbox" name="crearT" checked />Crear</td>
+                                {% if messages %}
+                                        {% for message in messages %}
+                                                <small class="text-error">{{ message }}</small> 
+                                        {% endfor %}                                            
+                                {% endif %}
+                        {% endwith %}         
+                <br/>
+                <p><input type="text" name="nombre" value="{{nombre}}" /></p>
+                </div>
+                <div class="span4">
+                <p align="center">      <strong>Permisos sobre Tipo de Item</strong></p>        
+                        <table  class="table" >
+                <tr class="info">
+                {%if tienePermiso(r,"CrearT")%}
+                <td><input type="checkbox" name="crearT" checked />Crear</td>
             {%else%}
-            	<td><input type="checkbox" name="crearT" />Crear</td>
+                <td><input type="checkbox" name="crearT" />Crear</td>
             {%endif%}
             {%if tienePermiso(r,"EditarT")%}
-            	<td><input type="checkbox" name="editarT" checked />Editar</td>
+                <td><input type="checkbox" name="editarT" checked />Editar</td>
             {%else%}
-            	<td><input type="checkbox" name="editarT" /> Editar</td>
+                <td><input type="checkbox" name="editarT" /> Editar</td>
             {%endif%}
             {%if tienePermiso(r,"EliminarT")%}
-            	<td><input type="checkbox" name="eliminarT" checked /> Eliminar</td> 
+                <td><input type="checkbox" name="eliminarT" checked /> Eliminar</td> 
             {%else%}
-            	<td><input type="checkbox" name="eliminarT" /> Eliminar</td> 
+                <td><input type="checkbox" name="eliminarT" /> Eliminar</td> 
             {%endif%}
             </tr>
             </table>
@@ -70,15 +70,15 @@
             <table  class="table" >
             <tr class="error">
             {%if tienePermiso(r,"CrearLB")%}
-            	<td><input type="checkbox" name="crearLB" checked /> Crear</td>
+                <td><input type="checkbox" name="crearLB" checked /> Crear</td>
             {%else%}
-            	<td><input type="checkbox" name="crearLB" /> Crear</td>
+                <td><input type="checkbox" name="crearLB" /> Crear</td>
             {%endif%}
-            {%if tienePermiso(r,"EliminarLB")%}
-            	<td><input type="checkbox" name="eliminarLB" checked /> Eliminar</td>
+            <!-- {%if tienePermiso(r,"EliminarLB")%}
+                <td><input type="checkbox" name="eliminarLB" checked /> Eliminar</td>
             {%else%}
-            	<td><input type="checkbox" name="eliminarLB" /> Eliminar</td>
-            {%endif%}
+                <td><input type="checkbox" name="eliminarLB" /> Eliminar</td>
+            {%endif%} -->
             </tr>
             </table>
             </div>
@@ -88,48 +88,48 @@
             <table  class="table" >
             <tr class="success">
             {%if tienePermiso(r,"CrearI")%}
-            	<td><input type="checkbox" name="crearI" checked/> Crear</td>
+                <td><input type="checkbox" name="crearI" checked/> Crear</td>
             {%else%}
-            	<td><input type="checkbox" name="crearI" /> Crear</td>
+                <td><input type="checkbox" name="crearI" /> Crear</td>
             {%endif%}
             {%if tienePermiso(r,"EditarI")%}
-            	<td><input type="checkbox" name="editarI" checked /> Editar</td>
+                <td><input type="checkbox" name="editarI" checked /> Editar</td>
             {%else%}
-            	<td><input type="checkbox" name="editarI" /> Editar</td>
+                <td><input type="checkbox" name="editarI" /> Editar</td>
             {%endif%}
             {%if tienePermiso(r,"EliminarI")%}
-            	<td><input type="checkbox" name="eliminarI" checked /> Eliminar</td>
+                <td><input type="checkbox" name="eliminarI" checked /> Eliminar</td>
             {%else%}
-            	<td><input type="checkbox" name="eliminarI" /> Eliminar</td>
+                <td><input type="checkbox" name="eliminarI" /> Eliminar</td>
             {%endif%}
             </tr>
             <tr class="success">
             {%if tienePermiso(r,"AprobarI")%}
-            	<td><input type="checkbox" name="aprobarI" checked /> Aprobar</td>
+                <td><input type="checkbox" name="aprobarI" checked /> Aprobar</td>
             {%else%}
-            	<td><input type="checkbox" name="aprobarI" /> Aprobar</td>
+                <td><input type="checkbox" name="aprobarI" /> Aprobar</td>
             {%endif%}
             {%if tienePermiso(r,"RevivirI")%}
-            	<td><input type="checkbox" name="revivirI" checked/>Revivir</td>
+                <td><input type="checkbox" name="revivirI" checked/>Revivir</td>
             {%else%}
-            	<td><input type="checkbox" name="revivirI" />Revivir</td>
+                <td><input type="checkbox" name="revivirI" />Revivir</td>
             {%endif%}
             {%if tienePermiso(r,"ReversionarI")%}
-            	<td><input type="checkbox" name="reversionarI" checked/> Reversionar</td>
+                <td><input type="checkbox" name="reversionarI" checked/> Reversionar</td>
             {%else%}
-            	<td><input type="checkbox" name="reversionarI" /> Reversionar</td>
+                <td><input type="checkbox" name="reversionarI" /> Reversionar</td>
             {%endif%}
             </tr>
             <tr class="success">
             {%if tienePermiso(r,"AsignarPadreI")%}
-            	<td><input type="checkbox" name="asignarpadreI" checked /> Asignar Padre</td>
+                <td><input type="checkbox" name="asignarpadreI" checked /> Asignar Padre</td>
             {%else%}
-            	<td><input type="checkbox" name="asignarpadreI" /> Asignar Padre</td>
+                <td><input type="checkbox" name="asignarpadreI" /> Asignar Padre</td>
             {%endif%}
             {%if tienePermiso(r,"AsignarAntecesorI")%}
-            	<td><input type="checkbox" name="asignarantecesorI" checked/> Asignar Antecesor</td>
+                <td><input type="checkbox" name="asignarantecesorI" checked/> Asignar Antecesor</td>
             {%else%}
-            	<td><input type="checkbox" name="asignarantecesorI" /> Asignar Antecesor</td>
+                <td><input type="checkbox" name="asignarantecesorI" /> Asignar Antecesor</td>
             {%endif%}
             <td></td>
             </tr>
