@@ -156,7 +156,7 @@ app.add_url_rule('/admfase/comite/',
                  methods=["GET", "POST"])
 
 app.add_url_rule('/admsolicitud/',
-                 view_func=vista.solicitudVista.AdmSolicitud.as_view('solicitud'),
+                 view_func=vista.solicitudVista.AdmSolicitud.as_view('admsolicitud'),
                  methods=["GET", "POST"])
 
 app.add_url_rule('/admsolicitud/crear/',
