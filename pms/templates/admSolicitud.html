@@ -41,22 +41,18 @@
 
 {%block content%}
 <div>
-		<table>
-		<tr>
-			<td width="950px">
-				<div align="center" >
-		        	<h3 class="muted" >{{session['proyectonombre']}}</h3>
-		        </div>
-	      	 </td>
-	      	 <td >
-		      <div class="span3 bs-docs-sidebar" >
-	        	<ul class="nav nav-list bs-docs-sidenav">
-					  <li><a href="{{url_for('crearsolicitud')}}"><i class="icon-chevron-right"></i> Crear Solicitud</a></li>
-					</ul>
-				</div>
-			</td>
-		</tr>
-		</table>
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}}</h3>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+                  </div>
+          {% endif %}
+        {% endwith %}
         <div class="row" >
                 <div class="span14">
                         <h2> Listado de Solicitudes </h2>
@@ -82,9 +78,9 @@
                     
                                 <tr>
                                 		<td>s</td>
-                                		<td>s</td>
                                 		<td>2013/03/05</td>
                                 		<td>Solicitante Apellido</td>
+                                		<td>Pendiente</td>
                                 		<td>s</td>
                                        <!--  <td>{{s.nro}}</td>
                                         <td>{{s.fecha}}</td>
@@ -137,9 +133,17 @@
 	                	
                 	{% endif %}
                 </div>
+                		        
+		     
+                
                 </form>
                 <a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a>
       	  </div>
+      	   <div class="span3 bs-docs-sidebar" >
+	        	<ul class="nav nav-list bs-docs-sidenav">
+					  <li><a href="{{url_for('crearsolicitud')}}"><i class="icon-chevron-right"></i> Crear Solicitud</a></li>
+					</ul>
+				</div>
       </div>
 </div>
 {%endblock%} 

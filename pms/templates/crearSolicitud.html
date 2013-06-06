@@ -32,10 +32,17 @@
 	<h3>Crear Solicitud de Cambio en <em>{{session['proyectonombre']}}</em></h3>
 	<hr>
 	
-	<p><strong class="text-info">--</strong> Las relaciones solo se podran crear entre los items que se encuentren en la solicitud.<strong class="text-info">--</strong></p>
+	
 	<form action="{{url_for('crearsolicitud')}}" method="POST">
 	<div class="span8">
-	<p align="center">	<strong>Lista de Items Bloqueado o en Conflicto</strong></p>	
+	<p align="center">	<strong>Lista de Items Bloqueado o en Conflicto</strong>
+		{%  with messages = get_flashed_messages(category_filter=["item"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<small class="text-error">{{ message }}</small>	
+  					{% endfor %}    					
+			{% endif %}
+		{% endwith %}</p>	
 	<table  class="table table-striped" >
 			<tr>
                <th>Nombre</th>
@@ -74,7 +81,15 @@
           	</tr>
           	{%endfor%}
         </table>
-        <p align="left">	<strong>Acciones que realizara sobre los items:</strong></p>
+        <p><strong class="text-info">--</strong> Las relaciones solo se podran crear entre los items que se encuentren en la solicitud.<strong class="text-info"> --</strong></p>
+        <p align="left">	<strong>Acciones que realizara sobre los items:</strong>
+        {%  with messages = get_flashed_messages(category_filter=["accion"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<small class="text-error">{{ message }}</small>	
+  					{% endfor %}    					
+			{% endif %}
+		{% endwith %}  </p>
 		<table>
 				<tr>
 					<td>
@@ -104,14 +119,14 @@
 						
 			    <tr>
 			        <td>
-				        <p>Motivo de cambio<small class="text-error">(*)</small>:</p>
+				        <p>Motivo de cambio<small class="text-error">(*)</small>:
 						{%  with messages = get_flashed_messages(category_filter=["comentario"]) %}
 						  			{% if messages %}
 						  				{% for message in messages %}
 					   						<small class="text-error">{{ message }}</small>	
 					   					{% endfor %}    					
 									{% endif %}
-								{% endwith %}  
+								{% endwith %}  </p>
 						<input type="text" class="span6 search-query" name="comentario">
 					</td>
 				</tr>

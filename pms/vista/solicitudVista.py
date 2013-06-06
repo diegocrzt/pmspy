@@ -58,45 +58,109 @@ class Crearsolicitud(flask.views.MethodView):
     """
     Vista de Crear Solicitud
     """
-    #iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
-    @pms.vista.required.login_required
-    def get(self):
-        iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
-        acciones=[]
+    iversiones=[]
+    acciones=[]
+    def getItemsSolicitud(self):
+        self.iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
+        self.acciones=[]
         aux=[]
         aux.append("Editar")
         aux.append(True)
-        acciones.append(aux)
+        self.acciones.append(aux)
         aux=[]
         aux.append("Eliminar")
         aux.append(False)
-        acciones.append(aux)
+        self.acciones.append(aux)
         aux=[]
         aux.append("Crear Relacion")
         aux.append(False)
-        acciones.append(aux)
+        self.acciones.append(aux)
         aux=[]
         aux.append("Eliminar Relacion")
         aux.append(False)
-        acciones.append(aux)
-        return flask.render_template('crearSolicitud.html', versiones=iversiones, acciones=acciones)
+        self.acciones.append(aux)
+        
+    @pms.vista.required.login_required
+    def get(self):
+        
+        self.getItemsSolicitud()
+        return flask.render_template('crearSolicitud.html', versiones=self.iversiones, acciones=self.acciones)
     @pms.vista.required.login_required
     def post(self):
         """
-        Ejecuta la funcion de Crear Proyecto
+        Ejecuta la funcion de Crear Solicitud
         """
-        flask.session['aux1']=flask.request.form['nombre']
-        flask.session['aux2']=int(flask.request.form['lider'])
-        flask.session['aux3']=flask.request.form['fechainicio']
-        flask.session['aux4']=flask.request.form['fechafin']
-        ag=[]
-        iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
-        for u in iversiones:
-            if u.nombredeusuario in flask.request.form:
-                if flask.request.form[u.nonombredeusuariombre]:
-                    ag.append(u)
-        if len(ag)!=0:
-            a=True
+        self.getItemsSolicitud()
+        ag=[]#lista items para pasarle a la funcion que crea la solicitud
+        items=[]
+        for u in self.iversiones:
+            aux=[]
+            aux.append(u[0])
+            if u[0].nombre in flask.request.form:
+                check=True
+                ag.append(u[0])
+            else:
+                check=False
+            aux.append(check)
+            items.append(aux)
+                
+        l=[]#lista de acciones para pasarle a la funcion que crea la solicitud
+        acciones=[]
+        aux=[]
+        aux.append("Editar")
+        if "Editar"in flask.request.form:
+            l.insert(0, True)
+            aux.append(True)
+        else:
+            l.insert(0, False)
+            aux.append(False)
+        acciones.append(aux)
+        
+        aux=[]
+        aux.append("Eliminar")
+        if "Eliminar" in flask.request.form:
+            l.insert(1, True)
+            aux.append(True)
+        else:
+            l.insert(1, False)
+            aux.append(False)
+        acciones.append(aux)
+        
+        aux=[]
+        aux.append("Crear Relacion")
+        if "Crear Relacion" in flask.request.form:
+            l.insert(2, True)
+            aux.append(True)
+        else:
+            l.insert(2, False)
+            aux.append(False)
+        acciones.append(aux)
+        
+        aux=[]
+        aux.append("Eliminar Relacion")
+        if "Eliminar Relacion" in flask.request.form:
+            l.insert(3, True)
+            aux.append(True)
+        else:
+            l.insert(3, False)
+            aux.append(False)
+        acciones.append(aux)
+        
+        error=False
+        if len(ag)==0:
+            flask.flash(u"Debe seleccionar al menos un Item", "item")
+            error=True
+        if not True in l:
+            flask.flash(u"Debe seleccionar al menos una Accion", "accion")
+            error=True
+        if flask.request.form['comentario']=="":
+            flask.flash(u"El campo no puede estar vacio","comentario")
+            error=True
+        if error:
+            return flask.render_template('crearSolicitud.html', versiones=items, acciones=acciones)
+        
+        
+            #crearSolicitud(flask.session['username'], ag, l)
         
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admproyecto'))
