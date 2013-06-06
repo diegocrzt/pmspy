@@ -43,19 +43,19 @@
 <div>
 		<table>
 		<tr>
-		<td width="950px">
-		<div align="center" >
-        <h3 class="muted" >{{session['proyectonombre']}}</h3>
-        </div>
-      	 </td>
-      	 <td >
-	      <div class="span3 bs-docs-sidebar" >
-        	<ul class="nav nav-list bs-docs-sidenav">
-				  <li><a href="/admsolicitud/crear/"><i class="icon-chevron-right"></i> Crear Solicitud</a></li>
-				</ul>
-			</div>
+			<td width="950px">
+				<div align="center" >
+		        	<h3 class="muted" >{{session['proyectonombre']}}</h3>
+		        </div>
+	      	 </td>
+	      	 <td >
+		      <div class="span3 bs-docs-sidebar" >
+	        	<ul class="nav nav-list bs-docs-sidenav">
+					  <li><a href="{{url_for('crearsolicitud')}}"><i class="icon-chevron-right"></i> Crear Solicitud</a></li>
+					</ul>
+				</div>
 			</td>
-			</tr>
+		</tr>
 		</table>
         <div class="row" >
                 <div class="span14">
@@ -81,11 +81,16 @@
                                 {% for s in solicitudes %}
                     
                                 <tr>
-                                        <td>{{s.nro}}</td>
+                                		<td>s</td>
+                                		<td>s</td>
+                                		<td>2013/03/05</td>
+                                		<td>Solicitante Apellido</td>
+                                		<td>s</td>
+                                       <!--  <td>{{s.nro}}</td>
                                         <td>{{s.fecha}}</td>
                                         <td>{{s.solicitante}}</td>
                                         <td>{{s.estado}}</td>
-                                        <td>{{s.cantI}}</td>
+                                        <td>{{s.cantI}}</td> -->
                                        	<td>
                                         <a class="btn" href="/admsolicitud/editar/{{s.id}}">Editar</a>
                                         </td>
