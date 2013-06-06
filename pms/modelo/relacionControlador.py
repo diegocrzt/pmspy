@@ -257,4 +257,3 @@ def hijosRecursivo(nA, grafo):
             l.append(e)
     l.append(nA)
     return l
-    

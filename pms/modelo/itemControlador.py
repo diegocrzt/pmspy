@@ -243,4 +243,3 @@ if __name__== '__main__':
     query=getItemsFiltrados(fase,"1")
     for q in query:
         print q.nombre + " tipo:" + str(q.item.tipo)
-            
