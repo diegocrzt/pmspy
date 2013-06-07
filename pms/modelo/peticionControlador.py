@@ -1,4 +1,4 @@
-from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro
+from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro, ItemPeticion
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
@@ -14,15 +14,43 @@ def getPeticion(id=None):
     res=session.query(Peticion).filter(Peticion.id==id).first()
     shutdown_session()
     return res
+
+def getItemPeticion(idv=None):
+    """
     
+    """
+    init_db()
+    res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).first()
+    shutdown_session()
+    return res
+
     
-def crearPeticion(proyecto=None,idv=None,comentario=None, idusuario=None):
+def crearPeticion(numero,proyecto_id,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):
     """
     Crea una Peticion, recibe el id del proyecto, el id de la version del item sobre el cual se solicita la peticion, un comentario y el id del usuario que solicita la peticioin
     """
     init_db()
-    peticion=Peticion(proyecto,idv,comentario,"Pendiente", idusuario)
+    peticion=Peticion(numero,proyecto_id,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio)
     session.add(peticion)
+    session.commit()
+    shutdown_session()
+    
+def editarPeticion(idp,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):
+    """
+    permite editar un usuario existente
+    """
+    init_db()
+    p = getPeticion(idp)
+    p.comentario=comentario
+    p.estado=estado
+    p.usuario_id=usuario_id
+    p.cantVotos=cantVotos
+    p.cantItems=cantItems
+    p.costoT=costoT
+    p.difultadT=dificultadT
+    p.fechaCreacion=fechaCreacion
+    p.fechaEnvio=fechaEnvio
+    session.merge(p)
     session.commit()
     shutdown_session()
     
@@ -33,6 +61,55 @@ def eliminarPeticion(id=None):
     session.commit()
     shutdown_session()
     
+def comprobarItemPeticion(idv=None):
+    res=getItemPeticion(idv)
+    if res==None:
+        return True
+    else:
+        return False
+    
+def agregarItem(idv=None,idp=None,costo=None,dificultad=None):
+    r=comprobarItemPeticion(idv)
+    if r==True:
+        init_db()
+        ipeticion=ItemPeticion(idv,idp,costo,dificultad)
+        session.add(ipeticion)
+        shutdown_session()
+        return True
+    else:
+        return False
+    
+def quitarItem(id=None):
+    init_db()
+    session.query(ItemPeticion).filter(ItemPeticion.item_id==id).delete()
+    session.commit()
+    shutdown_session()
+
+def getVoto(idu=None,idp=None):
+    init_db()
+    res=session.query(Voto).filter(Voto.user_id==idu).filter(Voto.peticion_id==idp).first()
+    shutdown_session()
+    return res
+
+def comprobarVoto(idu=None,idp=None):
+    res=getVoto(idu,idp)
+    if res==None:
+        return True
+    else:
+        return False
+
+def agregarVoto(idu=None,idp=None,valor=None):
+    if comprobarVoto(idu,idp):
+        init_db()
+        v=Voto(idu,idp,valor)
+        session.add(v)
+        shutdown_session()
+        return True
+    else:
+        return False
+    
+    
+
 def getMiembros(idp=None):
     """
     Devuelve los usuarios que son miembros de el comite de un proyecto, recibe el id del proyecto
