@@ -414,6 +414,7 @@ class Voto(Base):
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
     valor = Column(Boolean)     
     peticion = relationship("Peticion",backref="votos")
+    usuario=relationship("Usuario",backref="votos")
         
     def __init__(self, peticion_id, user_id, valor):
         self.peticion_id=peticion_id
@@ -430,7 +431,6 @@ class Miembro(Base):
     __tablename__ = 'miembro'
     proyecto_id = Column(Integer, ForeignKey('proyecto.id'), primary_key=True)
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
-    votos = relationship("Voto",backref="usuario")
     
     def __init__(self, proyecto_id, user_id):
         self.proyecto_id=proyecto_id
