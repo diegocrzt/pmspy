@@ -2,6 +2,7 @@ from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembr
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
+from datetime import datetime
 session = db_session()
 
 
@@ -24,32 +25,41 @@ def getItemPeticion(idv=None):
     shutdown_session()
     return res
 
-    
-def crearPeticion(numero,proyecto_id,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):
+#def crearPeticion(numero,proyecto_id,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):    
+def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, acciones=None):
     """
     Crea una Peticion, recibe el id del proyecto, el id de la version del item sobre el cual se solicita la peticion, un comentario y el id del usuario que solicita la peticioin
     """
-    init_db()
-    peticion=Peticion(numero,proyecto_id,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio)
-    session.add(peticion)
-    session.commit()
-    shutdown_session()
+    if proyecto_id and comentario and usuario_id and items and acciones:
+        init_db()
+        numero=session.query(Peticion).count()
+        numero=numero+1
+        fechaCreacion=datetime.today()
+        #calcular costo y dificultad
+        peticion=Peticion(numero,proyecto_id,comentario,"Pendiente",usuario_id,0,len(items),120,120,fechaCreacion,None,acciones)
+        session.add(peticion)
+        session.commit()
+        peticion=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).filter(Peticion.numero==numero)
+        for i in items:
+            agregarItem(i.id,peticion.id)
+        shutdown_session()
     
-def editarPeticion(idp,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):
+def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
     """
     permite editar un usuario existente
     """
     init_db()
     p = getPeticion(idp)
-    p.comentario=comentario
-    p.estado=estado
-    p.usuario_id=usuario_id
-    p.cantVotos=cantVotos
-    p.cantItems=cantItems
-    p.costoT=costoT
-    p.difultadT=dificultadT
-    p.fechaCreacion=fechaCreacion
-    p.fechaEnvio=fechaEnvio
+    if comentario:
+        p.comentario=comentario
+    if acciones:
+        p.acciones=acciones
+    for i in items:
+        if comprobarItemPeticion(i.id):
+            agregarItem(i.id,p.id)
+    for i in p.items:
+        if not i in items:
+            quitarItem(i.id,p.id)
     session.merge(p)
     session.commit()
     shutdown_session()
@@ -72,11 +82,11 @@ def comprobarItemPeticion(idv=None):
     else:
         return False
     
-def agregarItem(idv=None,idp=None,costo=None,dificultad=None):
+def agregarItem(idv=None,idp=None,):
     r=comprobarItemPeticion(idv)
     if r==True:
         init_db()
-        ipeticion=ItemPeticion(idv,idp,costo,dificultad)
+        ipeticion=ItemPeticion(idv,idp)
         session.add(ipeticion)
         shutdown_session()
         return True
