@@ -292,4 +292,5 @@ def consultarSolicitud(s=None):
     recibe el id de la solicitud a consultar
     """
     #soli=getSolicitud(s)
-    return flask.render_template('consultarSolicitud.html')  
+    return flask.render_template('consultarSolicitud.html')
+ 

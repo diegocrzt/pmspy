@@ -82,7 +82,7 @@
           	{%endfor%}
         </table>
         <p><strong class="text-info">--</strong> Las relaciones solo se podran crear entre los items que se encuentren en la solicitud.<strong class="text-info"> --</strong></p>
-        <p align="left">	<strong>Acciones que realizara sobre los items:</strong>
+        <p align="left">	<strong>Acciones que realizaran sobre los items:</strong>
         {%  with messages = get_flashed_messages(category_filter=["accion"]) %}
   			{% if messages %}
   				{% for message in messages %}
@@ -138,13 +138,7 @@
 				        <div class="span10" align="left">
 				            <p><input class="btn btn-success" type="submit" value="Aceptar" />
 				            <a class="btn btn-inverse" href="/admsolicitud/">Cancelar</a>
-				        	{%  with messages = get_flashed_messages(category_filter=["cantidad"]) %}
-				  			{% if messages %}
-				  				{% for message in messages %}
-				  						<span class="text-error">{{ message }}</span></p>	
-				  					{% endfor %}    					
-							{% endif %}
-							{% endwith %}
+				        	
 						</div>
 					</td>
 					<td></td>

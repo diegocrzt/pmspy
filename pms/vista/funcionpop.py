@@ -15,3 +15,6 @@ def pop13aux():
     flask.session.pop('aux11',None)
     flask.session.pop('aux12',None)
     flask.session.pop('aux13',None)
+    
+def funcionAReemplazar(s=None,a=None):
+    return True

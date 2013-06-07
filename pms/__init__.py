@@ -19,6 +19,8 @@ import modelo.rolControlador
 import vista.funcionpop
 import vista.solicitudVista
 
+
+app.jinja_env.globals.update(accionHabilitada=vista.funcionpop.funcionAReemplazar)
 app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)
 app.jinja_env.globals.update(permisoTipo=modelo.rolControlador.getPermisosStringTipoItem)
 app.jinja_env.globals.update(permisoLB=modelo.rolControlador.getPermisosStringLB)
