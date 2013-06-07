@@ -1,7 +1,7 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import agregarMiembro
+from pms.modelo.peticionControlador import crearPeticion
 from pms.modelo.itemControlador import getVersionesItemParaSolicitud
 from datetime import datetime
 import pms.vista.required
@@ -104,45 +104,41 @@ class Crearsolicitud(flask.views.MethodView):
             aux.append(check)
             items.append(aux)
                 
-        l=[]#lista de acciones para pasarle a la funcion que crea la solicitud
+        acc=0#lista de acciones para pasarle a la funcion que crea la solicitud
         acciones=[]
         aux=[]
         aux.append("Editar")
         if "Editar"in flask.request.form:
-            l.insert(0, True)
+            acc=1
             aux.append(True)
         else:
-            l.insert(0, False)
             aux.append(False)
         acciones.append(aux)
         
         aux=[]
         aux.append("Eliminar")
         if "Eliminar" in flask.request.form:
-            l.insert(1, True)
+            acc=acc+10
             aux.append(True)
         else:
-            l.insert(1, False)
             aux.append(False)
         acciones.append(aux)
         
         aux=[]
         aux.append("Crear Relacion")
         if "Crear Relacion" in flask.request.form:
-            l.insert(2, True)
+            acc=acc+100
             aux.append(True)
         else:
-            l.insert(2, False)
             aux.append(False)
         acciones.append(aux)
         
         aux=[]
         aux.append("Eliminar Relacion")
         if "Eliminar Relacion" in flask.request.form:
-            l.insert(3, True)
+            acc=acc+1000
             aux.append(True)
         else:
-            l.insert(3, False)
             aux.append(False)
         acciones.append(aux)
         
@@ -150,7 +146,7 @@ class Crearsolicitud(flask.views.MethodView):
         if len(ag)==0:
             flask.flash(u"Debe seleccionar al menos un Item", "item")
             error=True
-        if not True in l:
+        if acc==0:
             flask.flash(u"Debe seleccionar al menos una Accion", "accion")
             error=True
         if flask.request.form['comentario']=="":
@@ -158,7 +154,7 @@ class Crearsolicitud(flask.views.MethodView):
             error=True
         if error:
             return flask.render_template('crearSolicitud.html', versiones=items, acciones=acciones)
-        #crearSolicitud(flask.session['username'], ag, l, flask.request.form['comentario'])
+        crearPeticion(flask.session['proyectoid'],flask.request.form['comentario'],flask.session['username'],ag,acc )
         
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))

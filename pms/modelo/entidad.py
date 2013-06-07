@@ -368,8 +368,9 @@ class Peticion(Base):
     dificultadT=Column(Integer)
     fechaCreacion=Column(DateTime)
     fechaEnvio=Column(DateTime)
+    acciones=Column(Integer)
     
-    def __init__(self,numero, proyecto_id,comentario,estado, usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):
+    def __init__(self,numero, proyecto_id,comentario,estado, usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio,acciones):
         self.numero=numero
         self.proyecto_id=proyecto_id
         self.comentario=comentario
@@ -381,6 +382,7 @@ class Peticion(Base):
         self.dificultadT=dificultadT
         self.fechaCreacion=fechaCreacion
         self.fechaEnvio=fechaEnvio
+        self.acciones=acciones
         
         
     def __repr__(self):
@@ -392,17 +394,16 @@ class ItemPeticion(Base):
         Define la clase ItemPeticion y la mapea a la tabla peticion_item
     """
     __tablename__='peticion_item'
+    id = Column(Integer, primary_key=True)
     peticion_id= Column(Integer, ForeignKey('peticion.id'))
     item_id=Column(Integer, ForeignKey('vitem.id'))
-    costo=Column(Integer)
-    dificultad=Column(Integer)
     peticion=relationship("Peticion",backref="items")
     
-    def __init__(self, peticion_id,item_id,costo,dificultad):
+    def __init__(self, peticion_id,item_id):
         self.peticion_id=peticion_id
         self.item_id=item_id
-        self.costo=costo
-        self.dificultad=dificultad
+    def __repr__(self):
+        return 'ItemPeticion { '+ self.peticion_id+self.item_id+'}'
         
 class Voto(Base):
     """
