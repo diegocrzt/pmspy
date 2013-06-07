@@ -357,23 +357,53 @@ class Peticion(Base):
     """
     __tablename__='peticion'
     id = Column(Integer, primary_key=True)
+    numero=Column(Integer)
     proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
-    item_id=Column(Integer,ForeignKey('vitem.id'))
     comentario=Column(Unicode(100))
     estado=Column(Unicode(10))
     usuario_id=Column(Integer, ForeignKey('usuario.id'))
-    item=relationship("VersionItem")
+    cantVotos=Column(Integer)
+    cantItems=Column(Integer)
+    costoT=Column(Integer)
+    dificultadT=Column(Integer)
+    fechaCreacion=Column(DateTime)
+    fechaEnvio=Column(DateTime)
     
-    def __init__(self, proyecto_id,item_id,comentario,estado, usuario_id):
+    def __init__(self,numero, proyecto_id,comentario,estado, usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):
+        self.numero=numero
         self.proyecto_id=proyecto_id
-        self.item_id=item_id
         self.comentario=comentario
         self.estado=estado
         self.usuario_id=usuario_id
+        self.cantVotos=cantVotos
+        self.cantItems=cantItems
+        self.costoT=costoT
+        self.dificultadT=dificultadT
+        self.fechaCreacion=fechaCreacion
+        self.fechaEnvio=fechaEnvio
+        
         
     def __repr__(self):
-        return 'Peticion { '+ self.proyecto_id+self.item_id +self.comentario+self.estado+'}'
+        return 'Peticion { '+ self.proyecto_id+self.comentario+self.estado+'}'
     
+    
+class ItemPeticion(Base):
+    """
+        Define la clase ItemPeticion y la mapea a la tabla peticion_item
+    """
+    __tablename__='peticion_item'
+    peticion_id= Column(Integer, ForeignKey('peticion.id'))
+    item_id=Column(Integer, ForeignKey('vitem.id'))
+    costo=Column(Integer)
+    dificultad=Column(Integer)
+    peticion=relationship("Peticion",backref="items")
+    
+    def __init__(self, peticion_id,item_id,costo,dificultad):
+        self.peticion_id=peticion_id
+        self.item_id=item_id
+        self.costo=costo
+        self.dificultad=dificultad
+        
 class Voto(Base):
     """
         Define la clase Voto y la mapea con la tabla voto
@@ -382,7 +412,7 @@ class Voto(Base):
     peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
     valor = Column(Boolean)     
-    peticion = relationship("Peticion",backref="voto")
+    peticion = relationship("Peticion",backref="votos")
         
     def __init__(self, peticion_id, user_id, valor):
         self.peticion_id=peticion_id
@@ -399,6 +429,7 @@ class Miembro(Base):
     __tablename__ = 'miembro'
     proyecto_id = Column(Integer, ForeignKey('proyecto.id'), primary_key=True)
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
+    votos = relationship("Voto",backref="usuario")
     
     def __init__(self, proyecto_id, user_id):
         self.proyecto_id=proyecto_id
