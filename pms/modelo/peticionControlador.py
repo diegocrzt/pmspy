@@ -57,6 +57,10 @@ def editarPeticion(idp,comentario,estado,usuario_id,cantVotos,cantItems,costoT,d
 def eliminarPeticion(id=None):
     init_db()
     u=getPeticion(id)
+    for l in u.items:
+        quitarItem(l.item_id)
+    for l in u.votos:
+        quitarVoto(l.user_id,l.peticion_id)
     session.query(Peticion).filter(Peticion.id==u.id).delete()
     session.commit()
     shutdown_session()
@@ -79,9 +83,9 @@ def agregarItem(idv=None,idp=None,costo=None,dificultad=None):
     else:
         return False
     
-def quitarItem(id=None):
+def quitarItem(idi=None):
     init_db()
-    session.query(ItemPeticion).filter(ItemPeticion.item_id==id).delete()
+    session.query(ItemPeticion).filter(ItemPeticion.item_id==idi).delete()
     session.commit()
     shutdown_session()
 
@@ -108,8 +112,13 @@ def agregarVoto(idu=None,idp=None,valor=None):
     else:
         return False
     
+def quitarVoto(idu=None,idp=None):
+    init_db()
+    session.query(Voto).filter(Voto.peticion_id==idp).filter(Voto.user_id==idu).delete()
+    session.commit()
+    shutdown_session()
     
-
+    
 def getMiembros(idp=None):
     """
     Devuelve los usuarios que son miembros de el comite de un proyecto, recibe el id del proyecto
