@@ -29,11 +29,11 @@
 <div class="container">
 	<h3>Eliminar Solicitud de Cambio - <em>{{session['proyectonombre']}}</em></h3>
 	<hr>
-	 <p><strong>Fecha de Creacion:</strong> s.fecha </p>
-	 <p><strong>Solicitante:</strong>  s.solicitante</p>
-	 <p><strong>Dificultad:</strong> s.dificultad</p>
-	 <p><strong>Costo:</strong> s.costo</p>
-	 <p><strong>CantI: </strong>s.cantI</p>
+	 <p><strong>Fecha de Creacion:</strong> {{s.fechaCreacion}} </p>
+	 <p><strong>Solicitante:</strong>  {{s.usuario.nombre}}</p>
+	 <p><strong>Dificultad:</strong> {{s.dificultadT}}</p>
+	 <p><strong>Costo:</strong> {{s.costoT}}</p>
+	 <p><strong>CantI: </strong>{{s.cantItems}}</p>
 	<div class="span8">
 	<p align="center">	<strong>Lista de Items</strong>
 			
@@ -46,11 +46,11 @@
                <th>Costo</th>
                <th>Dificultad</th>
             </tr>
-            {% for v in s.versiones %}
+            {% for v in s.items %}
             <tr>   
             	<td>{{v.nombre}}</td>
             	<td>{{v.estado}}</td>
-            	<td>{{v.item.tipoitem.fase.numero}}</td>
+            	<td>v.item.tipoitem.nombre</td>
             	<td>{{v.version}}</td>
             	<td>{{v.costo}}</td>
             	<td>{{v.dificultad}}</td>
@@ -99,7 +99,7 @@
 						
 			    <tr>
 			        <td>
-				        <p><strong>Motivo de cambio:</strong>s.comentario</p>
+				        <p><strong>Motivo de cambio:</strong>{{s.comentario}}</p>
 						
 					</td>
 				</tr>
@@ -110,7 +110,7 @@
 			        <td>
 				        <div class="span10" align="left">
 				        <form action="{{url_for('eliminaritem')}}" method="post">     
-				         <p><input class="btn btn-warning" type="submit" value="Eliminar" />
+				         <p><input class="btn btn-danger" type="submit" value="Eliminar" />
 				            <a class="btn btn-inverse" href="/admsolicitud/">Cancelar</a>
 				        	</p>
 				        	</form>

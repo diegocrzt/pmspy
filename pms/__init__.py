@@ -164,3 +164,7 @@ app.add_url_rule('/admsolicitud/',
 app.add_url_rule('/admsolicitud/crear/',
                  view_func=vista.solicitudVista.Crearsolicitud.as_view('crearsolicitud'),
                  methods=["GET", "POST"])
+
+app.add_url_rule('/admsolicitud/eliminar/',
+                 view_func=vista.solicitudVista.EliminarSolicitud.as_view('eliminaritem'),
+                 methods=["GET", "POST"])

@@ -11,6 +11,7 @@ from atributoControlador import getAtributoId
 from proyectoControlador import getProyectoId
 from faseControlador import getFaseId
 from datetime import datetime
+from peticionControlador import comprobarItemPeticion
 from sqlalchemy import or_
 
 session = db_session()
@@ -166,7 +167,7 @@ def copiarValores(idvante=None,idvnueva=None):
 def peticionExiste(vid=None):
     if vid:
         init_db()
-        query=session.query(Peticion).filter(Peticion.item_id==vid).first()
+        #query=session.query(Peticion).filter(Peticion.item_id==vid).first()
         if query:
             return True
         else:
@@ -233,7 +234,7 @@ def getVersionesItemParaSolicitud(idpro=None):
                     for i in t.instancias:
                         v=getVersionItem(i.id)
                         aux=[]
-                        if v.estado=="Bloqueado" or v.estado=="Conflicto":#controlar si se encuentra en una solicitud
+                        if comprobarItemPeticion(v.id) and (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
                             aux.append(v)
                             aux.append(False)
                             l.append(aux)

@@ -39,9 +39,12 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
         peticion=Peticion(numero,proyecto_id,comentario,"Pendiente",usuario_id,0,len(items),120,120,fechaCreacion,None,acciones)
         session.add(peticion)
         session.commit()
-        peticion=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).filter(Peticion.numero==numero)
-        for i in items:
-            agregarItem(i.id,peticion.id)
+        peticion=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).filter(Peticion.numero==numero).first()
+        if peticion:
+            print "---------------------------------------------"
+            for i in items:
+                a=agregarItem(i.id,peticion.id)
+                 
         shutdown_session()
     
 def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
@@ -86,8 +89,9 @@ def agregarItem(idv=None,idp=None,):
     r=comprobarItemPeticion(idv)
     if r==True:
         init_db()
-        ipeticion=ItemPeticion(idv,idp)
+        ipeticion=ItemPeticion(idp, idv)
         session.add(ipeticion)
+        session.commit()
         shutdown_session()
         return True
     else:

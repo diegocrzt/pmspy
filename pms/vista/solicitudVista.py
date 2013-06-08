@@ -1,7 +1,7 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import crearPeticion
+from pms.modelo.peticionControlador import crearPeticion, getPeticion, eliminarPeticion, editarPeticion
 from pms.modelo.itemControlador import getVersionesItemParaSolicitud
 from datetime import datetime
 import pms.vista.required
@@ -27,9 +27,9 @@ class AdmSolicitud(flask.views.MethodView):
         flask.session.pop('aux4',None)
         
         
-        #ls=getSolicitudes(flask.session['proyectoid'])
-        l=[1,2,3]
-        return flask.render_template('admSolicitud.html',solicitudes=l, infopag="1 de 1", buscar=False)
+        p=getProyectoId(flask.session['proyectoid'])
+        ls=p.solicitudes
+        return flask.render_template('admSolicitud.html',solicitudes=ls, infopag="Pagina 1 de 1", buscar=False)
     @pms.vista.required.login_required
     def post(self):
         """
@@ -154,7 +154,7 @@ class Crearsolicitud(flask.views.MethodView):
             error=True
         if error:
             return flask.render_template('crearSolicitud.html', versiones=items, acciones=acciones)
-        crearPeticion(flask.session['proyectoid'],flask.request.form['comentario'],flask.session['username'],ag,acc )
+        crearPeticion(flask.session['proyectoid'],flask.request.form['comentario'],flask.session['usuarioid'],ag,acc )
         
         flask.flash(u"CREACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
@@ -240,6 +240,20 @@ class EditarSolicitud(flask.views.MethodView):
         #editarSolicitud(flask.session['solicitudid'], ag, l, flask.request.form['comentario'])
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
+
+class EliminarSolicitud(flask.views.MethodView):
+    """
+    Gestiona la Vista de Editar Tipo de Item
+    """
+    @pms.vista.required.login_required
+    def get(self):
+        return flask.redirect('/admsolicitud/'+str(flask.session['proyectoid'])) 
+
+    @pms.vista.required.login_required
+    def post(self):
+        eliminarPeticion(flask.session['solicitudid'])
+        flask.flash(u"ELIMINACION EXITOSA","text-success")
+        return flask.redirect(flask.url_for('admsolicitud'))
         
 @app.route('/admsolicitud/editar/<s>')
 @pms.vista.required.login_required       
@@ -275,9 +289,46 @@ def eSolicitud(s=None):
     """
     flask.session.pop('aux1',None)
     flask.session.pop('aux2',None)
-    #soli=getSolicitud(s)
+    soli=getPeticion(s)
+    acc=[]
+    acc.insert(0, ["Editar",soli.acciones%10==1])
+    acc.insert(1,["Eliminar",soli.acciones%100>=10])
+    acc.insert(2,["Crear Relacion",soli.acciones%1000==100])
+    acc.insert(3,["Eliminar Relacion",soli.acciones%10000==1000])
+    """aux=[]
+    aux.append("Editar")
+    if soli.acciones%10==1:
+        acc.append(True)
+    else:
+        acc.append(True)
+    acc.append(aux)
+    
+    aux=[]
+    aux.append("Eliminar")
+    if soli.acciones%100>=10:
+        acc.append(True)
+    else:
+        acc.append(False)
+    acc.append(aux)
+    
+    aux=[]
+    aux.append("Crear Relacion")
+    if soli.acciones%1000>=100:
+        acc.append(True)
+    else:
+        acc.append(False)
+    acc.append(aux)
+    
+    aux=[]
+    aux.append("Eliminar Relacion")
+    if soli.acciones%10000>=1000:
+        acc.append(True)
+    else:
+        acc.append(False)
+    acc.append(aux)"""
+    
     flask.session['solicitudid']=s
-    return flask.render_template('eliminarSolicitud.html')   
+    return flask.render_template('eliminarSolicitud.html',s=soli, acciones=acc)
 
 @app.route('/admsolicitud/consultar/<s>')
 @pms.vista.required.login_required

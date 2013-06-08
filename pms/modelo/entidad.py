@@ -29,7 +29,6 @@ class Usuario(Base):
     
     esLider = relationship("Proyecto", backref="lider")
     lineas = relationship("LineaBase",backref="creador")
-    votos=relationship("Voto",backref="usuario")
     peticiones=relationship("Peticion",backref="usuario")
     
     def __init__(self, nombre, nombredeusuario, clave, isAdmin):
