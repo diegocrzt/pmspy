@@ -180,13 +180,15 @@ class VersionItem(Base):
     costo = Column(Integer)
     dificultad =Column(Integer)
     deitem = Column(Integer, ForeignKey('item.id'))
+    peticion_id=Column(Integer,ForeignKey('peticion.id'))
+    peticion=relationship("Peticion",backref="items")
     atributosnum = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
 
     
-    def __init__(self, version, nombre, estado, actual, costo, dificultad, deitem):
+    def __init__(self, version, nombre, estado, actual, costo, dificultad, deitem,peticion_id=None):
         self.version = version
         self.nombre = nombre
         self.estado = estado
@@ -194,6 +196,7 @@ class VersionItem(Base):
         self.costo =costo
         self.dificultad=dificultad
         self.deitem = deitem
+        self.peticion_id=peticion_id
         
     def __repr__(self):
         return 'VersionItem { '+ self.nombre + '('+ self.version+ ')}'
@@ -388,21 +391,6 @@ class Peticion(Base):
         return 'Peticion { '+ self.proyecto_id+self.comentario+self.estado+'}'
     
     
-class ItemPeticion(Base):
-    """
-        Define la clase ItemPeticion y la mapea a la tabla peticion_item
-    """
-    __tablename__='peticion_item'
-    id = Column(Integer, primary_key=True)
-    peticion_id= Column(Integer, ForeignKey('peticion.id'))
-    item_id=Column(Integer, ForeignKey('vitem.id'))
-    peticion=relationship("Peticion",backref="items")
-    
-    def __init__(self, peticion_id,item_id):
-        self.peticion_id=peticion_id
-        self.item_id=item_id
-    def __repr__(self):
-        return 'ItemPeticion { '+ self.peticion_id+self.item_id+'}'
         
 class Voto(Base):
     """

@@ -1,7 +1,8 @@
-from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro, ItemPeticion
+from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
+from pms.modelo.itemControlador import getVersionId
 from datetime import datetime
 session = db_session()
 
@@ -16,14 +17,6 @@ def getPeticion(id=None):
     shutdown_session()
     return res
 
-def getItemPeticion(idv=None):
-    """
-    
-    """
-    init_db()
-    res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).first()
-    shutdown_session()
-    return res
 
 #def crearPeticion(numero,proyecto_id,comentario,estado,usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio):    
 def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, acciones=None):
@@ -79,8 +72,8 @@ def eliminarPeticion(id=None):
     shutdown_session()
     
 def comprobarItemPeticion(idv=None):
-    res=getItemPeticion(idv)
-    if res==None:
+    res=getVersionId(idv)
+    if res.peticion_id==None:
         return True
     else:
         return False
@@ -89,17 +82,20 @@ def agregarItem(idv=None,idp=None,):
     r=comprobarItemPeticion(idv)
     if r==True:
         init_db()
-        ipeticion=ItemPeticion(idp, idv)
-        session.add(ipeticion)
+        v=getVersionId(idv)
+        v.peticion_id=idp
+        session.merge(v)
         session.commit()
         shutdown_session()
         return True
     else:
         return False
     
-def quitarItem(idi=None):
+def quitarItem(idv=None):
     init_db()
-    session.query(ItemPeticion).filter(ItemPeticion.item_id==idi).delete()
+    v=getVersionId(idv)
+    v.peticion_id=None
+    session.merge(v)
     session.commit()
     shutdown_session()
 
