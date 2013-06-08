@@ -59,32 +59,19 @@ class Crearsolicitud(flask.views.MethodView):
     Vista de Crear Solicitud
     """
     iversiones=[]
-    acciones=[]
     def getItemsSolicitud(self):
         self.iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
-        self.acciones=[]
-        aux=[]
-        aux.append("Editar")
-        aux.append(True)
-        self.acciones.append(aux)
-        aux=[]
-        aux.append("Eliminar")
-        aux.append(False)
-        self.acciones.append(aux)
-        aux=[]
-        aux.append("Crear Relacion")
-        aux.append(False)
-        self.acciones.append(aux)
-        aux=[]
-        aux.append("Eliminar Relacion")
-        aux.append(False)
-        self.acciones.append(aux)
+        
         
     @pms.vista.required.login_required
     def get(self):
-        
+        acciones=[]
+        acciones.insert(0, ["Editar",True])
+        acciones.insert(1,["Eliminar",False])
+        acciones.insert(2,["Crear Relacion",False])
+        acciones.insert(3,["Eliminar Relacion",False])
         self.getItemsSolicitud()
-        return flask.render_template('crearSolicitud.html', versiones=self.iversiones, acciones=self.acciones)
+        return flask.render_template('crearSolicitud.html', versiones=self.iversiones, acciones=acciones)
     @pms.vista.required.login_required
     def post(self):
         """
@@ -295,37 +282,6 @@ def eSolicitud(s=None):
     acc.insert(1,["Eliminar",soli.acciones%100>=10])
     acc.insert(2,["Crear Relacion",soli.acciones%1000==100])
     acc.insert(3,["Eliminar Relacion",soli.acciones%10000==1000])
-    """aux=[]
-    aux.append("Editar")
-    if soli.acciones%10==1:
-        acc.append(True)
-    else:
-        acc.append(True)
-    acc.append(aux)
-    
-    aux=[]
-    aux.append("Eliminar")
-    if soli.acciones%100>=10:
-        acc.append(True)
-    else:
-        acc.append(False)
-    acc.append(aux)
-    
-    aux=[]
-    aux.append("Crear Relacion")
-    if soli.acciones%1000>=100:
-        acc.append(True)
-    else:
-        acc.append(False)
-    acc.append(aux)
-    
-    aux=[]
-    aux.append("Eliminar Relacion")
-    if soli.acciones%10000>=1000:
-        acc.append(True)
-    else:
-        acc.append(False)
-    acc.append(aux)"""
     
     flask.session['solicitudid']=s
     return flask.render_template('eliminarSolicitud.html',s=soli, acciones=acc)
