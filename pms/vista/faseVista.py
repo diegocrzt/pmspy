@@ -345,7 +345,7 @@ class ListaMiembros(flask.views.MethodView):
         ag.append(lider)
         for u in usuarios:
             if u.nombredeusuario in flask.request.form:
-                if flask.request.form[u.nonombredeusuariombre]:
+                if flask.request.form[u.nombredeusuario]:
                     ag.append(u)
         if len(ag)%2!=0:
             agregarListaMiembros(ag,flask.session['proyectoid'])
