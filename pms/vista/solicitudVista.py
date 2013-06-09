@@ -1,8 +1,7 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import crearPeticion, getPeticion, eliminarPeticion, editarPeticion
-from pms.modelo.itemControlador import getVersionesItemParaSolicitud
+from pms.modelo.peticionControlador import crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -156,10 +155,13 @@ class EditarSolicitud(flask.views.MethodView):
 
     @pms.vista.required.login_required
     def post(self):
-        self.getItemsSolicitud()
+        iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
+        soli=getPeticion(flask.session['solicitudid'])
         ag=[]#lista items para pasarle a la funcion que crea la solicitud
         items=[]
-        for u in self.iversiones:
+        for i in soli.items:
+            iversiones.append([i,True])
+        for u in iversiones:
             aux=[]
             aux.append(u[0])
             if u[0].nombre in flask.request.form:
@@ -169,46 +171,41 @@ class EditarSolicitud(flask.views.MethodView):
                 check=False
             aux.append(check)
             items.append(aux)
-                
-        l=[]#lista de acciones para pasarle a la funcion que crea la solicitud
+        acc=0#lista de acciones para pasarle a la funcion que crea la solicitud
         acciones=[]
         aux=[]
         aux.append("Editar")
         if "Editar"in flask.request.form:
-            l.insert(0, True)
+            acc=1
             aux.append(True)
         else:
-            l.insert(0, False)
             aux.append(False)
         acciones.append(aux)
         
         aux=[]
         aux.append("Eliminar")
         if "Eliminar" in flask.request.form:
-            l.insert(1, True)
+            acc=acc+10
             aux.append(True)
         else:
-            l.insert(1, False)
             aux.append(False)
         acciones.append(aux)
         
         aux=[]
         aux.append("Crear Relacion")
         if "Crear Relacion" in flask.request.form:
-            l.insert(2, True)
+            acc=acc+100
             aux.append(True)
         else:
-            l.insert(2, False)
             aux.append(False)
         acciones.append(aux)
         
         aux=[]
         aux.append("Eliminar Relacion")
         if "Eliminar Relacion" in flask.request.form:
-            l.insert(3, True)
+            acc=acc+1000
             aux.append(True)
         else:
-            l.insert(3, False)
             aux.append(False)
         acciones.append(aux)
         
@@ -216,15 +213,15 @@ class EditarSolicitud(flask.views.MethodView):
         if len(ag)==0:
             flask.flash(u"Debe seleccionar al menos un Item", "item")
             error=True
-        if not True in l:
+        if acc==0:
             flask.flash(u"Debe seleccionar al menos una Accion", "accion")
             error=True
         if flask.request.form['comentario']=="":
             flask.flash(u"El campo no puede estar vacio","comentario")
             error=True
         if error:
-            return flask.render_template('editarSolicitud.html', versiones=items, acciones=acciones)
-        #editarSolicitud(flask.session['solicitudid'], ag, l, flask.request.form['comentario'])
+            return flask.render_template('editarSolicitud.html', s=soli, versiones=items, acciones=acciones)
+        editarPeticion(flask.session['solicitudid'],flask.request.form['comentario'], ag, acc)
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
 
@@ -251,20 +248,24 @@ def edSolicitud(s=None):
     """
     #soli=getSolicitud(s)
     flask.session['solicitudid']=s
-    iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
-    """for i in i versiones:
-        if i[0] in soli.items:
-            i[1]=True
-    acc=[]
-    aux=[]
-    aux.append("Editar")
-    if soli.acciones%10==1:
-        aux.append(True)
-    else:
-        aux.append(False)"""
     
+    soli=getPeticion(s)
+    acc=[]
+    acc.insert(0, ["Editar",soli.acciones%10==1])
+    acc.insert(1,["Eliminar",soli.acciones%100>=10])
+    acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
+    acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
+    iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
+    l=[]
+    c=0
+    for i in iversiones:
+        l.insert(c,[i[0],False])
+        c=c+1
+    for i in soli.items:
+        l.insert(c, [i,True])
+        c=c+1
      
-    return flask.render_template('editarSolicitud.html') 
+    return flask.render_template('editarSolicitud.html',s=soli, versiones=l,acciones=acc) 
 
 @app.route('/admsolicitud/eliminar/<s>')
 @pms.vista.required.login_required       
@@ -274,14 +275,13 @@ def eSolicitud(s=None):
     responde al boton de 'Eliminar' de Administrar Solicitud
     recibe el id de la Solicitud a eliminarce
     """
-    flask.session.pop('aux1',None)
-    flask.session.pop('aux2',None)
+    
     soli=getPeticion(s)
     acc=[]
     acc.insert(0, ["Editar",soli.acciones%10==1])
     acc.insert(1,["Eliminar",soli.acciones%100>=10])
-    acc.insert(2,["Crear Relacion",soli.acciones%1000==100])
-    acc.insert(3,["Eliminar Relacion",soli.acciones%10000==1000])
+    acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
+    acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
     
     flask.session['solicitudid']=s
     return flask.render_template('eliminarSolicitud.html',s=soli, acciones=acc)
@@ -294,6 +294,21 @@ def consultarSolicitud(s=None):
     responde al boton de 'Consultar' de Administrar Solicitud
     recibe el id de la solicitud a consultar
     """
-    #soli=getSolicitud(s)
-    return flask.render_template('consultarSolicitud.html')
- 
+    soli=getPeticion(s)
+    acc=[]
+    acc.insert(0, ["Editar",soli.acciones%10==1])
+    acc.insert(1,["Eliminar",soli.acciones%100>=10])
+    acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
+    acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
+    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc)
+
+@app.route('/admsolicitud/consultar/<s>')
+@pms.vista.required.login_required
+def enviarSolicitud(s=None):
+    """
+    Funcion que despliega pagina de enviar Solicitud llama a consultarSolicitud.html
+    responde al boton de 'Enviar' de Administrar Solicitud
+    recibe el id de la solicitud a enviar
+    """
+    
+    

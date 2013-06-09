@@ -11,7 +11,6 @@ from atributoControlador import getAtributoId
 from proyectoControlador import getProyectoId
 from faseControlador import getFaseId
 from datetime import datetime
-from peticionControlador import comprobarItemPeticion
 from sqlalchemy import or_
 
 session = db_session()
@@ -224,21 +223,8 @@ def getItemsFiltrados(fase=None, filtro=None):
                 r.append(getVersionItem(i.id))
         return r
     
-def getVersionesItemParaSolicitud(idpro=None):
-        if idpro:
-            l=[]
-            pro=getProyectoId(idpro)
-            fases=pro.fases
-            for f in fases:
-                for t in f.tipos:
-                    for i in t.instancias:
-                        v=getVersionItem(i.id)
-                        aux=[]
-                        if comprobarItemPeticion(v.id) and (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
-                            aux.append(v)
-                            aux.append(False)
-                            l.append(aux)
-            return l
+
+
 if __name__== '__main__':
     fase=getFaseId(1)
     query=getItemsFiltrados(fase,"1")

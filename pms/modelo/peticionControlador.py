@@ -2,7 +2,7 @@ from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembr
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
-from pms.modelo.itemControlador import getVersionId
+from pms.modelo.itemControlador import getVersionId, getVersionItem
 from datetime import datetime
 session = db_session()
 
@@ -64,7 +64,7 @@ def eliminarPeticion(id=None):
     init_db()
     u=getPeticion(id)
     for l in u.items:
-        quitarItem(l.item_id)
+        quitarItem(l.id)
     for l in u.votos:
         quitarVoto(l.user_id,l.peticion_id)
     session.query(Peticion).filter(Peticion.id==u.id).delete()
@@ -191,7 +191,21 @@ def agregarListaMiembros(lista=None,idp=None):
     else:
         return False 
     
-    
-    
-    
+def getVersionesItemParaSolicitud(idpro=None):
+        if idpro:
+            l=[]
+            pro=getProyectoId(idpro)
+            fases=pro.fases
+            for f in fases:
+                for t in f.tipos:
+                    for i in t.instancias:
+                        v=getVersionItem(i.id)
+                        aux=[]
+                        if comprobarItemPeticion(v.id) and (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
+                            aux.append(v)
+                            aux.append(False)
+                            l.append(aux)
+            return l
+        
+  
     

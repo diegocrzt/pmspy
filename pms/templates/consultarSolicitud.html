@@ -31,11 +31,11 @@
 <div class="container">
 	<h3>Consultar Solicitud de Cambio - <em>{{session['proyectonombre']}}</em></h3>
 	<hr>
-	 <p><strong>Fecha de Creacion:</strong> s.fecha </p>
-	 <p><strong>Solicitante:</strong>  s.solicitante</p>
-	 <p><strong>Dificultad:</strong> s.dificultad</p>
-	 <p><strong>Costo:</strong> s.costo</p>
-	 <p><strong>CantI: </strong>s.cantI</p>
+	 <p><strong>Fecha de Creacion:</strong> {{s.fechaCreacion.strftime('%Y/%m/%d - %H:%M')}} </p>
+	 <p><strong>Solicitante:</strong>  {{s.usuario.nombre}}</p>
+	 <p><strong>Dificultad:</strong> {{s.dificultadT}}</p>
+	 <p><strong>Costo:</strong> {{s.costoT}}</p>
+	 <p><strong>Cantidad de Items: </strong>{{s.cantItems}}</p>
 	<div class="span8">
 	<p align="center">	<strong>Lista de Items</strong>
 			
@@ -48,7 +48,7 @@
                <th>Costo</th>
                <th>Dificultad</th>
             </tr>
-            {% for v in s.versiones %}
+            {% for v in s.items %}
             <tr>   
             	<td>{{v.nombre}}</td>
             	<td>{{v.estado}}</td>
@@ -101,7 +101,7 @@
 						
 			    <tr>
 			        <td>
-				        <p><strong>Motivo de cambio:</strong>s.comentario</p>
+				        <p><strong>Motivo de cambio:</strong> {{s.comentario}}</p>
 						
 					</td>
 				</tr>
@@ -110,10 +110,19 @@
 				</tr>
 		        <tr>
 			        <td>
+			        {%if consultar==True %}
 				        <div class="span10" align="left">
-				            <a class="btn btn-inverse" href="/admsolicitud/">Cancelar</a>
+				            <a class="btn btn-success" href="/admsolicitud/">Aceptar</a>
 				        	
 						</div>
+					{%else%}
+					<form action="{{url_for('enviarsolicitud')}}" method="post">
+						 <div class="span10" align="left">
+						 
+				            <a class="btn btn-success" href="/admsolicitud/">Aceptar</a>
+				        	
+						</div>
+					</form>
 					</td>
 					<td></td>
 		        </tr>
