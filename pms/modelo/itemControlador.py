@@ -11,7 +11,7 @@ from atributoControlador import getAtributoId
 from proyectoControlador import getProyectoId
 from faseControlador import getFaseId
 from datetime import datetime
-from peticionControlador import comprobarItemPeticion
+from pms.modelo.peticionControlador import comprobarItemPeticion
 from sqlalchemy import or_
 
 session = db_session()
