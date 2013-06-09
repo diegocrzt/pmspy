@@ -29,7 +29,7 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
         numero=numero+1
         fechaCreacion=datetime.today()
         #calcular costo y dificultad
-        peticion=Peticion(numero,proyecto_id,comentario,"Pendiente",usuario_id,0,len(items),120,120,fechaCreacion,None,acciones)
+        peticion=Peticion(numero,proyecto_id,comentario,"EnEdicion",usuario_id,0,len(items),120,120,fechaCreacion,None,acciones)
         session.add(peticion)
         session.commit()
         peticion=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).filter(Peticion.numero==numero).first()
@@ -42,25 +42,29 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
     
 def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
     """
-    permite editar un usuario existente
+    Permite editar un Peticion existente
     """
-    init_db()
     p = getPeticion(idp)
     if comentario:
         p.comentario=comentario
     if acciones:
         p.acciones=acciones
-    for i in items:
-        if comprobarItemPeticion(i.id):
-            agregarItem(i.id,p.id)
-    for i in p.items:
-        if not i in items:
-            quitarItem(i.id,p.id)
+    if items:
+        for i in items:
+            if comprobarItemPeticion(i.id):
+                agregarItem(i.id,p.id)
+        for i in p.items:
+            if not i in items:
+                quitarItem(i.id,p.id)
+    p.cantItems=len(p.items)
+    init_db()
     session.merge(p)
     session.commit()
     shutdown_session()
     
 def eliminarPeticion(id=None):
+    """Elimina una Peticion, recibe el id de la peticion
+    """
     init_db()
     u=getPeticion(id)
     for l in u.items:
@@ -72,13 +76,28 @@ def eliminarPeticion(id=None):
     shutdown_session()
     
 def comprobarItemPeticion(idv=None):
+    """Comprueba que el item no se encuentre en una peticion, retornar False si el item ya esta en una peticion
+    """
     res=getVersionId(idv)
     if res.peticion_id==None:
         return True
     else:
         return False
-    
+def enviarPeticion(idp=None):
+    """Envia una Peticion, recibe el id de la peticion, cambia el estado de la peticion a EnVotacion 
+    """
+    if idp:
+        p = getPeticion(idp)
+        init_db()
+        p.estado="EnVotacion"
+        p.fechaEnvio=datetime.today()
+        session.merge(p)
+        session.commit()
+        shutdown_session()
+        
 def agregarItem(idv=None,idp=None,):
+    """Agrega un Item a una peticion, recibe el id del item y de la peticion
+    """
     r=comprobarItemPeticion(idv)
     if r==True:
         init_db()
@@ -92,6 +111,8 @@ def agregarItem(idv=None,idp=None,):
         return False
     
 def quitarItem(idv=None):
+    """Quita un Item de una peticion, recibe el id del item
+    """
     init_db()
     v=getVersionId(idv)
     v.peticion_id=None
@@ -192,20 +213,22 @@ def agregarListaMiembros(lista=None,idp=None):
         return False 
     
 def getVersionesItemParaSolicitud(idpro=None):
-        if idpro:
-            l=[]
-            pro=getProyectoId(idpro)
-            fases=pro.fases
-            for f in fases:
-                for t in f.tipos:
-                    for i in t.instancias:
-                        v=getVersionItem(i.id)
-                        aux=[]
-                        if comprobarItemPeticion(v.id) and (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
-                            aux.append(v)
-                            aux.append(False)
-                            l.append(aux)
-            return l
+    """Retorna una lista de items que no es encuentran en una peticion y que estan en estado Bloqueado o Conflicto
+    """
+    if idpro:
+        l=[]
+        pro=getProyectoId(idpro)
+        fases=pro.fases
+        for f in fases:
+            for t in f.tipos:
+                for i in t.instancias:
+                    v=getVersionItem(i.id)
+                    aux=[]
+                    if comprobarItemPeticion(v.id) and (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
+                        aux.append(v)
+                        aux.append(False)
+                        l.append(aux)
+        return l
         
   
     

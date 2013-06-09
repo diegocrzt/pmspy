@@ -26,18 +26,6 @@
               
 {%endblock%}
 
-{%block mensaje%}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-          <div class="container" align="center">
-            {% for category, message in messages %}
-              <h4 class="{{ category }}">{{ message }}</h4>
-            {% endfor %}
-		  </div>
-          {% endif %}
-        {% endwith %}
-{%endblock%}
-
 
 {%block content%}
 <div>
@@ -84,22 +72,32 @@
                                         <td>{{s.estado}}</td>
                                         <td>{{s.cantItems}}</td>
                                        	<td>
+                                        {%if s.estado=="EnEdicion" and s.usuario_id==session['usuarioid']%}
                                         <a class="btn" href="/admsolicitud/editar/{{s.id}}">Editar</a>
+                                        {%endif%}
                                         </td>
                                         <td>
+                                        {% if s.usuario_id==session['usuarioid']%}
                                         <a class="btn btn-danger" href="/admsolicitud/eliminar/{{s.id}}">Eliminar</a>
+                                        {% endif %}
                                         </td>
                                         <td>
                                         <a class="btn btn-info" href="/admsolicitud/consultar/{{s.id}}">Consultar</a>
                                         </td>
                                         <td>
+                                        {%if s.estado=="EnEdicion" and s.usuario_id==session['usuarioid']%}
 		                                <a class="btn btn-success" href="/admsolicitud/enviar/{{s.id}}">Enviar</a>
+		                                {%endif%}
                                         </td>
                                         <td>
+                                        {% if s.estado=="EnVotacion" and esMiembro(session['proyectoid'],session['usuarioid']) %}
 		                                <a class="btn btn-primary" href="/admsolicitud/votar/{{s.id}}">Votar</a>
+		                                {%endif%}
                                         </td>
                                         <td>
+                                        {% if s.estado=="Aprobada" %}
 		                                <a class="btn btn-warning" href="/admsolicitud/ejecutar/1">Ejecutar>></a>
+		                                {%endif%}
                                         </td>
                         	</tr>
                                 {% else %}

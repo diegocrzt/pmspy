@@ -362,7 +362,7 @@ class Peticion(Base):
     numero=Column(Integer)
     proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
     comentario=Column(Unicode(100))
-    estado=Column(Unicode(10))
+    estado=Column(Unicode(15))
     usuario_id=Column(Integer, ForeignKey('usuario.id'))
     cantVotos=Column(Integer)
     cantItems=Column(Integer)

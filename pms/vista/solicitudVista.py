@@ -1,7 +1,8 @@
 import flask.views
+from flask import request
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
+from pms.modelo.peticionControlador import enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -300,9 +301,9 @@ def consultarSolicitud(s=None):
     acc.insert(1,["Eliminar",soli.acciones%100>=10])
     acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
     acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
-    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc)
+    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=True)
 
-@app.route('/admsolicitud/consultar/<s>')
+@app.route('/admsolicitud/enviar/<s>',methods=['POST', 'GET'])
 @pms.vista.required.login_required
 def enviarSolicitud(s=None):
     """
@@ -310,5 +311,16 @@ def enviarSolicitud(s=None):
     responde al boton de 'Enviar' de Administrar Solicitud
     recibe el id de la solicitud a enviar
     """
-    
-    
+    if request.method == "GET":
+        flask.session['solicitudid']=s
+        soli=getPeticion(s)
+        acc=[]
+        acc.insert(0, ["Editar",soli.acciones%10==1])
+        acc.insert(1,["Eliminar",soli.acciones%100>=10])
+        acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
+        acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
+        return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=False)
+    if request.method == "POST":
+        enviarPeticion(flask.session['solicitudid'])
+        flask.flash(u"ENVIO EXITOSO","text-success")
+        return flask.redirect(flask.url_for('admsolicitud'))

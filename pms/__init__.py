@@ -19,7 +19,7 @@ import modelo.rolControlador
 import vista.funcionpop
 import vista.solicitudVista
 
-
+app.jinja_env.globals.update(esMiembro=modelo.peticionControlador.getMiembro)
 app.jinja_env.globals.update(accionHabilitada=vista.funcionpop.funcionAReemplazar)
 app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)
 app.jinja_env.globals.update(permisoTipo=modelo.rolControlador.getPermisosStringTipoItem)
@@ -172,3 +172,4 @@ app.add_url_rule('/admsolicitud/eliminar/',
 app.add_url_rule('/admsolicitud/editar/',
                  view_func=vista.solicitudVista.EditarSolicitud.as_view('editarsolicitud'),
                  methods=["GET", "POST"])
+
