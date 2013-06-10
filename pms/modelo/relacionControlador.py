@@ -279,10 +279,9 @@ def calcularCyD(listaItems):
         costo=costo+c.costo
         dificultad=dificultad+c.dificultad
         for nex in c.salientes:
-            if next.marca==False:
+            if nex.marca==False:
                 cola.append(nex)
                 nex.marca=True
-        cola.remove(c)
     res=[]
     res.append(costo)
     res.append(dificultad)
