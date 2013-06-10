@@ -54,7 +54,7 @@
 				
 				
         <div class="row" >
-                <div class="span14">
+                <div class="span10">
                         <h2> Listado de Items de Solicitud de Cambio </h2>
                       
                         <table class="table table-striped table-bordered">
@@ -63,37 +63,32 @@
                                         <th>Estado</th>
 				                        <th>Tipo</th>
 				                        <th>Version</th>
-				                        {% if accionHabilitada(s,"editarI") %}
+				                        {% if accionHabilitada(s,"Editar") %}
 				                        <th>Atributos</th>
 				                        <th>Editar</th>
 				                        {%endif%}
-				                        {% if accionHabilitada(s,"editarI") %}
+				                        {% if accionHabilitada(s,"Eliminar") %}
 				                        <th>Eliminar</th>
 				                        {%endif%}
 				                        <th>Consultar</th>
-				                        {%if accionHabilitada(s,"editarI")%}
+				                        {%if accionHabilitada(s,"Crear Relacion")%}
+				                        <th>Asignar</th>
 				                        <th>Asignar</th>
 				                        {%endif%}
-				                        {%if accionHabilitada(s,"editarI")%}
-				                        <th>Asignar</th>
-				                        {%endif%}
-				                        {%if accionHabilitada(s,"editarI")%}
+				                        {%if accionHabilitada(s,"Eliminar Relacion")%}
 				                        <th>Relaciones</th>
 				                        {%endif%}
 										
                                 </tr>
-                                {% for i in items %}
+                                {% for i in s.items %}
                     
                                 <tr>
-                                		<td>Item X</td>
-                                		<td>Bloqueado</td>
-                                		<td>Tipo</td>
-                                		<td>4</td>
-                                        <!-- <td>{{i.nombre}}</td>
+                                		
+                                        <td>{{i.nombre}}</td>
                                         <td>{{i.estado}}</td>
-                                        <td>{i.item.tipoitem.nombre}}</td>
-                                        <td>{{i.version}}</td> -->
-                                        {% if accionHabilitada(s,"editarI")%}
+                                        <td>{{i.item.tipoitem.nombre}}</td>
+                                        <td>{{i.version}}</td>
+                                        {% if accionHabilitada(s,"Editar")%}
 	                                    <td>
                                         {% if iitemtipoitematributos %}
                                         	<a class="btn" href="/admitem/atributo/{{i.id}}">Completar</a>
@@ -105,7 +100,7 @@
                                         <a class="btn" href="/admitem/editaritem/{{i.id}}">Editar</a>
                                         </td>
                                         {%endif%}
-                                        {% if accionHabilitada(s,"eliminarI")%}
+                                        {% if accionHabilitada(s,"Eliminar")%}
 		                                <td>
 		                                <a class="btn btn-danger" href="/admitem/eliminaritem/{{i.id}}">Eliminar</a>
                                         </td>
@@ -113,19 +108,17 @@
                                         <td>
                                         <a class="btn btn-info" href="/admitem/consultaritem/{{i.id}}">Consultar</a>
                                         </td>
-                                        {%if accionHabilitada(s,"asignarpadrei")%}
+                                        {%if accionHabilitada(s,"Crear Relacion")%}
                                         <td>
                                         <a class="btn btn-warning" href="/admitem/asignarhijo/{{i.id}}">Padre</a>
                                         </td>
-	                                    {%endif%}
-                                        {%if accionHabilitada(s,"asignarantecesori")%}
                                         <td>
                                         <a class="btn btn-warning" href="/admitem/asignarantecesor/{{i.id}}">Antecesor</a>
                                         </td>
                                         {%endif%}
-                                        {%if accionHabilitada(s,"eliminarrelacion")%}
+                                        {%if accionHabilitada(s,"Eliminar Relacion")%}
                                         <td>
-                                        <a class="btn btn-warning" href="/admitem/eliminarrel/{{i.id}}">Eliminar</a>
+                                        <a class="btn btn-inverse" href="/admitem/eliminarrel/{{i.id}}">Eliminar</a>
                                         </td>
                                         {%endif%}
                                        
@@ -137,7 +130,7 @@
                                 </tr>
                                 {% endfor %}
                 </table>
-                <a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a>
+                <a class="btn" href="/admsolicitud/"><i class="icon-arrow-left"></i> Atras</a>
       	  </div>
       	  <div class="span3 bs-docs-sidebar" >
 	        	<ul class="nav nav-list bs-docs-sidenav">

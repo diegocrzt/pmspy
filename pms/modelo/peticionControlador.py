@@ -10,7 +10,7 @@ session = db_session()
 
 def getPeticion(id=None):
     """
-    recupera un usuario por su nombre de usuario
+    Retorna una peticion, recibe el id de la peticion
     """
     init_db()
     res=session.query(Peticion).filter(Peticion.id==id).first()
@@ -45,7 +45,7 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
     
 def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
     """
-    Permite editar un Peticion existente
+    Permite editar un Peticion existente, recibe el id de la peticion, su comentario, una lista de items y las acciones
     """
     p = getPeticion(idp)
     if comentario:
@@ -125,6 +125,8 @@ def quitarItem(idv=None):
     shutdown_session()
 
 def getVoto(idu=None,idp=None):
+    """Retorna un voto, recibe el id del usuario y el id de la peticion
+    """
     init_db()
     res=session.query(Voto).filter(Voto.user_id==idu).filter(Voto.peticion_id==idp).first()
     shutdown_session()
@@ -140,6 +142,8 @@ def comprobarVoto(idu=None,idp=None):
         return False
 
 def agregarVoto(idu=None, idp=None,valor=None):
+    """Crea un voto, recibe el id del ususario que vota, el id de la peticion en la que vota y el valor de su voto (True o False)
+    """
     if comprobarVoto(idu,idp):
         soli=getPeticion(idp)
         init_db()
@@ -154,6 +158,8 @@ def agregarVoto(idu=None, idp=None,valor=None):
         return False
     
 def quitarVoto(idu=None,idp=None):
+    """Elimina un voto, recibe el id del usuario y el id de la peticion
+    """
     soli=getPeticion(idp)
     soli.cantVotos=soli.cantVotos-1
     init_db()
@@ -163,6 +169,8 @@ def quitarVoto(idu=None,idp=None):
     shutdown_session()
     
 def contarVotos(idp=None):
+    """Cuentas los votos de una peticion y la rechaza o aprueba, recibe el id de la peticion
+    """
     soli=getPeticion(idp)
     votos=0
     for v in soli.votos:
@@ -190,7 +198,7 @@ def getMiembros(idp=None):
     
 def getMiembro(idp=None,idu=None):
     """
-    devuelve un usuario que sea miembro de un poryecto, recive el id del usuario y el proyecto
+    Devuelve un usuario que sea miembro de un poryecto, recive el id del usuario y el proyecto
     """
     init_db()
     res = session.query(Miembro).filter(Miembro.proyecto_id==idp).filter(Miembro.user_id==idu).first()
@@ -258,6 +266,17 @@ def getVersionesItemParaSolicitud(idpro=None):
                         aux.append(False)
                         l.append(aux)
         return l
-        
-  
+
+def opercionHabilitada(s=None, op=None):
+    if s and op:
+        if op=="Editar":
+            return s.acciones%10==1
+        elif op=="Eliminar":
+            return s.acciones%100>=10
+        elif op=="Crear Relacion":
+            return s.acciones%1000>=100
+        elif op=="Eliminar Relacion":
+            return s.acciones%10000>=1000
+        else:
+            return False
     
