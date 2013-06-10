@@ -18,3 +18,7 @@ def pop13aux():
     
 def funcionAReemplazar(s=None,a=None):
     return True
+
+def longitud(a=None):
+    l=len(a)
+    return l

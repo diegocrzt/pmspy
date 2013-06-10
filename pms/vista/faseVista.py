@@ -3,7 +3,7 @@ from flask import request
 from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas, controlCerrarFase, cerrarFase,actualizarFecha
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.rolControlador import getProyectosDeUsuario
-from pms.modelo.peticionControlador import getMiembros, agregarListaMiembros
+from pms.modelo.peticionControlador import getMiembros, agregarListaMiembros, contarVotos, quitarVoto
 from pms.modelo.usuarioControlador import getUsuarios, getUsuarioById
 from datetime import timedelta
 from datetime import datetime
@@ -341,6 +341,7 @@ class ListaMiembros(flask.views.MethodView):
         """
         usuarios=getUsuarios()
         ag=[]
+        cantmiembrosant= len(getMiembros(flask.session['proyectoid']))
         lider=getUsuarioById(flask.session['usuarioid'])
         ag.append(lider)
         for u in usuarios:
@@ -349,6 +350,18 @@ class ListaMiembros(flask.views.MethodView):
                     ag.append(u)
         if len(ag)%2!=0:
             agregarListaMiembros(ag,flask.session['proyectoid'])
+            cantidadm= len(getMiembros(flask.session['proyectoid']))
+            
+            p=getProyectoId(flask.session['proyectoid'])
+            for soli in p.solicitudes:
+                if soli.estado=="EnVotacion":
+                    for v in soli.votos:
+                        if v.user_id!=p.delider:
+                            if not v.usuario in p.miembros:
+                                quitarVoto(v.user_id, soli.id)
+                    if soli.cantVotos==len(p.miembros):
+                        contarVotos(soli.id)
+                
             flask.flash(u"COMITE EDITADO", "text-success")
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))            
         else:

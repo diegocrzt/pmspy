@@ -19,6 +19,8 @@ import modelo.rolControlador
 import vista.funcionpop
 import vista.solicitudVista
 
+app.jinja_env.globals.update(len=vista.funcionpop.longitud)
+app.jinja_env.globals.update(puedeVotar=modelo.peticionControlador.comprobarVoto)
 app.jinja_env.globals.update(esMiembro=modelo.peticionControlador.getMiembro)
 app.jinja_env.globals.update(accionHabilitada=vista.funcionpop.funcionAReemplazar)
 app.jinja_env.globals.update(tienePermiso=modelo.rolControlador.tienePermiso)

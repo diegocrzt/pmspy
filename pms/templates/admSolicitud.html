@@ -90,13 +90,13 @@
 		                                {%endif%}
                                         </td>
                                         <td>
-                                        {% if s.estado=="EnVotacion" and esMiembro(session['proyectoid'],session['usuarioid']) %}
+                                        {% if s.estado=="EnVotacion" and esMiembro(session['proyectoid'],session['usuarioid']) and puedeVotar(session['usuarioid'], s.id) %}
 		                                <a class="btn btn-primary" href="/admsolicitud/votar/{{s.id}}">Votar</a>
 		                                {%endif%}
                                         </td>
                                         <td>
                                         {% if s.estado=="Aprobada" %}
-		                                <a class="btn btn-warning" href="/admsolicitud/ejecutar/1">Ejecutar>></a>
+		                                <a class="btn btn-warning" href="/admsolicitud/ejecutar/{{s.id}}">Ejecutar>></a>
 		                                {%endif%}
                                         </td>
                         	</tr>
