@@ -2,7 +2,7 @@ import flask.views
 from flask import request
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
+from pms.modelo.peticionControlador import contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -222,7 +222,7 @@ class EditarSolicitud(flask.views.MethodView):
             error=True
         if error:
             return flask.render_template('editarSolicitud.html', s=soli, versiones=items, acciones=acciones)
-        editarPeticion(flask.session['solicitudid'],flask.request.form['comentario'], ag, acc)
+        editarPeticion(flask.session['solicitudid'],flask.request.form['comentario'][:100], ag, acc)
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
 
@@ -324,3 +324,37 @@ def enviarSolicitud(s=None):
         enviarPeticion(flask.session['solicitudid'])
         flask.flash(u"ENVIO EXITOSO","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
+    
+@app.route('/admsolicitud/votar/<s>',methods=['POST', 'GET'])
+@pms.vista.required.login_required
+def votarEnSoliciutud(s=None):
+    if request.method == "GET":
+        flask.session['solicitudid']=s
+        soli=getPeticion(s)
+        acc=[]
+        if soli.acciones%10==1:
+            acc.append("Editar")
+        if soli.acciones%100>=10:
+            acc.append("Eliminar")
+        if soli.acciones%1000>=100:
+            acc.append("Crear Relacion")
+        if soli.acciones%10000>=1000:
+            acc.append("Eliminar Relacion")
+        return flask.render_template('votarSolicitud.html', s=soli, acciones=acc)
+    if request.method == "POST":
+        voto=None
+        if "Aprobar" in flask.request.form:
+            voto=True
+        if "Rechazar" in flask.request.form:
+            voto=False
+         
+        agregarVoto(flask.session['usuarioid'],s,voto)
+        cantidadm= len(getMiembros(flask.session['proyectoid']))
+        soli=getPeticion(s)
+        if soli.cantVotos>=cantidadm:
+            contarVotos(soli.id)
+        
+        flask.flash(u"VOTACION EXITOSA","text-success")
+        return flask.redirect(flask.url_for('admsolicitud'))
+        
+        

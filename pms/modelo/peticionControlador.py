@@ -25,8 +25,11 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
     """
     if proyecto_id and comentario and usuario_id and items and acciones:
         init_db()
-        numero=session.query(Peticion).count()
-        numero=numero+1
+        ultimo=session.query(Peticion).order_by(Peticion.id.desc()).first()
+        if ultimo:
+            numero=ultimo.numero+1
+        else:
+            numero=1
         fechaCreacion=datetime.today()
         #calcular costo y dificultad
         peticion=Peticion(numero,proyecto_id,comentario,"EnEdicion",usuario_id,0,len(items),120,120,fechaCreacion,None,acciones)
@@ -62,11 +65,11 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
     session.commit()
     shutdown_session()
     
-def eliminarPeticion(id=None):
+def eliminarPeticion(idp=None):
     """Elimina una Peticion, recibe el id de la peticion
     """
     init_db()
-    u=getPeticion(id)
+    u=getPeticion(idp)
     for l in u.items:
         quitarItem(l.id)
     for l in u.votos:
@@ -100,8 +103,9 @@ def agregarItem(idv=None,idp=None,):
     """
     r=comprobarItemPeticion(idv)
     if r==True:
-        init_db()
+       
         v=getVersionId(idv)
+        init_db()
         v.peticion_id=idp
         session.merge(v)
         session.commit()
@@ -127,28 +131,53 @@ def getVoto(idu=None,idp=None):
     return res
 
 def comprobarVoto(idu=None,idp=None):
+    """Comprueba que el usuario no haya votado aun en la solicitud, recibe el id del usuario y el id de la solicitud
+    """
     res=getVoto(idu,idp)
     if res==None:
         return True
     else:
         return False
 
-def agregarVoto(idu=None,idp=None,valor=None):
+def agregarVoto(idu=None, idp=None,valor=None):
     if comprobarVoto(idu,idp):
+        soli=getPeticion(idp)
         init_db()
-        v=Voto(idu,idp,valor)
+        soli.cantVotos=soli.cantVotos+1
+        v=Voto(idp,idu,valor)
         session.add(v)
+        session.merge(soli)
+        session.commit()
         shutdown_session()
         return True
     else:
         return False
     
 def quitarVoto(idu=None,idp=None):
+    soli=getPeticion(idp)
+    soli.cantVotos=soli.cantVotos-1
     init_db()
     session.query(Voto).filter(Voto.peticion_id==idp).filter(Voto.user_id==idu).delete()
+    session.merge(soli)
     session.commit()
     shutdown_session()
     
+def contarVotos(idp=None):
+    soli=getPeticion(idp)
+    votos=0
+    for v in soli.votos:
+        if v.valor==True:
+            votos=votos+1
+    init_db()
+    c=(soli.cantVotos+1)/2 #cantidad necesaria para aprobar
+    print c
+    if votos>=c:
+        soli.estado="Aprobada"
+    else:
+        soli.estado="Rechazada"
+    session.merge(soli)
+    session.commit()
+    shutdown_session()
     
 def getMiembros(idp=None):
     """

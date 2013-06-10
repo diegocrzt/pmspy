@@ -31,14 +31,39 @@
 <div class="container">
 	<h3>Consultar Solicitud de Cambio - <em>{{session['proyectonombre']}}</em></h3>
 	<hr>
-	 <p><strong>Fecha de Creacion:</strong> {{s.fechaCreacion.strftime('%Y/%m/%d - %H:%M')}} </p>
-	 <p><strong>Solicitante:</strong>  {{s.usuario.nombre}}</p>
-	 <p><strong>Dificultad:</strong> {{s.dificultadT}}</p>
-	 <p><strong>Costo:</strong> {{s.costoT}}</p>
-	 <p><strong>Cantidad de Items: </strong>{{s.cantItems}}</p>
-	 <p><strong>Estado:</strong> {{s.estado}}</p>
-	 <p><strong>Motivo de cambio:</strong> {{s.comentario}}</p>
-	 <p><strong>Votos: </strong> {{s.cantVotos}}
+	<div class="span11">
+	<table>
+		<tr>
+			<td width="300px">
+			 	<strong>Fecha de Creacion:</strong> {{s.fechaCreacion.strftime('%Y/%m/%d - %H:%M')}} 
+			</td>
+			<td>
+			 	<strong>Solicitante:</strong>  {{s.usuario.nombre}}
+			</td>
+		 </tr>
+		 <tr>
+			 <td>
+			 	<strong>Dificultad:</strong> {{s.dificultadT}}
+			 </td>
+			 <td>
+			 	<strong>Costo:</strong> {{s.costoT}}
+			 </td>
+		 </tr>
+		 <tr>
+			 <td>
+			 	<strong>Cantidad de Items: </strong>{{s.cantItems}} 
+			 </td>
+			 <td>
+			 	<strong>Estado:</strong> {{s.estado}}
+			 </td>
+		 </tr>
+		 <tr>
+			 <td colspan="2">
+			 	<strong>Motivo de cambio:</strong> {{s.comentario}}
+			 </td>
+		 </tr>
+	 </table>
+	 </div>
 	<div class="span8">
 	<p align="center">	<strong>Lista de Items</strong>
 			
@@ -75,51 +100,28 @@
           	{%endfor%}
         </table>
         <p align="left">	<strong>Acciones que realizaran sobre los items:</strong></p>
-		<table>
-				<tr>
-					<td>
+		
 				        <div class="span3">
-						
 				        <table  class="table table-striped" >
-							<tr >
-				               <th><i class="icon-check"></i></th>
-				               <th>Accion</th>
-				        	</tr>
 				        	{%for a in acciones%}
 				        	<tr>
-				        	
-				        			{% if a[1]==True %}
-						            		<td><input type="checkbox" name="{{a[0]}}" checked disabled/></td>
-						           	{% else %}
-						           			<td><input type="checkbox" name="{{a[0]}}" disabled/></td>
-				            		{% endif %}
-				            		<td>{{a[0]}}</td>
-				           
+				        			<th><i class="icon-check"></i></th>
+				            		<td>{{a}}</td>
 				        	</tr>
 				        	 {%endfor%}
 				        </table>
 						</div>
-				   	</td>
-				</tr>
-		        <tr>
-			        <td>
-			        {%if consultar==True %}
-				        <div class="span10" align="left">
-				            <a class="btn btn-success" href="/admsolicitud/">Aceptar</a>
-				        	
-						</div>
-					{%else%}
-					<form action="/admsolicitud/enviar/{{session['solicitudid']}}" method="post">
-						 <div class="span10" align="left">
-						 	<input class="btn btn-success" type="submit" value="Enviar" />
+			        
+					
+    	</div>
+    	<form action="/admsolicitud/votar/{{session['solicitudid']}}" method="post">
+						 <div class="span8" align="left">
+						 <p> <strong>Votar: </strong>
+						 	<input class="btn btn-success" type="submit" value="Aprobar" name="Aprobar"/>
+						 	<input class="btn btn-danger" type="submit" value="Rechazar" name="Rechazar" /> </p>
+						 	<br/>
 				            <a class="btn btn-inverse" href="/admsolicitud/">Cancelar</a>
 						</div>
 					</form>
-					{%endif%}
-					</td>
-					<td></td>
-		        </tr>
-		   </table>
-    	</div>
 </div>
 {%endblock%}		
