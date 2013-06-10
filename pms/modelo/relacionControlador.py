@@ -257,4 +257,33 @@ def hijosRecursivo(nA, grafo):
             l.append(e)
     l.append(nA)
     return l
-    
+
+def calcularCyD(listaItems):
+    """
+    recibe una lista de los id de la version de los items, aunque sea solo uno que sea iterable de alguna forma
+    """
+    ver=getVersionId(listaItems[0])
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    cola=[]
+    for n in grafo:
+        for l in listaItems:
+            if int(n.version)==int(l):
+                cola.append(n)
+                n.marca=True
+    costo=0
+    dificultad=0
+    for c in cola:
+        costo=costo+c.costo
+        dificultad=dificultad+c.dificultad
+        for nex in c.salientes:
+            if next.marca==False:
+                cola.append(nex)
+                nex.marca=True
+        cola.remove(c)
+    res=[]
+    res.append(costo)
+    res.append(dificultad)
+    return res

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/">Logout</a></li>
+			<li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+
+{%block mensaje%}
+
+{%endblock%}
+
+{%block content%}
+<div class="container">
+	<h3>Editar Solicitud de Cambio en <em>{{session['proyectonombre']}}</em></h3>
+	<hr>
+	  <p><strong>Fecha de Creacion:</strong> {{s.fechaCreacion.strftime('%Y/%m/%d - %H:%M')}} </p>
+	 <p><strong>Solicitante:</strong>  {{s.usuario.nombre}}</p>
+	 <p><strong>Dificultad:</strong> {{s.dificultadT}}</p>
+	 <p><strong>Costo:</strong> {{s.costoT}}</p>
+	 <p><strong>Cantidad de Items: </strong>{{s.cantItems}}</p>
+	<form action="{{url_for('editarsolicitud')}}" method="POST">
+	<div class="span8">
+	<p align="center">	<strong>Lista de Items Bloqueado o en Conflicto</strong>
+		{%  with messages = get_flashed_messages(category_filter=["item"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<small class="text-error">{{ message }}</small>	
+  					{% endfor %}    					
+			{% endif %}
+		{% endwith %}</p>	
+	<table  class="table table-striped" >
+			<tr>
+               <th>Nombre</th>
+               <th>Estado</th>
+               <th>Fase</th>
+               <th>Version</th>
+               <th>Costo</th>
+               <th>Dificultad</th>
+               <th><i class="icon-check"></i></th>
+            </tr>
+            {% for l in versiones %}
+            <tr>   
+            	<td>{{l[0].nombre}}</td>
+            	<td>{{l[0].estado}}</td>
+            	<td>{{l[0].item.tipoitem.fase.numero}}</td>
+            	<td>{{l[0].version}}</td>
+            	<td>{{l[0].costo}}</td>
+            	<td>{{l[0].dificultad}}</td>
+            		{% if l[1]==True %}
+		            		<td><input type="checkbox" name="{{l[0].nombre}}" checked/></td>
+		           	{% else %}
+		           			<td><input type="checkbox" name="{{l[0].nombre}}"/></td>
+            		{% endif %}
+           </tr>
+           {% else %}
+	       <tr>
+	            <td>
+	          		No existen items bloqueado o en conflicto
+	          	</td>
+          		<td></td>
+          		<td></td>
+          		<td></td>
+          		<td></td>
+          		<td></td>
+          		<td></td>
+          	</tr>
+          	{%endfor%}
+        </table>
+        <p><strong class="text-info">--</strong> Las relaciones solo se podran crear entre los items que se encuentren en la solicitud.<strong class="text-info"> --</strong></p>
+        <p align="left">	<strong>Acciones que realizaran sobre los items:</strong>
+        {%  with messages = get_flashed_messages(category_filter=["accion"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<small class="text-error">{{ message }}</small>	
+  					{% endfor %}    					
+			{% endif %}
+		{% endwith %}  </p>
+		<table>
+				<tr>
+					<td>
+				        <div class="span3">
+						
+				        <table  class="table table-striped" >
+							<tr >
+				               <th><i class="icon-check"></i></th>
+				               <th>Accion</th>
+				        	</tr>
+				        	{%for a in acciones%}
+				        	<tr>
+				        	
+				        			{% if a[1]==True %}
+						            		<td><input type="checkbox" name="{{a[0]}}" checked/></td>
+						           	{% else %}
+						           			<td><input type="checkbox" name="{{a[0]}}"/></td>
+				            		{% endif %}
+				            		<td>{{a[0]}}</td>
+				           
+				        	</tr>
+				        	 {%endfor%}
+				        </table>
+						</div>
+				   	</td>
+				</tr>
+						
+			    <tr>
+			        <td>
+				        <p>Motivo de cambio<small class="text-error">(*)</small>:
+						{%  with messages = get_flashed_messages(category_filter=["comentario"]) %}
+						  			{% if messages %}
+						  				{% for message in messages %}
+					   						<small class="text-error">{{ message }}</small>	
+					   					{% endfor %}    					
+									{% endif %}
+								{% endwith %}  </p>
+						<input type="text" class="span6 search-query" name="comentario" value="{{s.comentario}}">
+					</td>
+				</tr>
+				<tr> 
+					<td><br></td> 
+				</tr>
+		        <tr>
+			        <td>
+				        <div class="span10" align="left">
+				            <p><input class="btn btn-success" type="submit" value="Aceptar" />
+				            <a class="btn btn-inverse" href="/admsolicitud/">Cancelar</a>
+				        	
+						</div>
+					</td>
+					<td></td>
+		        </tr>
+		   </table>
+    	</div>
+    </form>
+</div>
+{%endblock%}		

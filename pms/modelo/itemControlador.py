@@ -8,6 +8,7 @@ from entidad import TipoItem, Item, VersionItem, ValorStr, ValorNum, ValorBoolea
 from initdb import db_session, init_db, shutdown_session
 from tipoItemControlador import getTiposFase, getTipoItemId
 from atributoControlador import getAtributoId
+from proyectoControlador import getProyectoId
 from faseControlador import getFaseId
 from datetime import datetime
 from sqlalchemy import or_
@@ -165,7 +166,7 @@ def copiarValores(idvante=None,idvnueva=None):
 def peticionExiste(vid=None):
     if vid:
         init_db()
-        query=session.query(Peticion).filter(Peticion.item_id==vid).first()
+        #query=session.query(Peticion).filter(Peticion.item_id==vid).first()
         if query:
             return True
         else:
@@ -222,9 +223,10 @@ def getItemsFiltrados(fase=None, filtro=None):
                 r.append(getVersionItem(i.id))
         return r
     
+
+
 if __name__== '__main__':
     fase=getFaseId(1)
     query=getItemsFiltrados(fase,"1")
     for q in query:
         print q.nombre + " tipo:" + str(q.item.tipo)
-            

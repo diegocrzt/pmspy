@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block menu %}
-	
+		
   <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
@@ -74,11 +74,11 @@
             {%else%}
             	<td><input type="checkbox" name="crearLB" /> Crear</td>
             {%endif%}
-            {%if tienePermiso(r,"EliminarLB")%}
-            	<td><input type="checkbox" name="eliminarLB" checked /> Eliminar</td>
+             <!-- {%if tienePermiso(r,"EliminarLB")%}
+                <td><input type="checkbox" name="eliminarLB" checked /> Eliminar</td>
             {%else%}
-            	<td><input type="checkbox" name="eliminarLB" /> Eliminar</td>
-            {%endif%}
+                <td><input type="checkbox" name="eliminarLB" /> Eliminar</td>
+            {%endif%} -->
             </tr>
             </table>
             </div>
