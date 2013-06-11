@@ -10,7 +10,7 @@ from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
 from pms.modelo.itemControlador import getItemsFiltrados, getItemsPaginados, peticionExiste, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
-from pms.modelo.peticionControlador import crearPeticion
+from pms.modelo.peticionControlador import crearPeticion, buscarSolicitud
 from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
@@ -220,6 +220,7 @@ class EditarItem(flask.views.MethodView):
         flask.session.pop('aux4',None)
         desAprobarAdelante(version.id)
         flask.flash(u"EDICION EXITOSA","text-success")
+        buscarSolicitud(version.id)
         actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
     
@@ -365,6 +366,7 @@ def auHijo(vid=None):
             desAprobar(flask.session['hijo'])
             desAprobarAdelante(flask.session['hijo'])
         actualizarFecha(flask.session['faseid'])
+        buscarSolicitud(flask.session['hijo'])
         return flask.redirect('/admitem/asignarhijo/'+str(flask.session['hijo']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -408,6 +410,7 @@ def auAntecesor(vid=None):
             desAprobar(flask.session['antecesor'])
             desAprobarAdelante(flask.session['antecesor'])
         actualizarFecha(flask.session['faseid'])
+        buscarSolicitud(flask.session['antecesor'])
         return flask.redirect('/admitem/asignarantecesor/'+str(flask.session['antecesor']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")

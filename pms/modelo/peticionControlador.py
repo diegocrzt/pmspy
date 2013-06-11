@@ -298,7 +298,7 @@ def compararPeticion(ids=None):
     for a in aux:
         l.append(a.id) 
     r=calcularCyD(l)
-    if r[0]!=peticion.costo or r[1]!=peticion.dificultad:
+    if r[0]!=peticion.costoT or r[1]!=peticion.dificultadT:
         reiniciarVotacion(peticion.id)
         return True
     else:
