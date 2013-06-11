@@ -24,4 +24,13 @@ def AdmEjecutarSolicitud(s=None):
 """Fuciones de eliminar y crear relacion que si tienen que ser diferentes porque solo deben pasar los item de la solicitud
 """
 
-
+@app.route('/admsolicitud/ejecutar/editaritem/<i>')
+@pms.vista.required.login_required
+def edItemSolicitud(i=None):
+    iversion=getVersionId(i)
+    flask.session['itemid']=i
+    return flask.render_template('editarItem.html')
+    
+    
+    
+    
