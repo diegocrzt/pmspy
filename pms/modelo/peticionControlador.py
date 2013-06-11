@@ -36,8 +36,9 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
         for i in items:
             l.append(i.id)
         cd=calcularCyD(l)
-        #calcular costo y dificultad
+        #calcular costo y dificultad y mete en el crear de peticion!!1
         peticion=Peticion(numero,proyecto_id,comentario,"EnEdicion",usuario_id,0,len(items),cd[0],cd[1],fechaCreacion,None,acciones)
+        ##------------
         session.add(peticion)
         session.commit()
         peticion=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).filter(Peticion.numero==numero).first()
