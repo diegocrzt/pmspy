@@ -32,13 +32,18 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
         else:
             numero=1
         fechaCreacion=datetime.today()
-        #calcular costo y dificultad
-        peticion=Peticion(numero,proyecto_id,comentario,"EnEdicion",usuario_id,0,len(items),120,120,fechaCreacion,None,acciones)
+        l=[]
+        for i in items:
+            l.append(i.id)
+        cd=calcularCyD(l)
+        #calcular costo y dificultad y mete en el crear de peticion!!1
+        peticion=Peticion(numero,proyecto_id,comentario,"EnEdicion",usuario_id,0,len(items),cd[0],cd[1],fechaCreacion,None,acciones)
+        ##------------
+        ##------------
         session.add(peticion)
         session.commit()
         peticion=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).filter(Peticion.numero==numero).first()
         if peticion:
-            print "---------------------------------------------"
             for i in items:
                 a=agregarItem(i.id,peticion.id)
                  
@@ -55,11 +60,16 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
         p.acciones=acciones
     if items:
         for i in items:
-            if comprobarItemPeticion(i.id):
                 agregarItem(i.id,p.id)
         for i in p.items:
             if not i in items:
-                quitarItem(i.id,p.id)
+                quitarItem(i.id)
+        l=[]
+        for i in items:
+            l.append(i.id)
+        cd=calcularCyD(l)
+        p.costoT=cd[0]
+        p.dificultadT=cd[1]
     p.cantItems=len(p.items)
     init_db()
     session.merge(p)
