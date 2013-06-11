@@ -61,13 +61,13 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
                 agregarItem(i.id,p.id)
         for i in p.items:
             if not i in items:
-                quitarItem(i.id,p.id)
+                quitarItem(i.id)
         l=[]
         for i in items:
             l.append(i.id)
         cd=calcularCyD(l)
         p.costoT=cd[0]
-        p.dificultad=cd[1]
+        p.dificultadT=cd[1]
     p.cantItems=len(p.items)
     init_db()
     session.merge(p)
