@@ -29,11 +29,11 @@
 
 {%block content%}
 <div class="container">
-	<h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+	<h3 class="muted" align="center">{{session['proyectonombre']}}</h3>
 	<h3>Editar Item</h3>
 	<hr>
 	<p>Complete los datos del Item</p>
-		<form action="{{url_for('editaritem')}}" method="post">
+		<form action="{{url_for('editaritemsolicitud')}}" method="post">
             <p>Nombre<small class="text-error">(*)</small>:
             {%  with messages = get_flashed_messages(category_filter=["nombre"]) %}
 		  			{% if messages %}
@@ -66,7 +66,7 @@
             <br/>
 
             <p><input class="btn btn-success" type="submit" value="Aceptar" />
-            <a class="btn btn-inverse" href="/admitem/{{session['faseid']}}">Cancelar</a></p>
+            <a class="btn btn-inverse" href="/admsolicitud/ejecutar/{{session['solicitudid']}}">Cancelar</a></p>
         </form>
 </div> 
 {%endblock%}

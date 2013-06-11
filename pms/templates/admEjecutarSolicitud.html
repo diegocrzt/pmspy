@@ -25,17 +25,6 @@
               
 {%endblock%}
 
-{%block mensaje%}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-          <div class="container" align="center">
-            {% for category, message in messages %}
-              <h4 class="{{ category }}">{{ message }}</h4>
-            {% endfor %}
-		  </div>
-          {% endif %}
-        {% endwith %}
-{%endblock%}
 
 {%block content%}
 <div class="fases">
@@ -91,18 +80,18 @@
                                         {% if accionHabilitada(s,"Editar")%}
 	                                    <td>
                                         {% if iitemtipoitematributos %}
-                                        	<a class="btn" href="/admitem/atributo/{{i.id}}">Completar</a>
+                                        	<a class="btn" href="/admsolicitud/ejecutar/atributo/{{i.id}}">Completar</a>
                                         {% else %}
                                         	No tiene Atributos
                                         {%endif%}
                                         </td>
                                         <td>
-                                        <a class="btn" href="/admitem/editaritem/{{i.id}}">Editar</a>
+                                        <a class="btn" href="/admsolicitud/ejecutar/editaritem/{{i.id}}">Editar</a>
                                         </td>
                                         {%endif%}
                                         {% if accionHabilitada(s,"Eliminar")%}
 		                                <td>
-		                                <a class="btn btn-danger" href="/admitem/eliminaritem/{{i.id}}">Eliminar</a>
+		                                <a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminaritem/{{i.id}}">Eliminar</a>
                                         </td>
                                         {%endif%}
                                         <td>
@@ -110,15 +99,15 @@
                                         </td>
                                         {%if accionHabilitada(s,"Crear Relacion")%}
                                         <td>
-                                        <a class="btn btn-warning" href="/admitem/asignarhijo/{{i.id}}">Padre</a>
+                                        <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarhijo/{{i.id}}">Padre</a>
                                         </td>
                                         <td>
-                                        <a class="btn btn-warning" href="/admitem/asignarantecesor/{{i.id}}">Antecesor</a>
-                                        </td>
+                                        <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarantecesor/{{i.id}}">Antecesor</a>
+                                        </td>	
                                         {%endif%}
                                         {%if accionHabilitada(s,"Eliminar Relacion")%}
                                         <td>
-                                        <a class="btn btn-inverse" href="/admitem/eliminarrel/{{i.id}}">Eliminar</a>
+                                        <a class="btn btn-inverse" href="/admsolicitud/ejecutar/eliminarrel/{{i.id}}">Eliminar</a>
                                         </td>
                                         {%endif%}
                                        

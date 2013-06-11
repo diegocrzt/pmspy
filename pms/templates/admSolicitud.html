@@ -44,9 +44,9 @@
         <div class="row" >
                 <div class="span14">
                         <h2> Listado de Solicitudes </h2>
-                        <form class="form-search" action="{{url_for('admsolicitud')}}" method="POST" >
+                        <!-- <form class="form-search" action="{{url_for('admsolicitud')}}" method="POST" >
                         <p align="right">
-  						<input type="text" class="input-medium search-query" name="fil" value="{{session['filtro']}}">
+  						<input type="text" class="input-medium search-query" name="fil" value="{{session['filtro']}}"> -->
   						<button type="submit" class="btn" name="buscar">Buscar</button></p>
                         <table class="table table-striped table-bordered">
                                 <tr>
@@ -72,38 +72,40 @@
                                         <td>{{s.estado}}</td>
                                         <td>{{s.cantItems}}</td>
                                        	<td>
-                                        {%if s.estado=="EnEdicion" and s.usuario_id==session['usuarioid']%}
-                                        <a class="btn" href="/admsolicitud/editar/{{s.id}}">Editar</a>
-                                        {%endif%}
+	                                        {%if s.estado=="EnEdicion" and s.usuario_id==session['usuarioid']%}
+	                                        <a class="btn" href="/admsolicitud/editar/{{s.id}}">Editar</a>
+	                                        {%endif%}
                                         </td>
                                         <td>
-                                        {% if s.usuario_id==session['usuarioid']%}
-                                        <a class="btn btn-danger" href="/admsolicitud/eliminar/{{s.id}}">Eliminar</a>
-                                        {% endif %}
+	                                        {% if s.usuario_id==session['usuarioid']%}
+	                                        <a class="btn btn-danger" href="/admsolicitud/eliminar/{{s.id}}">Eliminar</a>
+	                                        {% endif %}
                                         </td>
                                         <td>
-                                        <a class="btn btn-info" href="/admsolicitud/consultar/{{s.id}}">Consultar</a>
+                                        	<a class="btn btn-info" href="/admsolicitud/consultar/{{s.id}}">Consultar</a>
                                         </td>
                                         <td>
-                                        {%if s.estado=="EnEdicion" and s.usuario_id==session['usuarioid']%}
-		                                <a class="btn btn-success" href="/admsolicitud/enviar/{{s.id}}">Enviar</a>
-		                                {%endif%}
+	                                        {%if s.estado=="EnEdicion" and s.usuario_id==session['usuarioid']%}
+			                                <a class="btn btn-success" href="/admsolicitud/enviar/{{s.id}}">Enviar</a>
+			                                {%endif%}
                                         </td>
                                         <td>
-                                        {% if s.estado=="EnVotacion" and esMiembro(session['proyectoid'],session['usuarioid']) and puedeVotar(session['usuarioid'], s.id) %}
-		                                <a class="btn btn-primary" href="/admsolicitud/votar/{{s.id}}">Votar</a>
-		                                {%endif%}
+	                                        {% if s.estado=="EnVotacion" and esMiembro(session['proyectoid'],session['usuarioid']) and puedeVotar(session['usuarioid'], s.id) %}
+			                                <a class="btn btn-primary" href="/admsolicitud/votar/{{s.id}}">Votar</a>
+			                                {%endif%}
                                         </td>
                                         <td>
-                                        {% if s.estado=="Aprobada" %}
-		                                <a class="btn btn-warning" href="/admsolicitud/ejecutar/{{s.id}}">Ejecutar>></a>
-		                                {%endif%}
+	                                        {% if s.estado=="Aprobada" and s.usuario_id==session['usuarioid'] %}
+			                                <a class="btn btn-warning" href="/admsolicitud/ejecutar/{{s.id}}">Ejecutar>></a>
+			                                {%endif%}
                                         </td>
                         	</tr>
                                 {% else %}
                         
                                 <tr>
+                                	<td colspan="11">
                                         No se han creado Solicitudes aún
+                                	</td>
                                 </tr>
                                 {% endfor %}
                 </table>
@@ -117,20 +119,20 @@
 	                	<a class="btn btn-mini" href="/admitem/nextitem"> Siguiente &raquo;</a>
 	                	{% endif %}
                 	{% else %}
-	                	<a class="muted">{{infopag}}</a>
+	                	<!-- <a class="muted">{{infopag}}</a>
 	                	{% if session['hayprev']==True %}
 	                	<button type="submit" class="btn btn-mini" name="anterior">&laquo; Anterior Bus</button>
 	                	{% endif %}
 	                	{% if session['haynext']==True %}
 	                	<button type="submit" class="btn btn-mini" name="sgte">Bus Siguiente &raquo;</button>
-	                	{% endif %}
+	                	{% endif %} -->
 	                	
                 	{% endif %}
                 </div>
                 		        
 		     
                 
-                </form>
+                <!-- </form> -->
                 <a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a>
       	  </div>
       	   <div class="span3 bs-docs-sidebar" >
