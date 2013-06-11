@@ -310,6 +310,12 @@ def compararPeticion(ids=None):
     r=calcularCyD(l)
     if r[0]!=peticion.costoT or r[1]!=peticion.dificultadT:
         reiniciarVotacion(peticion.id)
+        init_db()
+        peticion.costoT=r[0]
+        peticion.dificultadT=r[1]
+        session.merge(peticion)
+        session.commit()
+        shutdown_session()
         return True
     else:
         return False
