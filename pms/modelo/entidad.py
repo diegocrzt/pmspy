@@ -180,15 +180,13 @@ class VersionItem(Base):
     costo = Column(Integer)
     dificultad =Column(Integer)
     deitem = Column(Integer, ForeignKey('item.id'))
-    peticion_id=Column(Integer,ForeignKey('peticion.id'))
-    peticion=relationship("Peticion",backref="items")
     atributosnum = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
 
     
-    def __init__(self, version, nombre, estado, actual, costo, dificultad, deitem,peticion_id=None):
+    def __init__(self, version, nombre, estado, actual, costo, dificultad, deitem):
         self.version = version
         self.nombre = nombre
         self.estado = estado
@@ -196,7 +194,6 @@ class VersionItem(Base):
         self.costo =costo
         self.dificultad=dificultad
         self.deitem = deitem
-        self.peticion_id=peticion_id
         
     def __repr__(self):
         return 'VersionItem { '+ self.nombre + '('+ self.version+ ')}'
@@ -422,6 +419,14 @@ class Miembro(Base):
     def __init__(self, proyecto_id, user_id):
         self.proyecto_id=proyecto_id
         self.user_id=user_id
-
+        
+class ItemPeticion(Base):
+    __tablename__ = 'item_peticion'
+    peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
+    user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
+    
+    def __init__(self, peticion_id, user_id):
+        self.peticion_id=peticion_id
+        self.user_id=user_id
 
 init_db()
