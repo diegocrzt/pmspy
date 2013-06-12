@@ -9,7 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from pms import app
 if app.config['DEV'] == True:
-    engine = create_engine('postgresql://postgres:postgres@localhost:5432/pms',echo=True)
+    engine = create_engine('postgresql://postgres:postgres@localhost:5432/pms')
     print 'Ambiente de Desarrollo'
 else:
     engine = create_engine('postgresql://postgres:postgres@localhost:5432/pmstest')

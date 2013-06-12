@@ -314,3 +314,45 @@ def actualizarItemsSolicitud(s=None):
                 return True
         return False
             
+def reiniciarVotacion(ids=None):
+    peticion=getPeticion(ids)
+    peticion.cantVotos=0
+    init_db()
+    session.query(Voto).filter(Voto.peticion_id==ids).delete()
+    session.commit()
+    session.merge(peticion)
+    session.commit()
+    shutdown_session()
+    
+def compararPeticion(ids=None):
+    peticion=getPeticion(ids)
+    aux=peticion.items
+    l=[]
+    for a in aux:
+        l.append(a.id) 
+    r=calcularCyD(l)
+    if r[0]!=peticion.costo or r[1]!=peticion.dificultad:
+        reiniciarVotacion(peticion.id)
+        return True
+    else:
+        return False
+    
+def buscarSolicitud(idv=None):
+    ver=getVersionId(idv)
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    cola=[]
+    for n in grafo:
+        if int(n.version)==int(idv):
+            n.marca=True
+            cola.append(n)
+    for c in cola:
+        for s in c.entrantes:
+            s.marca=True
+            cola.append(s)
+            if not comprobarItemPeticion(s.version):
+                v=getVersionId(s.version)
+                compararPeticion(v.peticion_id)
+            

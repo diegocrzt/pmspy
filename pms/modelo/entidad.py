@@ -12,8 +12,6 @@ from sqlalchemy.types import DateTime
 from initdb import init_db
 from initdb import Base
 
-
-
 class Usuario(Base):
 
     """
