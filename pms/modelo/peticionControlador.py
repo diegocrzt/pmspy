@@ -39,7 +39,6 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
         #calcular costo y dificultad y mete en el crear de peticion!!1
         peticion=Peticion(numero,proyecto_id,comentario,"EnEdicion",usuario_id,0,len(items),cd[0],cd[1],fechaCreacion,None,acciones)
         ##------------
-        ##------------
         session.add(peticion)
         session.commit()
         peticion=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).filter(Peticion.numero==numero).first()
@@ -261,7 +260,7 @@ def agregarListaMiembros(lista=None,idp=None):
         return False 
     
 def getVersionesItemParaSolicitud(idpro=None):
-    """Retorna una lista de items que no es encuentran en una peticion y que estan en estado Bloqueado o Conflicto
+    """Retorna una lista de items que no se encuentran en una peticion en votacion, en edicion o aprobada y que estan en estado Bloqueado o Conflicto
     """
     if idpro:
         l=[]
@@ -272,13 +271,21 @@ def getVersionesItemParaSolicitud(idpro=None):
                 for i in t.instancias:
                     v=getVersionItem(i.id)
                     aux=[]
-                    if comprobarItemPeticion(v.id) and (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
-                        aux.append(v)
-                        aux.append(False)
-                        l.append(aux)
+                    if (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
+                        if comprobarItemPeticion(v.id):
+                            aux.append(v)
+                            aux.append(False)
+                            l.append(aux)
+                        """else:
+                            if v.peticion.estado=="Rechazada" or v.peticion.estado=="Ejecutada":
+                                aux.append(v)
+                                aux.append(False)
+                                l.append(aux)"""
         return l
 
 def opercionHabilitada(s=None, op=None):
+    """Retorna True si la solicitud de id s contiene la operacion que se le pasa en op
+    """
     if s and op:
         if op=="Editar":
             return s.acciones%10==1
@@ -290,54 +297,20 @@ def opercionHabilitada(s=None, op=None):
             return s.acciones%10000>=1000
         else:
             return False
-    
-def reiniciarVotacion(ids=None):
-    peticion=getPeticion(ids)
-    peticion.cantVotos=0
-    init_db()
-    session.query(Voto).filter(Voto.peticion_id==ids).delete()
-    session.commit()
-    session.merge(peticion)
-    session.commit()
-    shutdown_session()
-    
-def compararPeticion(ids=None):
-    peticion=getPeticion(ids)
-    aux=peticion.items
-    l=[]
-    for a in aux:
-        l.append(a.id) 
-    r=calcularCyD(l)
-    if r[0]!=peticion.costoT or r[1]!=peticion.dificultadT:
-        reiniciarVotacion(peticion.id)
-        init_db()
-        peticion.costoT=r[0]
-        peticion.dificultadT=r[1]
-        session.merge(peticion)
-        session.commit()
-        shutdown_session()
-        return True
-    else:
+
+def actualizarItemsSolicitud(s=None):
+    """
+    Actualiza las versiones de los items que se encuentran en la solicitud de id s, recorre los items de la solicitud(que en relidad son las versiones de los items) 
+    y revisa que la version que se tiene es la actual del item en cuestion
+    """
+    if s :
+        soli=getPeticion(s)
+        for i in soli.items:
+            idi=i.item.id
+            nuevav=getVersionItem(idi)
+            if nuevav.id!=i.id:
+                quitarItem(i.id)
+                a=agregarItem(nuevav.id, soli.id)
+                return True
         return False
-    
-def buscarSolicitud(idv=None):
-    ver=getVersionId(idv)
-    itm= ver.item
-    fase=itm.tipoitem.fase
-    proyecto=fase.proyecto
-    grafo=crearGrafoProyecto(proyecto.id)
-    cola=[]
-    for n in grafo:
-        if int(n.version)==int(idv):
-            n.marca=True
-            cola.append(n)
-    for c in cola:
-        for s in c.entrantes:
-            s.marca=True
-            cola.append(s)
-            if not comprobarItemPeticion(s.version):
-                v=getVersionId(s.version)
-                compararPeticion(v.peticion_id)
             
-    
-    

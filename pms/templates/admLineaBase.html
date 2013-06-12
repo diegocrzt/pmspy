@@ -46,10 +46,11 @@
                                         <th>Comentario</th>
 				                        <th>Fecha Creación</th>
 				                        <th>Creador</th>
+				                        <th>Estado</th>
 				                        <th>Consultar</th>
-				                        {% if tienePermiso(roles,"eliminarLB") %}
-				                        <th>Eliminar</th>
-				                        {%endif%}
+				                        
+				                        <th>Cerrar</th>
+				                        
                                 </tr>
                                 {% for l in lineas %}
                     
@@ -63,15 +64,17 @@
 	                                    </td>
                                         <td>{{l.fechaCreacion.strftime('%Y/%m/%d')}}</td>
                                         <td>{{l.creador.nombre}}</td>
+                                        <td>{{l.estado}}</td>
                                         <td>
                                         <a class="btn btn-info" href="/admlinea/concultar/{{l.id}}">Consultar</a>
                                         </td>
-                                        {% if tienePermiso(roles,"eliminarLB") %}
-		                                <td>
-		                                <a class="btn btn-danger" href="/admlinea/eliminar/{{l.id}}">Eliminar</a>
-                                        </td>
-                                        {%endif%}
+                                        <td>
+                                        {% if tienePermiso(roles,"crearLB") and session['usuarioid']==l.creador_id and l.estado=="Abierta"%}
+		                                
+		                                <a class="btn btn-danger" href="/admlinea/cerrar/{{l.id}}">Cerrar</a>
                                         
+                                        {%endif%}
+                                        </td>
                         		</tr>
                                 {% else %}
                          
