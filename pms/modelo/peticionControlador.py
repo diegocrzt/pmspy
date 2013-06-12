@@ -3,7 +3,7 @@ from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
 from pms.modelo.itemControlador import getVersionId, getVersionItem
-from pms.modelo.relacionControlador import calcularCyD
+from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto
 from datetime import datetime
 session = db_session()
 
