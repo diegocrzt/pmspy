@@ -1,4 +1,4 @@
-from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro
+from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro, ItemPeticion
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
@@ -88,14 +88,21 @@ def eliminarPeticion(idp=None):
     session.commit()
     shutdown_session()
     
+def getItemPeticion(idv=None):
+    init_db()
+    res=session.query(ItemPeticion).filter(ItemPeticion.item_id==id).filter(ItemPeticion.actual==True).first()
+    shutdown_session()
+    return res
+
 def comprobarItemPeticion(idv=None):
     """Comprueba que el item no se encuentre en una peticion, retornar False si el item ya esta en una peticion
     """
-    res=getVersionId(idv)
+    res=getItemPeticion(idv)
     if res.peticion_id==None:
         return True
     else:
         return False
+    
 def enviarPeticion(idp=None):
     """Envia una Peticion, recibe el id de la peticion, cambia el estado de la peticion a EnVotacion 
     """
@@ -114,10 +121,9 @@ def agregarItem(idv=None,idp=None,):
     r=comprobarItemPeticion(idv)
     if r==True:
        
-        v=getVersionId(idv)
+        ip=ItemPeticion(idp,idv,True)
         init_db()
-        v.peticion_id=idp
-        session.merge(v)
+        session.add(ip)
         session.commit()
         shutdown_session()
         return True
@@ -128,9 +134,8 @@ def quitarItem(idv=None):
     """Quita un Item de una peticion, recibe el id del item
     """
     init_db()
-    v=getVersionId(idv)
-    v.peticion_id=None
-    session.merge(v)
+    v=getItemPeticion(idv)
+    session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
     session.commit()
     shutdown_session()
 
@@ -314,3 +319,43 @@ def actualizarItemsSolicitud(s=None):
                 return True
         return False
             
+def reiniciarVotacion(ids=None):
+    peticion=getPeticion(ids)
+    peticion.cantVotos=0
+    init_db()
+    session.query(Voto).filter(Voto.peticion_id==ids).delete()
+    session.commit()
+    session.merge(peticion)
+    session.commit()
+    shutdown_session()
+    
+def compararPeticion(ids=None):
+    peticion=getPeticion(ids)
+    aux=peticion.items
+    l=[]
+    for a in aux:
+        l.append(a.id) 
+    r=calcularCyD(l)
+    if r[0]!=peticion.costo or r[1]!=peticion.dificultad:
+        reiniciarVotacion(peticion.id)
+        return True
+    else:
+        return False
+    
+def buscarSolicitud(idv=None):
+    ver=getVersionId(idv)
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    cola=[]
+    for n in grafo:
+        if int(n.version)==int(idv):
+            n.marca=True
+            cola.append(n)
+    for c in cola:
+        for s in c.entrantes:
+            s.marca=True
+            cola.append(s)
+            if not comprobarItemPeticion(s.version):
+                compararPeticion(getItemPeticion(s.version).peticion_id)

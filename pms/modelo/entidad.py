@@ -425,10 +425,14 @@ class Miembro(Base):
 class ItemPeticion(Base):
     __tablename__ = 'item_peticion'
     peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
-    user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
+    item_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
+    peticion = relationship("Peticion", backref="items")
+    actual=Column(Boolean)
+    item = relationship("VersionItem", backref="peticion")
     
-    def __init__(self, peticion_id, user_id):
+    def __init__(self, peticion_id, item_id,actual):
         self.peticion_id=peticion_id
-        self.user_id=user_id
+        self.item_id=item_id
+        self.actual=actual
 
 init_db()
