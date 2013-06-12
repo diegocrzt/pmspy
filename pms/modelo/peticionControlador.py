@@ -59,10 +59,10 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
         p.acciones=acciones
     if items:
         for i in items:
-                agregarItem(i.id,p.id)
+                agregarItem(i.item.id,p.id)
         for i in p.items:
             if not i in items:
-                quitarItem(i.id)
+                quitarItem(i.item.id)
         l=[]
         for i in items:
             l.append(i.id)
@@ -81,7 +81,7 @@ def eliminarPeticion(idp=None):
     init_db()
     u=getPeticion(idp)
     for l in u.items:
-        quitarItem(l.id)
+        quitarItem(l.item.id)
     for l in u.votos:
         quitarVoto(l.user_id,l.peticion_id)
     session.query(Peticion).filter(Peticion.id==u.id).delete()
@@ -90,7 +90,7 @@ def eliminarPeticion(idp=None):
     
 def getItemPeticion(idv=None):
     init_db()
-    res=session.query(ItemPeticion).filter(ItemPeticion.item_id==id).filter(ItemPeticion.actual==True).first()
+    res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
     shutdown_session()
     return res
 
@@ -98,7 +98,7 @@ def comprobarItemPeticion(idv=None):
     """Comprueba que el item no se encuentre en una peticion, retornar False si el item ya esta en una peticion
     """
     res=getItemPeticion(idv)
-    if res.peticion_id==None:
+    if res==None:
         return True
     else:
         return False
