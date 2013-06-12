@@ -163,7 +163,8 @@ class EditarSolicitud(flask.views.MethodView):
         ag=[]#lista items para pasarle a la funcion que crea la solicitud
         items=[]
         for i in soli.items:
-            iversiones.append([i,True])
+            
+            iversiones.append([i.item,True])
         for u in iversiones:
             aux=[]
             aux.append(u[0])
@@ -265,7 +266,7 @@ def edSolicitud(s=None):
         l.insert(c,[i[0],False])
         c=c+1
     for i in soli.items:
-        l.insert(c, [i,True])
+        l.insert(c, [i.item,True])
         c=c+1
      
     return flask.render_template('editarSolicitud.html',s=soli, versiones=l,acciones=acc) 
