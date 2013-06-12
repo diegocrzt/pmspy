@@ -276,11 +276,11 @@ def getVersionesItemParaSolicitud(idpro=None):
                             aux.append(v)
                             aux.append(False)
                             l.append(aux)
-                        else:
+                        """else:
                             if v.peticion.estado=="Rechazada" or v.peticion.estado=="Ejecutada":
                                 aux.append(v)
                                 aux.append(False)
-                                l.append(aux)
+                                l.append(aux)"""
         return l
 
 def opercionHabilitada(s=None, op=None):
