@@ -211,4 +211,4 @@ session.commit()
 #
 #rel=Relacion(ante_id="2",post_id="3",tipo="P-H")
 #session.add(rel)
-session.commit()
+#session.commit()

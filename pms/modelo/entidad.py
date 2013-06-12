@@ -185,8 +185,6 @@ class VersionItem(Base):
     dificultad = Column(Integer)
     fechaModificacion = Column(DateTime)
     deitem = Column(Integer, ForeignKey('item.id'))
-    peticion_id = Column(Integer, ForeignKey('peticion.id'))
-    peticion = relationship("Peticion", backref="items")
     atributosnum = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
@@ -194,7 +192,7 @@ class VersionItem(Base):
     usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
 
     
-    def __init__(self, version, nombre, estado, actual, costo, dificultad, fechaModificacion, deitem, peticion_id=None, usuario_modidificador_id=None):
+    def __init__(self, version, nombre, estado, actual, costo, dificultad, fechaModificacion, deitem, usuario_modidificador_id=None):
         self.version = version
         self.nombre = nombre
         self.estado = estado
@@ -203,8 +201,6 @@ class VersionItem(Base):
         self.dificultad = dificultad
         self.fechaModificacion = fechaModificacion
         self.deitem = deitem
-        self.peticion_id = peticion_id
-        self.usuario_modificador_id = usuario_modidificador_id
         
     def __repr__(self):
         return 'VersionItem { ' + self.nombre + '(' + self.version + ')}'
