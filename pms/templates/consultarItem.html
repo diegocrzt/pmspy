@@ -156,11 +156,14 @@
 		</tr>			
      {% endfor %}
 </table>
-
-	{%if session['itemid']%}
-	<a class="btn btn-success" href="/admitem/reversionar/{{session['itemid']}}">Aceptar</a>
+	{%if llama=="cerrarlinea"%}
+		<a class="btn btn-success" href="/admlinea/cerrar/{{session['lineaid']}}">Aceptar</a>
 	{%else%}
-    <a class="btn btn-success" href="/admitem/{{session['faseid']}}">Aceptar</a>
+		{%if session['itemid']%}
+		<a class="btn btn-success" href="/admitem/reversionar/{{session['itemid']}}">Aceptar</a>
+		{%else%}
+	    <a class="btn btn-success" href="/admitem/{{session['faseid']}}">Aceptar</a>
+    	{%endif%}
     {%endif%}
     </div>
 </div>

@@ -8,11 +8,11 @@ from flask import request
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 import pms.vista.required
 from pms import app
-from pms.modelo.itemControlador import copiarValores, getItemsTipo,getItemId,getItemEtiqueta,getVersionId,getVersionItem
+from pms.modelo.itemControlador import getItemId,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.faseControlador import getFaseId,actualizarFecha
-from pms.modelo.lineaBaseControlador import desBloquearAdelante, comprobarBloquear, crearLB, aItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
-
+from pms.modelo.lineaBaseControlador import bloquearItem, desBloquearAdelante, comprobarBloquear, crearLB, aItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
+from pms.modelo.tipoItemControlador import getTipoItemId
 class AdmLineaBase(flask.views.MethodView):
     
     @pms.vista.required.login_required
@@ -188,6 +188,7 @@ def confirmarCreacion():
             if linea.items:
                 flask.flash(u"CREACION EXITOSA","text-success")
                 actualizarFecha(flask.session['faseid'])
+                flask.session.pop('aux1',None)
                 return flask.redirect('/admlinea/')
             else:
                 flask.flash(u"La linea base debe contener al menos un item","text-error")
@@ -201,6 +202,7 @@ def cancelarCreacion():
     """Cancela la creacion de la linea base eliminandola, responde al boton cancelar de Crear Linea Base
     """
     eliminarLB(flask.session['lineaid'])
+    flask.session.pop('aux1',None)
     flask.flash(u"CREACION CANCELADA","text-error")
     return flask.redirect('/admlinea/')
 
@@ -219,5 +221,74 @@ def consultarLineaBase(l=None):
     else:
         return flask.redirect('/admlinea/')
     
+   
+@app.route('/admlinea/cerrar/<l>')
+@pms.vista.required.login_required 
+def cerrarLineaBase(l=None):
+    """Despliega la vista de cerrar linea base con los items que contiene la linea y la opcion de confirmar estos items
+    """
+    flask.session['lineaid']=l
+    linea=getLineaBaseId(l)
+    if linea:
+        versiones=[]
+        for i in linea.items:
+            v=getVersionItem(i.id)
+            versiones.append(v)
+        return flask.render_template('cerrarLineaBase.html', linea=linea, versiones=versiones)
 
+@app.route('/admlinea/cerrar/confirmaritem/<i>')
+@pms.vista.required.login_required 
+def confirmarItem(i=None):
+    version=getVersionId(i)
+    flask.session['itemid']=i
+    if(comprobarBloquear(version)):
+        a=bloquearItem(i)
+        if a:
+            flask.flash(u"Item confirmado","text-success")
+            return cerrarLineaBase(flask.session['lineaid'])
+    else:
+        flask.flash(u"El item no puede ser bloqueado","text-error")
+        return cerrarLineaBase(flask.session['lineaid'])
+
+@app.route('/admlinea/consultaritem/<i>')
+@pms.vista.required.login_required 
+def consultarItemLinea(i=None):
+    """Despliega la vista de consultar item de una linea base
+    """
+    ver=getVersionId(i)
+    item=getItemId(ver.deitem)
+    tipo=getTipoItemId(item.tipo)
+    atr=tipo.atributos
+    val=[]
+    for at in ver.atributosnum:
+        val.append(at)
+    for at in ver.atributosstr:
+        val.append(at)
+    for at in ver.atributosbool:
+        val.append(at)
+    for at in ver.atributosdate:
+        val.append(at)
+    padres=[]
+    antecesores=[]
+    for n in ver.ante_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                padres.append(aux)
+        else:
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                antecesores.append(aux)
+    hijos=[]
+    posteriores=[]
+    for n in ver.post_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                hijos.append(aux)
+        else:
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                posteriores.append(aux)
+    return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores,llama="cerrarlinea")   
     

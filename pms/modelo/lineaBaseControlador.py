@@ -55,7 +55,7 @@ def crearLB(creadorid=None, comentario=None, faseid=None):
         fecha=datetime.today()
         n=session.query(LineaBase).join(Fase).filter(Fase.id==faseid).count()
         numero=n+1
-        lb=LineaBase(creador_id=creadorid, fechaCreacion=fecha, numero=numero, fase_id=faseid)
+        lb=LineaBase(creador_id=creadorid, fechaCreacion=fecha, numero=numero, fase_id=faseid, estado="Cerrada")
         session.add(lb)
         session.commit()
         linea=getLineaBaseDeFase(faseid, numero)
@@ -125,3 +125,16 @@ def desBloquearAdelante(idvcambio=None):
         for a in ante:
             lista.append(getVersionId(a.post_id))
         quitarItemLB(l.id)
+
+def bloquearItem(idv=None):
+    """Bloquea un item, recibe el id de la version del item
+    """
+    if(idv):
+        version=getVersionId(idv)
+        init_db()
+        version.estado="Bloqueado"
+        session.merge(version)
+        session.commit()
+        shutdown_session()
+        return True
+    return False

@@ -1,8 +1,8 @@
 import flask.views
 from flask import request
-from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
+from pms.modelo.usuarioControlador import  getUsuarioById
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
+from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -26,9 +26,11 @@ class AdmSolicitud(flask.views.MethodView):
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
         
-        
-        p=getProyectoId(flask.session['proyectoid'])
-        ls=p.solicitudes
+        if getMiembro(flask.session['proyectoid'],flask.session['usuarioid']):
+            p=getProyectoId(flask.session['proyectoid'])
+            ls=p.solicitudes
+        else:
+            ls=getUsuarioById(flask.session['usuarioid']).peticiones
         return flask.render_template('admSolicitud.html',solicitudes=ls, infopag="Pagina 1 de 1", buscar=False)
     @pms.vista.required.login_required
     def post(self):

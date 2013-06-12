@@ -352,15 +352,17 @@ class LineaBase(Base):
     comentario = Column(Unicode(100))
     fase_id = Column(Integer, ForeignKey('fase.id'))
     items = relationship("Item", backref="lineabase")
+    estado=Column(Unicode(15))
     
-    def __init__(self, creador_id, fechaCreacion, numero, fase_id):
+    def __init__(self, creador_id, fechaCreacion, numero, fase_id, estado):
         self.creador_id = creador_id
         self.fechaCreacion = fechaCreacion
         self.numero = numero
         self.fase_id = fase_id
+        self.estado=estado
         
     def __repr__(self):
-        return 'LineaBase { ' + self.numero + self.fase_id + self.creador_id + self.fechaCreacion + '}' 
+        return 'LineaBase { '+ self.numero+ self.fase_id + self.creador_id + self.fechaCreacion + self.estado +'}'
 
 
 class Peticion(Base):
