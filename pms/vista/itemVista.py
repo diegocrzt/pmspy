@@ -117,7 +117,7 @@ class CrearItem(flask.views.MethodView):
                 for v in i.version:
                     c=c+1
         etiqueta=str(flask.session['proyectoid'])+"-"+str(flask.session['faseid'])+"-"+str(c)
-        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'])
+        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
         tipo=getTipoItemId(flask.request.form['tipo'])
         creado=getItemEtiqueta(etiqueta)
         version=getVersionItem(creado.id)
@@ -142,7 +142,7 @@ class CompletarAtributo(flask.views.MethodView):
     @pms.vista.required.login_required
     def post(self):
         itm1=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],itm1.nombre,itm1.estado,itm1.costo,itm1.dificultad)
+        editarItem(flask.session['itemid'],itm1.nombre,itm1.estado,itm1.costo,itm1.dificultad,flask.session['usuarioid'])
         itm=getVersionItem(flask.session['itemid'])
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
@@ -209,7 +209,7 @@ class EditarItem(flask.views.MethodView):
             flask.flash(u"El item ya existe", "nombre")
             return flask.render_template('editarItem.html',i=v)
         vvieja=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'])
+        editarItem(flask.session['itemid'],flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
         item=getItemId(flask.session['itemid'])
         version=getVersionItem(item.id)
         copiarValores(vvieja.id,version.id)
@@ -248,7 +248,7 @@ class Eliminaritem(flask.views.MethodView):
         """
         if(flask.session['itemid']!=None):
             vvieja=getVersionItem(flask.session['itemid'])
-            eliminarItem(flask.session['itemid'])
+            eliminarItem(flask.session['itemid'],flask.session['usuarioid'])
             item=getItemId(flask.session['itemid'])
             version=getVersionItem(item.id)
             copiarValores(vvieja.id,version.id)
@@ -438,7 +438,7 @@ def bReversionar(vid=None):
     """
     vvieja=getVersionId(vid)
     item=vvieja.item
-    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
+    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad,usr=flask.session['usuarioid'])
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
@@ -488,7 +488,7 @@ def bRevivir(vid=None):
     """
     vvieja=getVersionId(vid)
     item=vvieja.item
-    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
+    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad,flask.session['usuarioid'])
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
@@ -527,7 +527,7 @@ def aprobarItem(vid=None):
             return flask.render_template('aprobarItem.html',version=vvieja, padres=padres, ante=antecesores, a=False)
     if request.method == "POST":
         if "Aceptar" in flask.request.form:
-            editarItem(item.id,vvieja.nombre,"Aprobado",vvieja.costo,vvieja.dificultad)
+            editarItem(item.id,vvieja.nombre,"Aprobado",vvieja.costo,vvieja.dificultad,flask.session['usuarioid'])
             version=getVersionItem(item.id)
             copiarValores(vvieja.id,version.id)
             copiarRelacionesEstable(vvieja.id,version.id)

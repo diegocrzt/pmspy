@@ -21,15 +21,17 @@ class Usuario(Base):
     """
     __tablename__ = 'usuario'
 
-    id = Column(Integer,primary_key = True)
+    id = Column(Integer, primary_key=True)
     nombre = Column(Unicode(20))
     nombredeusuario = Column(Unicode(20), unique=True)
     clave = Column(Unicode(41))
     isAdmin = Column(Boolean)    
     
     esLider = relationship("Proyecto", backref="lider")
-    lineas = relationship("LineaBase",backref="creador")
-    peticiones=relationship("Peticion",backref="usuario")
+    lineas = relationship("LineaBase", backref="creador")
+    peticiones = relationship("Peticion", backref="usuario")
+    items = relationship("Item", backref="usuario_creador")
+    vitems = relationship("VersionItem", backref="usuario_modificador")
     
     def __init__(self, nombre, nombredeusuario, clave, isAdmin):
         self.nombre = nombre
@@ -52,12 +54,12 @@ class Proyecto(Base):
     fechaInicio = Column(DateTime)
     fechaFin = Column(DateTime)
     fechaUltMod = Column(DateTime)
-    delider = Column(Integer, ForeignKey('usuario.id') )
+    delider = Column(Integer, ForeignKey('usuario.id'))
     estado = Column(Unicode(10))
     
-    fases = relationship("Fase",order_by="Fase.id",backref="proyecto")
-    solicitudes=relationship("Peticion",order_by="Peticion.id",backref="proyecto")
-    miembros=relationship("Miembro",order_by="Miembro.proyecto_id",backref="proyecto")
+    fases = relationship("Fase", order_by="Fase.id", backref="proyecto")
+    solicitudes = relationship("Peticion", order_by="Peticion.id", backref="proyecto")
+    miembros = relationship("Miembro", order_by="Miembro.proyecto_id", backref="proyecto")
     
     
     def __init__(self, nombre, cantFase, fechaInicio, fechaFin, fechaUltMod, delider, estado):
@@ -92,7 +94,7 @@ class Fase(Base):
     
     tipos = relationship("TipoItem", backref="fase")
     roles = relationship("Rol", order_by="Rol.id", backref="fase")
-    lineas = relationship("LineaBase",order_by="LineaBase.numero", backref="fase")
+    lineas = relationship("LineaBase", order_by="LineaBase.numero", backref="fase")
     
     def __init__(self, nombre, numero, fechaInicio, fechaFin, fechaUltMod, estado, delproyecto):
         self.nombre = nombre
@@ -117,7 +119,7 @@ class TipoItem(Base):
     comentario = Column(Unicode(100))
     defase = Column(Integer, ForeignKey('fase.id')) 
     atributos = relationship("Atributo", backref="tipoitem")
-    instancias = relationship("Item",order_by="Item.id", backref="tipoitem")
+    instancias = relationship("Item", order_by="Item.id", backref="tipoitem")
     
     def __init__(self, nombre, comentario, defase):
         self.nombre = nombre
@@ -125,7 +127,7 @@ class TipoItem(Base):
         self.defase = defase
         
     def __repr__(self):
-        return 'TipoItem { '+self.nombre + '('+ self.comentario+ ')}'
+        return 'TipoItem { ' + self.nombre + '(' + self.comentario + ')}'
     
         
 class Atributo(Base):
@@ -144,7 +146,7 @@ class Atributo(Base):
         self.pertenece = pertenece
         
     def __repr__(self):
-        return 'Atributo { '+ self.nombre + '('+ self.tipoDato+ ')}' 
+        return 'Atributo { ' + self.nombre + '(' + self.tipoDato + ')}' 
         
 class Item(Base):
     """
@@ -155,15 +157,19 @@ class Item(Base):
     tipo = Column(Integer, ForeignKey('tipoitem.id'))
     etiqueta = Column(Unicode(60), unique=True)
     version = relationship("VersionItem", backref="item")
-    linea_id=Column(Integer, ForeignKey('lineabase.id'))
+    fechaCreacion = Column(DateTime)
+    linea_id = Column(Integer, ForeignKey('lineabase.id'))
+    usuario_creador_id = Column(Integer, ForeignKey('usuario.id'))
     
-    def __init__(self, tipo, etiqueta,linea_id=None):
-        self.linea_id=linea_id
+    def __init__(self, tipo, etiqueta, fechaCreacion, linea_id=None, usuario_creador_id=None):
+        self.linea_id = linea_id
         self.tipo = tipo
         self.etiqueta = etiqueta 
+        self.fechaCreacion = fechaCreacion
+        self.usuario_creador_id = usuario_creador_id
     
     def __repr__(self):
-        return 'Item { '+ self.etiqueta + '('+ self.version+ ')}'
+        return 'Item { ' + self.etiqueta + '(' + self.version + ')}'
 
     
   
@@ -178,45 +184,49 @@ class VersionItem(Base):
     estado = Column(Unicode(20))
     actual = Column(Boolean)
     costo = Column(Integer)
-    dificultad =Column(Integer)
+    dificultad = Column(Integer)
+    fechaModificacion = Column(DateTime)
     deitem = Column(Integer, ForeignKey('item.id'))
-    peticion_id=Column(Integer,ForeignKey('peticion.id'))
-    peticion=relationship("Peticion",backref="items")
+    peticion_id = Column(Integer, ForeignKey('peticion.id'))
+    peticion = relationship("Peticion", backref="items")
     atributosnum = relationship("ValorNum")
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
+    usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
 
     
-    def __init__(self, version, nombre, estado, actual, costo, dificultad, deitem,peticion_id=None):
+    def __init__(self, version, nombre, estado, actual, costo, dificultad, fechaModificacion, deitem, peticion_id=None, usuario_modidificador_id=None):
         self.version = version
         self.nombre = nombre
         self.estado = estado
         self.actual = actual
-        self.costo =costo
-        self.dificultad=dificultad
+        self.costo = costo
+        self.dificultad = dificultad
+        self.fechaModificacion = fechaModificacion
         self.deitem = deitem
-        self.peticion_id=peticion_id
+        self.peticion_id = peticion_id
+        self.usuario_modificador_id = usuario_modidificador_id
         
     def __repr__(self):
-        return 'VersionItem { '+ self.nombre + '('+ self.version+ ')}'
+        return 'VersionItem { ' + self.nombre + '(' + self.version + ')}'
     
 class Relacion(Base):
     """
         Define la clase Relacion y la mapea con la tabla item
     """
     __tablename__ = 'relacion'
-    id = Column(Integer,primary_key=True)
+    id = Column(Integer, primary_key=True)
     ante_id = Column(Integer, ForeignKey('vitem.id'))
     post_id = Column(Integer, ForeignKey('vitem.id'))
     tipo = Column(Unicode(10))
-    ante = relationship("VersionItem", backref="post_list",  primaryjoin=(VersionItem.id == ante_id))
-    post = relationship("VersionItem", backref="ante_list",  primaryjoin=(VersionItem.id == post_id))
+    ante = relationship("VersionItem", backref="post_list", primaryjoin=(VersionItem.id == ante_id))
+    post = relationship("VersionItem", backref="ante_list", primaryjoin=(VersionItem.id == post_id))
     
-    def __init__(self, ante_id,post_id,tipo):
+    def __init__(self, ante_id, post_id, tipo):
         self.ante_id = ante_id
         self.post_id = post_id
-        self.tipo =tipo
+        self.tipo = tipo
 
 class ValorNum(Base):
     """
@@ -234,7 +244,7 @@ class ValorNum(Base):
         self.valor = valor
         
     def __repr__(self):
-        return 'ValorInt { '+ self.valor+ '}'
+        return 'ValorInt { ' + self.valor + '}'
 
 class ValorBoolean(Base):
     """
@@ -252,7 +262,7 @@ class ValorBoolean(Base):
         self.valor = valor
         
     def __repr__(self):
-        return 'ValorBoolean { '+ self.valor+ '}'
+        return 'ValorBoolean { ' + self.valor + '}'
         
 class ValorStr(Base):
     """
@@ -270,7 +280,7 @@ class ValorStr(Base):
         self.valor = valor
         
     def __repr__(self):
-        return 'ValorStr { '+ self.valor+ '}'
+        return 'ValorStr { ' + self.valor + '}'
         
 class ValorDate(Base):
     """
@@ -288,7 +298,7 @@ class ValorDate(Base):
         self.valor = valor
         
     def __repr__(self):
-        return 'ValorDate { '+ self.valor+ '}'
+        return 'ValorDate { ' + self.valor + '}'
     
     
 class Rol(Base):
@@ -298,13 +308,13 @@ class Rol(Base):
     __tablename__ = 'rol'
     id = Column(Integer, primary_key=True)
     fase_id = Column(Integer, ForeignKey('fase.id'))
-    nombre=Column(Unicode(30))
+    nombre = Column(Unicode(30))
     codigoTipo = Column(Integer)
     codigoItem = Column(Integer)
     codigoLB = Column(Integer)
-    usuarios = relationship("User_Rol",backref="rol")
+    usuarios = relationship("User_Rol", backref="rol")
         
-    def __init__(self, fase_id, nombre,codigoTipo,codigoItem,codigoLB):
+    def __init__(self, fase_id, nombre, codigoTipo, codigoItem, codigoLB):
         self.fase_id = fase_id
         self.nombre = nombre
         self.codigoTipo = codigoTipo
@@ -312,7 +322,7 @@ class Rol(Base):
         self.codigoLB = codigoLB
         
     def __repr__(self):
-        return 'Rol { '+ self.fase_id + self.nombre + self.codigoTipo + self.codigoItem + self.codigoLB + '}'   
+        return 'Rol { ' + self.fase_id + self.nombre + self.codigoTipo + self.codigoItem + self.codigoLB + '}'   
 
 class User_Rol(Base):
     """
@@ -320,75 +330,75 @@ class User_Rol(Base):
     """
     __tablename__ = 'user_rol'
     usuario_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
-    rol_id = Column(Integer, ForeignKey('rol.id'),primary_key=True)
-    usuario = relationship("Usuario",backref="elrol")
+    rol_id = Column(Integer, ForeignKey('rol.id'), primary_key=True)
+    usuario = relationship("Usuario", backref="elrol")
         
     def __init__(self, usuario_id, rol_id):
         self.usuario_id = usuario_id
         self.rol_id = rol_id
         
     def __repr__(self):
-        return 'User_Rol { '+ self.usuario_id+ self.rol_id + '}'
+        return 'User_Rol { ' + self.usuario_id + self.rol_id + '}'
     
 class LineaBase(Base):
     """
         Define la clase Linea Base y la mapea a la tabla lineabase
     """
-    __tablename__='lineabase'
+    __tablename__ = 'lineabase'
     id = Column(Integer, primary_key=True)
-    creador_id= Column(Integer, ForeignKey('usuario.id'))
-    fechaCreacion=Column(DateTime)
-    numero=Column(Integer)
-    comentario=Column(Unicode(100))
+    creador_id = Column(Integer, ForeignKey('usuario.id'))
+    fechaCreacion = Column(DateTime)
+    numero = Column(Integer)
+    comentario = Column(Unicode(100))
     fase_id = Column(Integer, ForeignKey('fase.id'))
-    items = relationship("Item",backref="lineabase")
+    items = relationship("Item", backref="lineabase")
     
     def __init__(self, creador_id, fechaCreacion, numero, fase_id):
-        self.creador_id=creador_id
-        self.fechaCreacion=fechaCreacion
-        self.numero=numero
-        self.fase_id=fase_id
+        self.creador_id = creador_id
+        self.fechaCreacion = fechaCreacion
+        self.numero = numero
+        self.fase_id = fase_id
         
     def __repr__(self):
-        return 'LineaBase { '+ self.numero+ self.fase_id + self.creador_id + self.fechaCreacion +'}' 
+        return 'LineaBase { ' + self.numero + self.fase_id + self.creador_id + self.fechaCreacion + '}' 
 
 
 class Peticion(Base):
     """
         Define la clase Peticion y la mapea a la tabla peticion
     """
-    __tablename__='peticion'
+    __tablename__ = 'peticion'
     id = Column(Integer, primary_key=True)
-    numero=Column(Integer)
-    proyecto_id= Column(Integer, ForeignKey('proyecto.id'))
-    comentario=Column(Unicode(100))
-    estado=Column(Unicode(15))
-    usuario_id=Column(Integer, ForeignKey('usuario.id'))
-    cantVotos=Column(Integer)
-    cantItems=Column(Integer)
-    costoT=Column(Integer)
-    dificultadT=Column(Integer)
-    fechaCreacion=Column(DateTime)
-    fechaEnvio=Column(DateTime)
-    acciones=Column(Integer)
+    numero = Column(Integer)
+    proyecto_id = Column(Integer, ForeignKey('proyecto.id'))
+    comentario = Column(Unicode(100))
+    estado = Column(Unicode(15))
+    usuario_id = Column(Integer, ForeignKey('usuario.id'))
+    cantVotos = Column(Integer)
+    cantItems = Column(Integer)
+    costoT = Column(Integer)
+    dificultadT = Column(Integer)
+    fechaCreacion = Column(DateTime)
+    fechaEnvio = Column(DateTime)
+    acciones = Column(Integer)
     
-    def __init__(self,numero, proyecto_id,comentario,estado, usuario_id,cantVotos,cantItems,costoT,dificultadT,fechaCreacion,fechaEnvio,acciones):
-        self.numero=numero
-        self.proyecto_id=proyecto_id
-        self.comentario=comentario
-        self.estado=estado
-        self.usuario_id=usuario_id
-        self.cantVotos=cantVotos
-        self.cantItems=cantItems
-        self.costoT=costoT
-        self.dificultadT=dificultadT
-        self.fechaCreacion=fechaCreacion
-        self.fechaEnvio=fechaEnvio
-        self.acciones=acciones
+    def __init__(self, numero, proyecto_id, comentario, estado, usuario_id, cantVotos, cantItems, costoT, dificultadT, fechaCreacion, fechaEnvio, acciones):
+        self.numero = numero
+        self.proyecto_id = proyecto_id
+        self.comentario = comentario
+        self.estado = estado
+        self.usuario_id = usuario_id
+        self.cantVotos = cantVotos
+        self.cantItems = cantItems
+        self.costoT = costoT
+        self.dificultadT = dificultadT
+        self.fechaCreacion = fechaCreacion
+        self.fechaEnvio = fechaEnvio
+        self.acciones = acciones
         
         
     def __repr__(self):
-        return 'Peticion { '+ self.proyecto_id+self.comentario+self.estado+'}'
+        return 'Peticion { ' + self.proyecto_id + self.comentario + self.estado + '}'
     
     
         
@@ -400,16 +410,16 @@ class Voto(Base):
     peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
     valor = Column(Boolean)     
-    peticion = relationship("Peticion",backref="votos")
-    usuario=relationship("Usuario",backref="votos")
+    peticion = relationship("Peticion", backref="votos")
+    usuario = relationship("Usuario", backref="votos")
         
     def __init__(self, peticion_id, user_id, valor):
-        self.peticion_id=peticion_id
-        self.user_id=user_id
+        self.peticion_id = peticion_id
+        self.user_id = user_id
         self.valor = valor
         
     def __repr__(self):
-        return 'Voto { '+ self.peticion_id+self.user_id+self.valor+ '}'
+        return 'Voto { ' + self.peticion_id + self.user_id + self.valor + '}'
 
 class Miembro(Base):
     """
@@ -420,8 +430,8 @@ class Miembro(Base):
     user_id = Column(Integer, ForeignKey('usuario.id'), primary_key=True)
     
     def __init__(self, proyecto_id, user_id):
-        self.proyecto_id=proyecto_id
-        self.user_id=user_id
+        self.proyecto_id = proyecto_id
+        self.user_id = user_id
 
 
 init_db()
