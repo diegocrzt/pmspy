@@ -10,7 +10,7 @@ from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
 from pms.modelo.itemControlador import getItemsFiltrados, getItemsPaginados, peticionExiste, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
-from pms.modelo.peticionControlador import crearPeticion
+from pms.modelo.peticionControlador import crearPeticion, buscarSolicitud
 from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
@@ -117,7 +117,7 @@ class CrearItem(flask.views.MethodView):
                 for v in i.version:
                     c=c+1
         etiqueta=str(flask.session['proyectoid'])+"-"+str(flask.session['faseid'])+"-"+str(c)
-        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'])
+        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
         tipo=getTipoItemId(flask.request.form['tipo'])
         creado=getItemEtiqueta(etiqueta)
         version=getVersionItem(creado.id)
@@ -142,7 +142,7 @@ class CompletarAtributo(flask.views.MethodView):
     @pms.vista.required.login_required
     def post(self):
         itm1=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],itm1.nombre,itm1.estado,itm1.costo,itm1.dificultad)
+        editarItem(flask.session['itemid'],itm1.nombre,itm1.estado,itm1.costo,itm1.dificultad,flask.session['usuarioid'])
         itm=getVersionItem(flask.session['itemid'])
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
@@ -209,7 +209,7 @@ class EditarItem(flask.views.MethodView):
             flask.flash(u"El item ya existe", "nombre")
             return flask.render_template('editarItem.html',i=v)
         vvieja=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'])
+        editarItem(flask.session['itemid'],flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
         item=getItemId(flask.session['itemid'])
         version=getVersionItem(item.id)
         copiarValores(vvieja.id,version.id)
@@ -220,6 +220,7 @@ class EditarItem(flask.views.MethodView):
         flask.session.pop('aux4',None)
         desAprobarAdelante(version.id)
         flask.flash(u"EDICION EXITOSA","text-success")
+        buscarSolicitud(version.id)
         actualizarFecha(flask.session['faseid'])
         return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
     
@@ -247,7 +248,7 @@ class Eliminaritem(flask.views.MethodView):
         """
         if(flask.session['itemid']!=None):
             vvieja=getVersionItem(flask.session['itemid'])
-            eliminarItem(flask.session['itemid'])
+            eliminarItem(flask.session['itemid'],flask.session['usuarioid'])
             item=getItemId(flask.session['itemid'])
             version=getVersionItem(item.id)
             copiarValores(vvieja.id,version.id)
@@ -365,6 +366,7 @@ def auHijo(vid=None):
             desAprobar(flask.session['hijo'])
             desAprobarAdelante(flask.session['hijo'])
         actualizarFecha(flask.session['faseid'])
+        buscarSolicitud(flask.session['hijo'])
         return flask.redirect('/admitem/asignarhijo/'+str(flask.session['hijo']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -408,6 +410,7 @@ def auAntecesor(vid=None):
             desAprobar(flask.session['antecesor'])
             desAprobarAdelante(flask.session['antecesor'])
         actualizarFecha(flask.session['faseid'])
+        buscarSolicitud(flask.session['antecesor'])
         return flask.redirect('/admitem/asignarantecesor/'+str(flask.session['antecesor']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -435,7 +438,7 @@ def bReversionar(vid=None):
     """
     vvieja=getVersionId(vid)
     item=vvieja.item
-    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
+    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad,usr=flask.session['usuarioid'])
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
@@ -485,7 +488,7 @@ def bRevivir(vid=None):
     """
     vvieja=getVersionId(vid)
     item=vvieja.item
-    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad)
+    editarItem(item.id,vvieja.nombre,"Activo",vvieja.costo,vvieja.dificultad,flask.session['usuarioid'])
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
@@ -524,7 +527,7 @@ def aprobarItem(vid=None):
             return flask.render_template('aprobarItem.html',version=vvieja, padres=padres, ante=antecesores, a=False)
     if request.method == "POST":
         if "Aceptar" in flask.request.form:
-            editarItem(item.id,vvieja.nombre,"Aprobado",vvieja.costo,vvieja.dificultad)
+            editarItem(item.id,vvieja.nombre,"Aprobado",vvieja.costo,vvieja.dificultad,flask.session['usuarioid'])
             version=getVersionItem(item.id)
             copiarValores(vvieja.id,version.id)
             copiarRelacionesEstable(vvieja.id,version.id)

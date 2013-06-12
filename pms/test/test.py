@@ -33,7 +33,7 @@ class PMSTestSuite(unittest.TestCase):
     failCreateProjectMsg = 'El proyecto ya existe'
     failCreateFaseMsg = 'La fase ya existe'
     failCreateFaseDateMsg = 'Incoherencia entre fechas de inicio y de fin'
-    logoutMessage = 'El logueo es necesario'
+    logoutMessage = 'Login'
     inicializarQuery = 'La Inicializacion de un proyecto es <strong>irreversible</strong>.'
     proyectoURL = '/admproyecto/'
     nextProyectoURL = '/admproyecto/nextproyecto/'
@@ -94,7 +94,6 @@ class PMSTestSuite(unittest.TestCase):
            
         rv = self.app.get(url, follow_redirects=True)
         assert assertion in rv.data
-        print 'Route [OK]'
    
     def inicializarProyecto(self, proyecto=None):
         id = proyecto.id

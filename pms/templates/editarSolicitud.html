@@ -31,11 +31,34 @@
 <div class="container">
 	<h3>Editar Solicitud de Cambio en <em>{{session['proyectonombre']}}</em></h3>
 	<hr>
-	  <p><strong>Fecha de Creacion:</strong> {{s.fechaCreacion.strftime('%Y/%m/%d - %H:%M')}} </p>
-	 <p><strong>Solicitante:</strong>  {{s.usuario.nombre}}</p>
-	 <p><strong>Dificultad:</strong> {{s.dificultadT}}</p>
-	 <p><strong>Costo:</strong> {{s.costoT}}</p>
-	 <p><strong>Cantidad de Items: </strong>{{s.cantItems}}</p>
+	<div class="span11">
+	<table>
+		<tr>
+			<td width="300px">
+			 	<strong>Fecha de Creacion:</strong> {{s.fechaCreacion.strftime('%Y/%m/%d - %H:%M')}} 
+			</td>
+			<td>
+			 	<strong>Solicitante:</strong>  {{s.usuario.nombre}}
+			</td>
+		 </tr>
+		 <tr>
+			 <td>
+			 	<strong>Costo:</strong> {{s.costoT}}
+			 </td>
+			 <td>
+			 	<strong>Dificultad:</strong> {{s.dificultadT}}
+			 </td>
+		 </tr>
+		 <tr>
+			 <td>
+			 	<strong>Cantidad de Items: </strong>{{s.cantItems}} 
+			 </td>
+			 <td>
+			 	<strong>Estado:</strong> {{s.estado}}
+			 </td>
+		 </tr>
+	 </table>
+	 </div>
 	<form action="{{url_for('editarsolicitud')}}" method="POST">
 	<div class="span8">
 	<p align="center">	<strong>Lista de Items Bloqueado o en Conflicto</strong>

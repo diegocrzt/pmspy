@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block menu %}
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/admlinea/">Administrar Linea Base</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="container" align="left">
+    <h3>Cerrar linea base de <em>{{session['proyectonombre']}} - {{session['fasenombre']}}</em></h3>
+    <hr>
+
+    <table>
+	    <tr>
+	    	<td width="300px">	
+		    <strong>Numero:</strong> {{linea.numero}}
+		    </td>
+		    <td>
+		    <strong>Estado:</strong> {{linea.estado}}
+		    </td>
+	     
+	    </tr>
+	    <tr>
+		    <td>
+		    <strong>Creador:</strong>  {{linea.creador.nombre}}
+		    </td>
+		    <td>
+		   	<strong>Fecha de creación:</strong> {{linea.fechaCreacion.strftime('%Y/%m/%d')}}
+		   	</td>
+	   	</tr>
+	   	<tr>
+	   		<td colspan="2">
+	    	<strong>Comentario:</strong> {%if linea.comentario %} {{linea.comentario}} {%else%} - {%endif%}
+	    	</td>
+	    </tr>
+    </table>
+         <p><strong class="text-info">-- </strong> Los items que contengan padres o antecesores <strong>no bloqueados</strong> no pueden ser confirmados <strong class="text-info">-- </strong>
+    
+     <div class="span5">
+    <p align="left">	<strong>Items de la linea base </strong>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+         
+            {% for category, message in messages %}
+              <span class="{{ category }}"> ---{{ message }}---</span>
+            {% endfor %}
+                  
+          {% endif %}
+        {% endwith %}
+    </p>	
+	<table  class="table  table-bordered table-striped" >
+		<tr>
+			<th>Nombre</th>
+			<th>Tipo</th>
+			<th>Version</th>
+			<th>Estado</th>
+			<th>Costo</th>
+			<th>Dificultad</th>
+			<th>Consultar</th>
+			<th>Confirmar</th>
+		</tr>
+		{% for v in versiones %}
+			<tr>
+				
+				<td>{{v.nombre}}</td>
+				<td>{{v.item.tipoitem.nombre}}</td>
+				<td>{{v.version}}</td>
+				<td>{{v.estado}}</td>
+				<td>{{v.costo}}</td>
+				<td>{{v.dificultad}}</td>
+				<td>
+				 <a class="btn btn-info" href="/admlinea/consultaritem/{{v.id}}">Consultar</a>
+				</td>
+				<td>
+				{%if v.estado!="Bloqueado"%}
+				<a class="btn btn-success" href="/admlinea/confirmaritem/{{v.id}}">Confirmar</a>
+				{%endif%}
+				<a class="btn btn-success" href="/admlinea/cerrar/confirmaritem/{{v.id}}">Confirmar</a>
+				</td>
+			</tr>
+		{%else%}
+			<tr>
+			<td>No contiene items</td>
+			<td></td>
+			</tr>
+		{%endfor%}
+		</table>
+	    	
+	    	<p><a class="btn btn-primary" href="/admlinea/{{session['faseid']}}">Cerrar Linea Base</a></p>
+	    	
+	    	<p><a class="btn " href="/admlinea/{{session['faseid']}}"><i class="icon-arrow-left"></i>Atras</a>
+    </div>
+
+</div>
+{%endblock%}
