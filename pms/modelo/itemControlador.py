@@ -4,6 +4,8 @@ Created on 14/04/2013
 @author: mpoletti
 
 '''
+import flask.views
+from flask import request
 from entidad import TipoItem, Item, VersionItem, ValorStr, ValorNum, ValorBoolean, ValorDate, Peticion
 from initdb import db_session, init_db, shutdown_session
 from tipoItemControlador import getTiposFase, getTipoItemId
@@ -68,7 +70,7 @@ def comprobarItem(nombre=None, fase=None):
     for t in tipos:
         for i in t.instancias:
             for v in i.version:
-                if(v.actual == True and (v.nombre == nombre)):
+                if(v.actual == True and (v.nombre == nombre) and getVersionItem(flask.session['itemid']).id!=v.id):
                     return True
                 else:
                     return False                
