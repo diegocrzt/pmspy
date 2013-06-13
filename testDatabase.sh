@@ -23,6 +23,6 @@ echo "Ejecutando $SOURCE en $DATABASE ($COMENTARIO)"
 
 sudo service postgresql restart
 sudo -u postgres dropdb $DATABASE
-sudo -u postgres createdb $DATABASE \"$COMENTARIO\"
+sudo -u postgres createdb $DATABASE "$COMENTARIO"
 sudo -u postgres psql -d $DATABASE -f $SOURCE
 
