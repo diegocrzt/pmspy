@@ -4,6 +4,8 @@ Created on 14/04/2013
 @author: mpoletti
 
 '''
+import flask.views
+from flask import request
 from entidad import TipoItem, Proyecto, Fase
 from initdb import db_session, init_db, shutdown_session
 from atributoControlador import getAtributosTipo, eliminarAtributo
@@ -48,7 +50,8 @@ def comprobarTipoItem(nombre=None, fase=None):
     if a == None:
         return False
     else:
-        return True
+        if flask.session['tipoitemid']!=a.id:
+            return True
 
 def crearTipoItem(nom=None, com=None, fa=None):
     """Crea un tipo de item, recibe el nombre y el comentario del tipo de item y el id de la fase
