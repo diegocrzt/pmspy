@@ -146,7 +146,6 @@ class CompletarAtributo(flask.views.MethodView):
         itm=getVersionItem(flask.session['itemid'])
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
-            print flask.request.form[at.nombre]
             if at.tipoDato=="Booleano":
                 if at.nombre in flask.request.form:
                     crearValor(at.id,itm.id,flask.request.form[at.nombre])
