@@ -123,9 +123,9 @@ app.add_url_rule('/admitem/crearitem/',
                  view_func=vista.itemVista.CrearItem.as_view('crearitem'),
                  methods=["GET", "POST"])
 
-app.add_url_rule('/admitem/atributo/',
-                 view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
-                 methods=["GET", "POST"])
+#app.add_url_rule('/admitem/atributo/',
+#                 view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
+#                 methods=["GET", "POST"])
 
 app.add_url_rule('/admrol/crearrol/',
                  view_func=vista.rolVista.CrearRol.as_view('crearrol'),

@@ -58,9 +58,9 @@
 		            	{% endif %}
 		            	{% if a.tipoDato == "Fecha" %}
 		            		{%if aux%}
-		            		<td><input type="date" name="{{a.nombre}}" value="{{aux.strftime('%Y-%m-%d')}}"/></td>
+		            			<td><input type="date" name="{{a.nombre}}" value="{{aux.strftime('%Y-%m-%d')}}"/></td>
 		            		{%else%}
-		            		<td><input type="date" name="{{a.nombre}}" value="{{aux}}"/></td>
+		            			<td><input type="date" name="{{a.nombre}}" value="{{aux}}"/></td>
 		            		{%endif%}
 		            	{% endif %}
 		            	{% if a.tipoDato == "Booleano" %}

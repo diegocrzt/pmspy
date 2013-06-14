@@ -86,7 +86,7 @@ def crearItem(ti=None, etiq=None, nom=None, est=None, cos=None, dif=None, usr=No
     session.add(itm)
     session.commit()
     i = getItemEtiqueta(etiq)
-    ver = VersionItem(nombre=nom, version=0, estado=est, actual=True, costo=cos, dificultad=dif, fechaModificacion=fecha_creacion, deitem=i.id, usuario_modidificador_id=usr)
+    ver = VersionItem(nombre=nom, version=0, estado=est, actual=True, costo=cos, dificultad=dif, fechaModificacion=fecha_creacion, deitem=i.id, usuario_modificador_id=usr)
     session.add(ver)
     session.commit()
     shutdown_session()

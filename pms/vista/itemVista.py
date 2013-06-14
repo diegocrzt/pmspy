@@ -94,11 +94,11 @@ class CrearItem(flask.views.MethodView):
         return flask.render_template('crearItem.html',tipos=tipos)
     @pms.vista.required.login_required
     def post(self):
-        flask.session['aux1']=flask.request.form['nombre']
+        flask.session['aux1']=flask.request.form['nombre'][:20]
         flask.session['aux2']=flask.request.form['costo']
         flask.session['aux3']=flask.request.form['dificultad']
         flask.session['aux4']=flask.request.form['tipo']
-        if(flask.request.form['nombre']==""):
+        if(flask.request.form['nombre'][:20]==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
             return flask.render_template('crearItem.html')
         if(flask.request.form['costo']==""):
@@ -107,7 +107,7 @@ class CrearItem(flask.views.MethodView):
         if(flask.request.form['dificultad']==""):
             flask.flash(u"El campo dificultad no puede estar vacio","dificultad")
             return flask.render_template('crearItem.html')
-        if comprobarItem(flask.request.form['nombre'],flask.session['faseid']):
+        if comprobarItem(flask.request.form['nombre'][:20],flask.session['faseid']):
             flask.flash(u"El item ya existe", "nombre")
             return flask.render_template('crearItem.html')
         tipos=getTiposFase(flask.session['faseid'])
@@ -117,7 +117,7 @@ class CrearItem(flask.views.MethodView):
                 for v in i.version:
                     c=c+1
         etiqueta=str(flask.session['proyectoid'])+"-"+str(flask.session['faseid'])+"-"+str(c)
-        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
+        crearItem(flask.request.form['tipo'],etiqueta,flask.request.form['nombre'][:20],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
         tipo=getTipoItemId(flask.request.form['tipo'])
         creado=getItemEtiqueta(etiqueta)
         version=getVersionItem(creado.id)
@@ -146,6 +146,7 @@ class CompletarAtributo(flask.views.MethodView):
         itm=getVersionItem(flask.session['itemid'])
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
+            print flask.request.form[at.nombre]
             if at.tipoDato=="Booleano":
                 if at.nombre in flask.request.form:
                     crearValor(at.id,itm.id,flask.request.form[at.nombre])
@@ -189,10 +190,10 @@ class EditarItem(flask.views.MethodView):
 
     @pms.vista.required.login_required
     def post(self):
-        flask.session['aux1']=flask.request.form['nombre']
+        flask.session['aux1']=flask.request.form['nombre'][:20]
         flask.session['aux2']=flask.request.form['costo']
         flask.session['aux3']=flask.request.form['dificultad']
-        if(flask.request.form['nombre']==""):
+        if(flask.request.form['nombre'][:20]==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
             v=getVersionItem(flask.session['itemid'])
             return flask.render_template('editarItem.html',i=v)
@@ -204,12 +205,12 @@ class EditarItem(flask.views.MethodView):
             v=getVersionItem(flask.session['itemid'])
             flask.flash(u"El campo dificultad no puede estar vacio","dificultad")
             return flask.render_template('editarItem.html',i=v)
-        if comprobarItem(flask.request.form['nombre'],flask.session['faseid']):
+        if comprobarItem(flask.request.form['nombre'][:20],flask.session['faseid']):
             v=getVersionItem(flask.session['itemid'])
             flask.flash(u"El item ya existe", "nombre")
             return flask.render_template('editarItem.html',i=v)
         vvieja=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],flask.request.form['nombre'],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
+        editarItem(flask.session['itemid'],flask.request.form['nombre'][:20],"Activo",flask.request.form['costo'],flask.request.form['dificultad'],flask.session['usuarioid'])
         item=getItemId(flask.session['itemid'])
         version=getVersionItem(item.id)
         copiarValores(vvieja.id,version.id)

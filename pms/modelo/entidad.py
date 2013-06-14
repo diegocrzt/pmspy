@@ -192,7 +192,7 @@ class VersionItem(Base):
     usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
 
     
-    def __init__(self, version, nombre, estado, actual, costo, dificultad, fechaModificacion, deitem, usuario_modidificador_id=None):
+    def __init__(self, version, nombre, estado, actual, costo, dificultad, fechaModificacion, deitem, usuario_modificador_id=None):
         self.version = version
         self.nombre = nombre
         self.estado = estado
@@ -201,6 +201,7 @@ class VersionItem(Base):
         self.dificultad = dificultad
         self.fechaModificacion = fechaModificacion
         self.deitem = deitem
+        self.usuario_modificador_id = usuario_modificador_id
         
     def __repr__(self):
         return 'VersionItem { ' + self.nombre + '(' + self.version + ')}'
