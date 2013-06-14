@@ -70,7 +70,7 @@ def comprobarItem(nombre=None, fase=None):
     for t in tipos:
         for i in t.instancias:
             for v in i.version:
-                if(v.actual == True and (v.nombre == nombre) and getVersionItem(flask.session['itemid']).id!=v.id):
+                if(v.actual == True and (v.nombre == nombre) and getVersionItem(flask.session['itemid']).id != v.id):
                     return True
                 else:
                     return False                
@@ -82,7 +82,7 @@ def crearItem(ti=None, etiq=None, nom=None, est=None, cos=None, dif=None, usr=No
     """
     init_db()
     fecha_creacion = datetime.today()
-    itm = Item(tipo=ti, etiqueta=etiq, fechaCreacion=fecha_creacion)
+    itm = Item(tipo=ti, etiqueta=etiq, fechaCreacion=fecha_creacion, usuario_creador_id=usr)
     session.add(itm)
     session.commit()
     i = getItemEtiqueta(etiq)
@@ -146,6 +146,10 @@ def crearValor(ida=None, idv=None, val=None):
         session.add(v)
         session.commit()
     elif atr.tipoDato == "Fecha":
+        try:
+            val = datetime.strptime(val,'%Y-%m-%d')
+        except:
+            val = None
         v = ValorDate(atributo=ida, item=idv, valor=val)
         session.add(v)
         session.commit()

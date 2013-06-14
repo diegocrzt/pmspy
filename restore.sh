@@ -22,7 +22,6 @@ sudo -u postgres dropdb $DATABASE
 
 sudo -u postgres createdb $DATABASE
 
-echo "here"
 sudo -u postgres psql $DATABASE < $SOURCE
 
 

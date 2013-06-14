@@ -14,6 +14,7 @@ from pms.modelo.peticionControlador import crearPeticion, buscarSolicitud
 from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
+from pms.modelo.usuarioControlador import getUsuarioById
 TAM_PAGINA=5
 
 @app.route('/admitem/<f>',methods=['POST', 'GET'])
@@ -146,7 +147,6 @@ class CompletarAtributo(flask.views.MethodView):
         itm=getVersionItem(flask.session['itemid'])
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
-            print flask.request.form[at.nombre]
             if at.tipoDato=="Booleano":
                 if at.nombre in flask.request.form:
                     crearValor(at.id,itm.id,flask.request.form[at.nombre])
@@ -330,7 +330,9 @@ def consultarItem(i=None):
             aux=getVersionId(n.post_id)
             if aux.actual==True:
                 posteriores.append(aux)
-    return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores)   
+    nombre = getUsuarioById(item.usuario_creador_id).nombre
+    nombreUtl = getUsuarioById(ver.usuario_modificador_id).nombre
+    return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores,nombreUsuario=nombre, fecha_creacion=item.fechaCreacion, nombreUlt=nombreUtl)   
 
 @app.route('/admitem/asignarhijo/<vid>')
 @pms.vista.required.login_required
