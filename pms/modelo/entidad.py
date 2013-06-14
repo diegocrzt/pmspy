@@ -204,7 +204,7 @@ class VersionItem(Base):
         self.usuario_modificador_id = usuario_modificador_id
         
     def __repr__(self):
-        return 'VersionItem { ' + self.nombre + '(' + self.version + ')}'
+        return 'VersionItem { ' + self.nombre + '(' + self.version.__str__() + ')}'
     
 class Relacion(Base):
     """

@@ -52,6 +52,8 @@
 				                        <th>Costo</th>
 				                        <th>Dificultad</th>
 				                        <th>Tipo</th>
+				                        <th>Eliminado por</th>
+				                        <th>Fecha de Eliminación</th>
 				                        <th>Consultar</th>
 				                        <th>Reversionar</th>
 				                       
@@ -65,6 +67,8 @@
                                         <td>{{i.costo}}</td>
                                         <td>{{i.dificultad}}</td>
                                         <td>{{i.item.tipoitem.nombre}}</td>
+                                        <td>{{usuarioMod[i.id]}}</td>
+                                        <td>{{i.fechaModificacion.strftime('%Y-%m-%d')}}</td>
                                         <td>
                                         <a class="btn btn-info" href="/admitem/consultaritem/{{i.id}}">Consultar</a>
                                         </td>

@@ -49,7 +49,9 @@ then
 fi
 
 echo "copiando config.py"
-sudo cp $CWD/config.py $DEPLOYDIR
+sed "s/= True/= False/" config.py > ${TMP}config.py
+sudo cp ${TMP}config.py $DEPLOYDIR
+rm ${TMP}config.py
 
 echo "desplegando el sistema"
 sudo cp -r $TMP$PMS $DEPLOYDIR
