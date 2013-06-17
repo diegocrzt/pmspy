@@ -59,10 +59,12 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
         p.acciones=acciones
     if items:
         for i in items:
-                agregarItem(i.item.id,p.id)
+                if(getItemPeticion(i.id)==None):
+                    agregarItem(i.id,p.id)
         for i in p.items:
-            if not i in items:
+            if not i.item in items:
                 quitarItem(i.item.id)
+                print "if not in items"
         l=[]
         for i in items:
             l.append(i.id)
@@ -81,14 +83,25 @@ def eliminarPeticion(idp=None):
     init_db()
     u=getPeticion(idp)
     for l in u.items:
-        quitarItem(l.item.id)
+        quitarItemDeCualquierSolicitud(l.item.id, u.id)
     for l in u.votos:
         quitarVoto(l.user_id,l.peticion_id)
     session.query(Peticion).filter(Peticion.id==u.id).delete()
     session.commit()
     shutdown_session()
-    
+def quitarItemDeCualquierSolicitud(idv=None, idp=None):
+    """ Quita un item de una solicitud sin importar el estado de sicha solicitud
+    """
+    if idv and idp:
+        init_db()
+        v=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.peticion_id==idp).first()
+        if v:
+            session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
+        session.commit()
+        shutdown_session()
 def getItemPeticion(idv=None):
+    """Retorna un ItemPeticion de una peticion con estado "EnVotacion" o "Aprobada" de una version de item
+    """
     init_db()
     res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
     shutdown_session()
@@ -100,7 +113,7 @@ def comprobarItemPeticion(idv=None):
     res=getItemPeticion(idv)
     if res==None:
         return True
-    else:
+    else: 
         return False
     
 def enviarPeticion(idp=None):
@@ -118,24 +131,24 @@ def enviarPeticion(idp=None):
 def agregarItem(idv=None,idp=None,):
     """Agrega un Item a una peticion, recibe el id del item y de la peticion
     """
-    r=comprobarItemPeticion(idv)
-    if r==True:
-       
+    if idv and idp:
         ip=ItemPeticion(idp,idv,True)
         init_db()
         session.add(ip)
         session.commit()
         shutdown_session()
         return True
-    else:
-        return False
-    
+    return False
+
 def quitarItem(idv=None):
     """Quita un Item de una peticion, recibe el id del item
-    """
+    """ 
     init_db()
     v=getItemPeticion(idv)
-    session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
+    if v:
+        session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
+    else:
+        session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
     session.commit()
     shutdown_session()
 
@@ -198,6 +211,10 @@ def contarVotos(idp=None):
         soli.estado="Aprobada"
     else:
         soli.estado="Rechazada"
+        for i in soli.items:
+            res=getItemPeticion(i.item.id)
+            res.actual=False
+            session.merge(res)
     session.merge(soli)
     session.commit()
     shutdown_session()
@@ -289,15 +306,12 @@ def getVersionesItemParaSolicitud(idpro=None):
                     v=getVersionItem(i.id)
                     aux=[]
                     if (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
-                        if comprobarItemPeticion(v.id):
-                            aux.append(v)
-                            aux.append(False)
-                            l.append(aux)
-                        """else:
-                            if v.peticion.estado=="Rechazada" or v.peticion.estado=="Ejecutada":
+                        a=comprobarItemPeticion(v.id)
+                        if  a:
+                            if (v.item.tipoitem.fase.estado=="Abierta"):
                                 aux.append(v)
                                 aux.append(False)
-                                l.append(aux)"""
+                                l.append(aux)
         return l
 
 def opercionHabilitada(s=None, op=None):

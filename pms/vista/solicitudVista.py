@@ -163,9 +163,8 @@ class EditarSolicitud(flask.views.MethodView):
         ag=[]#lista items para pasarle a la funcion que crea la solicitud
         items=[]
         for i in soli.items:
-            
             iversiones.append([i.item,True])
-        for u in iversiones:
+        for u in iversiones: 
             aux=[]
             aux.append(u[0])
             if u[0].nombre in flask.request.form:
