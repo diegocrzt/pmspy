@@ -306,9 +306,7 @@ def getVersionesItemParaSolicitud(idpro=None):
                     v=getVersionItem(i.id)
                     aux=[]
                     if (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
-                        a=comprobarItemPeticion(v.id)
-                        if  a:
-                            if (v.item.tipoitem.fase.estado=="Abierta"):
+                        if comprobarItemPeticion(v.id):
                                 aux.append(v)
                                 aux.append(False)
                                 l.append(aux)
