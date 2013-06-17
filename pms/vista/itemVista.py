@@ -61,7 +61,11 @@ def admItem(f=None):
                     if aux.estado!="Eliminado":
                         i.append(aux)"""
             flask.session.pop('itemid',None)
-            return flask.render_template('admItem.html',items=items,roles=roles, infopag=infopag, buscar=False)
+            if fase.tipos:
+                haytipos=True
+            else:
+                haytipos=False
+            return flask.render_template('admItem.html',items=items,roles=roles, infopag=infopag, buscar=False, haytipos=haytipos)
         else:
             return flask.redirect(flask.url_for('admfase'))
     if request.method == "POST":

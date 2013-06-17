@@ -59,10 +59,12 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
         p.acciones=acciones
     if items:
         for i in items:
-                agregarItem(i.item.id,p.id)
+                if(getItemPeticion(i.id)==None):
+                    agregarItem(i.id,p.id)
         for i in p.items:
-            if not i in items:
+            if not i.item in items:
                 quitarItem(i.item.id)
+                print "if not in items"
         l=[]
         for i in items:
             l.append(i.id)
@@ -100,7 +102,7 @@ def comprobarItemPeticion(idv=None):
     res=getItemPeticion(idv)
     if res==None:
         return True
-    else:
+    else: 
         return False
     
 def enviarPeticion(idp=None):
@@ -118,17 +120,17 @@ def enviarPeticion(idp=None):
 def agregarItem(idv=None,idp=None,):
     """Agrega un Item a una peticion, recibe el id del item y de la peticion
     """
-    r=comprobarItemPeticion(idv)
-    if r==True:
+#     r=comprobarItemPeticion(idv)
+#     if r==True:
        
-        ip=ItemPeticion(idp,idv,True)
-        init_db()
-        session.add(ip)
-        session.commit()
-        shutdown_session()
-        return True
-    else:
-        return False
+    ip=ItemPeticion(idp,idv,True)
+    init_db()
+    session.add(ip)
+    session.commit()
+    shutdown_session()
+    return True
+#     else:
+#         return False
     
 def quitarItem(idv=None):
     """Quita un Item de una peticion, recibe el id del item
@@ -198,6 +200,10 @@ def contarVotos(idp=None):
         soli.estado="Aprobada"
     else:
         soli.estado="Rechazada"
+        for i in soli.items:
+            res=getItemPeticion(i.item.id)
+            res.actual=False
+            session.merge(res)
     session.merge(soli)
     session.commit()
     shutdown_session()
@@ -277,15 +283,11 @@ def getVersionesItemParaSolicitud(idpro=None):
                     v=getVersionItem(i.id)
                     aux=[]
                     if (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
-                        if comprobarItemPeticion(v.id):
+                        a=comprobarItemPeticion(v.id)
+                        if  a:
                             aux.append(v)
                             aux.append(False)
                             l.append(aux)
-                        """else:
-                            if v.peticion.estado=="Rechazada" or v.peticion.estado=="Ejecutada":
-                                aux.append(v)
-                                aux.append(False)
-                                l.append(aux)"""
         return l
 
 def opercionHabilitada(s=None, op=None):
