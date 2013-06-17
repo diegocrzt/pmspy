@@ -58,7 +58,7 @@
           {% if messages %}
          
             {% for category, message in messages %}
-              <span class="{{ category }}"> ---{{ message }}---</span>
+              <span class="{{ category }}"> --{{ message }}--</span>
             {% endfor %}
                   
           {% endif %}
@@ -88,10 +88,9 @@
 				 <a class="btn btn-info" href="/admlinea/consultaritem/{{v.id}}">Consultar</a>
 				</td>
 				<td>
-				{%if v.estado!="Bloqueado"%}
-				<a class="btn btn-success" href="/admlinea/confirmaritem/{{v.id}}">Confirmar</a>
+				{%if v.estado=="Conflicto"%}
+					<a class="btn btn-success" href="/admlinea/cerrar/confirmaritem/{{v.id}}">Confirmar</a>
 				{%endif%}
-				<a class="btn btn-success" href="/admlinea/cerrar/confirmaritem/{{v.id}}">Confirmar</a>
 				</td>
 			</tr>
 		{%else%}
@@ -102,7 +101,7 @@
 		{%endfor%}
 		</table>
 	    	
-	    	<p><a class="btn btn-primary" href="/admlinea/{{session['faseid']}}">Cerrar Linea Base</a></p>
+	    	<p><a class="btn btn-primary" href="/admlinea/cerrarlineabase/{{session['lineaid']}}">Cerrar Linea Base</a></p>
 	    	
 	    	<p><a class="btn " href="/admlinea/{{session['faseid']}}"><i class="icon-arrow-left"></i>Atras</a>
     </div>

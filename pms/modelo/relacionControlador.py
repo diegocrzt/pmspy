@@ -1,7 +1,8 @@
 from entidad import Relacion
 from initdb import db_session, init_db, shutdown_session
-from faseControlador import getFaseId
-from itemControlador import getVersionId
+from faseControlador import getFaseId, abrirFase
+from itemControlador import getVersionId, getVersionItem
+from lineaBaseControlador import getLineaBaseId
 from proyectoControlador import getProyectoId
 session = db_session()
 
@@ -306,20 +307,39 @@ def desBloquearAdelante(lista=None):
         setEnCambio(l)
     for l in lista:
         desBloquearAdelanteG(l,grafo)
+def desBloquearAdelante2(lista=None):
+    """
+    Revierte el estado de todos los items que tengan relacion de dependencia con el item seleccionados a un estado de Revision desde un estado Aprobado
+    """
+    
+    idvcambio=lista[0]
+    ver=getVersionId(idvcambio)
+    itm= ver.item
+    fase=itm.tipoitem.fase
+    proyecto=fase.proyecto
+    grafo=crearGrafoProyecto(proyecto.id)
+    for l in lista:
+        desBloquear(l)
+    for l in lista:
+        desBloquearAdelanteG(l,grafo)
     
 def desBloquearAdelanteG(idvcambio=None,grafo=None):
     """
     Funcione recursiva que prueba la reversion de estado de un nodo a Revision y  continua con todos sus dependientes
     """
     ver=getVersionId(idvcambio)
+    if ver.item.lineabase!=None:
+        print ver.nombre 
+        if ver.item.lineabase.estado=="Cerrada":
+            abrirLB(ver.item.lineabase.id)
+        if ver.item.tipoitem.fase.estado!="Abierta":
+            abrirFase(ver.item.tipoitem.fase.id)
     nA=grafo[0]
     for n in grafo:
         if int(n.version)==int(idvcambio):
             nA=n
     for n in nA.salientes:
-        if n.estado=="EnCambio":
-            desBloquearAdelanteG(n.version,grafo)
-        elif n.estado=="Bloqueado":
+        if n.estado=="Bloqueado": 
             desBloquear(n.version)
             desBloquearAdelanteG(n.version,grafo)
         elif n.estado=="Aprobado":
@@ -348,3 +368,22 @@ def setEnCambio(idv=None):
     session.merge(ver)
     session.commit()
     shutdown_session()
+    
+def abrirLB(idlb=None):
+    linea=getLineaBaseId(idlb)
+    init_db()
+    linea.estado="Abierta"
+    session.merge(linea)
+    session.commit()
+    shutdown_session()
+    l=[]
+    bandera=False
+    for i in linea.items:
+        v=getVersionItem(i.id)
+        if v.estado=="Bloqueado":
+            bandera=True
+            l.append(v.id)
+    if bandera==True:
+        desBloquearAdelante2(l)
+    
+    

@@ -11,7 +11,7 @@ from pms import app
 from pms.modelo.itemControlador import getItemId,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.faseControlador import getFaseId,actualizarFecha
-from pms.modelo.lineaBaseControlador import bloquearItem, desBloquearAdelante, comprobarBloquear, crearLB, aItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
+from pms.modelo.lineaBaseControlador import cerrarLB, bloquearItem, desBloquearAdelante, comprobarBloquear, crearLB, aItemLB, quitarItemLB, eliminarLB, getLineaBaseId, agregarComentarioLB
 from pms.modelo.tipoItemControlador import getTipoItemId
 class AdmLineaBase(flask.views.MethodView):
     
@@ -235,6 +235,26 @@ def cerrarLineaBase(l=None):
             v=getVersionItem(i.id)
             versiones.append(v)
         return flask.render_template('cerrarLineaBase.html', linea=linea, versiones=versiones)
+
+@app.route('/admlinea/cerrarlineabase/<l>')
+@pms.vista.required.login_required 
+def cerrarLineaBase2(l=None):
+    """Despliega la vista de cerrar linea base con los items que contiene la linea y la opcion de confirmar estos items
+    """
+    flask.session['lineaid']=l
+    linea=getLineaBaseId(l)
+    cerrar=True
+    for i in linea.items:
+        ver=getVersionItem(i.id)
+        if ver.estado!="Bloqueado":
+            cerrar=False
+    if cerrar==False:
+        flask.flash(u"Faltan confirmar Items","text-error")
+        return cerrarLineaBase(flask.session['lineaid'])
+    else:
+        cerrarLB(linea)
+        flask.flash(u"LINEA BASE CERRADA","text-success")
+        return flask.redirect('/admlinea/')
 
 @app.route('/admlinea/cerrar/confirmaritem/<i>')
 @pms.vista.required.login_required 

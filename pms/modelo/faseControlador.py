@@ -135,3 +135,11 @@ def actualizarFecha(idf=None):
     session.merge(f)
     session.commit()
     shutdown_session()
+    
+def abrirFase(idf=None):
+    init_db()
+    f=getFaseId(idf)
+    f.estado="Abierta"
+    session.merge(f)
+    session.commit()
+    shutdown_session()

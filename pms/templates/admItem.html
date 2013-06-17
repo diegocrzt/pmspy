@@ -100,104 +100,104 @@
                                 </tr>
                                 {% for i in items %}
                     
-                                <tr>
+                                 <tr>
                                         <td>{{i.nombre}}</td>
                                         <td>{{i.estado}}</td>
                                         <td>{{i.item.tipoitem.nombre}}</td>
                                         <td>{{i.version}}</td>
                                         {% if tienePermiso(roles,"editarI")%}
                                        
-	                                        {%if i.estado=="Bloqueado"%}
-		                                        <td><p class="muted">Bloqueado</p></td>
-		                                        <td><p class="muted">Bloqueado</p></td>
-	                                        {% elif i.estado=="Conflicto" %}
-		                                        <td><p class="muted">Conflicto</p></td>
-		                                        <td><p class="muted">Conflicto</p></td>
-	                                        {%else%}
-	                                        	<td>
-		                                        {% if i.item.tipoitem.atributos %}
-		                                        	<a class="btn" href="/admitem/atributo/{{i.id}}">Completar</a>
-		                                        {% else %}
-		                                        	No tiene Atributos
-		                                        {%endif%}
-		                                        </td>
-		                                        <td>
-		                                        <a class="btn" href="/admitem/editaritem/{{i.id}}">Editar</a>
-		                                        </td>
-	                                        {%endif%}
+                                                {%if i.estado=="Bloqueado"%}
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                {% elif i.estado=="Conflicto" %}
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                {%else%}
+                                                        <td>
+                                                        {% if i.item.tipoitem.atributos %}
+                                                                <a class="btn" href="/admitem/atributo/{{i.id}}">Completar</a>
+                                                        {% else %}
+                                                                No tiene Atributos
+                                                        {%endif%}
+                                                        </td>
+                                                        <td>
+                                                        <a class="btn" href="/admitem/editaritem/{{i.id}}">Editar</a>
+                                                        </td>
+                                                {%endif%}
                                         {%endif%}
                                         {% if tienePermiso(roles,"eliminarI")%}
-	                                        {%if i.estado=="Bloqueado"%}
-	                                        	<td><p class="muted">Bloqueado</p></td>
-	                                         {% elif i.estado=="Conflicto" %}
-		                                        <td><p class="muted">Conflicto</p></td>
-	                                        {%else%}
-				                                <td>
-				                                <a class="btn btn-danger" href="/admitem/eliminaritem/{{i.id}}">Eliminar</a>
-		                                        </td>
-	                                        {%endif%}
+                                                {%if i.estado=="Bloqueado"%}
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                 {% elif i.estado=="Conflicto" %}
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                {%else%}
+                                                                <td>
+                                                                <a class="btn btn-danger" href="/admitem/eliminaritem/{{i.id}}">Eliminar</a>
+                                                        </td>
+                                                {%endif%}
                                         {%endif%}
                                         <td>
                                         <a class="btn btn-info" href="/admitem/consultaritem/{{i.id}}">Consultar</a>
                                         </td>
                                         {%if tienePermiso(roles,"asignarpadrei")%}
-                                        	{%if i.estado=="Bloqueado"%}
-	                                        	<td><p class="muted">Bloqueado</p></td>
-	                                    	{% elif i.estado=="Conflicto" %}
-		                                        <td><p class="muted">Conflicto</p></td>
-	                                      	{%else%}
-		                                        <td>
-		                                        <a class="btn btn-warning" href="/admitem/asignarhijo/{{i.id}}">Padre</a>
-		                                        </td>
-	                                        {%endif%}
-	                                    {%endif%}
+                                                {%if i.estado=="Bloqueado"%}
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                {% elif i.estado=="Conflicto" %}
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                {%else%}
+                                                        <td>
+                                                        <a class="btn btn-warning" href="/admitem/asignarhijo/{{i.id}}">Padre</a>
+                                                        </td>
+                                                {%endif%}
+                                            {%endif%}
                                         {%if tienePermiso(roles,"asignarantecesori")%}
-	                                        {%if i.estado=="Bloqueado"%}
-	                                        	<td><p class="muted">Bloqueado</p></td>
-	                                        {% elif i.estado=="Conflicto" %}
-		                                        <td><p class="muted">Conflicto</p></td>
-	                                        {%else%}
-		                                        <td>
-		                                        <a class="btn btn-warning" href="/admitem/asignarantecesor/{{i.id}}">Antecesor</a>
-		                                        </td>
-		                                    {%endif%}
+                                                {%if i.estado=="Bloqueado"%}
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                {% elif i.estado=="Conflicto" %}
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                {%else%}
+                                                        <td>
+                                                        <a class="btn btn-warning" href="/admitem/asignarantecesor/{{i.id}}">Antecesor</a>
+                                                        </td>
+                                                    {%endif%}
                                         {%endif%}
                                         {%if tienePermiso(roles,"asignarantecesori") or tienePermiso(roles,"asignarpadrei")%}
-                                        	{%if i.estado=="Bloqueado"%}
-	                                        	<td><p class="muted">Bloqueado</p></td>
-	                                        {% elif i.estado=="Conflicto" %}
-		                                        <td><p class="muted">Conflicto</p></td>
-	                                        {%else%}
-		                                        <td>
-		                                        <a class="btn btn-warning" href="/admitem/eliminarrel/{{i.id}}">Eliminar</a>
-		                                        </td>
-		                                    {%endif%}
+                                                {%if i.estado=="Bloqueado"%}
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                {% elif i.estado=="Conflicto" %}
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                {%else%}
+                                                        <td>
+                                                        <a class="btn btn-warning" href="/admitem/eliminarrel/{{i.id}}">Eliminar</a>
+                                                        </td>
+                                                    {%endif%}
                                         {%endif%}
                                         {%if tienePermiso(roles,"aprobari")%}
-                                        	{%if i.estado=="Bloqueado"%}
-	                                        	<td><p class="muted">Bloqueado</p></td>
-	                                        {% elif i.estado=="Conflicto" %}
-		                                        <td><p class="muted">Conflicto</p></td>
-	                                        {%else%}
-		                                        {%if i.estado=="Aprobado"%}
-		                                        	<td><p class="muted">Aprobado</p></td>
-		                                        {%else%}
-		                                        <td>
-		                                        <a class="btn btn-success" href="/admitem/aprobaritem/{{i.id}}">Aprobar</a>
-		                                        </td>
-		                                        {%endif%}
-	                                        {%endif%}
+                                                {%if i.estado=="Bloqueado"%}
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                {% elif i.estado=="Conflicto" %}
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                {%else%}
+                                                        {%if i.estado=="Aprobado"%}
+                                                                <td><p class="muted">Aprobado</p></td>
+                                                        {%else%}
+                                                        <td>
+                                                        <a class="btn btn-success" href="/admitem/aprobaritem/{{i.id}}">Aprobar</a>
+                                                        </td>
+                                                        {%endif%}
+                                                {%endif%}
                                         {%endif%}
                                         {%if tienePermiso(roles,"reversionari")%}
-                                        	{%if i.estado=="Bloqueado"%}
-	                                        	<td><p class="muted">Bloqueado</p></td>
-	                                        {% elif i.estado=="Conflicto" %}
-		                                        <td><p class="muted">Conflicto</p></td>
-	                                        {%else%}
-	                                        <td>
-	                                        <a class="btn btn-inverse" href="/admitem/reversionar/{{i.id}}">Reversionar</a>
-	                                        </td>
-	                                        {%endif%}
+                                                {%if i.estado=="Bloqueado"%}
+                                                        <td><p class="muted">Bloqueado</p></td>
+                                                {% elif i.estado=="Conflicto" %}
+                                                        <td><p class="muted">Conflicto</p></td>
+                                                {%else%}
+                                                <td>
+                                                <a class="btn btn-inverse" href="/admitem/reversionar/{{i.id}}">Reversionar</a>
+                                                </td>
+                                                {%endif%}
                                         {%endif%}
                         </tr>
                                 {% else %}
@@ -207,7 +207,7 @@
                                 </tr>
                                 {% endfor %}
                 </table>
-                <div align="left">
+                <div align="right">
                 	{% if buscar==False %}
 	                	<a class="muted">{{infopag}}</a>
 	                	{% if session['hayprev']==True %}
