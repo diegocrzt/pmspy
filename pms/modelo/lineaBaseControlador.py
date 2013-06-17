@@ -7,7 +7,6 @@ from pms.modelo.entidad import LineaBase, Fase, Item
 from datetime import datetime
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.itemControlador import getVersionId, getVersionItem
-from pms.modelo.relacionControlador import desBloquearAdelante
 session = db_session()
 
 def getLineaBaseId(lbid=None):
@@ -146,17 +145,5 @@ def bloquearItem(idv=None):
         return True
     return False
 
-def abrirLB(idlb=None):
-    linea=getLineaBaseId(idlb)
-    init_db()
-    linea.estad="Abierta"
-    session.merge(linea)
-    session.commit()
-    shutdown_session()
-    l=[]
-    for i in linea.items:
-        v=getVersionItem(i.id)
-        if v.estado=="Bloqueado":
-            l.append(v.id)
-    desBloquearAdelante(l)
+
     

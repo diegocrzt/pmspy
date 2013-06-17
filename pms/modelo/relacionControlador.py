@@ -1,8 +1,8 @@
 from entidad import Relacion
 from initdb import db_session, init_db, shutdown_session
 from faseControlador import getFaseId, abrirFase
-from itemControlador import getVersionId
-from lineaBaseControlador import abrirLB
+from itemControlador import getVersionId, getVersionItem
+from lineaBaseControlador import getLineaBaseId
 from proyectoControlador import getProyectoId
 session = db_session()
 
@@ -358,3 +358,17 @@ def setEnCambio(idv=None):
     session.merge(ver)
     session.commit()
     shutdown_session()
+    
+def abrirLB(idlb=None):
+    linea=getLineaBaseId(idlb)
+    init_db()
+    linea.estad="Abierta"
+    session.merge(linea)
+    session.commit()
+    shutdown_session()
+    l=[]
+    for i in linea.items:
+        v=getVersionItem(i.id)
+        if v.estado=="Bloqueado":
+            l.append(v.id)
+    desBloquearAdelante(l)
