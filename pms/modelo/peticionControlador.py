@@ -3,7 +3,7 @@ from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
 from pms.modelo.itemControlador import getVersionId, getVersionItem
-from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto
+from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto, desBloquearAdelante
 from datetime import datetime
 session = db_session()
 
@@ -209,6 +209,11 @@ def contarVotos(idp=None):
     print c
     if votos>=c:
         soli.estado="Aprobada"
+        l=[]
+        for i in soli.items:
+            l.append(i.item_id)
+        
+        desBloquearAdelante(l)
     else:
         soli.estado="Rechazada"
         for i in soli.items:

@@ -355,7 +355,6 @@ def votarEnSoliciutud(s=None):
         soli=getPeticion(s)
         if soli.cantVotos>=cantidadm:
             contarVotos(soli.id)
-            cambiarVotos(soli.id)
         
         flask.flash(u"VOTACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
