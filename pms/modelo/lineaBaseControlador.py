@@ -145,5 +145,11 @@ def bloquearItem(idv=None):
         return True
     return False
 
-
+def cerrarLB(linea):
+    if linea:
+        init_db()
+        linea.estado="Cerrada"
+        session.merge(linea)
+        session.commit()
+        shutdown_session()
     
