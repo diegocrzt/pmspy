@@ -83,14 +83,25 @@ def eliminarPeticion(idp=None):
     init_db()
     u=getPeticion(idp)
     for l in u.items:
-        quitarItem(l.item.id)
+        quitarItemDeCualquierSolicitud(l.item.id, u.id)
     for l in u.votos:
         quitarVoto(l.user_id,l.peticion_id)
     session.query(Peticion).filter(Peticion.id==u.id).delete()
     session.commit()
     shutdown_session()
-    
+def quitarItemDeCualquierSolicitud(idv=None, idp=None):
+    """ Quita un item de una solicitud sin importar el estado de sicha solicitud
+    """
+    if idv and idp:
+        init_db()
+        v=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.peticion_id==idp).first()
+        if v:
+            session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
+        session.commit()
+        shutdown_session()
 def getItemPeticion(idv=None):
+    """Retorna un ItemPeticion de una peticion con estado "EnVotacion" o "Aprobada" de una version de item
+    """
     init_db()
     res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
     shutdown_session()
@@ -120,24 +131,24 @@ def enviarPeticion(idp=None):
 def agregarItem(idv=None,idp=None,):
     """Agrega un Item a una peticion, recibe el id del item y de la peticion
     """
-#     r=comprobarItemPeticion(idv)
-#     if r==True:
-       
-    ip=ItemPeticion(idp,idv,True)
-    init_db()
-    session.add(ip)
-    session.commit()
-    shutdown_session()
-    return True
-#     else:
-#         return False
-    
+    if idv and idp:
+        ip=ItemPeticion(idp,idv,True)
+        init_db()
+        session.add(ip)
+        session.commit()
+        shutdown_session()
+        return True
+    return False
+
 def quitarItem(idv=None):
     """Quita un Item de una peticion, recibe el id del item
-    """
+    """ 
     init_db()
     v=getItemPeticion(idv)
-    session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
+    if v:
+        session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
+    else:
+        session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
     session.commit()
     shutdown_session()
 
@@ -285,9 +296,10 @@ def getVersionesItemParaSolicitud(idpro=None):
                     if (v.estado=="Bloqueado" or v.estado=="Conflicto"):#controlar si se encuentra en una solicitud
                         a=comprobarItemPeticion(v.id)
                         if  a:
-                            aux.append(v)
-                            aux.append(False)
-                            l.append(aux)
+                            if (v.item.tipoitem.fase.estado=="Abierta"):
+                                aux.append(v)
+                                aux.append(False)
+                                l.append(aux)
         return l
 
 def opercionHabilitada(s=None, op=None):
