@@ -1,7 +1,8 @@
 from entidad import Relacion
 from initdb import db_session, init_db, shutdown_session
-from faseControlador import getFaseId
+from faseControlador import getFaseId, abrirFase
 from itemControlador import getVersionId
+from lineaBaseControlador import abrirLB
 from proyectoControlador import getProyectoId
 session = db_session()
 
@@ -312,6 +313,7 @@ def desBloquearAdelanteG(idvcambio=None,grafo=None):
     Funcione recursiva que prueba la reversion de estado de un nodo a Revision y  continua con todos sus dependientes
     """
     ver=getVersionId(idvcambio)
+    
     nA=grafo[0]
     for n in grafo:
         if int(n.version)==int(idvcambio):
@@ -319,9 +321,17 @@ def desBloquearAdelanteG(idvcambio=None,grafo=None):
     for n in nA.salientes:
         if n.estado=="EnCambio":
             desBloquearAdelanteG(n.version,grafo)
+            if ver.lineabase.estado!="Cerrada":
+                abrirLB(ver.lineabase.id)
+            if ver.item.tipoitem.fase.estado!="Abierta":
+                abrirFase(ver.item.tipoitem.fase.id)
         elif n.estado=="Bloqueado":
             desBloquear(n.version)
             desBloquearAdelanteG(n.version,grafo)
+            if ver.lineabase.estado!="Cerrada":
+                abrirLB(ver.lineabase.id)
+            if ver.item.tipoitem.fase.estado!="Abierta":
+                abrirFase(ver.item.tipoitem.fase.id)
         elif n.estado=="Aprobado":
             desAprobar(n.version)
             desAprobarAdelanteG(n.version,grafo)
