@@ -71,41 +71,41 @@
                     
                                 <tr>
                                 		
-                                        <td>{{i.nombre}}</td>
-                                        <td>{{i.estado}}</td>
-                                        <td>{{i.item.tipoitem.nombre}}</td>
-                                        <td>{{i.version}}</td>
+                                        <td>{{i.item.nombre}}</td>
+                                        <td>{{i.item.estado}}</td>
+                                        <td>{{i.item.item.tipoitem.nombre}}</td>
+                                        <td>{{i.item.version}}</td>
                                         {% if accionHabilitada(s,"Editar")%}
 	                                    <td>
                                         {% if iitemtipoitematributos %}
-                                        	<a class="btn" href="/admsolicitud/ejecutar/atributo/{{i.id}}">Completar</a>
+                                        	<a class="btn" href="/admsolicitud/ejecutar/atributo/{{i.item.id}}">Completar</a>
                                         {% else %}
                                         	No tiene Atributos
                                         {%endif%}
                                         </td>
                                         <td>
-                                        <a class="btn" href="/admsolicitud/ejecutar/editaritem/{{i.id}}">Editar</a>
+                                        <a class="btn" href="/admsolicitud/ejecutar/editaritem/{{i.item.id}}">Editar</a>
                                         </td>
                                         {%endif%}
                                         {% if accionHabilitada(s,"Eliminar")%}
 		                                <td>
-		                                <a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminaritem/{{i.id}}">Eliminar</a>
+		                                <a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminaritem/{{i.item.id}}">Eliminar</a>
                                         </td>
                                         {%endif%}
                                         <td>
-                                        <a class="btn btn-info" href="/admitem/consultaritem/{{i.id}}">Consultar</a>
+                                        <a class="btn btn-info" href="/admitem/consultaritem/{{i.item.id}}">Consultar</a>
                                         </td>
                                         {%if accionHabilitada(s,"Crear Relacion")%}
                                         <td>
-                                        <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarhijo/{{i.id}}">Padre</a>
+                                        <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarpadre/{{i.item.id}}">Padre</a>
                                         </td>
                                         <td>
-                                        <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarantecesor/{{i.id}}">Antecesor</a>
+                                        <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarante/{{i.item.id}}">Antecesor</a>
                                         </td>	
                                         {%endif%}
                                         {%if accionHabilitada(s,"Eliminar Relacion")%}
                                         <td>
-                                        <a class="btn btn-inverse" href="/admsolicitud/ejecutar/eliminarrel/{{i.id}}">Eliminar</a>
+                                        <a class="btn btn-inverse" href="/admsolicitud/ejecutar/eliminarrel/{{i.item.id}}">Eliminar</a>
                                         </td>
                                         {%endif%}
                                        

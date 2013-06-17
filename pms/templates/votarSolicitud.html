@@ -78,12 +78,12 @@
             </tr>
             {% for v in s.items %}
             <tr>   
-            	<td>{{v.nombre}}</td>
-            	<td>{{v.estado}}</td>
-            	<td>{{v.item.tipoitem.fase.numero}}</td>
-            	<td>{{v.version}}</td>
-            	<td>{{v.costo}}</td>
-            	<td>{{v.dificultad}}</td>
+            	<td>{{v.item.nombre}}</td>
+            	<td>{{v.item.estado}}</td>
+            	<td>{{v.item.item.tipoitem.fase.numero}}</td>
+            	<td>{{v.item.version}}</td>
+            	<td>{{v.item.costo}}</td>
+            	<td>{{v.item.dificultad}}</td>
            </tr>
            {% else %}
 	       <tr>

@@ -202,6 +202,18 @@ def contarVotos(idp=None):
     session.commit()
     shutdown_session()
     
+def cambiarVotos(idp=None):
+    """
+    cambia a false el campo actual de los votos para que no se tome en cuenta en futuras operaciones
+    """
+    soli=getPeticion(idp)
+    init_db()
+    for v in soli.votos:
+        v.actual=False
+        session.merge(v)
+        session.commit()
+    shutdown_session()
+    
 def getMiembros(idp=None):
     """
     Devuelve los usuarios que son miembros de el comite de un proyecto, recibe el id del proyecto
@@ -311,10 +323,10 @@ def actualizarItemsSolicitud(s=None):
     if s :
         soli=getPeticion(s)
         for i in soli.items:
-            idi=i.item.id
+            idi=i.item.item.id
             nuevav=getVersionItem(idi)
-            if nuevav.id!=i.id:
-                quitarItem(i.id)
+            if nuevav.id!=i.item.id:
+                quitarItem(i.item.id)
                 a=agregarItem(nuevav.id, soli.id)
                 return True
         return False
@@ -334,9 +346,9 @@ def compararPeticion(ids=None):
     aux=peticion.items
     l=[]
     for a in aux:
-        l.append(a.id) 
+        l.append(a.item.id) 
     r=calcularCyD(l)
-    if r[0]!=peticion.costo or r[1]!=peticion.dificultad:
+    if r[0]!=peticion.costoT or r[1]!=peticion.dificultadT:
         reiniciarVotacion(peticion.id)
         return True
     else:

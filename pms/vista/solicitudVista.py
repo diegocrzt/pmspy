@@ -2,7 +2,7 @@ import flask.views
 from flask import request
 from pms.modelo.usuarioControlador import  getUsuarioById
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
+from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud, cambiarVotos
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -356,6 +356,7 @@ def votarEnSoliciutud(s=None):
         soli=getPeticion(s)
         if soli.cantVotos>=cantidadm:
             contarVotos(soli.id)
+            cambiarVotos(soli.id)
         
         flask.flash(u"VOTACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
