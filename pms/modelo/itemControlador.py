@@ -131,6 +131,17 @@ def eliminarItem(idi=None, usr=None):
         session.commit()
         shutdown_session()
         
+def ejEliminarItem(idi=None):
+    """
+    elimina un tipo de item
+    """
+    init_db()
+    v = getVersionId(idi)
+    v.estado="Eliminado"
+    session.merge(v)
+    session.commit()
+    shutdown_session()
+        
 def crearValor(ida=None, idv=None, val=None):
     atr = getAtributoId(ida)
     if atr.tipoDato == "Cadena":

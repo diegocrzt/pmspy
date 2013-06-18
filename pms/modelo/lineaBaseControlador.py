@@ -108,10 +108,16 @@ def comprobarBloquear(version=None):
     """Comprueba que un item pueda ser bloqueado, recibe el id de la version del item
     """
     anteriores=version.ante_list
+    bandera=False
     for a in anteriores:
         ant=getVersionId(a.ante_id)
-        if ant.estado!="Bloqueado" and ant.actual:
+        if ant.estado!="Bloqueado" and ant.estado!="Eliminado" and ant.actual:
             return False
+        if ant.estado=="Bloqueado" and ant.actual:
+            bandera=True
+    fase=version.item.tipoitem.fase
+    if fase.numero>1 and bandera==False:
+        return False
     return True    
 
 def desBloquearAdelante(idvcambio=None):
@@ -138,3 +144,12 @@ def bloquearItem(idv=None):
         shutdown_session()
         return True
     return False
+
+def cerrarLB(linea):
+    if linea:
+        init_db()
+        linea.estado="Cerrada"
+        session.merge(linea)
+        session.commit()
+        shutdown_session()
+    

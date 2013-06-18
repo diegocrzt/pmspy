@@ -119,6 +119,10 @@ app.add_url_rule('/admitem/editaritem/',
 app.add_url_rule('/admitem/eliminaritem/',
                  view_func=vista.itemVista.Eliminaritem.as_view('eliminaritem'),
                  methods=["GET", "POST"])
+
+app.add_url_rule('/admsolicitud/ejecutar/eliminar/',
+                 view_func=vista.itemVista.EjecutarEliminaritem.as_view('ejeceliminaritem'),
+                 methods=["GET", "POST"])
 app.add_url_rule('/admitem/crearitem/',
                  view_func=vista.itemVista.CrearItem.as_view('crearitem'),
                  methods=["GET", "POST"])

@@ -2,10 +2,7 @@ import flask.views
 from flask import request
 from pms.modelo.usuarioControlador import  getUsuarioById
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
-from pms.modelo.itemControlador import getItemId
-from pms.modelo.faseControlador import getFaseId
-from pms.modelo.tipoItemControlador import getTipoItemId
+from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud, cambiarVotos
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -166,9 +163,8 @@ class EditarSolicitud(flask.views.MethodView):
         ag=[]#lista items para pasarle a la funcion que crea la solicitud
         items=[]
         for i in soli.items:
-            
             iversiones.append([i.item,True])
-        for u in iversiones:
+        for u in iversiones: 
             aux=[]
             aux.append(u[0])
             if u[0].nombre in flask.request.form:
