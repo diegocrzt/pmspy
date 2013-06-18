@@ -1,7 +1,7 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
 from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import agregarMiembro
+from pms.modelo.peticionControlador import agregarMiembro, getPeticion,getPeticionesVotacion
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
@@ -175,4 +175,15 @@ def prevPageP():
     flask.session['infopag']=calculoDeAnterior(getCantProyectos())
     return flask.redirect(flask.url_for('admproyecto'))  
  
-
+def finalizarProyecto(s):
+    flask.session['solicitudid']=s
+    soli=getPeticion(s)
+    proyecto=soli.proyecto
+    fases=proyecto.fases
+    bandera=False
+    for f in fases:
+        if f.estado!="Cerrada":
+            bandera=True
+    r=getPeticionesVotacion(proyecto.id)
+    if bandera==False and r==None:
+        return True

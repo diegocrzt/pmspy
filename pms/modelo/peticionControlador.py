@@ -7,7 +7,11 @@ from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto, desB
 from datetime import datetime
 session = db_session()
 
-
+def getPeticionesVotacion(idp=None):
+    init_db()
+    res=session.query(Peticion).filter(Peticion.proyecto_id==idp).filter(Peticion.estado=="Votacion").all()
+    shutdown_session()
+    return res
 
 def getPeticion(id=None):
     """
@@ -388,3 +392,19 @@ def buscarSolicitud(idv=None):
             cola.append(s)
             if not comprobarItemPeticion(s.version):
                 compararPeticion(getItemPeticion(s.version).peticion_id)
+
+def tSolicitud(ids=None):
+    soli=getPeticion(ids)
+    init_db()
+    soli.estado="Terminada"
+    session.merge(soli)
+    session.commit()
+    for i in soli.items:
+        i.actual=False
+        session.merge(i)
+        session.commit()
+    shutdown_session()
+    
+    
+    
+    
