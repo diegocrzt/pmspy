@@ -9,13 +9,6 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: pms; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON DATABASE pms IS '"dev"';
-
-
---
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -424,6 +417,18 @@ CREATE TABLE valordate (
 
 
 --
+-- Name: valorfile; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE valorfile (
+    atributo_id integer NOT NULL,
+    item_id integer NOT NULL,
+    valor bytea,
+    nombre character varying(200)
+);
+
+
+--
 -- Name: valorint; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -575,22 +580,6 @@ ALTER TABLE ONLY vitem ALTER COLUMN id SET DEFAULT nextval('vitem_id_seq'::regcl
 --
 
 COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
-1	explicación	Cadena	1
-2	Planificado	Booleano	1
-3	Fecha de Análisis	Fecha	1
-4	Explicación	Cadena	2
-5	Genera Documentación	Booleano	2
-6	Nombre Clave	Cadena	3
-7	Páginas	Numerico	3
-8	Componente Activo	Booleano	4
-9	Experimental	Booleano	4
-10	Nombre Clave	Cadena	4
-11	Experimental	Booleano	5
-12	Duración del proceso	Numerico	5
-13	Notas Finales	Cadena	5
-14	Descripción	Cadena	6
-15	Duración	Numerico	6
-16	Exitoso	Booleano	6
 \.
 
 
@@ -598,7 +587,7 @@ COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
 -- Name: atributo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('atributo_id_seq', 16, true);
+SELECT pg_catalog.setval('atributo_id_seq', 1, false);
 
 
 --
@@ -606,10 +595,6 @@ SELECT pg_catalog.setval('atributo_id_seq', 16, true);
 --
 
 COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto) FROM stdin;
-2	beta	2	2013-08-02 00:00:00	2013-11-01 00:00:00	2013-06-13 11:36:00.288595	Abierta	1
-3	gama	3	2013-11-02 00:00:00	2014-02-01 00:00:00	2013-06-13 11:39:17.823924	Abierta	1
-4	delta	4	2014-02-02 00:00:00	2014-06-01 00:00:00	2013-06-13 11:41:43.249159	Abierta	1
-1	alfa	1	2013-06-13 10:17:50.626447	2013-08-01 00:00:00	2013-06-13 15:45:59.181756	Abierta	1
 \.
 
 
@@ -617,7 +602,7 @@ COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado,
 -- Name: fase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('fase_id_seq', 4, true);
+SELECT pg_catalog.setval('fase_id_seq', 1, false);
 
 
 --
@@ -625,7 +610,6 @@ SELECT pg_catalog.setval('fase_id_seq', 4, true);
 --
 
 COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FROM stdin;
-1	1	1-1-1	2013-06-13 15:45:58.98332	\N	\N
 \.
 
 
@@ -633,7 +617,7 @@ COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FR
 -- Name: item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('item_id_seq', 1, true);
+SELECT pg_catalog.setval('item_id_seq', 1, false);
 
 
 --
@@ -664,9 +648,6 @@ SELECT pg_catalog.setval('lineabase_id_seq', 1, false);
 --
 
 COPY miembro (proyecto_id, user_id) FROM stdin;
-1	4
-1	5
-1	9
 \.
 
 
@@ -690,7 +671,6 @@ SELECT pg_catalog.setval('peticion_id_seq', 1, false);
 --
 
 COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado) FROM stdin;
-1	BroadWell	4	2013-06-13 10:13:18.009162	2014-06-01 00:00:00	\N	4	Iniciado
 \.
 
 
@@ -698,7 +678,7 @@ COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod",
 -- Name: proyecto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('proyecto_id_seq', 1, true);
+SELECT pg_catalog.setval('proyecto_id_seq', 1, false);
 
 
 --
@@ -721,14 +701,6 @@ SELECT pg_catalog.setval('relacion_id_seq', 1, false);
 --
 
 COPY rol (id, fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") FROM stdin;
-1	1	Jefe de Ingeniería	111	1000	1
-2	1	Analista	0	11110111	0
-5	3	Ingeniero	0	11110111	0
-3	2	Arquitecto	111	1000	1
-6	2	Técnico	0	11110111	0
-7	4	Depurador	0	11110111	0
-8	4	Jefe de Ingeniería	111	1000	1
-4	3	Jefe de Ingeniería	111	1000	1
 \.
 
 
@@ -736,7 +708,7 @@ COPY rol (id, fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") FROM stdi
 -- Name: rol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('rol_id_seq', 8, true);
+SELECT pg_catalog.setval('rol_id_seq', 1, false);
 
 
 --
@@ -744,12 +716,6 @@ SELECT pg_catalog.setval('rol_id_seq', 8, true);
 --
 
 COPY tipoitem (id, nombre, comentario, defase) FROM stdin;
-2	Requisito	Requisito Concretos para las fases posteriores del proyecto	1
-1	Análisis	Estudio detallado de resquisitos y recursos	1
-3	Arquitectura Lógica	Describe la lógica de los microprocesardores	2
-4	Arquitectura Física	Describe los detalles del hardware que ha de ser implementado	2
-5	Componente	Componente Fabricado en la fase gama	3
-6	Prueba	Pruebas finales realizadas al microprocesador	4
 \.
 
 
@@ -757,7 +723,7 @@ COPY tipoitem (id, nombre, comentario, defase) FROM stdin;
 -- Name: tipoitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('tipoitem_id_seq', 6, true);
+SELECT pg_catalog.setval('tipoitem_id_seq', 1, false);
 
 
 --
@@ -765,19 +731,6 @@ SELECT pg_catalog.setval('tipoitem_id_seq', 6, true);
 --
 
 COPY user_rol (usuario_id, rol_id) FROM stdin;
-4	1
-5	2
-6	2
-4	3
-9	3
-4	4
-9	4
-9	5
-4	5
-9	6
-5	7
-6	7
-4	8
 \.
 
 
@@ -787,17 +740,12 @@ COPY user_rol (usuario_id, rol_id) FROM stdin;
 
 COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 1	Administrador	admin	7c4a8d09ca3762af61e59520943dc26494f8941b	t
-2	Natalia Valdez	natalia	2298625f2ba17912b286ad9afd8f089e460241b9	t
-3	Martin Poletti	martin	54669547a225ff20cba8b75a4adca540eef25858	f
-4	Thomas Dwyn	tom	7c4a8d09ca3762af61e59520943dc26494f8941b	t
-5	Anna Dyst	anna	7c4a8d09ca3762af61e59520943dc26494f8941b	f
-6	Dan Tor	dan	7c4a8d09ca3762af61e59520943dc26494f8941b	f
-7	Celia Rivas	crivas	7c4a8d09ca3762af61e59520943dc26494f8941b	f
-8	Bruno Díaz	bdiaz	7c4a8d09ca3762af61e59520943dc26494f8941b	t
-9	Ryunosuke Asakura	ryu	7c4a8d09ca3762af61e59520943dc26494f8941b	f
-10	Xiao Lang	xiao	7c4a8d09ca3762af61e59520943dc26494f8941b	f
-11	Ronaldo Riveiros	ronaldo	7c4a8d09ca3762af61e59520943dc26494f8941b	f
-12	Eva Soler	eva	7c4a8d09ca3762af61e59520943dc26494f8941b	t
+2	Natalia Valdez	natalia	fb7f46ec329a5e0f6fdfabfcccec30545fbe6d3f	t
+3	Martín Poletti	martin	54669547a225ff20cba8b75a4adca540eef25858	f
+4	Dan Tor	dan	7c4a8d09ca3762af61e59520943dc26494f8941b	t
+5	Eva Almada	eva	7c4a8d09ca3762af61e59520943dc26494f8941b	f
+6	Ryunosuke Asakura	ryu	7c4a8d09ca3762af61e59520943dc26494f8941b	f
+7	Anna Dyst	anna	7c4a8d09ca3762af61e59520943dc26494f8941b	f
 \.
 
 
@@ -805,7 +753,7 @@ COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 -- Name: usuario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('usuario_id_seq', 12, true);
+SELECT pg_catalog.setval('usuario_id_seq', 7, true);
 
 
 --
@@ -813,7 +761,6 @@ SELECT pg_catalog.setval('usuario_id_seq', 12, true);
 --
 
 COPY valorbool (atributo_id, item_id, valor) FROM stdin;
-2	1	f
 \.
 
 
@@ -822,7 +769,14 @@ COPY valorbool (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY valordate (atributo_id, item_id, valor) FROM stdin;
-3	1	\N
+\.
+
+
+--
+-- Data for Name: valorfile; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY valorfile (atributo_id, item_id, valor, nombre) FROM stdin;
 \.
 
 
@@ -839,7 +793,6 @@ COPY valorint (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY valorstr (atributo_id, item_id, valor) FROM stdin;
-1	1	
 \.
 
 
@@ -848,7 +801,6 @@ COPY valorstr (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModificacion", deitem, usuario_modificador_id) FROM stdin;
-1	0	Minerales	Activo	t	500000	30	2013-06-13 15:45:58.98332	1	6
 \.
 
 
@@ -856,7 +808,7 @@ COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModifi
 -- Name: vitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('vitem_id_seq', 1, true);
+SELECT pg_catalog.setval('vitem_id_seq', 1, false);
 
 
 --
@@ -1009,6 +961,14 @@ ALTER TABLE ONLY valorbool
 
 ALTER TABLE ONLY valordate
     ADD CONSTRAINT valordate_pkey PRIMARY KEY (atributo_id, item_id);
+
+
+--
+-- Name: valorfile_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY valorfile
+    ADD CONSTRAINT valorfile_pkey PRIMARY KEY (atributo_id, item_id);
 
 
 --
@@ -1233,6 +1193,22 @@ ALTER TABLE ONLY valordate
 
 ALTER TABLE ONLY valordate
     ADD CONSTRAINT valordate_item_id_fkey FOREIGN KEY (item_id) REFERENCES vitem(id);
+
+
+--
+-- Name: valorfile_atributo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY valorfile
+    ADD CONSTRAINT valorfile_atributo_id_fkey FOREIGN KEY (atributo_id) REFERENCES atributo(id);
+
+
+--
+-- Name: valorfile_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY valorfile
+    ADD CONSTRAINT valorfile_item_id_fkey FOREIGN KEY (item_id) REFERENCES vitem(id);
 
 
 --

@@ -580,6 +580,12 @@ ALTER TABLE ONLY vitem ALTER COLUMN id SET DEFAULT nextval('vitem_id_seq'::regcl
 --
 
 COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
+2	Notas	Cadena	1
+3	Genera Documento	Booleano	1
+4	Revision	Fecha	1
+6	Id Interno	Numerico	2
+7	Descripcion	Cadena	2
+8	Experimental	Booleano	2
 \.
 
 
@@ -587,7 +593,7 @@ COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
 -- Name: atributo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('atributo_id_seq', 1, false);
+SELECT pg_catalog.setval('atributo_id_seq', 8, true);
 
 
 --
@@ -595,6 +601,10 @@ SELECT pg_catalog.setval('atributo_id_seq', 1, false);
 --
 
 COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto) FROM stdin;
+2	beta	2	2013-09-02 00:00:00	2013-12-01 00:00:00	\N	Abierta	1
+3	gama	3	2013-12-02 00:00:00	2014-03-01 00:00:00	\N	Abierta	1
+4	delta	4	2014-03-02 00:00:00	2014-06-01 00:00:00	\N	Abierta	1
+1	alfa	1	2013-06-01 00:00:00	2013-09-01 00:00:00	2013-06-18 13:40:41.721343	Abierta	1
 \.
 
 
@@ -602,7 +612,7 @@ COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado,
 -- Name: fase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('fase_id_seq', 1, false);
+SELECT pg_catalog.setval('fase_id_seq', 4, true);
 
 
 --
@@ -610,6 +620,13 @@ SELECT pg_catalog.setval('fase_id_seq', 1, false);
 --
 
 COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FROM stdin;
+1	1	1-1-1	2013-06-18 13:31:33.264764	\N	1
+2	1	1-1-4	2013-06-18 13:32:31.321181	\N	1
+3	2	1-1-7	2013-06-18 13:33:58.974538	\N	1
+4	1	1-1-9	2013-06-18 13:35:10.758247	\N	1
+5	2	1-1-11	2013-06-18 13:36:47.560435	\N	1
+6	1	1-1-13	2013-06-18 13:37:59.290193	\N	1
+7	2	1-1-15	2013-06-18 13:39:24.550494	\N	1
 \.
 
 
@@ -617,7 +634,7 @@ COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FR
 -- Name: item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('item_id_seq', 1, false);
+SELECT pg_catalog.setval('item_id_seq', 7, true);
 
 
 --
@@ -648,6 +665,7 @@ SELECT pg_catalog.setval('lineabase_id_seq', 1, false);
 --
 
 COPY miembro (proyecto_id, user_id) FROM stdin;
+1	1
 \.
 
 
@@ -671,6 +689,7 @@ SELECT pg_catalog.setval('peticion_id_seq', 1, false);
 --
 
 COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado) FROM stdin;
+1	BroadWell	4	2013-06-01 00:00:00	2014-06-01 00:00:00	\N	1	Iniciado
 \.
 
 
@@ -678,7 +697,7 @@ COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod",
 -- Name: proyecto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('proyecto_id_seq', 1, false);
+SELECT pg_catalog.setval('proyecto_id_seq', 1, true);
 
 
 --
@@ -686,6 +705,11 @@ SELECT pg_catalog.setval('proyecto_id_seq', 1, false);
 --
 
 COPY relacion (id, ante_id, post_id, tipo) FROM stdin;
+1	3	8	P-H
+2	10	8	P-H
+3	12	14	P-H
+4	8	16	P-H
+5	14	16	P-H
 \.
 
 
@@ -693,7 +717,7 @@ COPY relacion (id, ante_id, post_id, tipo) FROM stdin;
 -- Name: relacion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('relacion_id_seq', 1, false);
+SELECT pg_catalog.setval('relacion_id_seq', 5, true);
 
 
 --
@@ -701,6 +725,7 @@ SELECT pg_catalog.setval('relacion_id_seq', 1, false);
 --
 
 COPY rol (id, fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") FROM stdin;
+1	1	Jefe de Area	111	11111111	1
 \.
 
 
@@ -708,7 +733,7 @@ COPY rol (id, fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") FROM stdi
 -- Name: rol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('rol_id_seq', 1, false);
+SELECT pg_catalog.setval('rol_id_seq', 1, true);
 
 
 --
@@ -716,6 +741,8 @@ SELECT pg_catalog.setval('rol_id_seq', 1, false);
 --
 
 COPY tipoitem (id, nombre, comentario, defase) FROM stdin;
+1	Análisis	Actividades de análisis para la fabricación de procesadores	1
+2	Requisito	Actividad pre requisito en el proceso de fabricación de procesadores	1
 \.
 
 
@@ -723,7 +750,7 @@ COPY tipoitem (id, nombre, comentario, defase) FROM stdin;
 -- Name: tipoitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('tipoitem_id_seq', 1, false);
+SELECT pg_catalog.setval('tipoitem_id_seq', 2, true);
 
 
 --
@@ -731,6 +758,7 @@ SELECT pg_catalog.setval('tipoitem_id_seq', 1, false);
 --
 
 COPY user_rol (usuario_id, rol_id) FROM stdin;
+1	1
 \.
 
 
@@ -740,6 +768,12 @@ COPY user_rol (usuario_id, rol_id) FROM stdin;
 
 COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 1	Administrador	admin	7c4a8d09ca3762af61e59520943dc26494f8941b	t
+2	Natalia Valdez	natalia	fb7f46ec329a5e0f6fdfabfcccec30545fbe6d3f	t
+3	Martín Poletti	martin	54669547a225ff20cba8b75a4adca540eef25858	f
+4	Dan Tor	dan	7c4a8d09ca3762af61e59520943dc26494f8941b	t
+5	Eva Almada	eva	7c4a8d09ca3762af61e59520943dc26494f8941b	f
+6	Ryunosuke Asakura	ryu	7c4a8d09ca3762af61e59520943dc26494f8941b	f
+7	Anna Dyst	anna	7c4a8d09ca3762af61e59520943dc26494f8941b	f
 \.
 
 
@@ -747,7 +781,7 @@ COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 -- Name: usuario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('usuario_id_seq', 1, true);
+SELECT pg_catalog.setval('usuario_id_seq', 7, true);
 
 
 --
@@ -755,6 +789,22 @@ SELECT pg_catalog.setval('usuario_id_seq', 1, true);
 --
 
 COPY valorbool (atributo_id, item_id, valor) FROM stdin;
+3	1	f
+3	2	f
+3	3	f
+3	4	f
+3	5	t
+3	6	t
+8	7	f
+8	8	f
+3	9	f
+3	10	t
+8	11	f
+8	12	t
+3	13	f
+3	14	t
+8	15	f
+8	16	f
 \.
 
 
@@ -763,6 +813,16 @@ COPY valorbool (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY valordate (atributo_id, item_id, valor) FROM stdin;
+4	1	\N
+4	2	2013-06-05 00:00:00
+4	3	2013-06-06 00:00:00
+4	4	\N
+4	5	2013-06-02 00:00:00
+4	6	\N
+4	9	\N
+4	10	2013-06-10 00:00:00
+4	13	\N
+4	14	\N
 \.
 
 
@@ -779,6 +839,12 @@ COPY valorfile (atributo_id, item_id, valor, nombre) FROM stdin;
 --
 
 COPY valorint (atributo_id, item_id, valor) FROM stdin;
+6	7	0
+6	8	1
+6	11	0
+6	12	2
+6	15	0
+6	16	4
 \.
 
 
@@ -787,6 +853,22 @@ COPY valorint (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY valorstr (atributo_id, item_id, valor) FROM stdin;
+2	1	
+2	2	Análisis de suelos en busca de minerales (cuarzo)
+2	3	Análisis de suelos en busca de minerales (cuarzo)
+2	4	
+2	5	Análisis de las instalaciones de la fabrica
+2	6	Análisis de las instalaciones de la fabrica
+7	7	
+7	8	Obtención de obleas de cuarzo para microprocesadores
+2	9	
+2	10	Análisis de las arquitecturas anteriores a BroadWell
+7	11	
+7	12	Mejoras a la nueva arquitectura
+2	13	
+2	14	Análisis de tempertura de la nueva aquitectura
+7	15	
+7	16	Prueba Térmica sobre el nuevo diseño térmico
 \.
 
 
@@ -795,6 +877,22 @@ COPY valorstr (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModificacion", deitem, usuario_modificador_id) FROM stdin;
+1	0	Minerales	Activo	f	250000	30	2013-06-18 13:31:33.264764	1	1
+2	1	Minerales	Activo	f	250000	30	2013-06-18 13:31:53.059921	1	1
+3	2	Minerales	Activo	t	250000	30	2013-06-18 13:32:04.71778	1	1
+4	0	Instalaciones	Activo	f	30000	10	2013-06-18 13:32:31.321181	2	1
+5	1	Instalaciones	Activo	f	30000	10	2013-06-18 13:33:34.582212	2	1
+6	2	Instalaciones	Eliminado	t	30000	10	2013-06-18 13:33:43.050457	2	1
+7	0	Quarzo	Activo	f	500000	25	2013-06-18 13:33:58.974538	3	1
+8	1	Quarzo	Activo	t	500000	25	2013-06-18 13:34:26.650533	3	1
+9	0	Arq. anteriores	Activo	f	15000	9	2013-06-18 13:35:10.758247	4	1
+10	1	Arq. anteriores	Activo	t	15000	9	2013-06-18 13:35:34.596879	4	1
+11	0	Mejoras	Activo	f	60000	12	2013-06-18 13:36:47.560435	5	1
+12	1	Mejoras	Activo	t	60000	12	2013-06-18 13:37:07.044416	5	1
+13	0	Temperatura	Activo	f	5000	10	2013-06-18 13:37:59.290193	6	1
+14	1	Temperatura	Activo	t	5000	10	2013-06-18 13:38:21.061465	6	1
+15	0	Prueba Térmica	Activo	f	50000	10	2013-06-18 13:39:24.550494	7	1
+16	1	Prueba Térmica	Activo	t	50000	10	2013-06-18 13:39:58.357826	7	1
 \.
 
 
@@ -802,7 +900,7 @@ COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModifi
 -- Name: vitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('vitem_id_seq', 1, false);
+SELECT pg_catalog.setval('vitem_id_seq', 16, true);
 
 
 --

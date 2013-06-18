@@ -595,6 +595,10 @@ SELECT pg_catalog.setval('atributo_id_seq', 1, false);
 --
 
 COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto) FROM stdin;
+1	alfa	1	2013-06-01 00:00:00	2013-09-01 00:00:00	\N	Abierta	1
+2	beta	2	2013-09-02 00:00:00	2013-12-01 00:00:00	\N	Abierta	1
+3	gama	3	2013-12-02 00:00:00	2014-03-01 00:00:00	\N	Abierta	1
+4	delta	4	2014-03-02 00:00:00	2014-06-01 00:00:00	\N	Abierta	1
 \.
 
 
@@ -602,7 +606,7 @@ COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado,
 -- Name: fase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('fase_id_seq', 1, false);
+SELECT pg_catalog.setval('fase_id_seq', 4, true);
 
 
 --
@@ -648,6 +652,7 @@ SELECT pg_catalog.setval('lineabase_id_seq', 1, false);
 --
 
 COPY miembro (proyecto_id, user_id) FROM stdin;
+1	1
 \.
 
 
@@ -671,6 +676,7 @@ SELECT pg_catalog.setval('peticion_id_seq', 1, false);
 --
 
 COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado) FROM stdin;
+1	BroadWell	4	2013-06-01 00:00:00	2014-06-01 00:00:00	\N	1	Iniciado
 \.
 
 
@@ -678,7 +684,7 @@ COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod",
 -- Name: proyecto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('proyecto_id_seq', 1, false);
+SELECT pg_catalog.setval('proyecto_id_seq', 1, true);
 
 
 --
@@ -740,6 +746,12 @@ COPY user_rol (usuario_id, rol_id) FROM stdin;
 
 COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 1	Administrador	admin	7c4a8d09ca3762af61e59520943dc26494f8941b	t
+2	Natalia Valdez	natalia	fb7f46ec329a5e0f6fdfabfcccec30545fbe6d3f	t
+3	Martín Poletti	martin	54669547a225ff20cba8b75a4adca540eef25858	f
+4	Dan Tor	dan	7c4a8d09ca3762af61e59520943dc26494f8941b	t
+5	Eva Almada	eva	7c4a8d09ca3762af61e59520943dc26494f8941b	f
+6	Ryunosuke Asakura	ryu	7c4a8d09ca3762af61e59520943dc26494f8941b	f
+7	Anna Dyst	anna	7c4a8d09ca3762af61e59520943dc26494f8941b	f
 \.
 
 
@@ -747,7 +759,7 @@ COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 -- Name: usuario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('usuario_id_seq', 1, true);
+SELECT pg_catalog.setval('usuario_id_seq', 7, true);
 
 
 --
