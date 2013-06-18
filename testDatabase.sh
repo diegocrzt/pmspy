@@ -16,7 +16,7 @@ fi
 
 if [ -z $COMENTARIO ]
 then
-	COMENTARIO="Test Environment Database for The Projecta Manager System"	
+	COMENTARIO="Test Environment Database for The Project Manager System"	
 fi
 
 echo "Ejecutando $SOURCE en $DATABASE ($COMENTARIO)"
