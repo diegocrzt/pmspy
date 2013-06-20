@@ -11,6 +11,7 @@ import faseControlador
 import miembroControlador
 from sqlalchemy import or_
 from pms.modelo import controllerHelper
+from datetime import datetime
 session = db_session()
 
 def getProyectos():
@@ -168,7 +169,8 @@ def controlFProyecto(idp):
     
 def finalizarProyecto(idp=None):
     p=getProyectoId(idp)
-    p.estado="Finalizado"    
+    p.estado="Finalizado" 
+    p.fechaFin=datetime.today()
     init_db()
     session.merge(p)
     session.commit()

@@ -33,9 +33,9 @@
     <p>	<strong>Costo:</strong> {{i.costo}} </p>
     <p>	<strong>Difucultad:</strong> {{i.dificultad}} </p>
     <p>	<strong>Version:</strong> {{i.version}} </p>
-    <p>	<strong>Usuario Creador:</strong> {{nombreUsuario}} </p>
-    <p>	<strong>Fecha de Creación:</strong> {{fecha_creacion.strftime('%Y-%m-%d')}} </p>
-    <p>	<strong>Último Usuario Modificador:</strong> {{nombreUlt}} </p>
+    <p>	<strong>Usuario Creador:</strong> {{i.item.usuario_creador.nombre}} </p>
+    <p>	<strong>Fecha de Creación:</strong> {{i.item.fechaCreacion.strftime('%Y-%m-%d')}} </p>
+    <p>	<strong>Último Usuario Modificador:</strong> {{i.usuario_modificador.nombre}} </p>
     <p>	<strong>Última Fecha de Modificación:</strong> {{i.fechaModificacion.strftime('%Y-%m-%d')}} </p>
     <div class="span5">
     <p align="center">	<strong>Atributos</strong></p>	
@@ -166,6 +166,8 @@
 </table>
 	{%if llama=="cerrarlinea"%}
 		<a class="btn btn-success" href="/admlinea/cerrar/{{session['lineaid']}}">Aceptar</a>
+	{% elif session['solicitudid']%}
+		<a class="btn btn-success" href="/admsolicitud/ejecutar/{{session['solicitudid']}}">Aceptar</a>
 	{%else%}
 		{%if session['itemid']%}
 		<a class="btn btn-success" href="/admitem/reversionar/{{session['itemid']}}">Aceptar</a>

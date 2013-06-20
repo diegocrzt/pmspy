@@ -8,6 +8,7 @@ from flask import request
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 import pms.vista.required
 from pms import app
+from pms.modelo.usuarioControlador import getUsuarioById
 from pms.modelo.itemControlador import getItemId,getItemEtiqueta,getVersionId,getVersionItem
 from pms.modelo.rolControlador import getRolesDeUsuarioEnFase
 from pms.modelo.faseControlador import getFaseId,actualizarFecha

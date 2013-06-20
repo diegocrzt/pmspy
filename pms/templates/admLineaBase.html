@@ -69,10 +69,8 @@
                                         <a class="btn btn-info" href="/admlinea/concultar/{{l.id}}">Consultar</a>
                                         </td>
                                         <td>
-                                        {% if tienePermiso(roles,"crearLB") and session['usuarioid']==l.creador_id and l.estado=="Abierta"%}
-		                                
-		                                <a class="btn btn-danger" href="/admlinea/cerrar/{{l.id}}">Cerrar</a>
-                                        
+                                        {% if session['usuarioid']==l.creador_id and l.estado=="Abierta" %}
+		                                	<a class="btn btn-danger" href="/admlinea/cerrar/{{l.id}}">Cerrar</a>
                                         {%endif%}
                                         </td>
                         		</tr>

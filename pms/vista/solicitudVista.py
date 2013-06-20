@@ -367,7 +367,13 @@ def terminarSolicitud(s=None):
         soli=getPeticion(s)
         proyecto=soli.proyecto
         fases=proyecto.fases
-        return flask.render_template('terminarSolicitud.html', s=soli, fases=fases)
+        soli=getPeticion(s)
+        acc=[]
+        acc.insert(0, ["Editar",soli.acciones%10==1])
+        acc.insert(1,["Eliminar",soli.acciones%100>=10])
+        acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
+        acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
+        return flask.render_template('terminarSolicitud.html', s=soli, fases=fases, acciones=acc)
         
     if request.method == "POST":
         if "Aceptar" in flask.request.form:

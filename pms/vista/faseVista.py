@@ -172,6 +172,7 @@ def admFase(p=None):
     recibe p que contiene el id del proyecto al que se ingreso
     """
     global TAM_PAGINA
+    flask.session.pop('solicitudid',None)
     flask.session.pop('aux1',None)
     flask.session.pop('aux2',None)
     flask.session.pop('aux3',None)

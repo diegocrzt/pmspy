@@ -41,7 +41,7 @@
           {% endif %}
         {% endwith %}
         <div class="row" >
-                <div class="span13">
+                <div class="span12">
                         <h2> Listado de Items de Solicitud de Cambio </h2>
                       
                         <table class="table table-striped table-bordered">
@@ -77,35 +77,47 @@
                                         <td>{{i.item.version}}</td>
                                         {% if accionHabilitada(s,"Editar")%}
 	                                    <td>
-                                        {% if iitemtipoitematributos %}
+	                                    
+                                        {% if iitemtipoitematributos and i.item.estado!="Eliminado" %}
                                         	<a class="btn" href="/admsolicitud/ejecutar/atributo/{{i.item.id}}">Completar</a>
                                         {% else %}
                                         	No tiene Atributos
                                         {%endif%}
                                         </td>
                                         <td>
+                                        {%if i.item.estado!="Eliminado"%}
                                         <a class="btn" href="/admsolicitud/ejecutar/editaritem/{{i.item.id}}">Editar</a>
+                                        {%endif%}
                                         </td>
                                         {%endif%}
                                         {% if accionHabilitada(s,"Eliminar")%}
 		                                <td>
+		                                {%if i.item.estado!="Eliminado"%}
 		                                <a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminaritem/{{i.item.id}}">Eliminar</a>
+		                                {%endif%}
                                         </td>
                                         {%endif%}
                                         <td>
                                         <a class="btn btn-info" href="/admitem/consultaritem/{{i.item.id}}">Consultar</a>
                                         </td>
-                                        {%if accionHabilitada(s,"Crear Relacion")%}
+                                        {%if accionHabilitada(s,"Crear Relacion") %}
                                         <td>
+                                        {%if i.item.estado!="Eliminado"%}
                                         <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarpadre/{{i.item.id}}">Padre</a>
+                                        {%endif%}
                                         </td>
                                         <td>
+                                        {%if i.item.estado!="Eliminado"%}
                                         <a class="btn btn-warning" href="/admsolicitud/ejecutar/asignarante/{{i.item.id}}">Antecesor</a>
-                                        </td>	
+                                        {%endif%}
+                                        </td>
+                                        
                                         {%endif%}
                                         {%if accionHabilitada(s,"Eliminar Relacion")%}
                                         <td>
+                                        {%if i.item.estado!="Eliminado"%}
                                         <a class="btn btn-inverse" href="/admsolicitud/ejecutar/eliminarrel/{{i.item.id}}">Eliminar</a>
+                                        {%endif%}
                                         </td>
                                         {%endif%}
                                        
