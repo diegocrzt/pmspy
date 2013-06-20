@@ -135,6 +135,7 @@ class TipoItem(Base):
         self.fechaCreacion = fechaCreacion
         self.fechaModificacion = fechaModificacion
         self.usuario_creador_id = usuarioCreador
+        self.usuario_modificador_id = usuarioCreador
         
     def __repr__(self):
         return 'TipoItem { ' + self.nombre + '(' + self.comentario + ')}'

@@ -75,6 +75,7 @@ def editarTipoItem(idti=None,nom=None, com=None, fa=None, usr=None):
     f.comentario=com
     f.defase=fa
     f.fechaModificiacion = datetime.today()
+    f.usuario_modificador_id = usr
     session.merge(f)
     session.commit()
     shutdown_session()
