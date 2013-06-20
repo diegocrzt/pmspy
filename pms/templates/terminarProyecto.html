@@ -42,7 +42,11 @@
 		<div class="container" align="center">
         <h3 class="muted">{{session['proyectonombre']}}</h3>
         <h2>Finalizar Proyecto</h2>
+        <hr>
         </div>
+        <div class="container">
+        <p><strong class="text-info">--</strong> La finalizacion de un proyecto es <strong>irreversible</strong>. <strong class="text-info">--</strong> </p>
+      
         <div class="row" >
                 <div class="span10">
                         <h2> Listado de Fases </h2>
@@ -67,9 +71,10 @@
                                 </tr>
                                 {% endfor %}
                 </table>
-                <a class="btn btn-success" href="/admproyecto/finalizarb/{{session['proyectoid']}}"> Terminar Proyecto</a>
+                <a class="btn btn-success" href="/admproyecto/finalizarb/{{session['proyectoid']}}"> Finalizar Proyecto</a>
                 <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}"> Cancelar </a>
       	  </div>
       </div>
+        </div>
 </div>
 {%endblock%} 
