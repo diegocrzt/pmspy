@@ -81,7 +81,6 @@
           	</tr>
           	{%endfor%}
         </table>
-        <p><strong class="text-info">--</strong> Las relaciones solo se podran crear entre los items que se encuentren en la solicitud.<strong class="text-info"> --</strong></p>
         <p align="left">	<strong>Acciones que realizaran sobre los items:</strong>
         {%  with messages = get_flashed_messages(category_filter=["accion"]) %}
   			{% if messages %}

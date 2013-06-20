@@ -166,6 +166,8 @@
 </table>
 	{%if llama=="cerrarlinea"%}
 		<a class="btn btn-success" href="/admlinea/cerrar/{{session['lineaid']}}">Aceptar</a>
+	{% elif session['solicitudid']%}
+		<a class="btn btn-success" href="/admsolicitud/ejecutar/{{session['solicitudid']}}">Aceptar</a>
 	{%else%}
 		{%if session['itemid']%}
 		<a class="btn btn-success" href="/admitem/reversionar/{{session['itemid']}}">Aceptar</a>
