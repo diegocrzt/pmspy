@@ -433,9 +433,11 @@ def aReversionar(iid=None):
     ver=getVersionId(iid)
     item=ver.item
     i=[]
+    z=dict()
     for v in item.version:
         i.append(v)
-    return flask.render_template('reversionarItem.html',versiones=i)
+        z[v.id]= getUsuarioById(v.usuario_modificador_id).nombre
+    return flask.render_template('reversionarItem.html',versiones=i,usuarioMod=z)
 
 @app.route('/admitem/reversionarb/<vid>')
 @pms.vista.required.login_required

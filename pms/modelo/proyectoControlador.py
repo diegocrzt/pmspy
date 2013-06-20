@@ -150,3 +150,27 @@ def getProyectosFiltrados(filtro=None):
             query = session.query(Proyecto).join(Usuario).filter(Usuario.nombre.ilike("%" + filtro + "%") | Proyecto.nombre.ilike("%" + filtro + "%") | Proyecto.estado.ilike("%" + filtro + "%"))
         shutdown_session()
         return query
+    
+    
+def controlFProyecto(idp):
+    p=getProyectoId(idp)
+    bandera=False
+    for f in p.fases:
+        if f.estado!="Cerrada":
+            bandera=True
+    for s in p.solicitudes:
+        if s.estado=="EnVotacion":
+            bandera=True
+    if bandera==True:
+        return False
+    else:
+        return True
+    
+def finalizarProyecto(idp=None):
+    p=getProyectoId(idp)
+    p.estado="Finalizado"    
+    init_db()
+    session.merge(p)
+    session.commit()
+    shutdown_session()
+    

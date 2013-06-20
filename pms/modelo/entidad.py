@@ -7,10 +7,11 @@ Created on 05/04/2013
 '''
 from sqlalchemy import Column, Integer, Boolean, ForeignKey, Table, Numeric, REAL
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.types import Unicode
+from sqlalchemy.types import Unicode, Binary
 from sqlalchemy.types import DateTime
 from initdb import init_db
 from initdb import Base
+from pms.modelo.initdb import shutdown_session
 
 class Usuario(Base):
 
@@ -189,6 +190,7 @@ class VersionItem(Base):
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
+    atributofile = relationship("ValorFile")
     usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
 
     
@@ -204,7 +206,7 @@ class VersionItem(Base):
         self.usuario_modificador_id = usuario_modificador_id
         
     def __repr__(self):
-        return 'VersionItem { ' + self.nombre + '(' + self.version + ')}'
+        return 'VersionItem { ' + self.nombre + '(' + self.version.__str__() + ')}'
     
 class Relacion(Base):
     """
@@ -295,6 +297,26 @@ class ValorDate(Base):
     def __repr__(self):
         return 'ValorDate { ' + self.valor + '}'
     
+class ValorFile(Base):
+    """
+        Define la clase ValorFile y la mapea con la tabla valorfile
+        Esta tabla almacena los atributos del tipo archivo(file)
+    """
+    __tablename__ = 'valorfile'
+    atributo_id = Column(Integer, ForeignKey('atributo.id'), primary_key=True)
+    item_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
+    valor = Column(Binary)
+    nombre = Column(Unicode(200))#nombre del fichero
+    atributo = relationship("Atributo")
+        
+    def __init__(self, atributo, item, valor, nombre):
+        self.atributo_id = atributo
+        self.item_id = item
+        self.valor = valor
+        self.nombre = nombre
+        
+    def __repr__(self):
+        return 'ValorFile { ' + self.nombre + '}' 
     
 class Rol(Base):
     """
@@ -444,3 +466,4 @@ class ItemPeticion(Base):
         self.actual=actual
 
 init_db()
+shutdown_session()

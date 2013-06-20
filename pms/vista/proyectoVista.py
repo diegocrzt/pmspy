@@ -1,12 +1,13 @@
 import flask.views
 from pms.modelo.usuarioControlador import validar, getUsuarios, eliminarUsuario, getUsuario, crearUsuario, getUsuarioById, editarUsuario, comprobarUsuario, usuarioIsLider
-from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
-from pms.modelo.peticionControlador import agregarMiembro
+from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto,controlFProyecto, finalizarProyecto
+from pms.modelo.peticionControlador import agregarMiembro, getPeticion,getPeticionesVotacion
 from datetime import datetime
 import pms.vista.required
 from pms.modelo.rolControlador import getProyectosDeUsuario
 from pms import app
 from pms.vista.paginar import calculoDeSiguiente, calculoDeAnterior, calculoPrimeraPag
+from flask import request
 TAM_PAGINA=5
 class AdmProyecto(flask.views.MethodView):
     """
@@ -175,4 +176,36 @@ def prevPageP():
     flask.session['infopag']=calculoDeAnterior(getCantProyectos())
     return flask.redirect(flask.url_for('admproyecto'))  
  
-
+@app.route('/admproyecto/finalizar/<idp>', methods=["POST", "GET"])
+@pms.vista.required.login_required
+def terminarProyecto(idp=None):
+    """
+    Funcion que llama a la Vista de Cerrar Fase
+    """
+    if request.method == "GET":
+        p=int(idp)
+        flask.session['proyectoid']=p
+        pr=getProyectoId(p)
+        fases=[]
+        fases=pr.fases
+        if not controlFProyecto(p):
+            flask.flash(u"El Proyecto no puede finalizarse", "text-error")
+            return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+        return flask.render_template('terminarProyecto.html',fases=fases)   
+    else:
+        return flask.redirect(flask.url_for('admproyecto'))
+    
+@app.route('/admproyecto/finalizarb/<p>', methods=["POST", "GET"])
+@pms.vista.required.login_required
+def terminarProyectoB(p=None):
+    """ 
+    Funcion que cierra la fase
+    """
+    p=int(p)
+    if controlFProyecto(p):
+        finalizarProyecto(p)
+        flask.flash(u"Proyecto finalizado","text-success")
+        
+        return flask.redirect('/admproyecto/')
+    else:
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
