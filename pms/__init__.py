@@ -112,6 +112,10 @@ app.add_url_rule('/admitem/atributo/',
                  view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
                  methods=["GET", "POST"])
 
+app.add_url_rule('/admsolicitud/ejecutar/atributo/',
+                 view_func=vista.ejecutarSolicitudVista.EjCompletarAtributo.as_view('ejcompletaratributo'),
+                 methods=["GET", "POST"])
+
 app.add_url_rule('/admitem/editaritem/',
                  view_func=vista.itemVista.EditarItem.as_view('editaritem'),
                  methods=["GET", "POST"])
@@ -121,7 +125,7 @@ app.add_url_rule('/admitem/eliminaritem/',
                  methods=["GET", "POST"])
 
 app.add_url_rule('/admsolicitud/ejecutar/eliminar/',
-                 view_func=vista.itemVista.EjecutarEliminaritem.as_view('ejeceliminaritem'),
+                 view_func=vista.ejecutarSolicitudVista.EjecutarEliminaritem.as_view('ejeceliminaritem'),
                  methods=["GET", "POST"])
 app.add_url_rule('/admitem/crearitem/',
                  view_func=vista.itemVista.CrearItem.as_view('crearitem'),
