@@ -405,10 +405,6 @@ def tSolicitud(ids=None):
         session.merge(i)
         session.commit()
         desBloquear(i.item_id)
-    p=soli.proyecto
-    p.fechaFin=datetime.today()
-    session.merge(p)
-    session.commit()
     shutdown_session()
     
     
