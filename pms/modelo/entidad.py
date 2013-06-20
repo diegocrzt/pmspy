@@ -31,7 +31,7 @@ class Usuario(Base):
     peticiones = relationship("Peticion", backref="usuario")
     items = relationship("Item", backref="usuario_creador")
     vitems = relationship("VersionItem", backref="usuario_modificador")
-    tipoitemCreador = relationship("TipoItem", backref="usuario_creador")
+    #tipoitemCreador = relationship("TipoItem", backref="usuario_creador")
     #tipoitemMod = relationship("TipoItem",backref="usuario_modificador")
     
     def __init__(self, nombre, nombredeusuario, clave, isAdmin):
@@ -124,9 +124,9 @@ class TipoItem(Base):
     fechaCreacion = Column(DateTime)
     fechaModificacion = Column(DateTime)
     usuario_creador_id = Column(Integer, ForeignKey('usuario.id'))
-    #usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
-    #usuario_creador = relationship("Usuario",foreign_keys="usuario_creador_id")
-    #usuario_modificador = relationship("Usuario",foreign_keys="usuario_modificador_id")
+    usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
+    usuario_creador = relationship("Usuario", primaryjoin=(Usuario.id == usuario_creador_id))
+    usuario_modificador = relationship("Usuario", primaryjoin=(Usuario.id == usuario_modificador_id))
     
     def __init__(self, nombre, comentario, defase, fechaCreacion, fechaModificacion, usuarioCreador ):
         self.nombre = nombre
@@ -170,6 +170,7 @@ class Item(Base):
     fechaCreacion = Column(DateTime)
     linea_id = Column(Integer, ForeignKey('lineabase.id'))
     usuario_creador_id = Column(Integer, ForeignKey('usuario.id'))
+    file = relationship("ValorFile",backref="item")
     
     def __init__(self, tipo, etiqueta, fechaCreacion, linea_id=None, usuario_creador_id=None):
         self.linea_id = linea_id
@@ -201,7 +202,6 @@ class VersionItem(Base):
     atributosbool = relationship("ValorBoolean")
     atributosstr = relationship("ValorStr")
     atributosdate = relationship("ValorDate")
-    atributofile = relationship("ValorFile")
     usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
 
     
@@ -221,7 +221,7 @@ class VersionItem(Base):
     
 class Relacion(Base):
     """
-        Define la clase Relacion y la mapea con la tabla item
+        Define la clase Relacion y la mapea con la tabla relacion
     """
     __tablename__ = 'relacion'
     id = Column(Integer, primary_key=True)
@@ -314,14 +314,12 @@ class ValorFile(Base):
         Esta tabla almacena los atributos del tipo archivo(file)
     """
     __tablename__ = 'valorfile'
-    atributo_id = Column(Integer, ForeignKey('atributo.id'), primary_key=True)
-    item_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    item_id = Column(Integer, ForeignKey('item.id'))
     valor = Column(Binary)
     nombre = Column(Unicode(200))#nombre del fichero
-    atributo = relationship("Atributo")
         
-    def __init__(self, atributo, item, valor, nombre):
-        self.atributo_id = atributo
+    def __init__(self, item, valor, nombre):
         self.item_id = item
         self.valor = valor
         self.nombre = nombre
