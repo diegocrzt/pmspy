@@ -451,9 +451,9 @@ def bReversionar(vid=None):
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
-        crearRelacion(vvieja.id,version.id,rel.tipo)
+        crearRelacion(rel.ante_id,version.id,rel.tipo)
     for rel in vvieja.post_list:
-        crearRelacion(version.id,vvieja.id,rel.tipo)
+        crearRelacion(version.id,rel.post_id,rel.tipo)
     desAprobarAdelante(version.id)
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/reversionar/'+str(flask.session['itemid']))
@@ -501,9 +501,9 @@ def bRevivir(vid=None):
     version=getVersionItem(item.id)
     copiarValores(vvieja.id,version.id)
     for rel in vvieja.ante_list:
-        crearRelacion(vvieja.id,version.id,rel.tipo)
+        crearRelacion(rel.ante_id,version.id,rel.tipo)
     for rel in vvieja.post_list:
-        crearRelacion(version.id,vvieja.id,rel.tipo)
+        crearRelacion(version.id,rel.post_id,rel.tipo)
     desAprobarAdelante(version.id)
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/'+str(flask.session['faseid'])) 
