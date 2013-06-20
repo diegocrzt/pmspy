@@ -3,8 +3,9 @@ from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
 from pms.modelo.itemControlador import getVersionId, getVersionItem
-from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto, desBloquearAdelante
+from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto, desBloquearAdelante, desBloquear
 from datetime import datetime
+from datetime import timedelta
 session = db_session()
 
 def getPeticionesVotacion(idp=None):
@@ -403,6 +404,11 @@ def tSolicitud(ids=None):
         i.actual=False
         session.merge(i)
         session.commit()
+        desBloquear(i.item_id)
+    p=soli.proyecto
+    p.fechaFin=datetime.today()
+    session.merge(p)
+    session.commit()
     shutdown_session()
     
     

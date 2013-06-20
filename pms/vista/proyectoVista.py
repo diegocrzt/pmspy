@@ -206,6 +206,6 @@ def terminarProyectoB(p=None):
         finalizarProyecto(p)
         flask.flash(u"Proyecto finalizado","text-success")
         
-        return flask.redirect('/admproyecto/')
+        return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
     else:
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
