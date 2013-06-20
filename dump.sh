@@ -17,4 +17,4 @@ fi
 
 echo "Dump $DATABASE in $DESTINATION"
 
-pg_dump $DATABASE -O > $DESTINATION
+sudo -u postgres pg_dump $DATABASE -O > $DESTINATION

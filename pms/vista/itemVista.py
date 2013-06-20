@@ -3,7 +3,7 @@ from flask import request
 import pms.vista.required
 from pms import app
 from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase,actualizarFecha
+from pms.modelo.faseControlador import getFase, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase,actualizarFecha
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.rolControlador import getRolesFase, comprobarUser_Rol
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
@@ -334,9 +334,7 @@ def consultarItem(i=None):
             aux=getVersionId(n.post_id)
             if aux.actual==True:
                 posteriores.append(aux)
-    nombre = getUsuarioById(item.usuario_creador_id).nombre
-    nombreUtl = getUsuarioById(ver.usuario_modificador_id).nombre
-    return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores,nombreUsuario=nombre, fecha_creacion=item.fechaCreacion, nombreUlt=nombreUtl)   
+    return flask.render_template('consultarItem.html',i=ver,atributos=atr,valores=val,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores)   
 
 @app.route('/admitem/asignarhijo/<vid>')
 @pms.vista.required.login_required
@@ -383,12 +381,13 @@ def auHijo(vid=None):
 @pms.vista.required.login_required
 def aAntecesor(vid=None): 
     """
-    Funcion que llama a la Vista de Asignar Rol, responde al boton de 'Asignar' de Administrar Rol
+    Funcion que llama a la Vista de Asignar Antecesor, responde al boton de 'Antecesor' de Administrar Item 
     """
     flask.session['antecesor']=vid
     if flask.session['fasenumero']>1:
         flask.session['itemnombre']=getVersionId(vid).nombre
-        fase=getFaseId(flask.session['faseid']-1)
+        faseact=getFaseId(flask.session['faseid'])
+        fase=getFase(faseact.numero-1, flask.session['proyectoid'])
         t=fase.tipos
         i=[]
         for ti in t:
@@ -613,47 +612,6 @@ def eliminarRelc(vid=None):
     actualizarFecha(flask.session['faseid'])
     return flask.redirect('/admitem/eliminarrel/'+str(flask.session['idver']))
 
-@app.route('/admitem/solicitud/<fid>')
-@pms.vista.required.login_required
-def solicitudCambio(fid=None):
-    fase=getFaseId(fid)
-    if fase:
-        tipos=fase.tipos
-        items=[]
-        for t in tipos:
-            for i in t.instancias:
-                items.append(i)
-        versiones=[]
-        for i in items:
-            v=getVersionItem(i.id)
-            if v.estado=="Bloqueado" and not peticionExiste(v.id):
-                versiones.append(v)
-        return flask.render_template('solicitud.html', versiones=versiones)
-
-@app.route('/admitem/solicitarcambio/<vid>', methods=['POST', 'GET'])
-@pms.vista.required.login_required
-def solcitarCambio(vid=None):
-    if request.method == "GET":
-        flask.session['itemid']=vid
-        version=getVersionId(vid)
-        if(version.estado=="Bloqueado"):
-            costo=version.costo
-            dificultad=version.dificultad
-            h=hijos(vid)
-            for hi in h:
-                costo=costo+hi.costo
-                dificultad=dificultad+hi.dificultad
-            return flask.render_template('solicitudCambio.html', version=version, costo=costo, dificultad=dificultad, hijos=h)
-        else:
-            return flask.redirect('/admitem/'+str(flask.session['faseid']))
-    if request.method == "POST":
-        if flask.request.form['comentario']=="":
-            flask.flash(u"El campo no puede estar vacio","comentario")
-            return flask.redirect('/admitem/solicitarcambio/'+str(vid))
-        else:
-            crearPeticion(flask.session['proyectoid'], vid, flask.request.form['comentario'], flask.session['usuarioid'])
-            flask.flash(u"Peticion realizada")
-            return flask.redirect('/admitem/'+str(flask.session['faseid']))
     
 @app.route('/admitem/nextitem/')
 @pms.vista.required.login_required       
