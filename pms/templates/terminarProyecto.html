@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+
+{% block menu %}
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/admfase/{{session['proyectoid']}}">Administrar Fase</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+         </div>
+        </div>
+</div>
+              
+{%endblock%}
+
+{%block mensaje%}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          <div class="container" align="center">
+            {% for category, message in messages %}
+              <h4 class="{{ category }}">{{ message }}</h4>
+            {% endfor %}
+		  </div>
+          {% endif %}
+        {% endwith %}
+{%endblock%}
+
+{%block content%}
+<div class="items">
+		<div class="container" align="center">
+        <h3 class="muted">{{session['proyectonombre']}}</h3>
+        <h2>Cerrar Fase</h2>
+        </div>
+        <div class="row" >
+                <div class="span14">
+                        <h2> Listado de Fases </h2>
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+				                        <th>Numero</th>
+				                        
+                                </tr>
+                                {% for i in fases %}
+                    
+                                <tr>
+                                        <td>{{i.nombre}}</td>
+                                        <td>{{i.estado}}</td>
+                                        <td>{{i.numero}}</td>
+                        </tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No tiene fases y no se podra cerrar la fase
+                                </tr>
+                                {% endfor %}
+                </table>
+                <a class="btn btn-success" href="/admproyecto/finalizarb/{{session['proyectoid']}}"> Terminar Proyecto</a>
+                <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}"> Cancelar </a>
+      	  </div>
+      </div>
+</div>
+{%endblock%} 

@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block menu %}
+	
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
+              <li><a href="/">Logout</a></li>
+              <li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+{%block content%}
+<div class="container" align="left">
+		<h3>Eliminar relacion del Item <em> {{session['itemnombre']}} </em> de <em>{{session['proyectonombre']}} - {{session['fasenombre']}} </em></h3>
+	    <hr>
+	    <div class="span7">
+	    <p align="center">	<strong>Padres</strong></p>	
+		<table  class="table  table-bordered" >
+		<tr>
+	        <th>Nombre</th>
+	        <th>Estado</th>
+	        <th>Version</th>
+	        <th>Eliminar</th>
+	     </tr>
+	
+	     {% for n in padres%}
+		     <tr>
+		      	<td>{{n.nombre}}</td>
+		      	<td>{{n.estado}}</td>
+		      	<td>{{n.version }}</td>
+		      	<td>
+		      	<a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminarrelc/{{n.id}}">Eliminar</a>
+		      	</td>
+		      </tr>
+		  {% else %}
+			<tr>
+				<td></td>
+				<td> -No tiene Padres-</td>
+				<td></td>
+				<td></td>
+			</tr>			
+	     {% endfor %}
+	</table>
+	
+	</table>
+	    <p align="center">	<strong>Antecesores</strong></p>	
+		<table  class="table  table-bordered" >
+		<tr>
+	        <th>Nombre</th>
+	        <th>Estado</th>
+	        <th>Version</th>
+	        <th>Eliminar</th>
+	     </tr>
+	
+	     {% for n in antecesores%}
+		     <tr>
+		      	<td>{{n.nombre}}</td>
+		      	<td>{{n.estado}}</td>
+		      	<td>{{n.version }}</td>
+		      	<td>
+		      	<a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminarrelc/{{n.id}}">Eliminar</a>
+		      	</td>
+		      </tr>	
+		 {% else %}
+			<tr>
+				<td></td>
+				<td> -No tiene Antecesores-</td>
+				<td></td>
+				<td></td>
+			</tr>			
+	     {% endfor %}
+	</table>
+	
+	</table>
+	    <p align="center">	<strong>Hijos</strong></p>	
+		<table  class="table  table-bordered" >
+		<tr>
+	        <th>Nombre</th>
+	        <th>Estado</th>
+	        <th>Version</th>
+	        <th>Eliminar</th>
+	     </tr>
+	
+	     {% for n in hijos%}
+		     <tr>
+		      	<td>{{n.nombre}}</td>
+		      	<td>{{n.estado}}</td>
+		      	<td>{{n.version }}</td>
+		      	<td>
+		      	<a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminarrelb/{{n.id}}">Eliminar</a>
+		      	</td>
+		      </tr>	
+		 {% else %}
+			<tr>
+				<td></td>
+				<td> -No tiene Hijos-</td>
+				<td></td>
+				<td></td>
+			</tr>
+	     {% endfor %}
+	</table>
+	
+	</table>
+	    <p align="center">	<strong>Sucesores</strong></p>	
+		<table  class="table  table-bordered" >
+		<tr>
+	        <th>Nombre</th>
+	        <th>Estado</th>
+	        <th>Version</th>
+	        <th>Eliminar</th>
+	     </tr>
+	
+	     {% for n in sucesores%}
+		     <tr>
+		      	<td>{{n.nombre}}</td>
+		      	<td>{{n.estado}}</td>
+		      	<td>{{n.version }}</td>
+		      	<td>
+		      	<a class="btn btn-danger" href="/admsolicitud/ejecutar/eliminarrelb/{{n.id}}">Eliminar</a>
+		      	</td>
+		      </tr>	
+		 {% else %}
+			<tr>
+				<td></td>
+				<td> -No tiene Sucesores-</td>
+				<td></td>
+				<td></td>
+			</tr>			
+	     {% endfor %}
+	</table>
+	
+		
+	    <a class="btn" href="/admsolicitud/ejecutar/{{session['solicitudid']}}"><i class="icon-arrow-left"></i> Atras</a>
+	    </div>
+{%endblock%}
