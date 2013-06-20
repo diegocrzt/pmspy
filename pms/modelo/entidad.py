@@ -31,6 +31,8 @@ class Usuario(Base):
     peticiones = relationship("Peticion", backref="usuario")
     items = relationship("Item", backref="usuario_creador")
     vitems = relationship("VersionItem", backref="usuario_modificador")
+    tipoitemCreador = relationship("TipoItem", backref="usuario_creador")
+    #tipoitemMod = relationship("TipoItem",backref="usuario_modificador")
     
     def __init__(self, nombre, nombredeusuario, clave, isAdmin):
         self.nombre = nombre
@@ -119,11 +121,20 @@ class TipoItem(Base):
     defase = Column(Integer, ForeignKey('fase.id')) 
     atributos = relationship("Atributo", backref="tipoitem")
     instancias = relationship("Item", order_by="Item.id", backref="tipoitem")
+    fechaCreacion = Column(DateTime)
+    fechaModificacion = Column(DateTime)
+    usuario_creador_id = Column(Integer, ForeignKey('usuario.id'))
+    #usuario_modificador_id = Column(Integer, ForeignKey('usuario.id'))
+    #usuario_creador = relationship("Usuario",foreign_keys="usuario_creador_id")
+    #usuario_modificador = relationship("Usuario",foreign_keys="usuario_modificador_id")
     
-    def __init__(self, nombre, comentario, defase):
+    def __init__(self, nombre, comentario, defase, fechaCreacion, fechaModificacion, usuarioCreador ):
         self.nombre = nombre
         self.comentario = comentario
         self.defase = defase
+        self.fechaCreacion = fechaCreacion
+        self.fechaModificacion = fechaModificacion
+        self.usuario_creador_id = usuarioCreador
         
     def __repr__(self):
         return 'TipoItem { ' + self.nombre + '(' + self.comentario + ')}'

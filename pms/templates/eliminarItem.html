@@ -32,6 +32,10 @@
     <p>	<strong>Costo:</strong> {{i.costo}} </p>
     <p>	<strong>Difucultad:</strong> {{i.dificultad}} </p>
     <p>	<strong>Version:</strong> {{i.version}} </p>
+    <p>	<strong>Usuario Creador:</strong> {{item.usuario_creador.nombre}} </p>
+    <p>	<strong>Fecha de Creación:</strong> {{item.fechaCreacion.strftime('%Y-%m-%d')}} </p>
+    <p>	<strong>Último Usuario Modificador:</strong> {{i.usuario_modificador.nombre}} </p>
+    <p>	<strong>Última Fecha de Modificación:</strong> {{i.fechaModificacion.strftime('%Y-%m-%d')}} </p>
      <div class="span5">
     <p align="center">	<strong>Atributos</strong></p>	
 	<table  class="table  table-bordered" >

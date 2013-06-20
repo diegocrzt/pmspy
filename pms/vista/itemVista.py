@@ -290,7 +290,7 @@ def eItem(i=None):
         val.append(at)
     for at in ver.atributosdate:
         val.append(at)
-    return flask.render_template('eliminarItem.html',i=ver, atributos=atr, valores=val)   
+    return flask.render_template('eliminarItem.html',i=ver, atributos=atr, valores=val,item=item)   
 
 @app.route('/admitem/consultaritem/<i>')
 @pms.vista.required.login_required

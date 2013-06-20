@@ -329,7 +329,10 @@ CREATE TABLE tipoitem (
     id integer NOT NULL,
     nombre character varying(20),
     comentario character varying(100),
-    defase integer
+    defase integer,
+    "fechaCreacion" timestamp without time zone,
+    "fechaModificacion" timestamp without time zone,
+    usuario_creador_id integer
 );
 
 
@@ -715,7 +718,7 @@ SELECT pg_catalog.setval('rol_id_seq', 1, false);
 -- Data for Name: tipoitem; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY tipoitem (id, nombre, comentario, defase) FROM stdin;
+COPY tipoitem (id, nombre, comentario, defase, "fechaCreacion", "fechaModificacion", usuario_creador_id) FROM stdin;
 \.
 
 
@@ -1139,6 +1142,14 @@ ALTER TABLE ONLY rol
 
 ALTER TABLE ONLY tipoitem
     ADD CONSTRAINT tipoitem_defase_fkey FOREIGN KEY (defase) REFERENCES fase(id);
+
+
+--
+-- Name: tipoitem_usuario_creador_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tipoitem
+    ADD CONSTRAINT tipoitem_usuario_creador_id_fkey FOREIGN KEY (usuario_creador_id) REFERENCES usuario(id);
 
 
 --

@@ -96,7 +96,7 @@ class Creartipo(flask.views.MethodView):
         if comprobarTipoItem(flask.request.form['nombre'],flask.session['faseid']):
             flask.flash(u"El tipo ya existe", "nombre")
             return flask.render_template('crearTipo.html')
-        crearTipoItem(flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
+        crearTipoItem(flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'],flask.session['usuarioid'])
         idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
         flask.session.pop('aux1',None)
         flask.session.pop('aux2',None)
@@ -131,7 +131,7 @@ class Editartipo(flask.views.MethodView):
             flask.flash(u"El tipo ya existe", "nombre")
             tipo=getTipoItemId(flask.session['tipoitemid'])
             return flask.render_template('editarTipo.html',t=tipo)
-        editarTipoItem(flask.session['tipoitemid'],flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
+        editarTipoItem(flask.session['tipoitemid'],flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'],flask.session['usuarioid'])
         idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid'])
         flask.session.pop('aux1',None)
         flask.flash(u"EDICION EXITOSA","text-success")
@@ -175,7 +175,7 @@ class ImportarTipo(flask.views.MethodView):
         if comprobarTipoItem(flask.request.form['nombre'],flask.session['faseid']):
             flask.flash(u"El tipo ya existe", "nombre")
             return flask.render_template('importarTipoItem.html',tipo=tipo)
-        crearTipoItem(flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'])
+        crearTipoItem(flask.request.form['nombre'][:20],flask.request.form['comentario'][:100],flask.session['faseid'],flask.session['usuarioid'])
         idcreado=getTipoItemNombre(flask.request.form['nombre'][:20],flask.session['faseid']).id
         for a in tipo.atributos:
             crearAtributo(a.nombre,a.tipoDato,idcreado)
