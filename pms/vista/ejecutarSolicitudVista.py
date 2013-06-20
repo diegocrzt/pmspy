@@ -61,7 +61,7 @@ class EditarItemSolicitud(flask.views.MethodView):
             flask.flash(u"El item ya existe", "nombre")
             return flask.render_template('editarItemSolicitud.html',i=v)
         
-        editarItem(flask.session['itemid'],flask.request.form['nombre'],"Bloqueado",flask.request.form['costo'],flask.request.form['dificultad'])
+        editarItem(flask.session['itemid'],flask.request.form['nombre'],"EnCambio",flask.request.form['costo'],flask.request.form['dificultad'])
         item=getItemId(flask.session['itemid'])
         version=getVersionItem(item.id)
         copiarValores(v.id,version.id)

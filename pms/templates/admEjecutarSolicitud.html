@@ -78,7 +78,7 @@
                                         {% if accionHabilitada(s,"Editar")%}
 	                                    <td>
 	                                    
-                                        {% if iitemtipoitematributos and i.item.estado!="Eliminado" %}
+                                        {% if i.item.item.tipoitem.atributos and i.item.estado!="Eliminado" %}
                                         	<a class="btn" href="/admsolicitud/ejecutar/atributo/{{i.item.id}}">Completar</a>
                                         {% else %}
                                         	No tiene Atributos
