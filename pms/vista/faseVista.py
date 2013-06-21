@@ -1,6 +1,6 @@
 import flask.views
 from flask import request
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas, controlCerrarFase, cerrarFase,actualizarFecha
+from pms.modelo.faseControlador import actualizarFechaProyecto, getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase, getFasesPaginadas, controlCerrarFase, cerrarFase,actualizarFecha
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.rolControlador import getProyectosDeUsuario
 from pms.modelo.peticionControlador import getMiembros, agregarListaMiembros, contarVotos, quitarVoto
@@ -56,6 +56,7 @@ class Crearfase(flask.views.MethodView):
         flask.session.pop('aux3',None)
         flask.session.pop('aux4',None)
         flask.flash(u"CREACION EXITOSA","text-success")
+        actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
         return flask.redirect('/admfase/'+str(flask.session['proyectoid'])) 
     
 class Editarfase(flask.views.MethodView):
@@ -98,6 +99,7 @@ class Editarfase(flask.views.MethodView):
             return flask.redirect('/admfase/editarfase/'+str(flask.session['faseid']))         
         editarFase(flask.session['faseid'], flask.request.form['nombre'][:20],flask.request.form['numero'], fechainicio,fechafin)
         flask.flash(u"EDICION EXITOSA","text-success")
+        actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))        
     
 class Eliminarfase(flask.views.MethodView):
@@ -119,6 +121,7 @@ class Eliminarfase(flask.views.MethodView):
         if(flask.session['faseid']!=None):
             eliminarFase(flask.session['faseid'])
             flask.flash(u"ELIMINACION EXITOSA","text-success")
+            actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
         else:
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
@@ -364,9 +367,26 @@ class ListaMiembros(flask.views.MethodView):
                         contarVotos(soli.id)
                 
             flask.flash(u"COMITE EDITADO", "text-success")
+            actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))            
         else:
             flask.flash(u"El numero de miembros seleccionados es impar.", "cantidad")
             return flask.redirect("/admfase/comite/")
         
-
+@app.route('/admfase/consultarfase/<f>', methods=["GET"])
+@pms.vista.required.login_required
+def consultarFase(f=None):
+    """Funcion que retorna la vista de consultar fase, llama a consultarFase.hmtl
+    """
+    if request.method == "GET":
+        f=int(f)
+        flask.session['faseid']=f
+        fas=getFaseId(f)
+        tipos=fas.tipos
+        itm=[]
+        for t in tipos:
+            for ins in t.instancias:
+                for ver in ins.version:
+                    if ver.actual:
+                        itm.append(ver)
+        return flask.render_template('consultarFase.html',items=itm, fase=fas)   

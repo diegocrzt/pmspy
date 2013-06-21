@@ -290,7 +290,29 @@ def eItem(i=None):
         val.append(at)
     for at in ver.atributosdate:
         val.append(at)
-    return flask.render_template('eliminarItem.html',i=ver, atributos=atr, valores=val, item=item)   
+    padres=[]
+    antecesores=[]
+    for n in ver.ante_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                padres.append(aux)
+        else:
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                antecesores.append(aux)
+    hijos=[]
+    posteriores=[]
+    for n in ver.post_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                hijos.append(aux)
+        else:
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                posteriores.append(aux)
+    return flask.render_template('eliminarItem.html',i=ver, atributos=atr, valores=val, item=item,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores)   
 
 @app.route('/admitem/consultaritem/<i>')
 @pms.vista.required.login_required

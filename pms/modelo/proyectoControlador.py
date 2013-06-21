@@ -167,6 +167,7 @@ def controlFProyecto(idp):
     else:
         return True
     
+
 def finalizarProyecto(idp=None):
     p=getProyectoId(idp)
     p.estado="Finalizado" 

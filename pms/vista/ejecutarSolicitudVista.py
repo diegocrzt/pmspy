@@ -177,7 +177,7 @@ class EjecutarEliminaritem(flask.views.MethodView):
         if(flask.session['itemid']!=None):
             vvieja=getVersionItem(flask.session['itemid'])
             ejEliminarItem(vvieja.id)
-            flask.flash(u"ELIMINACION EXITOSAA","text-success")
+            flask.flash(u"ELIMINACION EXITOSA","text-success")
             return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))
         else:
             return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))
@@ -206,7 +206,29 @@ def EjecutarEItem(i=None):
         val.append(at)
     for at in ver.atributosdate:
         val.append(at)
-    return flask.render_template('ejecutarEliminarItem.html',i=ver, atributos=atr, valores=val)   
+    padres=[]
+    antecesores=[]
+    for n in ver.ante_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                padres.append(aux)
+        else:
+            aux=getVersionId(n.ante_id)
+            if aux.actual==True:
+                antecesores.append(aux)
+    hijos=[]
+    posteriores=[]
+    for n in ver.post_list:
+        if n.tipo=="P-H":
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                hijos.append(aux)
+        else:
+            aux=getVersionId(n.post_id)
+            if aux.actual==True:
+                posteriores.append(aux)
+    return flask.render_template('ejecutarEliminarItem.html',i=ver, atributos=atr, valores=val,padres=padres,antecesores=antecesores,hijos=hijos,posteriores=posteriores)   
 
 @app.route('/admsolicitud/ejecutar/eliminarrel/<vid>')
 @pms.vista.required.login_required

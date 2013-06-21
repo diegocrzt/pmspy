@@ -66,6 +66,9 @@
 		                                        <th>Cerrar Fase</th>
 	                                        {% endif %}
                                         {%endif%}
+                                        {%if p.estado!="Pendiente"%}
+                                        <th>Consultar</th>
+                                        {%endif%}
                                 </tr>
                                 {% for f in fases %}
                    
@@ -113,7 +116,11 @@
 		                                        </td>
 	                                        {% endif %}
                                         {% endif %}
-                                        
+                                        {%if p.estado!="Pendiente"%}
+                                        <td>
+                                        	<a class="btn btn-info" href="/admfase/consultarfase/{{f.id}}">Consultar</a>
+                                        </td>
+                                        {% endif %}
                         </tr>
                                 {% else %}
                                 <tr>
