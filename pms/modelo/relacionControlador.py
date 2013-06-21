@@ -351,12 +351,13 @@ def desBloquear(idv=None):
     """
     Revierte el estado de un item de Aprobado a Revision
     """
-    init_db()
     ver=getVersionId(idv)
-    ver.estado="Conflicto"
-    session.merge(ver)
-    session.commit()
-    shutdown_session()
+    if ver.estado=="Bloqueado":
+        init_db()
+        ver.estado="Conflicto"
+        session.merge(ver)
+        session.commit()
+        shutdown_session()
     
 def setEnCambio(idv=None):
     """

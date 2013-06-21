@@ -404,7 +404,11 @@ def tSolicitud(ids=None):
         i.actual=False
         session.merge(i)
         session.commit()
-        desBloquear(i.item_id)
+        ver=i.item
+        if ver.estado=="EnCambio":
+            ver.estado="Conflicto"
+            session.merge(ver)
+            session.commit()
     shutdown_session()
     
     
