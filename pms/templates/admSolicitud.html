@@ -77,7 +77,7 @@
 	                                        {%endif%}
                                         </td>
                                         <td>
-	                                        {% if s.usuario_id==session['usuarioid'] and (s.estado=="EnEdicion" or s.estado=="Rechazada") %}
+	                                        {% if s.usuario_id==session['usuarioid'] and (s.estado=="EnEdicion") %}
 	                                        <a class="btn btn-danger" href="/admsolicitud/eliminar/{{s.id}}">Eliminar</a>
 	                                        {% endif %}
                                         </td>

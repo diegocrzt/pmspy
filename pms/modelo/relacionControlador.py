@@ -29,6 +29,11 @@ def crearRelacion(ante_id=None,post_id=None,t=None):
     Crea una nueva relacion que tiene como dados los id de el item anterior y el posterior
     """
     ver=getVersionId(ante_id)
+    aux=getVersionId(post_id)
+    if aux.estado=="Bloqueado":
+        return False
+    if aux.estado=="Aprobado":
+        return False
     itm=ver.item
     tipo=itm.tipoitem
     fase=tipo.fase
@@ -144,8 +149,8 @@ def pruebaArista(idvinicio=None,idvfin=None,proyecto=None):
     Realiza la comprobacion de que la arista a ser insertada no genere un ciclo en el grafo
     """
     grafo=crearGrafoProyecto(proyecto)
-    nA=grafo[1]
-    nB=grafo[1]
+    nA=grafo[0]
+    nB=grafo[0]
     for n in grafo:
         if int(n.version)==int(idvinicio):
             nA=n

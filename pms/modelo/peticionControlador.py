@@ -409,6 +409,11 @@ def tSolicitud(ids=None):
             ver.estado="Conflicto"
             session.merge(ver)
             session.commit()
+        elif ver.estado=="Eliminado":
+            it=ver.item
+            it.linea_id=None
+            session.merge(it)
+            session.commit()
     shutdown_session()
     
     
