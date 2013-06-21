@@ -1,6 +1,9 @@
 import flask.views
 
 def pop13aux():
+    """
+    Realiza la funcion pop de 13 variables auxiliares de sesion
+    """
     flask.session.pop('aux',None)
     flask.session.pop('aux1',None)
     flask.session.pop('aux2',None)
@@ -16,9 +19,10 @@ def pop13aux():
     flask.session.pop('aux12',None)
     flask.session.pop('aux13',None)
     
-def funcionAReemplazar(s=None,a=None):
-    return True
 
 def longitud(a=None):
+    """
+    Retorna la longitud de un objeto, funcion que se llama desde un html
+    """
     l=len(a)
     return l

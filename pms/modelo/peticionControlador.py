@@ -9,6 +9,9 @@ from datetime import timedelta
 session = db_session()
 
 def getPeticionesVotacion(idp=None):
+    """
+    Retorna las peticiones en votacion
+    """
     init_db()
     res=session.query(Peticion).filter(Peticion.proyecto_id==idp).filter(Peticion.estado=="Votacion").all()
     shutdown_session()
@@ -353,6 +356,9 @@ def actualizarItemsSolicitud(s=None):
         return False
             
 def reiniciarVotacion(ids=None):
+    """
+    Reinicia una votacion, recibe el id de la peticion
+    """
     peticion=getPeticion(ids)
     peticion.cantVotos=0
     init_db()
@@ -363,6 +369,7 @@ def reiniciarVotacion(ids=None):
     shutdown_session()
     
 def compararPeticion(ids=None):
+   
     peticion=getPeticion(ids)
     aux=peticion.items
     l=[]

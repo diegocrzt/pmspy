@@ -260,6 +260,9 @@ def cerrarLineaBase2(l=None):
 @app.route('/admlinea/cerrar/confirmaritem/<i>')
 @pms.vista.required.login_required 
 def confirmarItem(i=None):
+    """
+    Confirma un item de la vista cerrar fase, recibe el id del item
+    """
     version=getVersionId(i)
     flask.session['itemid']=i
     if(comprobarBloquear(version)):

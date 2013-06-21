@@ -41,10 +41,11 @@
 <div class="items">
 		<div class="container" align="center">
         <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
-        <h3>Cerrar Fase</h3>
-        <hr>
+        
         </div>
        	<div class="container">
+       	<h3>Consultar Fase</h3>
+        <hr>
        	<table>
        	<tr>
 	        <td width="200px">
@@ -120,8 +121,7 @@
                                 </tr>
                                 {% endfor %}
                 </table>
-                <a class="btn btn-success" href="/admfase/cerrarfaseb/{{session['faseid']}}"> Cerrar Fase</a>
-                <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}"> Cancelar </a>
+                <a class="btn btn-success" href="/admfase/{{session['proyectoid']}}"> Aceptar </a>
       	  </div>
       </div>
        </div>

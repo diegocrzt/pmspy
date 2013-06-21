@@ -52,17 +52,19 @@
                         <h2> Listado de Fases </h2>
                         <table class="table table-striped table-bordered">
                                 <tr>
+                                		<th>Numero</th>
                                         <th>Nombre</th>
                                         <th>Estado</th>
-				                        <th>Numero</th>
+				                        <th>CantLB</th>
 				                        
                                 </tr>
                                 {% for i in fases %}
                     
                                 <tr>
+                                		<td>{{i.numero}}</td>
                                         <td>{{i.nombre}}</td>
                                         <td>{{i.estado}}</td>
-                                        <td>{{i.numero}}</td>
+                                        <td>{{len(i.lineas)}}</td>
                         </tr>
                                 {% else %}
                         

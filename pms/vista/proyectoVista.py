@@ -39,7 +39,7 @@ class AdmProyecto(flask.views.MethodView):
     @pms.vista.required.login_required
     def post(self):
         """
-        Ejecuta el template admProyecto.html
+        Ejecuta el buscar proyecto y paginacion de la busqueda
         """
         if flask.request.form['fil']!="":
             infopag=""
@@ -68,6 +68,7 @@ class Crearproyecto(flask.views.MethodView):
     @pms.vista.required.admin_required
     @pms.vista.required.login_required
     def get(self):
+        """Retorna la vista de Crear Proyecto, llama a crearProyecto.html"""
         return flask.render_template('crearProyecto.html',u=getUsuarios())
     @pms.vista.required.admin_required
     @pms.vista.required.login_required
@@ -112,10 +113,11 @@ class Crearproyecto(flask.views.MethodView):
     
 class Inicializarproyecto(flask.views.MethodView):
     """
-    Vista de Inicializar Proyecto
+    Gestiona la vista de Inicializar Proyecto
     """  
     @pms.vista.required.login_required  
     def get(self):
+        """Retorna la vista de inicializar Proyecto, llama a inicializarProyecto.html"""
         return flask.render_template('inicializarProyecto.html')
     @pms.vista.required.login_required
     def post(self):
@@ -132,6 +134,7 @@ class Eliminarproyecto(flask.views.MethodView):
     """
     @pms.vista.required.login_required  
     def get(self):
+        """Esta funcion solo evita errores de url no encontrado"""
         return flask.redirect(flask.url_for('admproyecto'))
     @pms.vista.required.login_required
     def post(self):
@@ -164,6 +167,9 @@ def eProyecto(proyecto=None):
 @app.route('/admproyecto/nextproyecto/')
 @pms.vista.required.login_required       
 def nextPageP():
+    """
+    Fucion que retorna la siguiente pagina del paginar proyecto
+    """
     flask.session['cambio']=True
     cantP=getCantProyectos()
     flask.session['infopag']=calculoDeSiguiente(cantP)
@@ -172,6 +178,9 @@ def nextPageP():
 @app.route('/admproyecto/prevproyecto/')
 @pms.vista.required.login_required       
 def prevPageP():
+    """
+    Fucion que retorna la pagina anterior del paginar proyecto
+    """
     flask.session['cambio']=True
     flask.session['infopag']=calculoDeAnterior(getCantProyectos())
     return flask.redirect(flask.url_for('admproyecto'))  
@@ -180,7 +189,7 @@ def prevPageP():
 @pms.vista.required.login_required
 def terminarProyecto(idp=None):
     """
-    Funcion que llama a la Vista de Cerrar Fase
+    Funcion que llama a la Vista de Finalizar Proyecto (terminarProyecto.html)
     """
     if request.method == "GET":
         p=int(idp)
@@ -199,7 +208,7 @@ def terminarProyecto(idp=None):
 @pms.vista.required.login_required
 def terminarProyectoB(p=None):
     """ 
-    Funcion que cierra la fase
+    Funcion que finaliza el proyecto
     """
     p=int(p)
     if controlFProyecto(p):

@@ -8,6 +8,7 @@ from initdb import db_session, init_db, shutdown_session
 from entidad import Fase
 from datetime import timedelta
 from datetime import datetime
+from entidad import Rol, User_Rol
 
 session = db_session()
 
@@ -57,9 +58,13 @@ def eliminarFase(fase=None):
     Elimina una fase, recibe el id de la fase a eliminarse
     """
     if(fase):
-        init_db()
+        
         fa=getFaseId(fase)
         fa.proyecto.cantFase=fa.proyecto.cantFase-1
+        for r in fa.roles:
+            session.query(User_Rol).filter(User_Rol.rol_id==r.id).delete()
+            session.query(Rol).filter(Rol.id==r.id).delete()
+        init_db()
         session.query(Fase).filter(Fase.id==fase).delete()
         session.commit()
         shutdown_session()
@@ -135,6 +140,7 @@ def actualizarFecha(idf=None):
     session.merge(f)
     session.commit()
     shutdown_session()
+    actualizarFechaProyecto(f.proyecto)
     
 def abrirFase(idf=None):
     init_db()
@@ -143,3 +149,13 @@ def abrirFase(idf=None):
     session.merge(f)
     session.commit()
     shutdown_session()
+    
+def actualizarFechaProyecto(pro=None):
+    """Actualiza la fecha de modificacion del proyecto pro
+    """
+    if pro:
+        init_db()
+        pro.fechaUltMod=datetime.today()
+        session.merge(pro)
+        session.commit()
+        shutdown_session()

@@ -76,7 +76,7 @@
                                         <td>{{p.lider.nombre}}</td>
                                         {% if session['isAdmin']==True %}
                                         <td>
-                                        {% if p.estado!="Iniciado"  %}
+                                        {% if p.estado=="Pendiente"  %}
                                            <a class="btn btn-danger" href="/admproyecto/eliminarproyecto/{{p.id}}">Eliminar</a>
                                         {% endif %}
                                         </td>
