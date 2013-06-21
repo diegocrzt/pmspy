@@ -20,6 +20,7 @@ import vista.funcionpop
 import vista.solicitudVista
 import vista.ejecutarSolicitudVista
 
+
 app.jinja_env.globals.update(len=vista.funcionpop.longitud)
 app.jinja_env.globals.update(puedeVotar=modelo.peticionControlador.comprobarVoto)
 app.jinja_env.globals.update(esMiembro=modelo.peticionControlador.getMiembro)
