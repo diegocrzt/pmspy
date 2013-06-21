@@ -17,9 +17,15 @@ class Crearfase(flask.views.MethodView):
     """
     @pms.vista.required.login_required
     def get(self):
+        """
+        Retorna la vista de crearFase, llama a crearFase.html
+        """
         return flask.render_template('crearFase.html')
     @pms.vista.required.login_required
     def post(self):
+        """
+        Ejecuta la funcion de crear fase
+        """
         flask.session['aux1']=flask.request.form['nombre']
         flask.session['aux2']=flask.request.form['numero']
         flask.session['aux3']=flask.request.form['fechainicio']
@@ -65,6 +71,7 @@ class Editarfase(flask.views.MethodView):
     """
     @pms.vista.required.login_required
     def get(self):
+        """Esta funcion solo evita errores de url no encontrado"""
         return flask.redirect(flask.url_for('admfase'))
     @pms.vista.required.login_required
     def post(self):
@@ -109,6 +116,9 @@ class Eliminarfase(flask.views.MethodView):
     
     @pms.vista.required.login_required  
     def get(self):
+        """
+        Retorna la vista de eliminar fase, llama a eliminarFase.html
+        """
         if(flask.session['faseid']!=None):
             return flask.render_template('eliminarFase.html')
         else:
@@ -237,6 +247,9 @@ def admFase(p=None):
 @app.route('/admfase/nextfase/')
 @pms.vista.required.login_required       
 def nextPageF():
+    """
+    Devuelve la siguiente pagina del paginar fase
+    """
     flask.session['cambio']=True
     cantF=getFases(flask.session['proyectoid']).count()
     flask.session['pagina']=flask.session['pagina']+1
@@ -258,6 +271,9 @@ def nextPageF():
 @app.route('/admfase/prevfase/')
 @pms.vista.required.login_required       
 def prevPageF():
+    """
+    Devuelve la pagina anterior del paginar fase
+    """
     flask.session['cambio']=True
     flask.session['pagina']=flask.session['pagina']-1
     global TAM_PAGINA

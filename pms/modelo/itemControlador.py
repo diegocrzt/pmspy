@@ -117,7 +117,7 @@ def editarItem(idi=None, nom=None, est=None, cos=None, dif=None, usr=None):
 
 def eliminarItem(idi=None, usr=None):
     """
-    elimina un tipo de item
+    Elimina un item
     """
     if(idi):
         init_db()
@@ -133,7 +133,7 @@ def eliminarItem(idi=None, usr=None):
         
 def ejEliminarItem(idi=None):
     """
-    elimina un tipo de item
+    Elimina un item, recibe su id
     """
     init_db()
     v = getVersionId(idi)
@@ -143,6 +143,9 @@ def ejEliminarItem(idi=None):
     shutdown_session()
         
 def crearValor(ida=None, idv=None, val=None):
+    """
+    Crea un atributo nuevo
+    """
     atr = getAtributoId(ida)
     if atr.tipoDato == "Cadena":
         if val == None:
@@ -172,6 +175,9 @@ def crearValor(ida=None, idv=None, val=None):
         session.commit()
         
 def copiarValores(idvante=None, idvnueva=None):
+    """
+    Copia los valores a una nueva version del item, recibe las dos versiones
+    """
     version = getVersionId(idvante)
     for at in version.atributosnum:
         crearValor(at.atributo_id, idvnueva, at.valor)
@@ -182,16 +188,12 @@ def copiarValores(idvante=None, idvnueva=None):
     for at in version.atributosdate:
         crearValor(at.atributo_id, idvnueva, at.valor)
         
-def peticionExiste(vid=None):
-    if vid:
-        init_db()
-        # query=session.query(Peticion).filter(Peticion.item_id==vid).first()
-        if query:
-            return True
-        else:
-            return False
+
 
 def getItemsPaginados(pagina=None, tam_pagina=None, fase=None, fil=None):
+    """
+    Retorna los items paginados, recibe la pagina, el tamanio de la pagina, la fase y el filtro de busqueda
+    """
     i = []
     if fil:
         items = getItemsFiltrados(fase, fil)
@@ -225,6 +227,9 @@ def getItemsPaginados(pagina=None, tam_pagina=None, fase=None, fil=None):
                         c = c + 1
     return i
 def getItemsFiltrados(fase=None, filtro=None):
+    """
+    Retorna los items de una fase filtrados por un filtro
+    """
     if fase and filtro:
         r = []
         if filtro.isdigit():

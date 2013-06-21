@@ -33,9 +33,12 @@ class CrearRol(flask.views.MethodView):
     """
     @pms.vista.required.login_required
     def get(self):
+        """Esta funcion solo evita errores de url no encontrado"""
         return flask.render_template('crearRol.html')
     @pms.vista.required.login_required
     def post(self):
+        """Ejecuta la funcion de crear un rol
+        """
         flask.session['aux']=flask.request.form['nombre']
         if 'crearT' in flask.request.form:
             flask.session['aux1']=True
@@ -175,9 +178,13 @@ class EditarRol(flask.views.MethodView):
     """
     @pms.vista.required.login_required
     def get(self):
+        """Esta funcion solo evita errores de url no encontrado"""
         return flask.redirect('/admrol/'+str(flask.session['faseid']))
     @pms.vista.required.login_required
     def post(self):
+        """
+        Ejecuta la funcion de editar rol
+        """
         flask.session['aux1']=flask.request.form['nombre']
         if(flask.request.form['nombre']==""):
             flask.flash(u"El campo nombre no puede estar vacio","nombre")
@@ -289,7 +296,7 @@ class Eliminarrol(flask.views.MethodView):
     
     @pms.vista.required.login_required  
     def get(self):
-     
+        """Esta funcion solo evita errores de url no encontrado"""
         return flask.redirect('/admrol/'+str(flask.session['faseid']))
     @pms.vista.required.login_required
     def post(self):

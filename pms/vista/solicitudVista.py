@@ -62,11 +62,16 @@ class Crearsolicitud(flask.views.MethodView):
     """
     iversiones=[]
     def getItemsSolicitud(self):
+        """Carga el atributo iversiones con las versiones de los items sobre los que se puede realizar una solicitud
+        """
         self.iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
         
         
     @pms.vista.required.login_required
     def get(self):
+        """
+        Devuelve la vista de crear solicitud, llama a crearSolicitud.html, responde al boton Crear Solicitud de admSolicitud
+        """
         acciones=[]
         acciones.insert(0, ["Editar",True])
         acciones.insert(1,["Eliminar",False])
@@ -154,10 +159,17 @@ class EditarSolicitud(flask.views.MethodView):
     """
     @pms.vista.required.login_required
     def get(self):
+        """
+        Esta funcion solo evita errores de url no encontrado para el caso en que se introduzca el url /admsolicitud/editar/
+        el cual no devuelve ningun resultado, para ello se redirecciona a la vista de Solicitudes de Cambio
+        """
         return flask.redirect('/admsolicitud/'+str(flask.session['proyectoid'])) 
 
     @pms.vista.required.login_required
     def post(self):
+        """
+        Funcion que ejecuta la edicion del la solicitud
+        """
         iversiones=getVersionesItemParaSolicitud(flask.session['proyectoid'])
         soli=getPeticion(flask.session['solicitudid'])
         ag=[]#lista items para pasarle a la funcion que crea la solicitud
@@ -230,14 +242,19 @@ class EditarSolicitud(flask.views.MethodView):
 
 class EliminarSolicitud(flask.views.MethodView):
     """
-    Gestiona la Vista de Editar Tipo de Item
+    Gestiona la Vista de Eliminar Solicitud
     """
     @pms.vista.required.login_required
     def get(self):
+        """Esta funcion solo evita errores de url no encontrado para el caso en que se introduzca el url /admsolicitud/eliminar/
+        el cual no devuelve ningun resultado, para ello se redirecciona a la vista de Solicitudes de Cambio"""
         return flask.redirect('/admsolicitud/'+str(flask.session['proyectoid'])) 
 
     @pms.vista.required.login_required
     def post(self):
+        """
+        Funcion que ejecuta la eliminacion de la solicitud
+        """
         eliminarPeticion(flask.session['solicitudid'])
         flask.flash(u"ELIMINACION EXITOSA","text-success")
         return flask.redirect(flask.url_for('admsolicitud'))
@@ -330,6 +347,8 @@ def enviarSolicitud(s=None):
 @app.route('/admsolicitud/votar/<s>',methods=['POST', 'GET'])
 @pms.vista.required.login_required
 def votarEnSoliciutud(s=None):
+    """Funcion que gestion la vista de votar y ejecuta la funcion de votar en solicitud, recibe el id de la solicitud, responde al boton de votar en admSolicitud
+    """
     if request.method == "GET":
         flask.session['solicitudid']=s
         soli=getPeticion(s)
@@ -362,6 +381,9 @@ def votarEnSoliciutud(s=None):
 @app.route('/admsolicitud/terminar/<s>',methods=['POST', 'GET'])
 @pms.vista.required.login_required
 def terminarSolicitud(s=None):
+    """
+    Funcion que gestiona la vista de Terminar Solicitud, recibe el id de la solicitud, responde al boton Terminar de admEjecutarSolicitud
+    """
     if request.method == "GET":
         flask.session['solicitudid']=s
         soli=getPeticion(s)
