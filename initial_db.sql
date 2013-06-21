@@ -332,7 +332,8 @@ CREATE TABLE tipoitem (
     defase integer,
     "fechaCreacion" timestamp without time zone,
     "fechaModificacion" timestamp without time zone,
-    usuario_creador_id integer
+    usuario_creador_id integer,
+    usuario_modificador_id integer
 );
 
 
@@ -424,11 +425,30 @@ CREATE TABLE valordate (
 --
 
 CREATE TABLE valorfile (
-    atributo_id integer NOT NULL,
-    item_id integer NOT NULL,
+    id integer NOT NULL,
+    item_id integer,
     valor bytea,
     nombre character varying(200)
 );
+
+
+--
+-- Name: valorfile_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE valorfile_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: valorfile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE valorfile_id_seq OWNED BY valorfile.id;
 
 
 --
@@ -569,6 +589,13 @@ ALTER TABLE ONLY tipoitem ALTER COLUMN id SET DEFAULT nextval('tipoitem_id_seq':
 --
 
 ALTER TABLE ONLY usuario ALTER COLUMN id SET DEFAULT nextval('usuario_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY valorfile ALTER COLUMN id SET DEFAULT nextval('valorfile_id_seq'::regclass);
 
 
 --
@@ -718,7 +745,7 @@ SELECT pg_catalog.setval('rol_id_seq', 1, false);
 -- Data for Name: tipoitem; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY tipoitem (id, nombre, comentario, defase, "fechaCreacion", "fechaModificacion", usuario_creador_id) FROM stdin;
+COPY tipoitem (id, nombre, comentario, defase, "fechaCreacion", "fechaModificacion", usuario_creador_id, usuario_modificador_id) FROM stdin;
 \.
 
 
@@ -773,8 +800,15 @@ COPY valordate (atributo_id, item_id, valor) FROM stdin;
 -- Data for Name: valorfile; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY valorfile (atributo_id, item_id, valor, nombre) FROM stdin;
+COPY valorfile (id, item_id, valor, nombre) FROM stdin;
 \.
+
+
+--
+-- Name: valorfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('valorfile_id_seq', 1, false);
 
 
 --
@@ -965,7 +999,7 @@ ALTER TABLE ONLY valordate
 --
 
 ALTER TABLE ONLY valorfile
-    ADD CONSTRAINT valorfile_pkey PRIMARY KEY (atributo_id, item_id);
+    ADD CONSTRAINT valorfile_pkey PRIMARY KEY (id);
 
 
 --
@@ -1153,6 +1187,14 @@ ALTER TABLE ONLY tipoitem
 
 
 --
+-- Name: tipoitem_usuario_modificador_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tipoitem
+    ADD CONSTRAINT tipoitem_usuario_modificador_id_fkey FOREIGN KEY (usuario_modificador_id) REFERENCES usuario(id);
+
+
+--
 -- Name: user_rol_rol_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1201,19 +1243,11 @@ ALTER TABLE ONLY valordate
 
 
 --
--- Name: valorfile_atributo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY valorfile
-    ADD CONSTRAINT valorfile_atributo_id_fkey FOREIGN KEY (atributo_id) REFERENCES atributo(id);
-
-
---
 -- Name: valorfile_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY valorfile
-    ADD CONSTRAINT valorfile_item_id_fkey FOREIGN KEY (item_id) REFERENCES vitem(id);
+    ADD CONSTRAINT valorfile_item_id_fkey FOREIGN KEY (item_id) REFERENCES item(id);
 
 
 --

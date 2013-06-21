@@ -94,6 +94,7 @@ class PMSTestSuite(unittest.TestCase):
            
         rv = self.app.get(url, follow_redirects=True)
         assert assertion in rv.data
+        print 'route ' + url + ' [OK]' 
    
     def inicializarProyecto(self, proyecto=None):
         id = proyecto.id
