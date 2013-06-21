@@ -255,9 +255,6 @@ def nextPageF():
     flask.session['pagina']=flask.session['pagina']+1
     global TAM_PAGINA
     sobran=cantF-flask.session['pagina']* TAM_PAGINA
-    print "Pagina:"
-    print flask.session['pagina']
-    print sobran
     if sobran>0:
         flask.session['haynext']=True
     else:
@@ -349,10 +346,6 @@ class ListaMiembros(flask.views.MethodView):
                 else:
                     aux.append(False)
                 lista.append(aux)
-            
-        for l in lista:
-            print l[0]
-            print l[1]    
         return flask.render_template('listaComite.html',batata=lista,lider=lider)   
     @pms.vista.required.login_required
     def post(self):

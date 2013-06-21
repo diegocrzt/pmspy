@@ -674,6 +674,16 @@ COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
 64	punteada	Booleano	21
 65	notas	Cadena	21
 66	revision	Fecha	21
+67	Autor	Cadena	23
+68	Edicion	Numerico	23
+69	Paginas	Numerico	24
+70	Completo	Booleano	24
+71	Fecha	Fecha	24
+72	Monografia	Booleano	25
+75	Completo	Booleano	25
+76	Puntaje	Numerico	25
+77	Materia	Cadena	26
+78	Aprobado	Booleano	26
 \.
 
 
@@ -681,7 +691,7 @@ COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
 -- Name: atributo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('atributo_id_seq', 66, true);
+SELECT pg_catalog.setval('atributo_id_seq', 78, true);
 
 
 --
@@ -692,10 +702,12 @@ COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado,
 3	Gama	3	2013-12-02 00:00:00	2014-02-01 00:00:00	2013-06-20 18:37:26.451821	Abierta	1
 4	Delta	4	2014-02-02 00:00:00	2014-06-01 00:00:00	2013-06-20 18:53:49.51291	Abierta	1
 1	Alfa	1	2013-06-01 00:00:00	2013-09-01 00:00:00	2013-06-20 17:55:53.436956	Abierta	1
-2	Beta	2	2013-09-02 00:00:00	2013-12-01 00:00:00	2013-06-20 18:30:11.03313	Abierta	1
 7	Formas Avanzadas	3	2013-08-02 00:00:00	2013-09-01 00:00:00	2013-06-20 22:33:26.253698	Abierta	2
-6	Complicando Formas	2	2013-07-02 00:00:00	2013-08-01 00:00:00	2013-06-20 22:19:16.043995	Abierta	2
 5	Formas Básicas	1	2013-06-01 00:00:00	2013-07-01 00:00:00	2013-06-20 22:21:54.08977	Abierta	2
+6	Complicando Formas	2	2013-07-02 00:00:00	2013-08-01 00:00:00	2013-06-21 17:41:33.129279	Abierta	2
+9	Rendir	2	2013-06-20 00:00:00	2013-07-01 00:00:00	2013-06-21 18:17:19.806841	Cerrada	3
+2	Beta	2	2013-09-02 00:00:00	2013-12-01 00:00:00	2013-06-21 18:18:55.59743	Abierta	1
+8	Estudiar	1	2013-06-21 17:52:08.760837	2013-07-06 17:52:08.760837	2013-06-21 18:15:16.153456	Cerrada	3
 \.
 
 
@@ -703,7 +715,7 @@ COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado,
 -- Name: fase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('fase_id_seq', 7, true);
+SELECT pg_catalog.setval('fase_id_seq', 9, true);
 
 
 --
@@ -718,7 +730,6 @@ COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FR
 4	2	1-1-9	2013-06-20 17:44:29.81556	2	1
 5	2	1-1-11	2013-06-20 17:45:18.700759	2	1
 6	2	1-1-13	2013-06-20 17:46:43.969808	2	1
-12	4	1-2-14	2013-06-20 18:09:12.463724	\N	1
 8	3	1-2-1	2013-06-20 18:02:38.524235	3	1
 9	3	1-2-4	2013-06-20 18:03:57.796369	4	1
 10	3	1-2-8	2013-06-20 18:06:23.476064	4	1
@@ -755,6 +766,14 @@ COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FR
 42	20	2-7-9	2013-06-20 22:30:36.686046	\N	1
 43	20	2-7-11	2013-06-20 22:31:30.364325	\N	1
 44	21	2-7-13	2013-06-20 22:32:36.81941	\N	1
+45	23	3-8-1	2013-06-21 18:04:16.09045	11	3
+46	23	3-8-4	2013-06-21 18:04:59.537703	12	3
+47	24	3-8-7	2013-06-21 18:05:43.828379	12	3
+48	23	3-8-10	2013-06-21 18:07:00.687042	13	3
+49	26	3-9-1	2013-06-21 18:09:35.861741	14	3
+50	25	3-9-5	2013-06-21 18:12:19.527835	15	3
+51	26	3-9-8	2013-06-21 18:13:59.402721	15	3
+12	4	1-2-14	2013-06-20 18:09:12.463724	16	1
 \.
 
 
@@ -762,7 +781,7 @@ COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FR
 -- Name: item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('item_id_seq', 44, true);
+SELECT pg_catalog.setval('item_id_seq', 51, true);
 
 
 --
@@ -791,6 +810,12 @@ COPY lineabase (id, creador_id, "fechaCreacion", numero, comentario, fase_id, es
 8	2	2013-06-20 22:20:17.896598	2	LB2 Triángulos	5	Cerrada
 9	2	2013-06-20 22:21:05.294064	3	LB3 Cuadrados y un Círculo	5	Cerrada
 10	2	2013-06-20 22:21:43.142788	4	LB5 Linea recta	5	Cerrada
+11	3	2013-06-21 18:07:48.903639	1	Ya estudió Cálculo	8	Cerrada
+12	3	2013-06-21 18:08:27.629569	2	Ya estudió Física	8	Cerrada
+13	3	2013-06-21 18:08:45.542622	3	Ya sabe integrar	8	Cerrada
+14	3	2013-06-21 18:16:03.666131	1	Pasó Cálculo	9	Cerrada
+15	3	2013-06-21 18:16:37.264212	2	Firma en Física II	9	Cerrada
+16	1	2013-06-20 18:18:40.369097	3	Tecnología Mobile lista	2	Cerrada
 \.
 
 
@@ -798,7 +823,7 @@ COPY lineabase (id, creador_id, "fechaCreacion", numero, comentario, fase_id, es
 -- Name: lineabase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('lineabase_id_seq', 10, true);
+SELECT pg_catalog.setval('lineabase_id_seq', 16, true);
 
 
 --
@@ -812,6 +837,7 @@ COPY miembro (proyecto_id, user_id) FROM stdin;
 2	3
 2	1
 2	2
+3	3
 \.
 
 
@@ -838,6 +864,7 @@ SELECT pg_catalog.setval('peticion_id_seq', 1, true);
 COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado) FROM stdin;
 1	BroadWell	4	2013-06-01 00:00:00	2014-06-01 00:00:00	\N	1	Iniciado
 2	Geometría	3	2013-06-01 00:00:00	2013-09-01 00:00:00	\N	3	Iniciado
+3	Semestre	2	2013-06-21 17:51:49.541762	2013-07-01 00:00:00	\N	3	Iniciado
 \.
 
 
@@ -845,7 +872,7 @@ COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod",
 -- Name: proyecto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('proyecto_id_seq', 2, true);
+SELECT pg_catalog.setval('proyecto_id_seq', 3, true);
 
 
 --
@@ -944,6 +971,17 @@ COPY relacion (id, ante_id, post_id, tipo) FROM stdin;
 89	124	126	P-H
 90	124	128	P-H
 91	116	126	A-S
+92	136	138	P-H
+93	136	139	P-H
+94	133	144	A-S
+95	133	145	A-S
+96	133	146	A-S
+97	139	148	A-S
+98	139	149	A-S
+99	149	151	P-H
+100	142	151	A-S
+101	149	152	P-H
+102	142	152	A-S
 \.
 
 
@@ -951,7 +989,7 @@ COPY relacion (id, ante_id, post_id, tipo) FROM stdin;
 -- Name: relacion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('relacion_id_seq', 91, true);
+SELECT pg_catalog.setval('relacion_id_seq', 102, true);
 
 
 --
@@ -972,6 +1010,8 @@ COPY rol (id, fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") FROM stdi
 11	6	Artesano	111	1000	1
 12	7	Escultor	0	11110111	0
 13	7	Diseñador	111	1000	1
+14	8	Estudiante	111	11111111	1
+15	9	Estudiante	111	11111111	1
 \.
 
 
@@ -979,7 +1019,7 @@ COPY rol (id, fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") FROM stdi
 -- Name: rol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('rol_id_seq', 13, true);
+SELECT pg_catalog.setval('rol_id_seq', 15, true);
 
 
 --
@@ -996,18 +1036,22 @@ COPY tipoitem (id, nombre, comentario, defase, "fechaCreacion", "fechaModificaci
 7	Prueba de Hardware	Pruebas sobre el hardware del componente	4	2013-06-20 18:40:29.415426	2013-06-20 18:40:29.415426	1	1
 8	Homologación	Cumple con las normas y estándares propuestos	4	2013-06-20 18:42:46.825432	2013-06-20 18:42:46.825432	1	1
 9	Rendimiento	Pruebas de rendimiento del nuevo microprocesador	4	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	1	1
-10	Círculo	Conjunto de puntos equidistantes de un punto (centro)	5	\N	\N	\N	\N
-11	Triángulo	Polígono cerrado de tres lados	5	\N	\N	\N	\N
-12	Cuadrado	Polígono cerrado de cuatro lados iguales	5	\N	\N	\N	\N
-13	Linea	Conjunto infinito de puntos que une dos puntos cualesquiera	5	\N	\N	\N	\N
-14	Rectángulo	Un cuadrilatero con dos medias a y b	6	\N	\N	\N	\N
-15	Pentágono	Poligono regular de cinco lados	6	\N	\N	\N	\N
-16	Elipse	conjunto de puntos cuya suma de la distancia a dos puntos es constante	6	\N	\N	\N	\N
-17	Cruz	Líneas que se cruzan	6	\N	\N	\N	\N
-18	Hexágono	Polígono cerrado de seis lados	7	\N	\N	\N	\N
-19	Octógono	Polígono cerrado de ocho lados	7	\N	\N	\N	\N
-20	Amorfo	Figura Amorfa	7	\N	\N	\N	\N
-21	Estrella	Estrella hecha con trazos	7	\N	\N	\N	\N
+10	Círculo	Conjunto de puntos equidistantes de un punto (centro)	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+11	Triángulo	Polígono cerrado de tres lados	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+12	Cuadrado	Polígono cerrado de cuatro lados iguales	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+13	Linea	Conjunto infinito de puntos que une dos puntos cualesquiera	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+14	Rectángulo	Un cuadrilatero con dos medias a y b	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+15	Pentágono	Poligono regular de cinco lados	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+16	Elipse	conjunto de puntos cuya suma de la distancia a dos puntos es constante	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+17	Cruz	Líneas que se cruzan	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+18	Hexágono	Polígono cerrado de seis lados	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+19	Octógono	Polígono cerrado de ocho lados	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+20	Amorfo	Figura Amorfa	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+21	Estrella	Estrella hecha con trazos	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
+23	Libro	Un viejo volumen de textos arcanos	8	2013-06-21 17:58:50.527765	2013-06-21 17:58:50.527765	3	3
+24	Cuaderno	Notas fugaces de un estudiante poco atento	8	2013-06-21 18:00:26.990259	2013-06-21 18:00:26.990259	3	3
+25	TP	Trabajo Práctico	9	2013-06-21 18:01:41.752801	2013-06-21 18:01:41.752801	3	3
+26	Examen	Prueba final en un arte o disciplina	9	2013-06-21 18:03:24.84732	2013-06-21 18:03:24.84732	3	3
 \.
 
 
@@ -1015,7 +1059,7 @@ COPY tipoitem (id, nombre, comentario, defase, "fechaCreacion", "fechaModificaci
 -- Name: tipoitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('tipoitem_id_seq', 21, true);
+SELECT pg_catalog.setval('tipoitem_id_seq', 26, true);
 
 
 --
@@ -1050,6 +1094,8 @@ COPY user_rol (usuario_id, rol_id) FROM stdin;
 2	13
 1	12
 3	12
+3	14
+3	15
 \.
 
 
@@ -1071,7 +1117,7 @@ COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 -- Name: usuario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('usuario_id_seq', 6, true);
+SELECT pg_catalog.setval('usuario_id_seq', 7, true);
 
 
 --
@@ -1207,6 +1253,22 @@ COPY valorbool (atributo_id, item_id, valor) FROM stdin;
 62	128	t
 64	129	f
 64	130	t
+70	137	f
+70	138	f
+70	139	f
+78	143	f
+78	144	t
+78	145	t
+78	146	t
+72	147	f
+75	147	f
+72	148	t
+75	148	t
+72	149	t
+75	149	t
+78	150	f
+78	151	t
+78	152	t
 \.
 
 
@@ -1269,6 +1331,9 @@ COPY valordate (atributo_id, item_id, valor) FROM stdin;
 61	128	2013-08-13 00:00:00
 66	129	\N
 66	130	2013-08-25 00:00:00
+71	137	\N
+71	138	2013-06-19 00:00:00
+71	139	\N
 \.
 
 
@@ -1408,6 +1473,21 @@ COPY valorint (atributo_id, item_id, valor) FROM stdin;
 55	122	7
 63	129	0
 63	130	5
+68	131	0
+68	132	2
+68	133	2
+68	134	0
+68	135	4
+68	136	4
+69	137	0
+69	138	20
+69	139	20
+68	140	0
+68	141	2
+68	142	2
+76	147	0
+76	148	95
+76	149	95
 \.
 
 
@@ -1522,6 +1602,22 @@ COPY valorstr (atributo_id, item_id, valor) FROM stdin;
 60	128	Sólido amorfo de revolución
 65	129	
 65	130	Pentagrama punteado
+67	131	
+67	132	Piskunov
+67	133	Piskunov
+67	134	
+67	135	Sears
+67	136	Sears
+67	140	
+67	141	Piskunov
+67	142	Piskunov
+77	143	
+77	144	Cálculo I
+77	145	Cálculo I
+77	146	Cálculo I
+77	150	
+77	151	Física II
+77	152	Física II
 \.
 
 
@@ -1578,7 +1674,6 @@ COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModifi
 47	1	Extreme	Activo	f	100000	3	2013-06-20 18:19:31.218749	14	1
 49	0	Mobile	Activo	f	75000	7	2013-06-20 18:20:29.186812	15	1
 42	1	Empotrado	Activo	f	15000	3	2013-06-20 18:09:35.589538	12	1
-51	2	Empotrado	Aprobado	t	15000	3	2013-06-20 18:30:10.85877	12	1
 50	1	Mobile	Activo	f	75000	7	2013-06-20 18:20:48.385835	15	1
 53	0	Normal	Activo	f	50000	4	2013-06-20 18:31:01.484868	16	1
 54	1	Normal	Activo	f	50000	4	2013-06-20 18:31:14.675961	16	1
@@ -1660,6 +1755,29 @@ COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModifi
 128	1	A3	Activo	t	15000	10	2013-06-20 22:31:51.617826	43	1
 129	0	S1	Activo	f	15000	10	2013-06-20 22:32:36.81941	44	1
 130	1	S1	Activo	t	15000	10	2013-06-20 22:33:10.038023	44	1
+131	0	Cálculo Infinitesima	Activo	f	35000	7	2013-06-21 18:04:16.09045	45	3
+132	1	Cálculo Infinitesima	Activo	f	35000	7	2013-06-21 18:04:28.262483	45	3
+134	0	Física	Activo	f	45000	5	2013-06-21 18:04:59.537703	46	3
+135	1	Física	Activo	f	45000	5	2013-06-21 18:05:09.06256	46	3
+137	0	Física II	Activo	f	2500	8	2013-06-21 18:05:43.828379	47	3
+138	1	Física II	Activo	f	2500	8	2013-06-21 18:05:57.332014	47	3
+140	0	Cálculo Integral	Activo	f	35000	9	2013-06-21 18:07:00.687042	48	3
+141	1	Cálculo Integral	Activo	f	35000	9	2013-06-21 18:07:12.382311	48	3
+133	2	Cálculo Infinitesima	Bloqueado	t	35000	7	2013-06-21 18:04:39.765972	45	3
+136	2	Física	Bloqueado	t	45000	5	2013-06-21 18:05:16.755639	46	3
+139	2	Física II	Bloqueado	t	2500	8	2013-06-21 18:06:18.225172	47	3
+142	2	Cálculo Integral	Bloqueado	t	35000	9	2013-06-21 18:07:21.016267	48	3
+143	0	Final 1	Activo	f	4500	9	2013-06-21 18:09:35.861741	49	3
+144	1	Final 1	Activo	f	4500	9	2013-06-21 18:09:44.827203	49	3
+145	2	Final 1	Aprobado	f	4500	9	2013-06-21 18:11:07.287767	49	3
+147	0	Electromagnetismo	Activo	f	2450	6	2013-06-21 18:12:19.527835	50	3
+148	1	Electromagnetismo	Activo	f	2450	6	2013-06-21 18:12:32.311323	50	3
+150	0	Recuperatorio	Activo	f	2450	9	2013-06-21 18:13:59.402721	51	3
+151	1	Recuperatorio	Activo	f	2450	9	2013-06-21 18:14:33.655884	51	3
+146	3	Final 1	Bloqueado	t	4500	9	2013-06-21 18:11:15.228308	49	3
+149	2	Electromagnetismo	Bloqueado	t	2450	6	2013-06-21 18:13:36.7113	50	3
+152	2	Recuperatorio	Bloqueado	t	2450	9	2013-06-21 18:15:01.235348	51	3
+51	2	Empotrado	Bloqueado	t	15000	3	2013-06-20 18:30:10.85877	12	1
 \.
 
 
@@ -1667,7 +1785,7 @@ COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModifi
 -- Name: vitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('vitem_id_seq', 130, true);
+SELECT pg_catalog.setval('vitem_id_seq', 152, true);
 
 
 --
