@@ -4,7 +4,7 @@ from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, elimi
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
-from pms.modelo.itemControlador import getItemsFiltrados, getItemsPaginados, peticionExiste, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem, ejEliminarItem
+from pms.modelo.itemControlador import getItemsFiltrados, getItemsPaginados, copiarValores, getItemsTipo,getItemId, comprobarItem, crearItem, crearValor, editarItem,eliminarItem,getItemEtiqueta,getVersionId,getVersionItem, ejEliminarItem
 from pms.modelo.peticionControlador import actualizarItemsSolicitud, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud
 from datetime import datetime
 import pms.vista.required
