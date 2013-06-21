@@ -211,7 +211,6 @@ def contarVotos(idp=None):
             votos=votos+1
     init_db()
     c=(soli.cantVotos+1)/2 #cantidad necesaria para aprobar
-    print c
     if votos>=c:
         soli.estado="Aprobada"
         l=[]
