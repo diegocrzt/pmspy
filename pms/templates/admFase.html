@@ -62,10 +62,10 @@
                                         {%endif%}
                                         {%if session['islider']==True and p.estado!="Finalizado"%}
 	                                        <th>Roles</th>
-	                                    {%endif%}
-	                                    {% if p.estado=="Iniciado"%}
-	                                        <th>Cerrar Fase</th>
-                                        {% endif %}
+		                                    {% if p.estado=="Iniciado"%}
+		                                        <th>Cerrar Fase</th>
+	                                        {% endif %}
+                                        {%endif%}
                                 </tr>
                                 {% for f in fases %}
                    
