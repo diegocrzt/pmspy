@@ -33,6 +33,10 @@
     {% else %}
     <p>	<strong>Comentario:</strong> -- </p>
     {% endif %}
+    <p>	<strong>Usuario Creador:</strong> {{t.usuario_creador.nombre}} </p>
+    <p>	<strong>Fecha de Creación:</strong> {{t.fechaCreacion.strftime('%Y-%m-%d')}} </p>
+    <p>	<strong>Último Usuario que Modificó:</strong> {{t.usuario_modificador.nombre}} </p>
+    <p>	<strong>Fecha de Modificación:</strong> {{t.fechaModificacion.strftime('%Y-%m-%d')}} </p>
     <div class="span5">
 	<p align="center">	<strong>Atributos</strong></p>
 	<table  class="table  table-bordered" >

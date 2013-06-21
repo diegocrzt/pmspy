@@ -41,26 +41,76 @@
 <div class="items">
 		<div class="container" align="center">
         <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
-        <h2>Cerrar Fase</h2>
+        <h3>Cerrar Fase</h3>
+        <hr>
         </div>
+       	<div class="container">
+       	<table>
+       	<tr>
+	        <td width="200px">
+	        	<strong>Numero: </strong>{{fase.numero}}
+	        </td>
+	        <td>
+	        	<strong>Nombre: </strong>{{fase.nombre}}
+	        </td>
+        </tr>
+        <tr>
+        	<td>
+        		<strong>Fecha de inicio: </strong>{{fase.fechaInicio.strftime('%Y/%m/%d')}}
+        	</td>
+        	<td width="200px">
+        		<strong>Fecha de fin: </strong>{{fase.fechaFin.strftime('%Y/%m/%d')}}
+        	</td>
+        <td><strong>Fecha de ultima modificacion: </strong>{{fase.fechaUltMod.strftime('%Y/%m/%d')}}</td>
+        </tr></table>
         <div class="row" >
                 <div class="span10">
-                        <h2> Listado de Items </h2>
+                        <h3>Items </h3>
                         <table class="table table-striped table-bordered">
                                 <tr>
                                         <th>Nombre</th>
+                                        <th>Version</th>
                                         <th>Estado</th>
 				                        <th>Tipo</th>
-				                        <th>Version</th>
+				                        <th>Costo</th>
+				                        <th>Dificultad</th>
+				                        
                                 </tr>
                                 {% for i in items %}
                     
                                 <tr>
                                         <td>{{i.nombre}}</td>
+                                        <td>{{i.version}}</td>
                                         <td>{{i.estado}}</td>
                                         <td>{{i.item.tipoitem.nombre}}</td>
-                                        <td>{{i.version}}</td>
+                                        <td>{{i.costo}}</td>
+                                        <td>{{i.dificultad}}</td>
                         </tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No tiene items y no se podra cerrar la fase
+                                </tr>
+                                {% endfor %}
+                </table>
+                 <h3>Lineas Base </h3>
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Numero</th>
+                                        <th>Estado</th>
+				                        <th>Comentario</th>
+				                        <th>Creador</th>
+				                        <th>Fecha</th>
+                                </tr>
+                                {% for l in fase.lineas  %}
+                    
+                                <tr>
+                                        <td>{{l.numero}}</td>
+                                        <td>{{l.estado}}</td>
+                                        <td>{{l.comentario}}</td>
+                                        <td>{{l.creador.nombre}}</td>
+                                        <td>{{l.fechaCreacion.strftime('%Y/%m/%d')}}</td>
+                       			</tr>
                                 {% else %}
                         
                                 <tr>
@@ -72,5 +122,6 @@
                 <a class="btn btn-inverse" href="/admfase/{{session['proyectoid']}}"> Cancelar </a>
       	  </div>
       </div>
+       </div>
 </div>
 {%endblock%} 

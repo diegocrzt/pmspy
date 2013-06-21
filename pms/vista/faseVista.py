@@ -287,7 +287,7 @@ def cerrFase(f=None):
         if not controlCerrarFase(fas.id):
             flask.flash(u"LA FASE NO SE PUEDE CERRAR", "text-error")
             return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
-        return flask.render_template('cerrarFase.html',items=itm)   
+        return flask.render_template('cerrarFase.html',items=itm, fase=fas)   
     else:
         return flask.redirect(flask.url_for('admproyecto'))
     

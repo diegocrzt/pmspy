@@ -10,6 +10,7 @@ from entidad import TipoItem, Proyecto, Fase
 from initdb import db_session, init_db, shutdown_session
 from atributoControlador import getAtributosTipo, eliminarAtributo
 from sqlalchemy import or_
+from datetime import datetime
 
 session = db_session()
 
@@ -53,17 +54,18 @@ def comprobarTipoItem(nombre=None, fase=None):
         if flask.session['tipoitemid']!=a.id:
             return True
 
-def crearTipoItem(nom=None, com=None, fa=None):
+def crearTipoItem(nom=None, com=None, fa=None, usr=None):
     """Crea un tipo de item, recibe el nombre y el comentario del tipo de item y el id de la fase
     """
     init_db()
-    titem = TipoItem(nombre=nom,comentario=com, defase=fa)
+    fecha = datetime.today()
+    titem = TipoItem(nombre=nom,comentario=com, defase=fa,fechaCreacion=fecha,fechaModificacion=fecha,usuarioCreador=usr)
     session.add(titem)
     session.commit()
     shutdown_session()
     
     
-def editarTipoItem(idti=None,nom=None, com=None, fa=None):
+def editarTipoItem(idti=None,nom=None, com=None, fa=None, usr=None):
     """
     Edita un tipo de item, recibe el id, nombre y comentario del tipo de item y el id de la fase
     """
@@ -72,6 +74,8 @@ def editarTipoItem(idti=None,nom=None, com=None, fa=None):
     f.nombre=nom
     f.comentario=com
     f.defase=fa
+    f.fechaModificiacion = datetime.today()
+    f.usuario_modificador_id = usr
     session.merge(f)
     session.commit()
     shutdown_session()
