@@ -245,6 +245,9 @@ def desAprobar(idv=None):
     shutdown_session()
     
 def hijos(vid=None):
+    """
+    funcion que se llama para poder obtener los hijos de un item
+    """
     ver=getVersionId(vid)
     itm= ver.item
     fase=itm.tipoitem.fase
@@ -259,6 +262,9 @@ def hijos(vid=None):
     return aux
 
 def hijosRecursivo(nA, grafo):
+    """
+    funcion recursiva que permite obtener los hijos de un item
+    """
     l=[]
     for n in nA.salientes:
         aux=hijosRecursivo(n,grafo)
@@ -375,6 +381,9 @@ def setEnCambio(idv=None):
     shutdown_session()
     
 def abrirLB(idlb=None):
+    """
+    Funcion que cambia el estado de una linea base de Cerrada a Abierta
+    """
     linea=getLineaBaseId(idlb)
     init_db()
     linea.estado="Abierta"
