@@ -9,6 +9,9 @@ from entidad import Miembro
 session = db_session()
 
 def eliminarMiembro(miembro=None):
+    """
+    funcion para eliminar un  miembro del comite de votacion
+    """
     if(miembro):
         init_db()
         session.query(Miembro).filter(Miembro.proyecto_id==miembro.proyecto_id).delete()
