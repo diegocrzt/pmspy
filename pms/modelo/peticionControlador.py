@@ -72,7 +72,6 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
         for i in p.items:
             if not i.item in items:
                 quitarItem(i.item.id)
-                print "if not in items"
         l=[]
         for i in items:
             l.append(i.id)

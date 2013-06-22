@@ -334,7 +334,6 @@ def desBloquearAdelanteG(idvcambio=None,grafo=None):
     """
     ver=getVersionId(idvcambio)
     if ver.item.lineabase!=None:
-        print ver.nombre 
         if ver.item.lineabase.estado=="Cerrada":
             abrirLB(ver.item.lineabase.id)
         if ver.item.tipoitem.fase.estado!="Abierta":
