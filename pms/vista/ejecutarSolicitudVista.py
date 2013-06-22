@@ -307,6 +307,7 @@ class EjCompletarAtributo(flask.views.MethodView):
             else:
                 crearValor(at.id,itm.id,flask.request.form[at.nombre])
         copiarRelacionesEstable(itm1.id,itm.id)
+        actualizarItemsSolicitud(flask.session['solicitudid'])
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))    
 

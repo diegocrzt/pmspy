@@ -146,6 +146,7 @@ def crearValor(ida=None, idv=None, val=None):
     """
     Crea un atributo nuevo
     """
+    init_db()
     atr = getAtributoId(ida)
     if atr.tipoDato == "Cadena":
         if val == None:
@@ -173,6 +174,7 @@ def crearValor(ida=None, idv=None, val=None):
         v = ValorBoolean(atributo=ida, item=idv, valor=val)
         session.add(v)
         session.commit()
+    shutdown_session()
         
 def copiarValores(idvante=None, idvnueva=None):
     """
