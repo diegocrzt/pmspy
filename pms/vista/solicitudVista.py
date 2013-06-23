@@ -1,11 +1,12 @@
 import flask.views
 from flask import request
+from pms.modelo.entidad import VersionItem
 from pms.modelo.usuarioControlador import  getUsuarioById
-from pms.modelo.proyectoControlador import getProyectosFiltrados, getProyectosPaginados, getCantProyectos, comprobarProyecto, crearProyecto, getProyectos, eliminarProyecto, getProyectoId, inicializarProyecto, getProyecto
+from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud, cambiarVotos, tSolicitud, getPeticionesVotacion
 from datetime import datetime
+from pms.modelo.relacionControlador import hijos
 import pms.vista.required
-from pms.modelo.rolControlador import getProyectosDeUsuario
 from pms import app
 from pms.vista.paginar import calculoDeSiguiente, calculoDeAnterior, calculoPrimeraPag
 TAM_PAGINA=5
@@ -32,29 +33,7 @@ class AdmSolicitud(flask.views.MethodView):
         else:
             ls=getUsuarioById(flask.session['usuarioid']).peticiones
         return flask.render_template('admSolicitud.html',solicitudes=ls, infopag="Pagina 1 de 1", buscar=False)
-    @pms.vista.required.login_required
-    def post(self):
-        """
-        Ejecuta el template admSolicitud.html
-        """
-        if flask.request.form['fil']!="":
-            infopag=""
-            if 'buscar' in flask.request.form:
-                flask.session['pagina']=1
-                p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.request.form['fil'])
-                flask.session['filtro']=flask.request.form['fil']
-                if(p!=None):#Si devolvio algo
-                    infopag=calculoPrimeraPag(getProyectosFiltrados(flask.session['filtro']).count())
-            if 'sgte' in flask.request.form:
-                infopag=calculoDeSiguiente(getCantProyectos(flask.session['filtro']))
-                p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
-            if 'anterior' in flask.request.form:
-                infopag=calculoDeAnterior(getCantProyectos(flask.session['filtro']))
-                p=getProyectosPaginados(flask.session['pagina']-1,TAM_PAGINA, flask.session['filtro'])
-                    
-            return flask.render_template('admProyecto.html',proyectos=p,infopag=infopag,buscar=True)
-        else:
-            return flask.redirect(flask.url_for('admproyecto'))
+   
         
 class Crearsolicitud(flask.views.MethodView):
     """
@@ -320,7 +299,27 @@ def consultarSolicitud(s=None):
     acc.insert(1,["Eliminar",soli.acciones%100>=10])
     acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
     acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
-    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=True)
+    p=getProyectoId(flask.session['proyectoid'])
+    miembros=p.miembros
+    m=[]
+    for mi in miembros:
+        vot=False
+        for v in soli.votos:
+            if v.user_id==mi.user_id:
+                m.append([getUsuarioById(mi.user_id),True])
+                vot=True
+        if not vot:
+            m.append([getUsuarioById(mi.user_id),False])
+    for a in m:
+        print a[0].nombre
+    h=[]
+    for i in soli.items:
+        hi=hijos(i.item.id)
+        for item in hi:
+            h.append(item)
+    h.sort(cmp=numeric_compare, key=None, reverse=False)
+    
+    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=True, miembros=m, arbol=h)
 
 @app.route('/admsolicitud/enviar/<s>',methods=['POST', 'GET'])
 @pms.vista.required.login_required
@@ -338,7 +337,13 @@ def enviarSolicitud(s=None):
         acc.insert(1,["Eliminar",soli.acciones%100>=10])
         acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
         acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
-        return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=False)
+        h=[]
+        for i in soli.items:
+            hi=hijos(i.item.id)
+            for item in hi:
+                h.append(item)
+        h.sort(cmp=numeric_compare, key=None, reverse=False)
+        return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=False, arbol=h)
     if request.method == "POST":
         enviarPeticion(flask.session['solicitudid'])
         flask.flash(u"ENVIO EXITOSO","text-success")
@@ -361,7 +366,28 @@ def votarEnSoliciutud(s=None):
             acc.append("Crear Relacion")
         if soli.acciones%10000>=1000:
             acc.append("Eliminar Relacion")
-        return flask.render_template('votarSolicitud.html', s=soli, acciones=acc)
+        p=getProyectoId(flask.session['proyectoid'])
+        miembros=p.miembros
+        m=[]
+        
+        for mi in miembros:
+            vot=False
+            for v in soli.votos:
+                if v.user_id==mi.user_id:
+                    m.append([getUsuarioById(mi.user_id),True])
+                    vot=True
+            if not vot:
+                m.append([getUsuarioById(mi.user_id),False])
+        for a in m:
+            print a[0].nombre
+        h=[]
+        for i in soli.items:
+            hi=hijos(i.item.id)
+            for item in hi:
+                h.append(item)
+        h.sort(cmp=numeric_compare, key=None, reverse=False)
+        #sorted(h, key=lambda VersionItem: VersionItem.item.tipoitem.fase.numero , reverse=True)
+        return flask.render_template('votarSolicitud.html', s=soli, acciones=acc, miembros=m, arbol=h)
     if request.method == "POST":
         voto=None
         if "Aprobar" in flask.request.form:
@@ -404,3 +430,8 @@ def terminarSolicitud(s=None):
             return flask.redirect(flask.url_for('admsolicitud'))
         else:
             return flask.redirect(flask.url_for('admsolicitud'))
+        
+def numeric_compare(x, y):
+        a=x.item.tipoitem.fase.numero
+        b=y.item.tipoitem.fase.numero
+        return  a-b
