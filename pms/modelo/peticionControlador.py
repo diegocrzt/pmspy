@@ -72,6 +72,7 @@ def editarPeticion(idp=None,comentario=None,items=None,acciones=None):
         for i in p.items:
             if not i.item in items:
                 quitarItem(i.item.id)
+                print "if not in items"
         l=[]
         for i in items:
             l.append(i.id)
@@ -368,9 +369,7 @@ def reiniciarVotacion(ids=None):
     shutdown_session()
     
 def compararPeticion(ids=None):
-    """
-    compara si una peticion sus valores de costo o dificultad han cambiado
-    """
+   
     peticion=getPeticion(ids)
     aux=peticion.items
     l=[]
@@ -384,9 +383,6 @@ def compararPeticion(ids=None):
         return False
     
 def buscarSolicitud(idv=None):
-    """
-    funcion que recorre el grafo que representa el proyecto buscando si algun cambio en un item hace que cambien los costos o dificultad de una solicitud creada anteriormente
-    """
     ver=getVersionId(idv)
     itm= ver.item
     fase=itm.tipoitem.fase
@@ -405,9 +401,6 @@ def buscarSolicitud(idv=None):
                 compararPeticion(getItemPeticion(s.version).peticion_id)
 
 def tSolicitud(ids=None):
-    """
-    Realiza los pasos necesarios para terminar una solicitud dejandola en estado Terminada
-    """
     soli=getPeticion(ids)
     init_db()
     soli.estado="Terminada"

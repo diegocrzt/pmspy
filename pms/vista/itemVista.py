@@ -609,7 +609,7 @@ def eliminarRel(vid=None):
 @pms.vista.required.login_required
 def eliminarRelb(vid=None): 
     """
-    funcion que elimina una relacion dado que el item seleccionado primero es el anterior
+
     """
     flask.session.pop('itemnombre',None)
     eliminarRelacion(flask.session['idver'],vid)
@@ -624,7 +624,7 @@ def eliminarRelb(vid=None):
 @pms.vista.required.login_required
 def eliminarRelc(vid=None): 
     """
-    funcion que elimina una relacion dado que el item seleccionado primero es el posterior
+
     """
     eliminarRelacion(vid,flask.session['idver'])
     if getVersionId(flask.session['idver']).estado=="Aprobado":

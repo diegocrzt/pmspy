@@ -103,10 +103,36 @@
           	</tr>
           	{%endfor%}
         </table>
+         <p align="center">	<strong>Items afectados</strong>
+        <table  class="table table-striped" >
+			<tr>
+               <th>Nombre</th>
+               <th>Estado</th>
+               <th>Fase</th>
+               <th>Version</th>
+               <th>Costo</th>
+               <th>Dificultad</th>
+            </tr>
+            {% for v in arbol %}
+            <tr>   
+            	<td>{{v.nombre}}</td>
+            	<td>{{v.estado}}</td>
+            	<td>{{v.item.tipoitem.fase.numero}}</td>
+            	<td>{{v.version}}</td>
+            	<td>{{v.costo}}</td>
+            	<td>{{v.dificultad}}</td>
+           </tr>
+           {% else %}
+	       <tr>
+	            <td colspan="7">
+	          		No existen items afectados
+	          	</td>
+          		
+          	</tr>
+          	{%endfor%}
+        </table>
         <p align="left">	<strong>Acciones que realizaran sobre los items:</strong></p>
-		<table>
-				<tr>
-					<td>
+
 				        <div class="span3">
 						
 				        <table  class="table table-striped" >
@@ -127,11 +153,31 @@
 				        	</tr>
 				        	 {%endfor%}
 				        </table>
-						</div>
-				   	</td>
-				</tr>
-		        <tr>
-			        <td>
+    		</div>
+    		</div>
+			{%if consultar==True%}	
+			<div class="span3">			        
+		        <p align="left">	<strong>Miembros del comite:</strong></p>
+		        
+			        <table  class="table table-striped" >
+			        	<tr>
+			        	<th>Votó</th>
+			        	<th>Nombre</th>
+			        	</tr>
+			        	{%for a in miembros%}
+			        	<tr>
+			        		{%if a[1]==True%}
+			        			<th><i class="icon-ok"></i></th>
+			        		{%else%}
+			        			<th><i class="icon-remove"></i></th>
+			        		{%endif%}
+			            		<td>{{a[0].nombre}}</td>
+			        	</tr>
+			        	 {%endfor%}
+			        </table>
+				</div>
+			{%endif%}
+
 			        {%if consultar==True %}
 				        <div class="span10" align="left">
 				            <a class="btn btn-success" href="/admsolicitud/">Aceptar</a>
@@ -145,10 +191,6 @@
 						</div>
 					</form>
 					{%endif%}
-					</td>
-					<td></td>
-		        </tr>
-		   </table>
-    	</div>
+    	
 </div>
 {%endblock%}		

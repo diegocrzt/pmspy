@@ -152,9 +152,6 @@ def actualizarFecha(idf=None):
     actualizarFechaProyecto(f.proyecto)
     
 def abrirFase(idf=None):
-    """
-    Funcion que permite cambiar el estado de una fase a Abierta
-    """
     init_db()
     f=getFaseId(idf)
     f.estado="Abierta"

@@ -463,9 +463,6 @@ class Miembro(Base):
         self.user_id = user_id
 
 class ItemPeticion(Base):
-    """
-        Define la clase que representa a la relacion entre una peticion y un item y la mapea con la tabla item_peticion
-    """
     __tablename__ = 'item_peticion'
     peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
     item_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)

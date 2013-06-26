@@ -190,7 +190,7 @@ class EjecutarEliminaritem(flask.views.MethodView):
 @pms.vista.required.login_required       
 def EjecutarEItem(i=None): 
     """
-    funcion que ejecuta la eliminacion de un item en solicitud
+    
     """
     ver=getVersionId(i)
     item=getItemId(ver.deitem)
@@ -266,7 +266,7 @@ def ejEliminarRel(vid=None):
 @pms.vista.required.login_required
 def ejEliminarRelb(vid=None): 
     """
-    funcion que elimna una relacion dado que el item en sesion es el anterior
+
     """
     flask.session.pop('itemnombre',None)
     eliminarRelacion(flask.session['idver'],vid)
@@ -277,7 +277,7 @@ def ejEliminarRelb(vid=None):
 @pms.vista.required.login_required
 def ejEliminarRelc(vid=None): 
     """
-    funcion que elimna una relacion dado que el item en sesion es el posterior
+
     """
     eliminarRelacion(vid,flask.session['idver'])
     flask.flash(u"Relacion eliminada con exito")
@@ -307,16 +307,12 @@ class EjCompletarAtributo(flask.views.MethodView):
             else:
                 crearValor(at.id,itm.id,flask.request.form[at.nombre])
         copiarRelacionesEstable(itm1.id,itm.id)
-        actualizarItemsSolicitud(flask.session['solicitudid'])
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))    
 
 @app.route('/admsolicitud/ejecutar/atributo/<i>')
 @pms.vista.required.login_required       
 def ejComplAtributosItem(i=None): 
-    """
-    funcion que ejecuta la tarea de completar un atributo de un item en solicitud de cambio
-    """
     ver=getVersionId(i)
     item=getItemId(ver.deitem)
     tipo=getTipoItemId(item.tipo)

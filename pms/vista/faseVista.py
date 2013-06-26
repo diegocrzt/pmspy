@@ -325,7 +325,7 @@ def cerrarFaseB(f=None):
     
 class ListaMiembros(flask.views.MethodView):
     """
-    metodo get que despliega la vista de los miembros de un comite
+    
     """
     @pms.vista.required.login_required  
     def get(self):
@@ -350,7 +350,7 @@ class ListaMiembros(flask.views.MethodView):
     @pms.vista.required.login_required
     def post(self):
         """
-        metodo que setea los miembros de un comite
+        
         """
         usuarios=getUsuarios()
         ag=[]
