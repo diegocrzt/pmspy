@@ -20,6 +20,11 @@ def getFases(p=None):
     shutdown_session()
     return fases
 
+def getFaseNumPro(idp,num):
+    init_db()
+    fases = session.query(Fase).filter(Fase.delproyecto==idp).filter(Fase.numero==num).first()
+    shutdown_session()
+    return fases
 
 def crearFase(nom=None, num=None, fechainicio=None, fechafin=None, fechamod=None, estado=None, proy=None):
     """ Crea una fase nueva, recibe los atributos necesarios para su creacion, nombre, numero, fecha de inicio, 
@@ -109,6 +114,10 @@ def controlCerrarFase(idf=None):
     """Verifica que una fase se pueda cerrar, osea que todos sus items se encuentren en una linea base(bloqueados), recibe el id de la fase
     """
     f = getFaseId(idf)
+    if f.numero>1:
+        aux=getFaseNumPro(f.delproyecto,f.numero-1)
+        if aux.estado!="Cerrada":
+            return False
     cont=0
     for t in f.tipos:
         for i in t.instancias:
