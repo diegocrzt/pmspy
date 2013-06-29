@@ -10,7 +10,6 @@ from entidad import TipoItem, Item, VersionItem, ValorStr, ValorNum, ValorBoolea
 from initdb import db_session, init_db, shutdown_session
 from tipoItemControlador import getTiposFase, getTipoItemId
 from atributoControlador import getAtributoId
-from proyectoControlador import getProyectoId
 from faseControlador import getFaseId
 from datetime import datetime
 from sqlalchemy import or_

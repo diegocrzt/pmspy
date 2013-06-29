@@ -144,7 +144,10 @@ def aEjecutarAA(vid=None):
                         if not comprobarRelacion(aux.id,vid):
                             i.append(aux)
         return flask.render_template('cRelPadreSolicitud.html',items=i)   
-
+    else:
+        soli=getPeticion(flask.session['solicitudid'])
+        flask.flash(u"No se puede asignar antecesor en la fase 1")
+        return flask.render_template('admEjecutarSolicitud.html',s=soli)
 
 @app.route('/admsolicitud/ejecutar/asignaranteb/<vid>')
 @pms.vista.required.login_required
@@ -307,6 +310,7 @@ class EjCompletarAtributo(flask.views.MethodView):
             else:
                 crearValor(at.id,itm.id,flask.request.form[at.nombre])
         copiarRelacionesEstable(itm1.id,itm.id)
+        r=actualizarItemsSolicitud(flask.session['solicitudid'])
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))    
 

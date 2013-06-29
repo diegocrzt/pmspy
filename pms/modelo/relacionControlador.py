@@ -1,7 +1,7 @@
-from entidad import Relacion
+from entidad import Relacion, Peticion, ItemPeticion
 from initdb import db_session, init_db, shutdown_session
 from faseControlador import getFaseId, abrirFase
-from itemControlador import getVersionId, getVersionItem
+from itemControlador import getVersionId, getVersionItem, editarItem, copiarValores, getItemId
 from lineaBaseControlador import getLineaBaseId
 from proyectoControlador import getProyectoId
 session = db_session()
@@ -228,7 +228,7 @@ def desAprobarAdelanteG(idvcambio=None,grafo=None):
         if int(n.version)==int(idvcambio):
             nA=n
     for n in nA.salientes:
-        if n.estado=="Aprobado" or n.estado=="Bloqueado":
+        if n.estado=="Aprobado":
             desAprobar(n.version)
             desAprobarAdelanteG(n.version,grafo)
             
@@ -296,7 +296,29 @@ def calcularCyD(listaItems):
     res.append(dificultad)
     return res
 
-
+def romperLB(idv):
+    ver=getVersionId(idv)
+    if ver.estado=="Bloqueado":
+        itm=ver.item
+        lb=itm.lineabase
+        if lb.estado=="Cerrada":
+            lb.estado="Quebrada"
+            init_db()
+            session.merge(lb)
+            session.commit()
+            shutdown_session()
+            for i in lb.items:
+                iv=getVersionItem(i.id)
+                editarItem(i.id,iv.nombre,"Aprobado",iv.costo,iv.dificultad,iv.usuario_modificador_id)
+                version=getVersionItem(i.id)
+                copiarValores(iv.id,version.id)
+                copiarRelacionesEstable(iv.id,version.id)
+            return True
+        else:
+            return False
+    else:
+        return False
+    
 
 def desBloquearAdelante(lista=None):
     """
@@ -308,6 +330,8 @@ def desBloquearAdelante(lista=None):
     fase=itm.tipoitem.fase
     proyecto=fase.proyecto
     grafo=crearGrafoProyecto(proyecto.id)
+    for l in lista:
+        romperLB(l)
     for l in lista:
         setEnCambio(l)
     for l in lista:
@@ -348,8 +372,7 @@ def desBloquearAdelanteG(idvcambio=None,grafo=None):
             desBloquear(n.version)
             desBloquearAdelanteG(n.version,grafo)
         elif n.estado=="Aprobado":
-            desAprobar(n.version)
-            desAprobarAdelanteG(n.version,grafo)
+            desBloquearAdelanteG(n.version,grafo)
             
     
 def desBloquear(idv=None):
@@ -391,5 +414,61 @@ def abrirLB(idlb=None):
             l.append(v.id)
     if bandera==True:
         desBloquearAdelante2(l)
+        
+def actualizarItemsSolicitud(s=None):
+    """
+    Actualiza las versiones de los items que se encuentran en la solicitud de id s, recorre los items de la solicitud(que en relidad son las versiones de los items) 
+    y revisa que la version que se tiene es la actual del item en cuestion
+    """
+    if s :
+        soli=getPeticion(s)
+        for i in soli.items:
+            idi=i.item.item.id
+            nuevav=getVersionItem(idi)
+            if nuevav.id!=i.item.id:
+                quitarItem(i.item.id)
+                a=agregarItem(nuevav.id, soli.id)
+                return True
+        return False
     
+def getPeticion(id=None):
+    """
+    Retorna una peticion, recibe el id de la peticion
+    """
+    init_db()
+    res=session.query(Peticion).filter(Peticion.id==id).first()
+    shutdown_session()
+    return res
+
+def agregarItem(idv=None,idp=None,):
+    """Agrega un Item a una peticion, recibe el id del item y de la peticion
+    """
+    if idv and idp:
+        ip=ItemPeticion(idp,idv,True)
+        init_db()
+        session.add(ip)
+        session.commit()
+        shutdown_session()
+        return True
+    return False
+
+def quitarItem(idv=None):
+    """Quita un Item de una peticion, recibe el id del item
+    """ 
+    init_db()
+    v=getItemPeticion(idv)
+    if v:
+        session.query(ItemPeticion).filter(ItemPeticion.item_id==v.item_id).filter(ItemPeticion.peticion_id==v.peticion_id).delete()
+    else:
+        session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
+    session.commit()
+    shutdown_session()
+    
+def getItemPeticion(idv=None):
+    """Retorna un ItemPeticion de una peticion con estado "EnVotacion" o "Aprobada" de una version de item
+    """
+    init_db()
+    res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
+    shutdown_session()
+    return res
     

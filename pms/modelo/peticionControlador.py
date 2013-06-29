@@ -3,7 +3,7 @@ from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
 from pms.modelo.itemControlador import getVersionId, getVersionItem
-from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto, desBloquearAdelante, desBloquear
+from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto, desBloquearAdelante, desBloquear, setEnCambio
 from datetime import datetime
 from datetime import timedelta
 session = db_session()
@@ -221,6 +221,9 @@ def contarVotos(idp=None):
             l.append(i.item_id)
         
         desBloquearAdelante(l)
+        actualizarItemsSolicitud(soli.id)
+        for i in soli.items:
+            setEnCambio(i.item.id)
     else:
         soli.estado="Rechazada"
         for i in soli.items:
@@ -412,7 +415,7 @@ def tSolicitud(ids=None):
         session.commit()
         ver=i.item
         if ver.estado=="EnCambio":
-            ver.estado="Conflicto"
+            ver.estado="Aprobado"
             session.merge(ver)
             session.commit()
         elif ver.estado=="Eliminado":
