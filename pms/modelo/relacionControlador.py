@@ -471,4 +471,3 @@ def getItemPeticion(idv=None):
     res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
     shutdown_session()
     return res
-    

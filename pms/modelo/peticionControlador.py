@@ -424,7 +424,3 @@ def tSolicitud(ids=None):
             session.merge(it)
             session.commit()
     shutdown_session()
-    
-    
-    
-    
