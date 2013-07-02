@@ -3,13 +3,13 @@ from entidad import Relacion, Proyecto
 from proyectoControlador import getProyectoId
 from itemControlador import getVersionItem
 import config
-
+from datetime import datetime
 
 def graficarProyecto(idp=None):
-    
-    nombre="static/e.png"
-    
-    graph = pydot.Dot(graph_type='digraph',rankdir="LR",compound="True")
+    aux=str(datetime.today())
+    nombre="grafos/"+aux+".png"
+    nombre2="pms/static/grafos/"+aux+".png"
+    graph = pydot.Dot(graph_type='digraph',rankdir="LR",size="4")
     proyecto=getProyectoId(idp)
     fases=proyecto.fases
     dibujo={}
@@ -109,9 +109,11 @@ def graficarProyecto(idp=None):
         if anterior!=None:
             bx=invisibles[anterior.numero]
             for l in anterior.lineas:
-                graph.add_edge(pydot.Edge(lineas[str(anterior.numero)+"lb"+str(l.numero)], bx[0],color="white",arrowsize="0"))
+                if l.estado!="Quebrada":
+                    graph.add_edge(pydot.Edge(lineas[str(anterior.numero)+"lb"+str(l.numero)], bx[0],color="white",arrowsize="0"))
         for l in f.lineas:
-            graph.add_edge(pydot.Edge( ax[1],lineas[str(f.numero)+"lb"+str(l.numero)],color="white",arrowsize="0"))
+            if l.estado!="Quebrada":
+                graph.add_edge(pydot.Edge( ax[1],lineas[str(f.numero)+"lb"+str(l.numero)],color="white",arrowsize="0"))
         anterior=f                            
-    graph.write_png(nombre)
+    graph.write_png(nombre2)
     return nombre
