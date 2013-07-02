@@ -300,16 +300,21 @@ def consultarSolicitud(s=None):
     acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
     acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
     p=getProyectoId(flask.session['proyectoid'])
-    miembros=p.miembros
-    m=[]
-    for mi in miembros:
-        vot=False
+    if soli.cantVotos==0 or soli.estado=="EnVotacion":
+        miembros=p.miembros
+        m=[]
+        for mi in miembros:
+            vot=False
+            for v in soli.votos:
+                if v.user_id==mi.user_id:
+                    m.append([v.usuario,True])
+                    vot=True
+            if not vot:
+                m.append([getUsuarioById(mi.user_id),False])
+    else:
+        m=[]
         for v in soli.votos:
-            if v.user_id==mi.user_id:
-                m.append([getUsuarioById(mi.user_id),True])
-                vot=True
-        if not vot:
-            m.append([getUsuarioById(mi.user_id),False])
+            m.append(v.usuario,v.valor)
     for a in m:
         print a[0].nombre
     h=[]
