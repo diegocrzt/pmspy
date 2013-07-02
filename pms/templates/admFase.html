@@ -61,9 +61,10 @@
 	               	{%if p.estado!="Finalizado"%}
 	                	<li><a href="/admsolicitud/"><i class="icon-chevron-right"></i> Solicitudes de Cambio</a></li>
 	                {%endif%}
-	                {%if p.estado=="Iniciado"%}
+	                {%if p.estado=="Iniciado" and p.delider == session['usuarioid']%}
 	                	<li><a href="/admproyecto/finalizar/{{session['proyectoid']}}"><i class="icon-chevron-right"></i> Finalizar Proyecto</a></li>
 	                {%endif%}
+	                <li><a href="/hello/"><i class="icon-chevron-right"></i> Informe de Proyecto</a></li>
          		</ul>
                         
                         </div>
