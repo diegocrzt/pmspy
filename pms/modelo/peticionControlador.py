@@ -34,7 +34,7 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
     """
     if proyecto_id and comentario and usuario_id and items and acciones:
         init_db()
-        ultimo=session.query(Peticion).order_by(Peticion.id.desc()).first()
+        ultimo=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).order_by(Peticion.id.desc()).first()
         if ultimo:
             numero=ultimo.numero+1
         else:
