@@ -25,7 +25,7 @@ class AdmLineaBase(flask.views.MethodView):
             fase=getFaseId(flask.session['faseid'])
             lineas=fase.lineas
             for l in lineas:
-                if(len(l.items)==0):
+                if(len(l.items)==0 and l.estado!="Quebrada"):
                     eliminarLB(l.id)
             lineas=fase.lineas
             roles=getRolesDeUsuarioEnFase(flask.session['usuarioid'], flask.session['faseid'])
@@ -219,6 +219,20 @@ def consultarLineaBase(l=None):
             v=getVersionItem(i.id)
             versiones.append(v)
         return flask.render_template('consultarLineaBase.html', linea=linea, versiones=versiones)
+    else:
+        return flask.redirect('/admlinea/')
+    
+@app.route('/admlinea/concultar2/<l>')
+@pms.vista.required.login_required 
+def consultarLineaBaseQuebrada(l=None):
+    """Despliega la vista de consultar linea base Quebrada (consultarLineaBase.html), recibe el id de la linea base
+    """
+    linea=getLineaBaseId(l)
+    if(linea):
+        versiones=[]
+        for i in linea.vers:
+            versiones.append(i.ver)
+        return flask.render_template('consultarLineaBase2.html', linea=linea, versiones=versiones)
     else:
         return flask.redirect('/admlinea/')
     

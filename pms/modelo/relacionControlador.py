@@ -1,9 +1,10 @@
-from entidad import Relacion, Peticion, ItemPeticion
+from entidad import Relacion, Peticion, ItemPeticion, LB_Ver
 from initdb import db_session, init_db, shutdown_session
 from faseControlador import getFaseId, abrirFase
 from itemControlador import getVersionId, getVersionItem, editarItem, copiarValores, getItemId
 from lineaBaseControlador import getLineaBaseId
 from proyectoControlador import getProyectoId
+
 session = db_session()
 
 def getRelacionesCAnte(ante_id=None):
@@ -112,7 +113,7 @@ def crearGrafoProyecto(pr=None):
             for item in tipo.instancias:
                 for v in item.version:
                     if v.actual:
-                        grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado, v.item, v.version))
+                            grafo.append(nodo(v.nombre,v.costo,v.dificultad,v.id,v.estado, v.item, v.version))
     for n in grafo:
         relaciones=getRelacionesCAnte(n.version)
         for r in relaciones:
@@ -298,25 +299,37 @@ def calcularCyD(listaItems):
 
 def romperLB(idv):
     ver=getVersionId(idv)
+    init_db()
     if ver.estado=="Bloqueado":
         itm=ver.item
-        lb=itm.lineabase
-        if lb.estado=="Cerrada":
-            lb.estado="Quebrada"
-            init_db()
-            session.merge(lb)
-            session.commit()
-            shutdown_session()
-            for i in lb.items:
-                iv=getVersionItem(i.id)
-                editarItem(i.id,iv.nombre,"Aprobado",iv.costo,iv.dificultad,iv.usuario_modificador_id)
-                version=getVersionItem(i.id)
-                copiarValores(iv.id,version.id)
-                copiarRelacionesEstable(iv.id,version.id)
-            return True
+        if itm.lineabase!=None:
+            lb=itm.lineabase
+            if lb.estado=="Cerrada":
+                lb.estado="Quebrada"
+                session.merge(lb)
+                session.commit()
+                for i in lb.items:
+                    i.linea_id=None
+                    session.merge(i)
+                    session.commit()
+                    iv=getVersionItem(i.id)
+                    a=LB_Ver(lb.id,iv.id)
+                    session.add(a)
+                    session.commit()
+                    editarItem(i.id,iv.nombre,"Aprobado",iv.costo,iv.dificultad,iv.usuario_modificador_id)
+                    version=getVersionItem(i.id)
+                    copiarValores(iv.id,version.id)
+                    copiarRelacionesEstable(iv.id,version.id)
+                shutdown_session()
+                return True
+            else:
+                shutdown_session()
+                return False
         else:
+            shutdown_session()
             return False
     else:
+        shutdown_session()
         return False
     
 
@@ -471,3 +484,8 @@ def getItemPeticion(idv=None):
     res=session.query(ItemPeticion).filter(ItemPeticion.item_id==idv).filter(ItemPeticion.actual==True).first()
     shutdown_session()
     return res
+
+
+
+    
+        

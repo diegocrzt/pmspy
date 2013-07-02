@@ -66,7 +66,11 @@
                                         <td>{{l.creador.nombre}}</td>
                                         <td>{{l.estado}}</td>
                                         <td>
+                                        {% if l.estado!="Quebrada" %}
                                         <a class="btn btn-info" href="/admlinea/concultar/{{l.id}}">Consultar</a>
+                                        {% else %}
+                                        <a class="btn btn-info" href="/admlinea/concultar2/{{l.id}}">Consultar</a>
+                                        {%endif%}
                                         </td>
                                         <td>
                                         {% if session['usuarioid']==l.creador_id and l.estado=="Abierta" %}

@@ -50,12 +50,15 @@
         <div class="span3 bs-docs-sidebar">
                 <ul class="nav nav-list bs-docs-sidenav">
 	                {% if session['proyectoiniciado']==False and p.estado!="Finalizado"%}
+	                	
 	                	<li><a href="/admfase/crearfase/"><i class="icon-chevron-right"></i> Crear Fase</a></li>
 	                    {% if hay == True %}
+	                    	
 	                    	<li><a href="/admfase/inicializarproyecto/"><i class="icon-chevron-right"></i> Inicializar Proyecto</a></li>
 	                    {% endif %}    
 	                {% endif %}
 	                {% if p.delider == session['usuarioid'] and p.estado!="Finalizado"%}
+	                	
 	                	<li><a href="/admfase/comite/"><i class="icon-chevron-right"></i> Editar Comité</a></li>
 	                {% endif %}
 	               	{%if p.estado!="Finalizado"%}
@@ -63,7 +66,9 @@
 	                {%endif%}
 	                {%if p.estado=="Iniciado"%}
 	                	<li><a href="/admproyecto/finalizar/{{session['proyectoid']}}"><i class="icon-chevron-right"></i> Finalizar Proyecto</a></li>
+	                	<li><a href="/admfase/graficar/{{session['proyectoid']}}"><i class="icon-chevron-right"></i> Grafico</a></li>
 	                {%endif%}
+	                
          		</ul>
                         
                         </div>

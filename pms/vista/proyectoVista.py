@@ -8,6 +8,7 @@ from pms.modelo.rolControlador import getProyectosDeUsuario
 from pms import app
 from pms.vista.paginar import calculoDeSiguiente, calculoDeAnterior, calculoPrimeraPag
 from flask import request
+from pms.modelo.graficar import graficarProyecto
 TAM_PAGINA=5
 class AdmProyecto(flask.views.MethodView):
     """
@@ -218,3 +219,12 @@ def terminarProyectoB(p=None):
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
     else:
         return flask.redirect('/admfase/'+str(flask.session['proyectoid']))
+
+@app.route('/admfase/graficar/<idp>', methods=["POST", "GET"])
+@pms.vista.required.login_required    
+def GraficarProyecto(idp=None):
+    n=graficarProyecto(idp)
+    return flask.render_template('grafico.html',nombre=n)
+    
+
+    
