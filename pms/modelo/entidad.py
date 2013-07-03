@@ -58,7 +58,7 @@ class Proyecto(Base):
     delider = Column(Integer, ForeignKey('usuario.id'))
     estado = Column(Unicode(10))
     
-    fases = relationship("Fase", order_by="Fase.id", backref="proyecto")
+    fases = relationship("Fase", order_by="Fase.numero", backref="proyecto")
     solicitudes = relationship("Peticion", order_by="Peticion.id", backref="proyecto")
     miembros = relationship("Miembro", order_by="Miembro.proyecto_id", backref="proyecto")
     
@@ -391,6 +391,19 @@ class LineaBase(Base):
     def __repr__(self):
         return 'LineaBase { '+ self.numero+ self.fase_id + self.creador_id + self.fechaCreacion + self.estado +'}'
 
+class LB_Ver(Base):
+    """
+        Define la tabla entre el rol y el usuario y la mapea con la tabla valorstr
+    """
+    __tablename__ = 'lb_ver'
+    lb_id = Column(Integer, ForeignKey('lineabase.id'), primary_key=True)
+    ver_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
+    ver = relationship("VersionItem")
+    linea = relationship("LineaBase", backref="vers")  
+    
+    def __init__(self, lb_id, ver_id):
+        self.lb_id = lb_id
+        self.ver_id = ver_id
 
 class Peticion(Base):
     """
@@ -474,6 +487,8 @@ class ItemPeticion(Base):
         self.peticion_id=peticion_id
         self.item_id=item_id
         self.actual=actual
+
+
 
 init_db()
 shutdown_session()
