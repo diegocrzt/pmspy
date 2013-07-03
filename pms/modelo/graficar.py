@@ -4,12 +4,21 @@ from proyectoControlador import getProyectoId
 from itemControlador import getVersionItem
 import config
 from datetime import datetime
+import os
 
 def graficarProyecto(idp=None):
     aux=str(datetime.today())
-    nombre="grafos/"+aux+".png"
-    nombre2="pms/static/grafos/"+aux+".png"
-    graph = pydot.Dot(graph_type='digraph',rankdir="LR",size="4")
+    nombre="grafo.png"
+
+    if  config.DEV:
+        nombre="pms/static/grafo.png"
+    else:
+        nombre="/tmp/grafo.png"
+
+    res=[]
+    res.append(nombre)
+    res.append(aux)
+    graph = pydot.Dot(graph_type='digraph',rankdir="LR")
     proyecto=getProyectoId(idp)
     fases=proyecto.fases
     dibujo={}
@@ -114,6 +123,18 @@ def graficarProyecto(idp=None):
         for l in f.lineas:
             if l.estado!="Quebrada":
                 graph.add_edge(pydot.Edge( ax[1],lineas[str(f.numero)+"lb"+str(l.numero)],color="white",arrowsize="0"))
-        anterior=f                            
-    graph.write_png(nombre2)
-    return nombre
+        anterior=f     
+        
+    try:
+        print 'Intentando borrar'
+        os.remove(nombre)
+    except:
+        print 'Epic fail'
+        pass
+    
+    print 'Escribiendo en el el grafico'
+    print nombre 
+    graph.write_png(nombre)
+    print 'Escribio'
+    
+    return res

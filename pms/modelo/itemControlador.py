@@ -24,6 +24,14 @@ def getItemsTipo(tipo=None):
     shutdown_session()
     return res
 
+def getItemVerNum(id=None,v=None):
+    """Obtener una version de un item
+    """
+    init_db()
+    version = session.query(VersionItem).filter(VersionItem.deitem == id).filter(VersionItem.version == v).first()
+    shutdown_session()
+    return version
+
 def getItemEtiqueta(etiqueta=None):
     """
     recupera un tipo por su id

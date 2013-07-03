@@ -1,8 +1,8 @@
-from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro, ItemPeticion
+from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro, ItemPeticion,LineaBase
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
-from pms.modelo.itemControlador import getVersionId, getVersionItem
+from pms.modelo.itemControlador import getVersionId, getVersionItem, getItemVerNum
 from pms.modelo.relacionControlador import calcularCyD, crearGrafoProyecto, desBloquearAdelante, desBloquear, setEnCambio
 from datetime import datetime
 from datetime import timedelta
@@ -424,3 +424,22 @@ def tSolicitud(ids=None):
             session.merge(it)
             session.commit()
     shutdown_session()
+    
+def getLBPeticion(ids=None):
+    soli=getPeticion(ids)
+    lineas=[]
+    if soli.estado=="Terminada" or soli.estado=="Aprobada":
+        for i in soli.items:
+            v=i.item
+            while v.lalinea==None:
+                v=getItemVerNum(v.item.id,v.version-1)
+            lineas.append(v.lalinea)
+    else:
+        for i in soli.items:
+            it=i.item.item
+            '''while it.lineabase==None:
+                it=getItemVerNum(it.id,i.item.version-1).item'''
+            lineas.append(it.lineabase)
+    return lineas   
+                
+                

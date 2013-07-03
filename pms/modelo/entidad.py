@@ -398,7 +398,7 @@ class LB_Ver(Base):
     __tablename__ = 'lb_ver'
     lb_id = Column(Integer, ForeignKey('lineabase.id'), primary_key=True)
     ver_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
-    ver = relationship("VersionItem")
+    ver = relationship("VersionItem",backref="lalinea")
     linea = relationship("LineaBase", backref="vers")  
     
     def __init__(self, lb_id, ver_id):

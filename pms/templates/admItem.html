@@ -77,6 +77,7 @@
 				                        {% if tienePermiso(roles,"editarI") %}
 				                        <th>Atributos</th>
 				                        <th>Editar</th>
+				                        <th>Fichero</th>
 				                        {%endif%}
 				                        {% if tienePermiso(roles,"eliminarI") %}
 				                        <th>Eliminar</th>
@@ -110,10 +111,13 @@
                                                 {%if i.estado=="Bloqueado"%}
                                                         <td><p class="muted">Bloqueado</p></td>
                                                         <td><p class="muted">Bloqueado</p></td>
+                                                        <td><p class="muted">Bloqueado</p></td>
                                                 {% elif i.estado=="Conflicto" %}
                                                         <td><p class="muted">Conflicto</p></td>
                                                         <td><p class="muted">Conflicto</p></td>
+                                                        <td><p class="muted">Conflicto</p></td>
                                                 {% elif i.estado=="EnCambio" %}
+                                                        <td><p class="muted">EnCambio</p></td>
                                                         <td><p class="muted">EnCambio</p></td>
                                                         <td><p class="muted">EnCambio</p></td>
                                                 {%else%}
@@ -126,6 +130,9 @@
                                                         </td>
                                                         <td>
                                                         <a class="btn" href="/admitem/editaritem/{{i.id}}">Editar</a>
+                                                        </td>
+                                                        <td>
+                                                        	<a class="btn" href="/admitem/fichero/{{i.id}}">Fichero</a>
                                                         </td>
                                                 {%endif%}
                                         {%endif%}

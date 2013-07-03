@@ -15,6 +15,7 @@ from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
 from pms.modelo.usuarioControlador import getUsuarioById
+from pms.modelo.ficheroControlador import getFileByItemId
 TAM_PAGINA=5
 
 @app.route('/admitem/<f>',methods=['POST', 'GET'])
@@ -183,6 +184,57 @@ def complAtributosItem(i=None):
     for at in ver.atributosdate:
         val.append(at)
     return flask.render_template('completarAtributo.html',atributos=atr,valores=val) 
+
+class AdmFichero(flask.views.MethodView):
+    """
+    Gestiona la Vista de Fichero Adjunto
+    """
+    @pms.vista.required.login_required
+    def get(self):
+        return flask.redirect('/admitem/'+str(flask.session['faseid']))
+
+    @pms.vista.required.login_required
+    def post(self):
+        # El post es subir fichero
+        print "Empieza el post"
+        
+        fichero = flask.request.form['fichero']
+        
+        print "Fichero_"    
+        if fichero:
+            if subirFichero(fichero,flask.session['itemid']) :
+                flask.flash(u"FICHERO CARGADO EXITOSAMENTE","text-success")
+                return flask.redirect('/admitem/fichero/'+str(flask.session['itemid']))
+        else:
+            flask.flash(u"Debe seleccionar un fichero","text-error")
+            return flask.redirect('/admitem/fichero/'+str(flask.session['itemid']))
+        
+        itm1=getVersionItem(flask.session['itemid'])
+        editarItem(flask.session['itemid'],itm1.nombre,itm1.estado,itm1.costo,itm1.dificultad,flask.session['usuarioid'])
+        itm=getVersionItem(flask.session['itemid'])
+        tipo=getTipoItemId(flask.session['tipoitemid'])
+        for at in tipo.atributos:
+            if at.tipoDato=="Booleano":
+                if at.nombre in flask.request.form:
+                    crearValor(at.id,itm.id,flask.request.form[at.nombre])
+                else:
+                    crearValor(at.id,itm.id,False)
+            else:
+                crearValor(at.id,itm.id,flask.request.form[at.nombre])
+        copiarRelacionesEstable(itm1.id,itm.id)
+        desAprobarAdelante(itm.id)
+        flask.flash(u"EDICION EXITOSA","text-success")
+        actualizarFecha(flask.session['faseid'])
+        return flask.redirect('/admitem/'+str(flask.session['faseid']))    
+    
+@app.route('/admitem/fichero/<itemId>')
+@pms.vista.required.login_required       
+def admFicheroItem(itemId=None):
+    valorFile = getFileByItemId(itemId)
+    if valorFile :
+        item=getItemId(valorFile.item_id)
+        flask.session['itemid']=item.id
+    return flask.render_template('admFichero.html',fichero=valorFile)
 
 class EditarItem(flask.views.MethodView):
     """

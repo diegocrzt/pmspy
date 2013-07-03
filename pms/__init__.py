@@ -114,6 +114,10 @@ app.add_url_rule('/admitem/atributo/',
                  view_func=vista.itemVista.CompletarAtributo.as_view('completaratributo'),
                  methods=["GET", "POST"])
 
+app.add_url_rule('/admitem/fichero/',
+                 view_func=vista.itemVista.AdmFichero.as_view('admfichero'),
+                 methods=["GET", "POST"])
+
 app.add_url_rule('/admsolicitud/ejecutar/atributo/',
                  view_func=vista.ejecutarSolicitudVista.EjCompletarAtributo.as_view('ejcompletaratributo'),
                  methods=["GET", "POST"])
