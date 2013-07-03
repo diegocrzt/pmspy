@@ -224,7 +224,7 @@ def terminarProyectoB(p=None):
 @pms.vista.required.login_required    
 def GraficarProyecto(idp=None):
     n=graficarProyecto(idp)
-    return flask.render_template('grafico.html',nombre=n)
+    return flask.render_template('grafico.html',nombre=n[0],aux=n[1])
     
 
     

@@ -40,8 +40,9 @@
 
 {%block content%}
 {{nombre}}
+{{aux}}
 <center>
-            <img src="{{ url_for('static', filename = nombre) }}" alt="Grafo 1"><BR>
+            <img src="{{ url_for('static', filename = nombre) }}?{{aux}}" alt="Grafo 1"><BR>
             <center><a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a></center>
   </center>
 {%endblock%}
