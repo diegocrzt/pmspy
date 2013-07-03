@@ -7,8 +7,8 @@ from datetime import datetime
 
 def graficarProyecto(idp=None):
     aux=str(datetime.today())
-    nombre="grafos/"+aux+".png"
-    nombre2="pms/static/grafos/"+aux+".png"
+    nombre=aux+".png"
+    nombre2="pms/static/"+aux+".png"
     graph = pydot.Dot(graph_type='digraph',rankdir="LR",size="4")
     proyecto=getProyectoId(idp)
     fases=proyecto.fases

@@ -41,7 +41,7 @@
 {%block content%}
 {{nombre}}
 <center>
-            <img src="{{ url_for('static', filename = 'grafo.png') }}" alt="Grafo 1"><BR>
+            <img src="{{ url_for('static', filename = nombre) }}" alt="Grafo 1"><BR>
             <center><a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a></center>
   </center>
 {%endblock%}
