@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{%block content%}
+<div class="items">
+		<div class="container" align="center">
+        <h2 class="text-info">{{session['proyectonombre']}}</h2>
+        </div>
+       	<div class="container">
+       	<h3>Informe de proyecto</h3>
+        <hr>
+        {%for f in fases %}
+       	<h2><strong>Fase: </strong>{{f[0]}}</h2>
+	  	<ul class="inline">
+ 		 <li><strong> Nombre: </strong>{{f[1]}}</li>
+ 		 <li><strong> Estado: </strong>{{f[2]}}</li>
+		</ul>
+		<ul>
+			<li> <strong> Inicio: </strong>{{f[3].strftime('%Y/%m/%d')}}</li>
+			<li><strong> Fin: </strong>{{f[4].strftime('%Y/%m/%d')}}</li>
+			<li><strong> Ultima modificacion: </strong>{{f[5].strftime('%Y/%m/%d')}}</li>
+		</ul>
+        <div class="row" >
+                <div class="span10">
+                        <h3>Items </h3>
+                        <table class="table table-striped table-bordered">
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+				                        <th>Tipo</th>
+				                        <th>Costo</th>
+				                        <th>Dificultad</th>
+				                        <th>LB</th>
+				                        
+                                </tr>
+                                {% for i in f[6] %}
+                    
+                                <tr>
+                                        <td>{{i.nombre}}</td>
+                                        <td>{{i.estado}}</td>
+                                        <td>{{i.item.tipoitem.nombre}}</td>
+                                        <td>{{i.costo}}</td>
+                                        <td>{{i.dificultad}}</td>
+                                        <td>{{i.item.lineabase.numero}}</td>
+                        </tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No tiene items
+                                </tr>
+                                {% endfor %}
+                </table>
+                
+                
+      	  </div>
+      </div>
+      {%endfor%}
+      <a class="btn btn-success" href="/admfase/{{session['proyectoid']}}"> Aceptar </a>
+      <a class="btn" href="/proyectopdf/">Version PDF  <i class="icon-file"></i> </a>
+       </div>
+</div>
+{%endblock%} 
