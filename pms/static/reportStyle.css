@@ -2,6 +2,7 @@
   * {
     text-shadow: none !important;
     box-shadow: none !important;
+    font-size: 12px;
   }
   a,
   a:visited {
@@ -52,7 +53,7 @@ body {
   margin: 100;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 18px;
-  line-height: 20px;
+  line-height: 9px;
 }
 h1,
 h2,
@@ -63,26 +64,26 @@ h6 {
   margin: 10px 0;
   font-family: inherit;
   font-weight: bold;
-  line-height: 20px;
+  line-height: 10px;
   text-rendering: optimizelegibility;
 }
 h1,
 h2,
 h3 {
-  line-height: 40px;
+  line-height: 10px;
 }
 
 h1 {
-  font-size: 38.5px;
+  font-size: 28.5px;
 }
 
 h2 {
-  font-size: 31.5px;
+  font-size: 21.5px;
   color: #3a87ad;
 }
 
 h3 {
-  font-size: 24.5px;
+  font-size: 14.5px;
 }
 
 h4 {
@@ -99,7 +100,10 @@ h6 {
 .text-warning {
   color: #c09853;
 }
-
+a{
+	font-size: 12px
+	
+}
 a.text-warning:hover,
 a.text-warning:focus {
   color: #a47e3c;
@@ -123,9 +127,14 @@ a.text-error:focus {
 	@bottom-center{
 		content: counter(page)'/' counter(pages)
 	}
-	
+	@top-center {
+    	content: element(pageHeader);
+  	}
 }
-table {page-break-after:auto; background-color: #E1DFFE;}
+#pageHeader{
+  position: running(pageHeader);
+}
+table {page-break-after:auto; page-break-inside:avoid;}
 html{ -weasy-hyphens: auto }
 
 #container, #container2, #content {width: 100%; margin: 0; float: none;}
@@ -147,7 +156,7 @@ ol ul {
 }
 
 li {
-  line-height: 20px;
+  line-height: 15px;
 }
 
 ul.unstyled,
@@ -199,7 +208,7 @@ table {
 .table th,
 .table td {
   padding: 8px;
-  line-height: 20px;
+  line-height: 9px;
   text-align: left;
   vertical-align: top;
   border-top: 1px solid #dddddd;
@@ -283,7 +292,19 @@ table th[class*="span"],
   width: 364px;
   margin-left: 0;
 }
+.table td.span6,
+.table th.span6 {
+  float: none;
+  width: 444px;
+  margin-left: 0;
+}
 
+.table td.span7,
+.table th.span7 {
+  float: none;
+  width: 524px;
+  margin-left: 0;
+}
 .text-left {
   text-align: left;
 }
@@ -348,4 +369,26 @@ table th[class*="span"],
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
      -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
           box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.table-bordered {
+  border: 1px solid #dddddd;
+  border-collapse: separate;
+  *border-collapse: collapse;
+  border-left: 0;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border-left: 1px solid #dddddd;
+}
+
+@media print {
+    div.divFooter {
+        position: fixed;
+        bottom: 0;
+    }
 }

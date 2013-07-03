@@ -70,30 +70,29 @@
 								</tr>					
             					{% endfor %}
 </table>
-    <p align="center">	<strong>Padres</strong></p>	
-	<table  class="table  table-bordered" >
-	<tr>
-        <th>Nombre</th>
-        <th>Estado</th>
-        <th>Version</th>
-     </tr>
+			    <p align="center">	<strong>Padres</strong></p>	
+				<table  class="table  table-bordered" >
+					<tr>
+				        <th>Nombre</th>
+				        <th>Estado</th>
+				        <th>Version</th>
+				     </tr>
+				
+			     {% for n in padres%}
+				     <tr>
+				      	<td>{{n.nombre}}</td>
+				      	<td>{{n.estado}}</td>
+				      	<td>{{n.version }}</td>
+				      </tr>
+				  {% else %}
+					<tr>
+						<td></td>
+						<td> -No tiene Padres-</td>
+						<td></td>
+					</tr>			
+			     {% endfor %}
+			</table>
 
-     {% for n in padres%}
-	     <tr>
-	      	<td>{{n.nombre}}</td>
-	      	<td>{{n.estado}}</td>
-	      	<td>{{n.version }}</td>
-	      </tr>
-	  {% else %}
-		<tr>
-			<td></td>
-			<td> -No tiene Padres-</td>
-			<td></td>
-		</tr>			
-     {% endfor %}
-</table>
-
-</table>
     <p align="center">	<strong>Antecesores</strong></p>	
 	<table  class="table  table-bordered" >
 	<tr>
@@ -164,6 +163,7 @@
 		</tr>			
      {% endfor %}
 </table>
+	<a class="btn" href="/informeitem/{{i.id}}">Informe de Historial PDF  <i class="icon-file"></i> </a>
 	{%if llama=="cerrarlinea"%}
 		<a class="btn btn-success" href="/admlinea/cerrar/{{session['lineaid']}}">Aceptar</a>
 	{% elif session['solicitudid']%}
