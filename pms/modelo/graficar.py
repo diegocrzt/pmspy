@@ -9,7 +9,12 @@ import os
 def graficarProyecto(idp=None):
     aux=str(datetime.today())
     nombre="grafo.png"
-    nombre2="pms/static/grafo.png"
+
+    if  config.DEV:
+        nombre="pms/static/grafo.png"
+    else:
+        nombre="/tmp/grafo.png"
+
     res=[]
     res.append(nombre)
     res.append(aux)
@@ -121,10 +126,15 @@ def graficarProyecto(idp=None):
         anterior=f     
         
     try:
-        os.remove(nombre2)
+        print 'Intentando borrar'
+        os.remove(nombre)
     except:
-        pass  
-                         
-    graph.write_png(nombre2)
+        print 'Epic fail'
+        pass
+    
+    print 'Escribiendo en el el grafico'
+    print nombre 
+    graph.write_png(nombre)
+    print 'Escribio'
     
     return res

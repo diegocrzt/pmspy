@@ -70,7 +70,10 @@ fi
 # Se copia el fichero de configuración, se despliega el proyecto y se reinicia el servidor
 # web, al final del proceso la aplicación ya está lista y en ejecución
 echo "copiando config.py"
-sudo cp $CWD/config.py $DEPLOYDIR
+sed "s/= True/= False/" config.py > ${TMP}config.py
+sudo cp ${TMP}config.py $DEPLOYDIR
+rm ${TMP}config.py
+
 
 echo "desplegando el sistema"
 sudo cp -r $TMP$PMS $DEPLOYDIR
