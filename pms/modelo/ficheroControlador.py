@@ -16,7 +16,7 @@ def getFileByItemId(itemId=None):
         @param itemId: Identificador del Item del cual es adjunto el fichero 
     """
     init_db()
-    respuesta = session.query(ValorFile).filter(ValorFile.item_id == itemId).all()
+    respuesta = session.query(ValorFile).filter(ValorFile.item_id == itemId).first()
     shutdown_session()
     return respuesta
 
@@ -26,7 +26,7 @@ def getFileById(idFile=None):
         @param idFile: Identificador del fichero   
     """
     init_db()
-    respuesta = session.query(ValorFile).filter(ValorFile.id == idFile).all()
+    respuesta = session.query(ValorFile).filter(ValorFile.id == idFile).first()
     return respuesta
 
 def eliminarFichero(idFile=None):
@@ -49,9 +49,19 @@ def subirFichero(fichero=None,itemId=None):
     
     if(fichero and itemId):
         init_db()
-        vFile = ValorFile(itemId, fichero, fichero.filename)
-        session.add(vFile)
+        
+        vFile = session.query(ValorFile).filter(ValorFile.item_id == itemId).first()
+        
+        if vFile:
+            vFile.nombre = fichero.filename
+            vFile.valor = fichero.read()
+            session.merge(vFile)
+        else:
+            vFile = ValorFile(itemId, fichero.read(), fichero.filename)
+            session.add(vFile)
+            
         session.commit()
-        session.shutdown()
+        shutdown_session()
         return True
+    
     return None

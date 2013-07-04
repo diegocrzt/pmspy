@@ -15,7 +15,9 @@ from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
 from pms.modelo.usuarioControlador import getUsuarioById
-from pms.modelo.ficheroControlador import getFileByItemId, subirFichero
+from pms.modelo.ficheroControlador import getFileByItemId, subirFichero,\
+    getFileById, eliminarFichero
+from flask.helpers import make_response
 TAM_PAGINA=5
 
 @app.route('/admitem/<f>',methods=['POST', 'GET'])
@@ -196,45 +198,71 @@ class AdmFichero(flask.views.MethodView):
     @pms.vista.required.login_required
     def post(self):
         # El post es subir fichero
-        print "Empieza el post"
         
-        fichero = flask.request.form['fichero']
+        fichero = flask.request.files['fichero']
         
-        print "Fichero_"    
+        vitemId = getVersionItem(flask.session['itemid']).id
+        
         if fichero:
             if subirFichero(fichero,flask.session['itemid']) :
                 flask.flash(u"FICHERO CARGADO EXITOSAMENTE","text-success")
-                return flask.redirect('/admitem/fichero/'+str(flask.session['itemid']))
+                return flask.redirect('/admitem/fichero/'+str(vitemId))
         else:
             flask.flash(u"Debe seleccionar un fichero","text-error")
-            return flask.redirect('/admitem/fichero/'+str(flask.session['itemid']))
+            return flask.redirect('/admitem/fichero/'+str(vitemId))
         
-        itm1=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],itm1.nombre,itm1.estado,itm1.costo,itm1.dificultad,flask.session['usuarioid'])
-        itm=getVersionItem(flask.session['itemid'])
-        tipo=getTipoItemId(flask.session['tipoitemid'])
-        for at in tipo.atributos:
-            if at.tipoDato=="Booleano":
-                if at.nombre in flask.request.form:
-                    crearValor(at.id,itm.id,flask.request.form[at.nombre])
-                else:
-                    crearValor(at.id,itm.id,False)
-            else:
-                crearValor(at.id,itm.id,flask.request.form[at.nombre])
-        copiarRelacionesEstable(itm1.id,itm.id)
-        desAprobarAdelante(itm.id)
-        flask.flash(u"EDICION EXITOSA","text-success")
-        actualizarFecha(flask.session['faseid'])
-        return flask.redirect('/admitem/'+str(flask.session['faseid']))    
-    
-@app.route('/admitem/fichero/<itemId>')
+class EliminFichero(flask.views.MethodView):
+    """
+    Gestiona la Vista de Fichero Adjunto
+    """
+    @pms.vista.required.login_required
+    def get(self):
+        return flask.redirect('/admitem/fichero/'+str(flask.session['vitemid']))
+
+    @pms.vista.required.login_required
+    def post(self):
+        # El post es subir fichero
+        
+        idFichero = flask.session['ficheroid']
+        eliminarFichero(idFichero)
+        
+        flask.flash(u"FICHERO ELIMINADO","file-deleted")
+        return flask.redirect('/admitem/fichero/'+str(flask.session['vitemid']))
+        
+@app.route('/admitem/fichero/<vitemId>')
 @pms.vista.required.login_required       
-def admFicheroItem(itemId=None):
-    valorFile = getFileByItemId(itemId)
-    if valorFile :
-        item=getItemId(valorFile.item_id)
-        flask.session['itemid']=item.id
-    return flask.render_template('admFichero.html',fichero=valorFile)
+def admFicheroItem(vitemId=None):
+    versionItem = getVersionId(vitemId)
+    itemId = versionItem.deitem
+    vFile = getFileByItemId(itemId)
+    flask.session['itemid']=itemId
+    return flask.render_template('admFichero.html',fichero=vFile)
+
+@app.route('/admitem/fichero/descargar/<idFichero>')
+@pms.vista.required.login_required
+def descargarFichero(idFichero=None):
+    fichero = getFileById(idFichero)
+    response = make_response(fichero.valor)
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Content-Type'] = "application/download" 
+    response.headers['Content-Type'] = "application/force-download"
+    response.headers['Content-Type'] = "application/pdf"
+    response.headers['Content-Type'] = "application/octet-stream"
+    response.headers['X-Accel-Redirect'] = fichero.nombre
+    response.headers['Content-Transfer-Encoding'] = 'binary'
+    response.headers['Content-Disposition'] = "inline; filename="+fichero.nombre
+    return response
+
+@app.route('/admitem/fichero/eliminar/<idFichero>')
+@pms.vista.required.login_required
+def elimFichero(idFichero=None):
+    vFile = getFileById(idFichero)
+    vitem = getVersionItem(vFile.item_id)
+    vitemId = vitem.id
+    flask.session['vitemid']= vitemId
+    flask.session['ficheroid'] = idFichero
+    return flask.render_template('eliminarFichero.html',fichero=vFile,vitemid=vitemId)
+    
 
 class EditarItem(flask.views.MethodView):
     """

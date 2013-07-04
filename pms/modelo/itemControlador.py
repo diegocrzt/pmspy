@@ -54,7 +54,8 @@ def getItemId(id=None):
 
 def getVersionId(id=None):
     """
-    recupera un tipo por su id
+        Recuera la version de un item a partir de su id
+        @param id: Identificador de la un objeto VersionItem 
     
     """
     init_db()
