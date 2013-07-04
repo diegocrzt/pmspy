@@ -15,7 +15,7 @@ from pms.vista.paginar import calculoDeAnterior
 from pms.vista.paginar import calculoDeSiguiente
 from pms.vista.paginar import calculoPrimeraPag
 from pms.modelo.usuarioControlador import getUsuarioById
-from pms.modelo.ficheroControlador import getFileByItemId
+from pms.modelo.ficheroControlador import getFileByItemId, subirFichero
 TAM_PAGINA=5
 
 @app.route('/admitem/<f>',methods=['POST', 'GET'])
