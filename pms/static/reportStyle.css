@@ -385,7 +385,41 @@ table th[class*="span"],
 .table-bordered td {
   border-left: 1px solid #dddddd;
 }
+.span9 {
+  width: 700px;
+}
 
+.span8 {
+  width: 620px;
+}
+
+.span7 {
+  width: 540px;
+}
+
+.span6 {
+  width: 460px;
+}
+
+.span5 {
+  width: 380px;
+}
+
+.span4 {
+  width: 300px;
+}
+
+.span3 {
+  width: 220px;
+}
+
+.span2 {
+  width: 140px;
+}
+
+.span1 {
+  width: 60px;
+}
 @media print {
     div.divFooter {
         position: fixed;

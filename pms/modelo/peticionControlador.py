@@ -1,4 +1,4 @@
-from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro, ItemPeticion,LineaBase
+from entidad import Proyecto, Peticion, Voto, LB_Ver, Miembro, ItemPeticion,LineaBase
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
@@ -431,10 +431,13 @@ def getLBPeticion(ids=None):
     if soli.estado=="Terminada" or soli.estado=="Aprobada":
         for i in soli.items:
             v=i.item
-            while v.lalinea==None:
+            while not v.lalinea:
                 v=getItemVerNum(v.item.id,v.version-1)
-            lineas.append(v.lalinea)
-    else:
+            init_db()
+            l=session.query(LB_Ver).filter(LB_Ver.ver_id==v.id).first()
+            shutdown_session()
+            lineas.append(l.linea) 
+    else: 
         for i in soli.items:
             it=i.item.item
             '''while it.lineabase==None:

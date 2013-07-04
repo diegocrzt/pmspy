@@ -177,6 +177,24 @@
 			        </table>
 				</div>
 			{%endif%}
+			
+						<div class="span3">
+						<p align="left"><strong>Lineas Base Afectadas:</strong></p>
+							<table class="table table-striped">
+								<tr>
+									<th>Numero</th>
+									<th>Fase</th>
+									<th>Estado</th>
+								</tr>
+								{%for l in lineas%}
+								<tr>
+									<td>{{l.numero}}</td>
+									<td>{{l.fase.numero}}</td>
+									<td>{{l.estado}}</td>
+								</tr>
+								{%endfor%}
+							</table>
+						</div>
 
 			        {%if consultar==True %}
 				        <div class="span10" align="left">

@@ -3,8 +3,9 @@ import flask.views
 from pms.modelo.proyectoControlador import getProyectoId
 from flask_weasyprint import HTML, render_pdf
 from pms.modelo.relacionControlador import hijos
-from pms.modelo.itemControlador import getItemId,getVersionId,getVersionItem
+from pms.modelo.itemControlador import getItemId,getVersionId
 from pms.modelo.tipoItemControlador import getTipoItemId
+from pms.modelo.peticionControlador import getLBPeticion
 from datetime import datetime
 from pms import app
 @app.route('/hello/')
@@ -62,12 +63,7 @@ def informeSolicitud():
     solicitudes=[]
     for s in pro.solicitudes:
         lineas=[]
-        for i in s.items:
-            hi=hijos(i.item.id)
-            for item in hi:
-                if item.item.linea_id:
-                    if not item.item.lineabase in lineas:
-                        lineas.append(item.item.lineabase)
+        lineas=getLBPeticion(s.id)
         aux=[]
         aux.insert(0, s)
         aux.insert(1, lineas)

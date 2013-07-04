@@ -5,6 +5,7 @@ from itemControlador import getVersionItem
 import config
 from datetime import datetime
 import os
+import flask
 
 def graficarProyecto(idp=None):
     aux=str(datetime.today())
@@ -12,12 +13,16 @@ def graficarProyecto(idp=None):
 
     if  config.DEV:
         nombre="pms/static/grafo.png"
+        res=[]
+        res.append(flask.url_for('static',filename='grafo.png'))
+        res.append(aux)
     else:
         nombre="/tmp/grafo.png"
+        res=[]
+        res.append(nombre)
+        res.append(aux)
 
-    res=[]
-    res.append(nombre)
-    res.append(aux)
+    
     graph = pydot.Dot(graph_type='digraph',rankdir="LR")
     proyecto=getProyectoId(idp)
     fases=proyecto.fases

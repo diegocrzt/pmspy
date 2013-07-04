@@ -3,7 +3,7 @@ from flask import request
 from pms.modelo.entidad import VersionItem
 from pms.modelo.usuarioControlador import  getUsuarioById
 from pms.modelo.proyectoControlador import getProyectoId
-from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud, cambiarVotos, tSolicitud, getPeticionesVotacion
+from pms.modelo.peticionControlador import getLBPeticion, getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud, cambiarVotos, tSolicitud, getPeticionesVotacion
 from datetime import datetime
 from pms.modelo.relacionControlador import hijos
 import pms.vista.required
@@ -314,7 +314,7 @@ def consultarSolicitud(s=None):
     else:
         m=[]
         for v in soli.votos:
-            m.append(v.usuario,v.valor)
+            m.append([v.usuario,True])
     for a in m:
         print a[0].nombre
     h=[]
@@ -323,8 +323,8 @@ def consultarSolicitud(s=None):
         for item in hi:
             h.append(item)
     h.sort(cmp=numeric_compare, key=None, reverse=False)
-    
-    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=True, miembros=m, arbol=h)
+    lineas=getLBPeticion(s)
+    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=True, miembros=m, arbol=h, lineas=lineas)
 
 @app.route('/admsolicitud/enviar/<s>',methods=['POST', 'GET'])
 @pms.vista.required.login_required
