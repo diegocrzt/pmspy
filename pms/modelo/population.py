@@ -7,7 +7,6 @@ from sqlalchemy import Table
 from pms.modelo.entidad import Usuario, Proyecto, Fase, TipoItem, Atributo, Item, ValorNum, ValorStr, ValorBoolean, ValorDate, VersionItem, Rol, User_Rol, Relacion, Miembro
 from pms.modelo.initdb import metadata, db_session, init_db, engine
 import hashlib
-from mx.DateTime.mxDateTime.mxDateTime_Python import DateTime
 from sqlalchemy.dialects.sqlite.base import DATETIME
 from xmlrpclib import datetime
 """Puebla la base de datos con datos de pureba"""
@@ -27,8 +26,11 @@ valorDate = Table('valordate',metadata)
 miembro=Table('miembro',metadata)
 session = db_session()
 user = Usuario(nombre="Administrador", nombredeusuario="admin", clave=hashlib.sha1( "123456" ).hexdigest(), isAdmin="true")
-session.add(user)
-session.commit()
+try:
+    session.add(user)
+    session.commit()
+except:
+    pass
 # user2 = Usuario(nombre="Natalia Valdez", nombredeusuario="natalia", clave=hashlib.sha1( "admin2" ).hexdigest(), isAdmin="true")
 # session.add(user2)
 # user3 = Usuario(nombre="Martin Poletti", nombredeusuario="martin", clave=hashlib.sha1( "martin" ).hexdigest(), isAdmin="false")

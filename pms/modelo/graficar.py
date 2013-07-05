@@ -58,7 +58,7 @@ def graficarProyecto(idp=None):
                         color="#ffff00"
                     elif g.estado=="EnCambio":
                         color="#0000ff"
-                    elif g.estado=="Bloqueado":
+                    elif g.estado=="Revision":
                         color="#ff1122"
                     else:
                         color="#976856"
