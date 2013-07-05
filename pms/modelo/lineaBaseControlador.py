@@ -10,7 +10,7 @@ from pms.modelo.itemControlador import getVersionId, getVersionItem
 session = db_session()
 
 def getLineaBaseId(lbid=None):
-    """Devuelve una linea base, recibe el id de la
+    """Devuelve una linea base, recibe el id de la linea base
     """
     if(id):
         init_db()
@@ -146,6 +146,9 @@ def bloquearItem(idv=None):
     return False
 
 def cerrarLB(linea):
+    """
+    Establece el estado de la linea base a "Cerrada"
+    """
     if linea:
         init_db()
         linea.estado="Cerrada"

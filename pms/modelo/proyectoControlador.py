@@ -154,6 +154,9 @@ def getProyectosFiltrados(filtro=None):
     
     
 def controlFProyecto(idp):
+    """
+    Controla que un proyecto no contenga solicitudes en votacion y que todas sus fases esten cerradas
+    """
     p=getProyectoId(idp)
     bandera=False
     for f in p.fases:
@@ -169,6 +172,9 @@ def controlFProyecto(idp):
     
 
 def finalizarProyecto(idp=None):
+    """
+    Establece el estado de un proyecto a "Finalizado"
+    """
     p=getProyectoId(idp)
     p.estado="Finalizado" 
     p.fechaFin=datetime.today()

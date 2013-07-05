@@ -10,7 +10,8 @@ from initdb import db_session, init_db, shutdown_session
 session = db_session()
 
 def getAtributosTipo(tipoI=None):
-    """Obtener tipos de items
+    """
+    Retorna un atributo por su tipo, recibe el id del tipo de item
     """
     init_db()
     res = session.query(Atributo).filter(Atributo.pertenece==tipoI).all()
@@ -19,8 +20,7 @@ def getAtributosTipo(tipoI=None):
 
 def getAtributoId(id=None):
     """
-    recupera un tipo por su id
-    
+    Retorna un atributo por su id
     """
     init_db()
     res = session.query(Atributo).filter(Atributo.id==id).first()
@@ -29,8 +29,7 @@ def getAtributoId(id=None):
 
 def getAtributoNombreTipo(nombre=None,tipo=None):
     """
-    recupera un tipo por su nombre
-    
+    Retorna un atributo por su nombre y su tipo
     """
     if(nombre and tipo):
             init_db()
@@ -41,7 +40,7 @@ def getAtributoNombreTipo(nombre=None,tipo=None):
         
 def comprobarAtributo(nombre=None, tipo=None):
     """
-    valida si ya existe un item con ese nombre en esa fase
+    Valida si ya existe un tributo con ese nombre en ese tipo, recibe el nombre del atributo y el id del tipo
     """
     a=getAtributoNombreTipo(nombre, tipo)
     if a == None:
@@ -50,8 +49,8 @@ def comprobarAtributo(nombre=None, tipo=None):
         return True
 
 def crearAtributo(nom=None, td=None, ta=None):
-    """Crea un tipo de item
-
+    """
+    Crea un Atributo, recibe el nombre de atributo, tipo de atributo y el id del tipo al que pertenece
     """
     init_db()
     att = Atributo(nombre=nom,tipoDato=td, pertenece=ta)
@@ -62,7 +61,7 @@ def crearAtributo(nom=None, td=None, ta=None):
     
 def editarAtributo(idat=None,nom=None, td=None, ta=None):
     """
-    permite editar un tipo de item existente
+    Edita un atributo existente, recibe el id y el nombre de atributo, el tipo de dato que contiene y el id del tipo de item al que pertenece
     """
     init_db()
     at = getAtributoId(idat)
@@ -78,7 +77,7 @@ def editarAtributo(idat=None,nom=None, td=None, ta=None):
 
 def eliminarAtributo(idat=None):
     """
-    elimina un tipo de item
+    Elimina un atributo, recibe el id del atributo a ser eliminado
     """
     if(idat):
         init_db()

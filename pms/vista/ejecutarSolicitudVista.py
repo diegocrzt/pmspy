@@ -1,6 +1,7 @@
 import flask.views
+from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.tipoItemControlador import getTiposFase, getTipoItemId, getTipoItemNombre, comprobarTipoItem, crearTipoItem, editarTipoItem, eliminarTipoItem
-from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase,actualizarFecha
+from pms.modelo.faseControlador import getFases, comprobarFase, crearFase, eliminarFase, getFaseId, editarFase,actualizarFecha, actualizarFechaProyecto
 from pms.modelo.atributoControlador import crearAtributo, comprobarAtributo
 from pms.modelo.entidad import Atributo,TipoItem, Rol, Relacion
 from pms.modelo.relacionControlador import hijos, comprobarRelacion, crearRelacion,comprobarAprobar,copiarRelacionesEstable,desAprobarAdelante, desAprobar,eliminarRelacion
@@ -74,7 +75,7 @@ class EditarItemSolicitud(flask.views.MethodView):
         
         actualizarItemsSolicitud(flask.session['solicitudid'])
         flask.flash(u"EDICION EXITOSA","text-success")
-        
+        actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid'])) 
     
     
@@ -112,6 +113,7 @@ def auEjecutarAP(vid=None):
     flask.session.pop('itemnombre',None)
     if crearRelacion(vid,flask.session['hijo'],"P-H"):
         flask.flash(u"Relacion creada con exito")
+        actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -156,6 +158,7 @@ def auEjecutarAA(vid=None):
     flask.session.pop('itemnombre',None)
     if crearRelacion(vid,flask.session['hijo'],"A-S"):
         flask.flash(u"Relacion creada con exito")
+        actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))
     else:
         flask.flash(u"La relacion que se intenta crear produce un conflicto y ha sido denegada")
@@ -179,6 +182,7 @@ class EjecutarEliminaritem(flask.views.MethodView):
             vvieja=getVersionItem(flask.session['itemid'])
             ejEliminarItem(vvieja.id)
             flask.flash(u"ELIMINACION EXITOSA","text-success")
+            actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
             return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))
         else:
             return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))
@@ -191,7 +195,7 @@ class EjecutarEliminaritem(flask.views.MethodView):
 @pms.vista.required.login_required       
 def EjecutarEItem(i=None): 
     """
-    
+    Depliega la vista de eliminar item, recibe el id de la version del item a ser eliminado
     """
     ver=getVersionId(i)
     item=getItemId(ver.deitem)
@@ -267,21 +271,23 @@ def ejEliminarRel(vid=None):
 @pms.vista.required.login_required
 def ejEliminarRelb(vid=None): 
     """
-
+    Ejecuta la funciond de eliminar una relacion, recibe el id de la version del item con la que se tiene la relacion
     """
     flask.session.pop('itemnombre',None)
     eliminarRelacion(flask.session['idver'],vid)
     flask.flash(u"Relacion eliminada con exito")
+    actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
     return flask.redirect('/admsolicitud/ejecutar/eliminarrel/'+str(flask.session['idver']))
 
 @app.route('/admsolicitud/ejecutar/eliminarrelc/<vid>')
 @pms.vista.required.login_required
 def ejEliminarRelc(vid=None): 
     """
-
+    Ejecuta la eliminacion de una relacion
     """
     eliminarRelacion(vid,flask.session['idver'])
     flask.flash(u"Relacion eliminada con exito")
+    actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
     return flask.redirect('/admsolicitud/ejecutar/eliminarrel/'+str(flask.session['idver']))
 
 
@@ -310,11 +316,15 @@ class EjCompletarAtributo(flask.views.MethodView):
         copiarRelacionesEstable(itm1.id,itm.id)
         actualizarItemsSolicitud(flask.session['solicitudid'])
         flask.flash(u"EDICION EXITOSA","text-success")
+        actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))    
 
 @app.route('/admsolicitud/ejecutar/atributo/<i>')
 @pms.vista.required.login_required       
-def ejComplAtributosItem(i=None): 
+def ejComplAtributosItem(i=None):
+    """
+    Ejecuta la funciond de completar los atributos de una version, recibe el id de la version
+    """
     ver=getVersionId(i)
     item=getItemId(ver.deitem)
     tipo=getTipoItemId(item.tipo)
@@ -330,4 +340,5 @@ def ejComplAtributosItem(i=None):
         val.append(at)
     for at in ver.atributosdate:
         val.append(at)
+    actualizarFechaProyecto(getProyectoId(flask.session['proyectoid']))
     return flask.render_template('ejCompletarAtributo.html',atributos=atr,valores=val) 

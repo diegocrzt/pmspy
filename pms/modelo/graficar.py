@@ -9,6 +9,9 @@ import os
 import flask
 
 def graficarProyecto(idp=None):
+    """
+    Genera el grafico que el proyecto completo, recibe el id del proyecto
+    """
     aux=str(datetime.today())
     nombre="grafo.png"
 
@@ -139,14 +142,17 @@ def graficarProyecto(idp=None):
         print 'Epic fail'
         pass
     
-    print 'Escribiendo en el el grafico'
+    print 'Escribiendo en el grafico' 
     print nombre 
     graph.write_png(nombre)
     print 'Escribio'
-    
+     
     return res
 
 def graficarFase(idf=None):
+    """
+    Genera el grafico de la fase, recibe el id de la fase
+    """
     aux=str(datetime.today())
     nombre="grafo.png"
 
@@ -183,7 +189,7 @@ def graficarFase(idf=None):
                     color="#ffff00"
                 elif g.estado=="EnCambio":
                     color="#0000ff"
-                elif g.estado=="Bloqueado":
+                elif g.estado=="Revision":
                     color="#ff1122"
                 else:
                     color="#976856"

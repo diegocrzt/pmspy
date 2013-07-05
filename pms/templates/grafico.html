@@ -40,4 +40,38 @@
             <img src="{{ nombre }}?{{aux}}" alt="Grafo 1"><BR>
             <center><a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a></center>
   </center>
+  
+  <div class="span5">
+  <table class="table table-bordered">
+				<caption><strong class="text-info">Items</strong></caption>
+				<tr>
+				<td bgcolor="#ffff00"></td>
+				<td><font color="#000000">Activo</font></td>
+				<td bgcolor="green"></td>
+				<td><font color="#000000">Aprobado</font></td>
+				<td bgcolor="#ff1122"></td>
+				<td><font color="#000000">Revision</font></td>
+				<td bgcolor="#8b8878"></td>
+				<td><font color="#000000">Bloqueado</font></td>
+				<td bgcolor="#ff0000"></td>
+				<td><font color="#000000">Conflicto</font></td>
+				<td bgcolor="#0000ff"></td>
+				<td><font color="#000000">EnCambio</font></td>
+				</tr>
+	</table>
+
+	<div class="span2">
+  	<table class="table table-bordered">
+				<caption><strong class="text-info">Lineas base</strong></caption>
+				<thead>
+				<tr>
+				<td bgcolor="red"></td>
+				<td><font color="#000000">Abierta</font> </td>
+				<td bgcolor="#8b8878"></td>
+				<td><font color="#000000">Cerrada</font></td>
+				</tr>
+				</thead>
+	</table>
+	</div>
+		</div>
 {%endblock%}

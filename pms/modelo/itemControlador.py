@@ -64,6 +64,9 @@ def getVersionId(id=None):
     return item
 
 def getVersionItem(idi=None):
+    """
+    Retorna la ultima version de un item, recibe el id del item
+    """
     init_db()
     version = session.query(VersionItem).filter(VersionItem.deitem == idi).filter(VersionItem.actual == True).first()
     shutdown_session()
@@ -72,7 +75,7 @@ def getVersionItem(idi=None):
         
 def comprobarItem(nombre=None, fase=None):
     """
-    valida si ya existe un item con ese nombre en esa fase
+    Valida si ya existe un item con ese nombre en esa fase
     """
     tipos = getTiposFase(fase)
     for t in tipos:
@@ -85,7 +88,7 @@ def comprobarItem(nombre=None, fase=None):
     
 
 def crearItem(ti=None, etiq=None, nom=None, est=None, cos=None, dif=None, usr=None):
-    """Crea un tipo de item
+    """Crea un item, recibe id del tipo de item, la etiqueta, el nombre, el estado, el costo, la dificultad, y el id del usuario creador
 
     """
     init_db()
@@ -101,7 +104,7 @@ def crearItem(ti=None, etiq=None, nom=None, est=None, cos=None, dif=None, usr=No
     
 def editarItem(idi=None, nom=None, est=None, cos=None, dif=None, usr=None):
     """
-    permite editar un tipo de item existente
+   Edita un item, recibe el id del item, el nombre, el estado, el costo, la dificultad, y el id del usuario modificador
     """
     init_db()
     v = getVersionItem(idi)
@@ -125,7 +128,7 @@ def editarItem(idi=None, nom=None, est=None, cos=None, dif=None, usr=None):
 
 def eliminarItem(idi=None, usr=None):
     """
-    Elimina un item
+    Elimina un item, recibe el id del item y el id del usuario modificador
     """
     if(idi):
         init_db()
@@ -152,7 +155,7 @@ def ejEliminarItem(idi=None):
         
 def crearValor(ida=None, idv=None, val=None):
     """
-    Crea un atributo nuevo
+    Crea un atributo nuevo, recibe el id del atributo, el id de la version a la que pertenece y el valor que sera asignado al atributo
     """
     atr = getAtributoId(ida)
     if atr.tipoDato == "Cadena":
@@ -254,11 +257,3 @@ def getItemsFiltrados(fase=None, filtro=None):
             for i in t.instancias:
                 r.append(getVersionItem(i.id))
         return r
-    
-
-
-if __name__ == '__main__':
-    fase = getFaseId(1)
-    query = getItemsFiltrados(fase, "1")
-    for q in query:
-        print q.nombre + " tipo:" + str(q.item.tipo)

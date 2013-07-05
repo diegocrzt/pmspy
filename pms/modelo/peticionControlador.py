@@ -236,7 +236,7 @@ def contarVotos(idp=None):
     
 def cambiarVotos(idp=None):
     """
-    cambia a false el campo actual de los votos para que no se tome en cuenta en futuras operaciones
+    Cambia a false el campo actual de los votos para que no se tome en cuenta en futuras operaciones
     """
     soli=getPeticion(idp)
     init_db()
@@ -453,6 +453,9 @@ def getLBPeticion(ids=None):
     return lineas   
 
 def getItemsAfectados2(ids=None):
+    """
+    Retorna un diccionario con todos los items afectados por la solicitud y los relacionados con estos
+    """
     soli=getPeticion(ids)
     items={}
     lineas={}
@@ -493,6 +496,9 @@ def getItemsAfectados2(ids=None):
     return items
 
 def getItemsAfectados(ids=None):
+    """
+    Retorna un diccionario con los items afectados por una solicitud de cambio, recibe el id de la solicitud de cambio
+    """
     soli=getPeticion(ids)
     items={}
     lineas={}

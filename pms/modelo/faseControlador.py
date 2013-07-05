@@ -21,6 +21,9 @@ def getFases(p=None):
     return fases
 
 def getFaseNumPro(idp,num):
+    """
+    Retorna la fase de un proyecto por su numero, recibe el id del proyecto y el numero de la fase
+    """
     init_db()
     fases = session.query(Fase).filter(Fase.delproyecto==idp).filter(Fase.numero==num).first()
     shutdown_session()
@@ -152,6 +155,9 @@ def actualizarFecha(idf=None):
     actualizarFechaProyecto(f.proyecto)
     
 def abrirFase(idf=None):
+    """
+    Establece el estado de la fase a abierta, recibe el id de la fase
+    """
     init_db()
     f=getFaseId(idf)
     f.estado="Abierta"
