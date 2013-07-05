@@ -17,6 +17,7 @@ from pms.vista.paginar import calculoPrimeraPag
 from pms.modelo.usuarioControlador import getUsuarioById
 from pms.modelo.ficheroControlador import getFileByItemId, subirFichero,\
     getFileById, eliminarFichero
+from pms.modelo.graficar import graficarItem
 from flask.helpers import make_response
 TAM_PAGINA=5
 
@@ -732,4 +733,10 @@ def prevPageI():
     flask.session['cambio']=True
     flask.session['infopag']=calculoDeAnterior(flask.session['cantidaditems'])
     return flask.redirect('/admitem/'+str(flask.session['faseid']))
+
+@app.route('/consultaritem/grafico/<i>')
+@pms.vista.required.login_required   
+def graficarItemArbol(i=None):
+    n=graficarItem(i)
+    return flask.render_template('grafico.html',nombre=n[0],aux=n[1])
     

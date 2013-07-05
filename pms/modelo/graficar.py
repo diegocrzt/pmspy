@@ -1,7 +1,7 @@
 import pydot
 from entidad import Relacion, Proyecto
 from proyectoControlador import getProyectoId
-from itemControlador import getVersionItem
+from itemControlador import getVersionItem, getItemId
 from faseControlador import getFaseId
 import config
 from datetime import datetime
@@ -49,7 +49,7 @@ def graficarProyecto(idp=None):
                 g=getVersionItem(i.id) 
                 if g.estado!="Eliminado":
                     if g.estado=="Aprobado":
-                        color="green"
+                        color="#37F731"
                     elif g.estado=="Bloqueado":
                         color="#8b8878"
                     elif g.estado=="Conflicto":
@@ -180,7 +180,7 @@ def graficarFase(idf=None):
             g=getVersionItem(i.id) 
             if g.estado!="Eliminado":
                 if g.estado=="Aprobado":
-                    color="green"
+                    color="#37F731"
                 elif g.estado=="Bloqueado":
                     color="#8b8878"
                 elif g.estado=="Conflicto":
@@ -248,4 +248,159 @@ def graficarFase(idf=None):
     
     graph.write_png(nombre)
     
+    return res
+
+def graficarItem(idi=None):
+    graph = pydot.Dot(graph_type='digraph',rankdir="LR")
+    items={}
+    lineas={}
+    colaitems=[]
+    v=getVersionItem(idi)
+    fases=getItemId(idi).tipoitem.fase.proyecto.fases
+    colaitems.append(v)
+    
+    for i in colaitems:
+        if not(i.id in items):
+            items[i.id]=i
+            itm=i.item
+            if itm.lineabase:
+                lb=itm.lineabase
+                if not(lb.id in lineas):
+                    lineas[lb.id]=lb
+                    for n in lb.items:
+                        nv=getVersionItem(n.id)
+                        colaitems.append(nv)
+            for x in i.ante_list:
+                if x.ante.actual==True:
+                    colaitems.append(x.ante)
+            for w in i.post_list:
+                if w.post.actual==True:
+                    colaitems.append(w.post)
+    
+    aux=str(datetime.today())
+    nombre="grafo.png"
+
+    if  config.DEV:
+        nombre="pms/static/grafo.png"
+        res=[]
+        res.append(flask.url_for('static', filename="grafo.png"))
+        res.append(aux)
+    else:
+        nombre="/tmp/grafo.png"
+        res=[]
+        res.append(nombre)
+        res.append(aux)
+        
+    dibujo={}
+    clusterfase={}
+    invisibles={}
+    for f in fases:
+        clusterfase[f.numero]=pydot.Cluster(str(f.numero),label='Fase '+str(f.numero))
+        
+        
+    for f in fases:
+        node1 = pydot.Node(str(f.numero)+"invi"+"1", color="white",fontcolor="white")
+        node2 = pydot.Node(str(f.numero)+"invi"+"2", color="white",fontcolor="white")
+        clusterfase[f.numero].add_node(node1)
+        clusterfase[f.numero].add_node(node2)
+        aa=[node1,node2]
+        invisibles[f.numero]=aa
+        
+    for g in items.values():
+        f=g.item.tipoitem.fase
+        if g.estado!="Eliminado":
+            if g.estado=="Aprobado":
+                color="green"
+            elif g.estado=="Bloqueado":
+                color="#8b8878"
+            elif g.estado=="Conflicto":
+                color="#ff0000"
+            elif g.estado=="Activo":
+                color="#ffff00"
+            elif g.estado=="EnCambio":
+                color="#0000ff"
+            elif g.estado=="Bloqueado":
+                color="#ff1122"
+            else:
+                color="#976856"
+            nodeg = pydot.Node(g.nombre+'\nC='+str(g.costo)+'\nD='+str(g.dificultad), style="filled", fillcolor=color)
+            dibujo[str(f.numero)+g.nombre]=nodeg
+            clusterfase[f.numero].add_node(nodeg)
+    
+    lineasn={}
+           
+    for l in lineas.values():
+            if l.estado!="Quebrada":
+                c=0
+                aux=""
+                for i in l.items:
+                    vaux=getVersionItem(i.id)
+                    if c==0:
+                        aux=aux+"<"+vaux.nombre+"> "
+                    else:
+                        aux=aux+"|<"+vaux.nombre+"> "
+                    c=c+1
+                if l.estado=="Abierta":
+                    col="red"
+                else:
+                    col="#8b8878"
+                f=l.fase
+                nodel = pydot.Node(str(f.numero)+"lb"+str(l.numero),label = aux,shape="record",color=col)
+                clusterfase[f.numero].add_node(nodel)
+                lineasn[str(f.numero)+"lb"+str(l.numero)]=nodel
+    
+    for f in fases:
+        graph.add_subgraph(clusterfase[f.numero])
+    for f in fases:
+        aa=invisibles[f.numero]    
+        if f.numero>1:
+            a=invisibles[f.numero-1]
+            b=invisibles[f.numero]
+            graph.add_edge(pydot.Edge(a[1], b[0],color="white",arrowsize="0"))
+            
+    for v in items.values():
+        if v.estado!="Eliminado":
+            f=v.item.tipoitem.fase
+            aa=invisibles[v.item.tipoitem.fase.numero]
+            graph.add_edge(pydot.Edge(aa[0], dibujo[str(f.numero)+v.nombre],color="white",arrowsize="0"))
+            graph.add_edge(pydot.Edge( dibujo[str(f.numero)+v.nombre],aa[1],color="white",arrowsize="0"))
+            
+    for v in items.values():
+        if v.estado!="Eliminado":
+            f=v.item.tipoitem.fase
+            if v.item.lineabase!=None:
+                graph.add_edge(pydot.Edge(dibujo[str(f.numero)+v.nombre], lineasn[str(f.numero)+"lb"+str(v.item.lineabase.numero)],headport=v.nombre,style="dotted"))
+            for n in v.post_list:
+                s=n.post
+                if s.actual==True:
+                    if n.tipo=="P-H":
+                        graph.add_edge(pydot.Edge(dibujo[str(f.numero)+v.nombre], dibujo[str(s.item.tipoitem.fase.numero)+s.nombre]))
+                    else:
+                        if v.item.lineabase==None:
+                            graph.add_edge(pydot.Edge(dibujo[str(f.numero)+v.nombre], dibujo[str(s.item.tipoitem.fase.numero)+s.nombre],minlen="2"))
+                        else:
+                            graph.add_edge(pydot.Edge(lineasn[str(f.numero)+"lb"+str(v.item.lineabase.numero)],dibujo[str(s.item.tipoitem.fase.numero)+s.nombre],tailport=v.nombre,minlen="2"))
+
+    anterior=None                    
+    for f in fases:
+        ax=invisibles[f.numero]
+        if anterior!=None:
+            bx=invisibles[f.numero]
+            for l in anterior.lineas:
+                if l.estado!="Quebrada":
+                    if l.id in lineas:
+                        graph.add_edge(pydot.Edge(lineasn[str(anterior.numero)+"lb"+str(l.numero)], bx[0],color="white",arrowsize="0"))
+        for l in f.lineas:
+            if l.estado!="Quebrada":
+                if l.id in lineas:
+                    graph.add_edge(pydot.Edge( ax[1],lineasn[str(f.numero)+"lb"+str(l.numero)],color="white",arrowsize="0"))
+        anterior=f
+        
+    try:
+        os.remove(nombre)
+    except:
+        pass
+    
+    graph.write_png(nombre)
+
     return res
