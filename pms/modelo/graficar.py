@@ -35,8 +35,8 @@ def graficarProyecto(idp=None):
         clusterfase[f.numero]=pydot.Cluster(str(f.numero),label='Fase '+str(f.numero))
         
     for f in fases:
-        node1 = pydot.Node(str(f.numero)+"invi"+"1", color="white",fontcolor="white")
-        node2 = pydot.Node(str(f.numero)+"invi"+"2", color="white",fontcolor="white")
+        node1 = pydot.Node(str(f.numero)+"invi"+"1", color="white",fontcolor="white")#
+        node2 = pydot.Node(str(f.numero)+"invi"+"2", color="white",fontcolor="white")##
         clusterfase[f.numero].add_node(node1)
         clusterfase[f.numero].add_node(node2)
         aa=[node1,node2]
@@ -122,14 +122,15 @@ def graficarProyecto(idp=None):
     for f in fases:
         ax=invisibles[f.numero]
         if anterior!=None:
-            bx=invisibles[anterior.numero]
+            bx=invisibles[f.numero]
             for l in anterior.lineas:
                 if l.estado!="Quebrada":
+                    print anterior.numero
                     graph.add_edge(pydot.Edge(lineas[str(anterior.numero)+"lb"+str(l.numero)], bx[0],color="white",arrowsize="0"))
         for l in f.lineas:
             if l.estado!="Quebrada":
                 graph.add_edge(pydot.Edge( ax[1],lineas[str(f.numero)+"lb"+str(l.numero)],color="white",arrowsize="0"))
-        anterior=f     
+        anterior=f   
         
     try:
         print 'Intentando borrar'
