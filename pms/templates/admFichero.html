@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block menu %}
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Project Manager System</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="/admitem/{{session['faseid']}}">Administrar Item</a></li>
+              <li><a href="/">Logout</a></li>
+			<li><a href="#contact">Usuario: {{session['username']}}</a></li>
+              </ul>
+          </div>
+       </div>
+     </div>
+</div>
+{%endblock%}
+
+{%block mensaje%}
+{%endblock%}
+
+{%block content%}
+<div class="container">
+	<h3 class="muted" align="center">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
+	<h3>Fichero Adjunto</h3>
+	<hr>
+	<div class="span5">
+	{%  with messages = get_flashed_messages(category_filter=["text-success"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<small class="text-error">{{ message }}</small>	
+  				{% endfor %}  	  			
+			{% endif %}
+		{% endwith %}
+	{% if fichero %}
+	<table  class="table  table-bordered" >
+		<tr>
+			<th>Fichero</th>
+			<th>{{fichero.nombre}}</th>
+		</tr>
+	</table>
+	<p>
+		
+		<a href="/admitem/fichero/descargar/{{fichero.id}}" class="btn btn-success">Descargar</a>
+		<a href="/admitem/fichero/eliminar/{{fichero.id}}" class="btn btn-danger">Eliminar</a>
+	</p>
+	{% else %}
+	<p> No existe fichero adjunto </p> 
+	{% endif %}
+	
+	<form action="{{url_for('admfichero')}}" method="post" enctype="multipart/form-data">
+		{%  with messages = get_flashed_messages(category_filter=["text-error"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<small class="text-error">{{ message }}</small>	
+  				{% endfor %}  	  			
+			{% endif %}
+		{% endwith %}
+		{%  with messages = get_flashed_messages(category_filter=["file-deleted"]) %}
+  			{% if messages %}
+  				{% for message in messages %}
+  						<small class="text-success">{{ message }}</small>	
+  				{% endfor %}  	  			
+			{% endif %}
+		{% endwith %}
+		<input type="file" name="fichero"/>
+		<input class="btn btn-primary" type="submit" value="Subir"/>
+	</form>
+	
+            <p>
+            <a class="btn" href="/admitem/{{session['faseid']}}"><i class="icon-arrow-left"></i> Atras</a>
+            </p>
+        
+    </div>
+</div>
+
+{%endblock%}		
