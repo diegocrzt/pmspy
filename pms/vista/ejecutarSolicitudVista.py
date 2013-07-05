@@ -72,11 +72,9 @@ class EditarItemSolicitud(flask.views.MethodView):
         flask.session.pop('aux4',None)
         #desAprobarAdelante(version.id)
         
-        r=actualizarItemsSolicitud(flask.session['solicitudid'])
-        if r:
-            flask.flash(u"EDICION EXITOSA","text-success")
-        else:
-            flask.flash(u"error","text-warning")
+        actualizarItemsSolicitud(flask.session['solicitudid'])
+        flask.flash(u"EDICION EXITOSA","text-success")
+        
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid'])) 
     
     
@@ -310,7 +308,7 @@ class EjCompletarAtributo(flask.views.MethodView):
             else:
                 crearValor(at.id,itm.id,flask.request.form[at.nombre])
         copiarRelacionesEstable(itm1.id,itm.id)
-        r=actualizarItemsSolicitud(flask.session['solicitudid'])
+        actualizarItemsSolicitud(flask.session['solicitudid'])
         flask.flash(u"EDICION EXITOSA","text-success")
         return flask.redirect('/admsolicitud/ejecutar/'+str(flask.session['solicitudid']))    
 

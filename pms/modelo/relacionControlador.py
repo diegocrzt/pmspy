@@ -302,7 +302,7 @@ def romperLB(idv):
     init_db()
     if ver.estado=="Bloqueado":
         itm=ver.item
-        if itm.lineabase!=None:
+        if itm.lineabase:
             lb=itm.lineabase
             if lb.estado=="Cerrada":
                 lb.estado="Quebrada"
@@ -333,7 +333,7 @@ def romperLB(idv):
         return False
     
 
-def desBloquearAdelante(lista=None):
+def desBloquearAdelante(lista=None,):
     """
     Revierte el estado de todos los items que tengan relacion de dependencia con el item seleccionados a un estado de Revision desde un estado Aprobado
     """
@@ -345,8 +345,7 @@ def desBloquearAdelante(lista=None):
     grafo=crearGrafoProyecto(proyecto.id)
     for l in lista:
         romperLB(l)
-    for l in lista:
-        setEnCambio(l)
+    
     for l in lista:
         desBloquearAdelanteG(l,grafo)
 def desBloquearAdelante2(lista=None):
@@ -406,6 +405,8 @@ def setEnCambio(idv=None):
     """
     init_db()
     ver=getVersionId(idv)
+    i=ver.item
+    ver=getVersionItem(i.id)
     ver.estado="EnCambio"
     session.merge(ver)
     session.commit()
@@ -441,8 +442,6 @@ def actualizarItemsSolicitud(s=None):
             if nuevav.id!=i.item.id:
                 quitarItem(i.item.id)
                 a=agregarItem(nuevav.id, soli.id)
-                return True
-        return False
     
 def getPeticion(id=None):
     """

@@ -163,7 +163,7 @@
 		</tr>			
      {% endfor %}
 </table>
-	<a class="btn" href="/informeitem/{{i.id}}">Informe de Historial PDF  <i class="icon-file"></i> </a>
+
 	{%if llama=="cerrarlinea"%}
 		<a class="btn btn-success" href="/admlinea/cerrar/{{session['lineaid']}}">Aceptar</a>
 	{% elif session['solicitudid']%}
@@ -175,6 +175,9 @@
 	    <a class="btn btn-success" href="/admitem/{{session['faseid']}}">Aceptar</a>
     	{%endif%}
     {%endif%}
+    {% if session['islider']==True%}
+		<a class="btn" href="/informeitem/{{i.id}}">Informe de Historial PDF  <i class="icon-file"></i> </a>
+	{%endif%}
     </div>
 </div>
 

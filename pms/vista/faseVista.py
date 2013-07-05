@@ -5,6 +5,7 @@ from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.rolControlador import getProyectosDeUsuario
 from pms.modelo.peticionControlador import getMiembros, agregarListaMiembros, contarVotos, quitarVoto
 from pms.modelo.usuarioControlador import getUsuarios, getUsuarioById
+from pms.modelo.graficar import graficarFase
 from datetime import timedelta
 from datetime import datetime
 import pms.vista.required
@@ -399,3 +400,9 @@ def consultarFase(f=None):
                     if ver.actual:
                         itm.append(ver)
         return flask.render_template('consultarFase.html',items=itm, fase=fas)   
+    
+@app.route('/admfase/consultarfase/graficar/<idf>', methods=["POST", "GET"])
+@pms.vista.required.login_required    
+def GraficarFase(idf=None):
+    n=graficarFase(idf)
+    return flask.render_template('grafico.html',nombre=n[0],aux=n[1])
