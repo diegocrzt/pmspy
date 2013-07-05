@@ -89,4 +89,8 @@ Hecho esto probar http://probook4530s/ o http://localhost/
 OBS para el script que carga la base de datos tiene que existir el usuario postgres (por defecto, 
 esto es así, por lo que no debería haber problemas
 
-Terminar Testing
+Nota final, para que funcione el pydot es necesario establecer un alias en la configuración del apache
+	/etc/apache2/httpd.conf
+Añadir la linea 
+	Alias /tmp/ "/tmp/"
+Y todo debería funcionar bien

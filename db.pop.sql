@@ -139,6 +139,16 @@ CREATE TABLE item_peticion (
 
 
 --
+-- Name: lb_ver; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE lb_ver (
+    lb_id integer NOT NULL,
+    ver_id integer NOT NULL
+);
+
+
+--
 -- Name: lineabase; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -610,80 +620,76 @@ ALTER TABLE ONLY vitem ALTER COLUMN id SET DEFAULT nextval('vitem_id_seq'::regcl
 --
 
 COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
-1	Revision	Fecha	1
-2	Notas	Cadena	1
-3	Genera Documento	Booleano	1
+2	Genera Documento	Booleano	1
+3	Revision	Fecha	1
 4	ID interno	Numerico	2
 5	Descripcion	Cadena	2
 6	Experimental	Booleano	2
 7	Interno	Booleano	3
+8	Revision	Fecha	3
 9	Descripcion	Cadena	3
-10	Fabricable	Booleano	3
-11	Revision	Fecha	3
 12	Revision	Fecha	4
-13	Nombre Clave	Cadena	4
-14	Nuevo	Booleano	4
-15	Version	Numerico	5
-16	Nombre Clave	Cadena	5
-17	Empotrado	Booleano	5
-18	Novel	Booleano	5
-19	Interno	Booleano	6
-20	Notas	Cadena	6
-21	Tiempo	Numerico	7
-22	Notas	Cadena	7
-23	Exito	Booleano	7
-24	Notas	Cadena	8
-25	ISA Compatible	Booleano	8
-26	Tiempo	Numerico	9
-27	Notas	Cadena	9
-28	Mass. Manufacturing 	Booleano	9
-29	radio	Numerico	10
-30	relleno	Booleano	10
-31	longitud	Numerico	12
-32	nota	Cadena	12
-33	lado X	Numerico	11
-34	lado Y	Numerico	11
-35	lado Z	Numerico	11
-36	equilatero	Booleano	11
-37	longitud	Numerico	13
-38	punteada	Booleano	13
-39	descripcion	Cadena	13
-40	lado X	Numerico	14
-41	lado Y	Numerico	14
-43	descripcion	Cadena	14
-44	revision	Fecha	14
-45	lado	Numerico	15
-46	revision	Fecha	15
-47	radio A	Numerico	16
-48	radio B	Numerico	16
-49	notas	Cadena	16
-50	trazos	Numerico	17
-51	longitud X	Numerico	17
-52	longitud Y	Numerico	17
-53	punteada	Booleano	17
-54	estable	Booleano	18
-55	lado	Numerico	18
-56	nota	Cadena	18
-57	revision	Fecha	18
-58	lado	Numerico	19
-59	nota	Cadena	19
-60	descripcion	Cadena	20
-61	revision	Fecha	20
-62	solido	Booleano	20
-63	puntas	Numerico	21
-64	punteada	Booleano	21
-65	notas	Cadena	21
-66	revision	Fecha	21
-67	Autor	Cadena	23
-68	Edicion	Numerico	23
-69	Paginas	Numerico	24
-70	Completo	Booleano	24
-71	Fecha	Fecha	24
-72	Monografia	Booleano	25
-75	Completo	Booleano	25
-76	Puntaje	Numerico	25
-77	Materia	Cadena	26
-78	Aprobado	Booleano	26
+15	Clave	Cadena	4
+16	Nuevo	Booleano	4
+10	Fabricable	Booleano	3
+1	Notas	Cadena	1
+17	Nombre clave	Cadena	5
+18	Revision	Fecha	5
+19	Empotrado	Booleano	5
+20	Novel	Booleano	5
+21	Interno	Booleano	6
+22	Notas	Cadena	6
+23	Notas	Cadena	7
+24	ISA compatible	Booleano	7
+25	Tiempo	Numerico	8
+26	Notas	Cadena	8
+27	Exito	Booleano	8
+28	Tiempo	Numerico	9
+29	Notas	Cadena	9
+30	Mass ready	Booleano	9
+31	Radio	Numerico	10
+32	Relleno	Booleano	10
+33	X	Numerico	11
+34	Y	Numerico	11
+35	Z	Numerico	11
+36	Equilatero	Booleano	11
+37	Lado	Numerico	12
+38	Nota	Cadena	12
+39	Longitud	Numerico	13
+40	Punteada	Booleano	13
+41	Descripcion	Cadena	13
+42	Descripcion	Cadena	14
+43	X	Numerico	14
+44	Y	Numerico	14
+45	Lado	Numerico	15
+46	Revision	Fecha	15
+47	RA	Numerico	16
+48	RB	Numerico	16
+49	Notas	Cadena	16
+50	X	Numerico	17
+51	Y	Numerico	17
+52	Punteada	Booleano	17
+53	Estable	Booleano	18
+54	Lado	Numerico	18
+55	Nota	Cadena	18
+56	Revision	Fecha	18
+57	Lado	Numerico	19
+58	Nota	Cadena	19
+59	Descripcion	Cadena	20
+60	Revision	Fecha	20
+61	Solido	Booleano	20
+62	Puntas	Numerico	21
+63	Punteada	Booleano	21
+64	Notas	Cadena	21
+65	Revision	Fecha	21
+66	Paginas	Numerico	22
+67	Autor	Cadena	22
+68	Fecha	Fecha	23
+69	Completo	Booleano	23
+70	Monografia	Booleano	24
+71	Completo	Booleano	24
+72	Materia	Cadena	25
+73	Aprobado	Booleano	25
 \.
 
 
@@ -691,7 +697,7 @@ COPY atributo (id, nombre, "tipoDato", pertenece) FROM stdin;
 -- Name: atributo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('atributo_id_seq', 78, true);
+SELECT pg_catalog.setval('atributo_id_seq', 73, true);
 
 
 --
@@ -699,15 +705,15 @@ SELECT pg_catalog.setval('atributo_id_seq', 78, true);
 --
 
 COPY fase (id, nombre, numero, "fechaInicio", "fechaFin", "fechaUltMod", estado, delproyecto) FROM stdin;
-3	Gama	3	2013-12-02 00:00:00	2014-02-01 00:00:00	2013-06-20 18:37:26.451821	Abierta	1
-4	Delta	4	2014-02-02 00:00:00	2014-06-01 00:00:00	2013-06-20 18:53:49.51291	Abierta	1
-1	Alfa	1	2013-06-01 00:00:00	2013-09-01 00:00:00	2013-06-20 17:55:53.436956	Abierta	1
-7	Formas Avanzadas	3	2013-08-02 00:00:00	2013-09-01 00:00:00	2013-06-20 22:33:26.253698	Abierta	2
-5	Formas Básicas	1	2013-06-01 00:00:00	2013-07-01 00:00:00	2013-06-20 22:21:54.08977	Abierta	2
-6	Complicando Formas	2	2013-07-02 00:00:00	2013-08-01 00:00:00	2013-06-21 17:41:33.129279	Abierta	2
-9	Rendir	2	2013-06-20 00:00:00	2013-07-01 00:00:00	2013-06-21 18:17:19.806841	Cerrada	3
-2	Beta	2	2013-09-02 00:00:00	2013-12-01 00:00:00	2013-06-21 18:18:55.59743	Abierta	1
-8	Estudiar	1	2013-06-21 17:52:08.760837	2013-07-06 17:52:08.760837	2013-06-21 18:15:16.153456	Cerrada	3
+3	Gama	3	2013-12-02 00:00:00	2014-03-01 00:00:00	2013-07-05 13:27:15.608814	Abierta	1
+8	Estudiar	1	2013-08-01 00:00:00	2013-08-15 00:00:00	2013-07-05 15:36:27.829606	Cerrada	3
+2	Beta	2	2013-09-02 00:00:00	2013-12-01 00:00:00	2013-07-05 13:17:10.837039	Abierta	1
+9	Rendir	2	2013-08-16 00:00:00	2013-09-01 00:00:00	2013-07-05 15:40:41.957931	Abierta	3
+7	GrandGeometry	3	2013-08-02 00:00:00	2013-09-01 00:00:00	2013-07-05 15:24:19.510757	Abierta	2
+4	Delta	4	2014-03-02 00:00:00	2014-06-01 00:00:00	2013-07-05 13:36:26.632113	Abierta	1
+1	Alfa	1	2013-06-01 00:00:00	2013-09-01 00:00:00	2013-07-05 12:22:54.77703	Abierta	1
+6	Complicando Formas	2	2013-07-02 00:00:00	2013-08-01 00:00:00	2013-07-05 14:20:58.045586	Cerrada	2
+5	Formas Basicas	1	2013-06-01 00:00:00	2013-07-01 00:00:00	2013-07-05 14:08:36.566858	Cerrada	2
 \.
 
 
@@ -723,57 +729,58 @@ SELECT pg_catalog.setval('fase_id_seq', 9, true);
 --
 
 COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FROM stdin;
-1	1	1-1-1	2013-06-20 17:36:50.405986	\N	1
-7	1	1-1-19	2013-06-20 17:49:01.904475	1	1
-2	1	1-1-4	2013-06-20 17:42:00.421074	1	1
-3	1	1-1-6	2013-06-20 17:43:05.851946	2	1
-4	2	1-1-9	2013-06-20 17:44:29.81556	2	1
-5	2	1-1-11	2013-06-20 17:45:18.700759	2	1
-6	2	1-1-13	2013-06-20 17:46:43.969808	2	1
-8	3	1-2-1	2013-06-20 18:02:38.524235	3	1
-9	3	1-2-4	2013-06-20 18:03:57.796369	4	1
-10	3	1-2-8	2013-06-20 18:06:23.476064	4	1
-11	4	1-2-11	2013-06-20 18:07:46.139315	4	1
-13	3	1-2-16	2013-06-20 18:10:19.991607	4	1
-14	5	1-3-1	2013-06-20 18:19:09.819748	5	1
-15	5	1-3-4	2013-06-20 18:20:29.186812	5	1
-16	5	1-3-7	2013-06-20 18:31:01.484868	6	1
-17	6	1-3-10	2013-06-20 18:32:02.424953	6	1
-18	6	1-3-12	2013-06-20 18:33:06.692516	6	1
-19	9	1-4-1	2013-06-20 18:46:36.13507	\N	1
-20	7	1-4-3	2013-06-20 18:48:09.372839	\N	1
-21	9	1-4-5	2013-06-20 18:50:12.237212	\N	1
-22	8	1-4-7	2013-06-20 18:51:56.670504	\N	1
-33	14	2-6-1	2013-06-20 22:11:21.109807	\N	3
-34	14	2-6-4	2013-06-20 22:12:56.593863	\N	3
-35	15	2-6-7	2013-06-20 22:14:16.331761	\N	3
-36	16	2-6-10	2013-06-20 22:15:04.641209	\N	3
-37	17	2-6-14	2013-06-20 22:17:07.388567	\N	3
-23	10	2-5-1	2013-06-20 21:51:39.60636	7	3
-24	10	2-5-4	2013-06-20 21:52:16.799291	7	3
-25	11	2-5-7	2013-06-20 21:52:56.522616	8	3
-26	11	2-5-10	2013-06-20 21:53:32.753009	8	3
-27	11	2-5-13	2013-06-20 21:54:15.026001	8	3
-31	10	2-5-23	2013-06-20 22:03:28.583306	9	3
-28	12	2-5-15	2013-06-20 21:55:13.504395	9	3
-29	12	2-5-17	2013-06-20 21:55:52.013532	9	3
-30	12	2-5-21	2013-06-20 22:02:39.81833	9	3
-32	13	2-5-26	2013-06-20 22:04:44.634957	10	3
-38	18	2-7-1	2013-06-20 22:26:45.814953	\N	1
-39	19	2-7-3	2013-06-20 22:27:56.923618	\N	1
-40	18	2-7-5	2013-06-20 22:28:41.341282	\N	1
-41	20	2-7-7	2013-06-20 22:29:44.698716	\N	1
-42	20	2-7-9	2013-06-20 22:30:36.686046	\N	1
-43	20	2-7-11	2013-06-20 22:31:30.364325	\N	1
-44	21	2-7-13	2013-06-20 22:32:36.81941	\N	1
-45	23	3-8-1	2013-06-21 18:04:16.09045	11	3
-46	23	3-8-4	2013-06-21 18:04:59.537703	12	3
-47	24	3-8-7	2013-06-21 18:05:43.828379	12	3
-48	23	3-8-10	2013-06-21 18:07:00.687042	13	3
-49	26	3-9-1	2013-06-21 18:09:35.861741	14	3
-50	25	3-9-5	2013-06-21 18:12:19.527835	15	3
-51	26	3-9-8	2013-06-21 18:13:59.402721	15	3
-12	4	1-2-14	2013-06-20 18:09:12.463724	16	1
+7	1	1-1-20	2013-07-05 10:02:22.618785	\N	2
+1	1	1-1-1	2013-07-04 22:00:04.308328	2	2
+2	1	1-1-2	2013-07-04 22:00:24.883391	2	2
+3	1	1-1-7	2013-07-04 22:03:18.754222	4	2
+4	2	1-1-11	2013-07-04 22:05:47.856005	4	2
+5	2	1-1-14	2013-07-05 09:59:17.016962	4	2
+6	2	1-1-17	2013-07-05 10:00:08.301692	4	2
+8	3	1-2-1	2013-07-05 12:57:33.98838	5	2
+9	3	1-2-4	2013-07-05 13:00:29.39333	6	2
+10	3	1-2-7	2013-07-05 13:09:21.794007	6	2
+12	4	1-2-13	2013-07-05 13:11:40.548171	6	2
+11	4	1-2-10	2013-07-05 13:10:42.384573	6	2
+13	3	1-2-16	2013-07-05 13:12:49.384376	6	2
+14	5	1-3-1	2013-07-05 13:20:53.728145	7	2
+15	5	1-3-4	2013-07-05 13:21:37.616806	7	2
+16	5	1-3-7	2013-07-05 13:22:30.632315	8	2
+17	6	1-3-10	2013-07-05 13:23:49.302305	8	2
+18	6	1-3-13	2013-07-05 13:24:41.222259	8	2
+19	9	1-4-1	2013-07-05 13:31:11.050432	\N	2
+20	8	1-4-4	2013-07-05 13:32:23.287148	\N	2
+21	7	1-4-8	2013-07-05 13:34:19.897199	\N	2
+22	9	1-4-12	2013-07-05 13:35:44.607363	\N	2
+23	10	2-5-1	2013-07-05 13:48:18.240736	9	3
+24	10	2-5-4	2013-07-05 13:52:31.871646	9	3
+25	11	2-5-7	2013-07-05 13:53:03.749773	10	3
+26	11	2-5-10	2013-07-05 13:53:46.728944	10	3
+27	11	2-5-13	2013-07-05 13:54:21.315959	10	3
+29	10	2-5-19	2013-07-05 13:56:31.854397	11	3
+28	12	2-5-16	2013-07-05 13:55:22.864941	11	3
+30	12	2-5-22	2013-07-05 13:57:32.119984	11	3
+31	12	2-5-25	2013-07-05 14:01:25.487166	11	3
+32	13	2-5-29	2013-07-05 14:05:47.166599	12	3
+33	14	2-6-1	2013-07-05 14:13:42.237696	13	3
+34	14	2-6-4	2013-07-05 14:14:24.27631	13	3
+35	15	2-6-7	2013-07-05 14:15:20.351715	13	3
+36	16	2-6-10	2013-07-05 14:16:31.91073	14	3
+37	17	2-6-13	2013-07-05 14:18:34.297967	15	3
+38	18	2-7-1	2013-07-05 15:16:42.462378	16	3
+40	18	2-7-7	2013-07-05 15:18:12.666601	16	3
+39	19	2-7-4	2013-07-05 15:17:29.799642	16	3
+41	20	2-7-10	2013-07-05 15:19:11.855038	17	3
+42	20	2-7-13	2013-07-05 15:20:00.103931	17	3
+43	20	2-7-16	2013-07-05 15:21:02.57153	17	3
+44	21	2-7-19	2013-07-05 15:21:59.648496	18	3
+45	22	3-8-1	2013-07-05 15:31:46.327095	19	4
+46	22	3-8-4	2013-07-05 15:32:29.146505	20	4
+47	22	3-8-7	2013-07-05 15:32:57.828194	21	4
+48	23	3-8-10	2013-07-05 15:33:39.985293	21	4
+49	24	3-9-1	2013-07-05 15:37:59.932601	\N	4
+50	25	3-9-3	2013-07-05 15:38:19.296975	\N	4
+51	24	3-9-7	2013-07-05 15:39:14.923822	\N	4
+52	25	3-9-10	2013-07-05 15:40:10.917323	\N	4
 \.
 
 
@@ -781,7 +788,7 @@ COPY item (id, tipo, etiqueta, "fechaCreacion", linea_id, usuario_creador_id) FR
 -- Name: item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('item_id_seq', 51, true);
+SELECT pg_catalog.setval('item_id_seq', 52, true);
 
 
 --
@@ -789,9 +796,19 @@ SELECT pg_catalog.setval('item_id_seq', 51, true);
 --
 
 COPY item_peticion (peticion_id, item_id, actual) FROM stdin;
-1	74	t
-1	96	t
-1	85	t
+1	25	f
+\.
+
+
+--
+-- Data for Name: lb_ver; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY lb_ver (lb_id, ver_id) FROM stdin;
+3	10
+3	13
+3	16
+3	19
 \.
 
 
@@ -800,22 +817,26 @@ COPY item_peticion (peticion_id, item_id, actual) FROM stdin;
 --
 
 COPY lineabase (id, creador_id, "fechaCreacion", numero, comentario, fase_id, estado) FROM stdin;
-1	1	2013-06-20 17:53:47.843473	1	Mejoras sobre las arquitecturas anteriores	1	Cerrada
-2	1	2013-06-20 17:55:16.764845	2	Requisitos para el diseño completos	1	Cerrada
-3	1	2013-06-20 18:12:26.040068	1	Extensiones para las versiones High Performance listas	2	Cerrada
-4	1	2013-06-20 18:13:03.043264	2	Listo para Manufacturar	2	Cerrada
-5	1	2013-06-20 18:35:42.099525	1	Versiones Especiales	3	Cerrada
-6	1	2013-06-20 18:36:56.642727	2	Edición Regular Lista	3	Cerrada
-7	3	2013-06-20 22:19:28.929864	1	LB1 Círculos	5	Cerrada
-8	2	2013-06-20 22:20:17.896598	2	LB2 Triángulos	5	Cerrada
-9	2	2013-06-20 22:21:05.294064	3	LB3 Cuadrados y un Círculo	5	Cerrada
-10	2	2013-06-20 22:21:43.142788	4	LB5 Linea recta	5	Cerrada
-11	3	2013-06-21 18:07:48.903639	1	Ya estudió Cálculo	8	Cerrada
-12	3	2013-06-21 18:08:27.629569	2	Ya estudió Física	8	Cerrada
-13	3	2013-06-21 18:08:45.542622	3	Ya sabe integrar	8	Cerrada
-14	3	2013-06-21 18:16:03.666131	1	Pasó Cálculo	9	Cerrada
-15	3	2013-06-21 18:16:37.264212	2	Firma en Física II	9	Cerrada
-16	1	2013-06-20 18:18:40.369097	3	Tecnología Mobile lista	2	Cerrada
+2	2	2013-07-05 10:04:09.422009	1	Experiencias anteriores, aplicadas en la nueva arquitectura	1	Cerrada
+3	2	2013-07-05 10:05:36.966278	2	Requerimientos completos	1	Quebrada
+4	2	2013-07-05 12:22:26.75339	3	Requerimientos revisados y completos	1	Cerrada
+5	2	2013-07-05 13:15:33.726857	1	Extensiones Listas	2	Cerrada
+6	2	2013-07-05 13:15:49.916433	2	Prototipos y documentacion lista	2	Cerrada
+7	2	2013-07-05 13:26:09.768802	1	Versiones Especiales Ready For Mass production	3	Cerrada
+8	2	2013-07-05 13:26:40.106739	2	Versiones mainstream y documentos	3	Cerrada
+9	3	2013-07-05 14:06:39.735136	1	Circulos listos	5	Cerrada
+10	3	2013-07-05 14:06:59.006015	2	Triangulos listos	5	Cerrada
+11	3	2013-07-05 14:07:22.798512	3	Cuadrados listos (circulo incluido)	5	Cerrada
+12	3	2013-07-05 14:08:01.25102	4	Linea Lista	5	Cerrada
+13	3	2013-07-05 14:19:14.38115	1	Rectangulo y Pentagono	6	Cerrada
+14	3	2013-07-05 14:20:21.572329	2	Ovalo	6	Cerrada
+15	3	2013-07-05 14:20:34.20645	3	Crux	6	Cerrada
+16	3	2013-07-05 15:23:15.744411	1	Geometria Completa	7	Cerrada
+17	3	2013-07-05 15:23:45.631684	2	Amorfos completos	7	Cerrada
+18	3	2013-07-05 15:24:07.459255	3	Masterpiece	7	Cerrada
+19	4	2013-07-05 15:34:51.830196	1	Ya estudio calculo I	8	Cerrada
+20	4	2013-07-05 15:35:08.164854	2	Ya sabe Integrar	8	Cerrada
+21	4	2013-07-05 15:35:35.042032	3	Ya estudio y termino su trabajo practico para fisica II	8	Cerrada
 \.
 
 
@@ -823,7 +844,7 @@ COPY lineabase (id, creador_id, "fechaCreacion", numero, comentario, fase_id, es
 -- Name: lineabase_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('lineabase_id_seq', 16, true);
+SELECT pg_catalog.setval('lineabase_id_seq', 21, true);
 
 
 --
@@ -831,12 +852,12 @@ SELECT pg_catalog.setval('lineabase_id_seq', 16, true);
 --
 
 COPY miembro (proyecto_id, user_id) FROM stdin;
-1	1
 1	2
 1	3
+1	4
 2	3
-2	1
-2	2
+3	4
+3	2
 3	3
 \.
 
@@ -846,7 +867,7 @@ COPY miembro (proyecto_id, user_id) FROM stdin;
 --
 
 COPY peticion (id, numero, proyecto_id, comentario, estado, usuario_id, "cantVotos", "cantItems", "costoT", "dificultadT", "fechaCreacion", "fechaEnvio", acciones) FROM stdin;
-1	1	2	valores desactualizados	EnVotacion	1	2	3	72750	86	2013-06-20 22:35:03.267763	2013-06-20 22:35:13.013197	1
+1	1	1	Cuarzo depende de minerales	Terminada	2	3	1	250000	13	2013-07-05 12:20:10.724179	2013-07-05 12:20:21.137821	100
 \.
 
 
@@ -862,9 +883,9 @@ SELECT pg_catalog.setval('peticion_id_seq', 1, true);
 --
 
 COPY proyecto (id, nombre, "cantFase", "fechaInicio", "fechaFin", "fechaUltMod", delider, estado) FROM stdin;
-1	BroadWell	4	2013-06-01 00:00:00	2014-06-01 00:00:00	\N	1	Iniciado
-2	Geometría	3	2013-06-01 00:00:00	2013-09-01 00:00:00	\N	3	Iniciado
-3	Semestre	2	2013-06-21 17:51:49.541762	2013-07-01 00:00:00	\N	3	Iniciado
+2	Geometria	3	2013-06-01 00:00:00	2013-09-01 00:00:00	2013-07-05 15:24:19.529124	3	Iniciado
+1	BroadWell	4	2013-06-01 00:00:00	2014-06-01 00:00:00	2013-07-05 13:36:26.650753	2	Iniciado
+3	Semestre	2	2013-07-01 00:00:00	2013-08-01 00:00:00	2013-07-05 15:40:41.976195	4	Iniciado
 \.
 
 
@@ -880,108 +901,111 @@ SELECT pg_catalog.setval('proyecto_id_seq', 3, true);
 --
 
 COPY relacion (id, ante_id, post_id, tipo) FROM stdin;
-1	20	5	P-H
-2	8	18	P-H
-3	16	18	P-H
-4	10	16	P-H
-5	21	5	P-H
-6	20	22	P-H
-7	21	22	P-H
-8	23	18	P-H
-9	24	16	P-H
-10	25	16	P-H
-11	26	18	P-H
-12	10	26	P-H
-13	24	26	P-H
-14	25	26	P-H
-15	8	27	P-H
-16	16	27	P-H
-17	23	27	P-H
-18	26	27	P-H
-19	22	29	A-S
-20	22	30	A-S
-21	22	33	A-S
-22	22	34	A-S
-23	27	36	A-S
-24	27	37	A-S
-25	34	39	P-H
-26	37	39	P-H
-27	34	40	P-H
-28	37	40	P-H
-29	34	42	P-H
-30	40	44	P-H
-31	40	45	P-H
-32	30	47	A-S
-33	30	48	A-S
-34	42	50	A-S
-35	51	50	A-S
-36	34	51	P-H
-37	42	52	A-S
-38	51	52	A-S
-39	45	54	A-S
-40	45	55	A-S
-41	45	57	A-S
-42	57	58	P-H
-43	59	58	P-H
-44	45	59	A-S
-45	57	60	P-H
-46	59	60	P-H
-47	48	62	A-S
-48	48	64	A-S
-49	52	64	A-S
-50	55	66	A-S
-51	59	68	A-S
-52	48	69	A-S
-53	52	69	A-S
-54	48	70	A-S
-55	55	71	A-S
-56	74	76	P-H
-57	74	77	P-H
-58	80	84	P-H
-59	83	84	P-H
-60	80	85	P-H
-61	83	85	P-H
-62	87	89	P-H
-63	90	89	P-H
-64	87	91	P-H
-65	90	91	P-H
-66	96	93	P-H
-67	91	93	P-H
-68	77	100	A-S
-69	77	101	A-S
-70	101	103	P-H
-71	101	104	P-H
-72	104	106	P-H
-73	104	107	P-H
-74	85	107	A-S
-75	104	110	P-H
-76	85	110	A-S
-77	96	109	A-S
-78	96	111	A-S
-79	98	113	A-S
-80	96	114	P-H
-81	91	114	P-H
-82	115	113	A-S
-83	98	116	A-S
-84	115	116	A-S
-85	110	118	A-S
-86	118	120	P-H
-87	118	122	P-H
-88	111	124	A-S
-89	124	126	P-H
-90	124	128	P-H
-91	116	126	A-S
-92	136	138	P-H
-93	136	139	P-H
-94	133	144	A-S
-95	133	145	A-S
-96	133	146	A-S
-97	139	148	A-S
-98	139	149	A-S
-99	149	151	P-H
-100	142	151	A-S
-101	149	152	P-H
-102	142	152	A-S
+1	3	4	P-H
+2	5	4	P-H
+3	3	6	P-H
+4	5	6	P-H
+5	16	18	P-H
+6	10	18	P-H
+7	16	19	P-H
+8	10	19	P-H
+9	23	18	P-H
+10	23	19	P-H
+11	25	18	P-H
+12	25	19	P-H
+13	16	26	P-H
+14	10	26	P-H
+15	23	26	P-H
+16	25	26	P-H
+17	24	25	P-H
+18	6	28	A-S
+19	6	29	A-S
+20	6	31	A-S
+21	6	32	A-S
+22	26	34	A-S
+23	26	35	A-S
+24	32	37	P-H
+25	32	38	P-H
+26	32	40	P-H
+27	35	40	P-H
+28	32	41	P-H
+29	35	41	P-H
+30	41	42	P-H
+31	41	43	P-H
+32	41	44	P-H
+33	29	46	A-S
+34	29	47	A-S
+35	38	49	A-S
+36	38	50	A-S
+37	44	52	A-S
+38	44	53	A-S
+39	44	55	A-S
+40	44	56	A-S
+41	56	57	P-H
+42	56	58	P-H
+43	56	59	P-H
+44	47	61	A-S
+45	47	62	A-S
+46	47	64	A-S
+47	50	64	A-S
+48	47	65	A-S
+49	50	65	A-S
+50	47	66	A-S
+51	50	66	A-S
+52	56	69	A-S
+53	56	70	A-S
+54	53	72	A-S
+55	53	73	A-S
+56	76	78	P-H
+57	76	79	P-H
+58	82	87	P-H
+59	85	87	P-H
+60	82	88	P-H
+61	85	88	P-H
+62	91	95	P-H
+63	91	97	P-H
+64	94	98	P-H
+65	97	98	P-H
+66	94	100	P-H
+67	97	100	P-H
+68	94	101	P-H
+69	97	101	P-H
+70	79	106	A-S
+71	79	107	A-S
+72	107	109	P-H
+73	107	110	P-H
+74	110	112	P-H
+75	88	112	A-S
+76	110	113	P-H
+77	88	113	A-S
+78	94	115	A-S
+79	94	116	A-S
+80	104	118	A-S
+81	104	119	A-S
+82	113	121	A-S
+83	113	122	A-S
+84	122	124	P-H
+85	122	125	P-H
+86	122	127	P-H
+87	122	128	P-H
+88	116	130	A-S
+89	116	131	A-S
+90	131	133	P-H
+91	131	134	P-H
+92	131	136	P-H
+93	131	137	P-H
+94	119	139	A-S
+95	119	140	A-S
+96	149	151	P-H
+97	149	152	P-H
+98	143	157	A-S
+99	143	158	A-S
+100	152	160	A-S
+101	152	161	A-S
+102	161	163	P-H
+103	146	163	A-S
+104	161	164	P-H
+105	146	164	A-S
 \.
 
 
@@ -989,7 +1013,7 @@ COPY relacion (id, ante_id, post_id, tipo) FROM stdin;
 -- Name: relacion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('relacion_id_seq', 102, true);
+SELECT pg_catalog.setval('relacion_id_seq', 105, true);
 
 
 --
@@ -997,21 +1021,21 @@ SELECT pg_catalog.setval('relacion_id_seq', 102, true);
 --
 
 COPY rol (id, fase_id, nombre, "codigoTipo", "codigoItem", "codigoLB") FROM stdin;
-1	1	Jefe de Ingeniería	111	1000	1
+1	1	Jefe de Ingenieria	111	1000	1
 2	1	Analista	0	11110111	0
-3	2	Arquitecto HW	0	11110111	0
-4	2	Jefe de Ingeniería	111	1000	1
-5	3	Ingeniero	0	11110111	0
-6	3	Jefe de Ingeniería	111	1000	1
-7	4	Jefe de Ingeniería	111	11111111	1
-8	5	Dibujante	0	11110111	0
-9	5	Artista	111	1000	1
-10	6	Diseñador	0	11110111	0
-11	6	Artesano	111	1000	1
-12	7	Escultor	0	11110111	0
-13	7	Diseñador	111	1000	1
-14	8	Estudiante	111	11111111	1
-15	9	Estudiante	111	11111111	1
+3	2	Jefe de Ingenieria	11	1000	1
+4	2	Arquitecto	0	11110111	0
+5	3	Jefe de Ingenieria	111	1000	1
+6	3	Ingeniero	0	11110111	0
+7	4	Jefe de Ingenieria	111	11111111	1
+8	5	Aprobador	111	1000	1
+9	5	Dibujante	0	11110111	0
+10	6	Dibujante	0	11110111	0
+11	6	Aprobador	111	1000	1
+12	7	Dibujante	0	11110111	0
+13	7	Aprobador	111	1000	1
+14	8	estudiante	111	11111111	1
+15	9	estudiante	111	11111111	1
 \.
 
 
@@ -1027,31 +1051,31 @@ SELECT pg_catalog.setval('rol_id_seq', 15, true);
 --
 
 COPY tipoitem (id, nombre, comentario, defase, "fechaCreacion", "fechaModificacion", usuario_creador_id, usuario_modificador_id) FROM stdin;
-1	Análisis	Análisis de recursos y requisitos para la fabricación de microprocesadores	1	2013-06-20 17:27:30.755838	2013-06-20 17:27:30.755838	1	1
-2	Requisitos	Requisitos a cumplir para el desarrollo de microprocesadores	1	2013-06-20 17:35:40.173451	2013-06-20 17:35:40.173451	1	1
-3	Diseño Lógico	Diseño logico del ISA y la microarquitectura	2	2013-06-20 17:58:28.37556	2013-06-20 17:58:28.37556	1	1
-4	Diseño Físico	Diseño del hardware del microprocesador	2	2013-06-20 17:59:59.708495	2013-06-20 17:59:59.708495	1	1
-5	Microprocesador	Una obra maestra de la ingeniería	3	2013-06-20 18:16:38.245558	2013-06-20 18:16:38.245558	1	1
-6	Documentación	Documentación de la pieza desarrollada	3	2013-06-20 18:18:00.588953	2013-06-20 18:18:00.588953	1	1
-7	Prueba de Hardware	Pruebas sobre el hardware del componente	4	2013-06-20 18:40:29.415426	2013-06-20 18:40:29.415426	1	1
-8	Homologación	Cumple con las normas y estándares propuestos	4	2013-06-20 18:42:46.825432	2013-06-20 18:42:46.825432	1	1
-9	Rendimiento	Pruebas de rendimiento del nuevo microprocesador	4	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	1	1
-10	Círculo	Conjunto de puntos equidistantes de un punto (centro)	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-11	Triángulo	Polígono cerrado de tres lados	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-12	Cuadrado	Polígono cerrado de cuatro lados iguales	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-13	Linea	Conjunto infinito de puntos que une dos puntos cualesquiera	5	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-14	Rectángulo	Un cuadrilatero con dos medias a y b	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-15	Pentágono	Poligono regular de cinco lados	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-16	Elipse	conjunto de puntos cuya suma de la distancia a dos puntos es constante	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-17	Cruz	Líneas que se cruzan	6	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-18	Hexágono	Polígono cerrado de seis lados	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-19	Octógono	Polígono cerrado de ocho lados	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-20	Amorfo	Figura Amorfa	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-21	Estrella	Estrella hecha con trazos	7	2013-06-20 18:43:39.53496	2013-06-20 18:43:39.53496	2	2
-23	Libro	Un viejo volumen de textos arcanos	8	2013-06-21 17:58:50.527765	2013-06-21 17:58:50.527765	3	3
-24	Cuaderno	Notas fugaces de un estudiante poco atento	8	2013-06-21 18:00:26.990259	2013-06-21 18:00:26.990259	3	3
-25	TP	Trabajo Práctico	9	2013-06-21 18:01:41.752801	2013-06-21 18:01:41.752801	3	3
-26	Examen	Prueba final en un arte o disciplina	9	2013-06-21 18:03:24.84732	2013-06-21 18:03:24.84732	3	3
+1	Analisis	Analisis de los requisitos y experiencias en micropocesadores	1	2013-07-04 21:56:50.609927	2013-07-04 21:56:50.609927	2	2
+2	Requisito	Requisitos previos para iniciar el proceso	1	2013-07-04 21:58:18.16285	2013-07-04 21:58:18.16285	2	2
+3	Dis. Logico	Estructura logica de la microarquitectura	2	2013-07-05 12:54:55.150259	2013-07-05 12:54:55.150259	2	2
+4	Dis. Fisico	Estructura hardware de la microarquitectura	2	2013-07-05 12:56:10.325671	2013-07-05 12:56:10.325671	2	2
+5	Microprocesador	Un nuevo microprocesador fabricado	3	2013-07-05 13:18:11.352978	2013-07-05 13:18:11.352978	2	2
+6	Documentacion	Documentos que describen los nuevos microprocesadores	3	2013-07-05 13:19:29.636127	2013-07-05 13:19:29.636127	2	2
+7	Homologacion	estandarizacion de documentos y metodos	4	2013-07-05 13:28:30.199366	2013-07-05 13:28:30.199366	2	2
+8	Prueba Hardware	Prueba sobre la circuiteria del nuevo microprocesador	4	2013-07-05 13:29:08.621747	2013-07-05 13:29:08.621747	2	2
+9	Rendimiento	Pruebas de rendimiento y limites sobre los microprocesadores	4	2013-07-05 13:29:27.621682	2013-07-05 13:29:27.621682	2	2
+10	Circulo	Conjunto de puntos equidistantes de un punto llamado centro	5	2013-07-05 13:43:52.99449	2013-07-05 13:43:52.99449	3	3
+11	Triangulo	Poligono convexo de tres lados	5	2013-07-05 13:44:33.616168	2013-07-05 13:44:33.616168	3	3
+12	Cuadrado	Poligono convexo de cuatro lados iguales	5	2013-07-05 13:46:12.39744	2013-07-05 13:46:12.39744	3	3
+13	Linea	Conjunto infinito de puntos que unen dos punto dados	5	2013-07-05 13:47:10.101196	2013-07-05 13:47:10.101196	3	3
+14	Rectangulo	Cuadrilatero con angulos rectos	6	2013-07-05 14:09:13.678211	2013-07-05 14:09:13.678211	3	3
+15	Pentagono	Poligono cerrado de cinco lados iguales	6	2013-07-05 14:10:14.894773	2013-07-05 14:10:14.894773	3	3
+16	Elipse	Conjunto de puntos cuya distancia a dos puntos dados es constante	6	2013-07-05 14:11:03.642696	2013-07-05 14:11:03.642696	3	3
+17	Cruz	Conjunto de dos lineas que se intersectan en un punto	6	2013-07-05 14:11:59.231448	2013-07-05 14:11:59.231448	3	3
+18	Hexagono	Poligono cerrado de seis lados iguales	7	2013-07-05 14:21:22.089815	2013-07-05 14:21:22.089815	3	3
+19	Octogono	Poligono cerrado de ocho lados iguales	7	2013-07-05 14:28:05.574817	2013-07-05 14:28:05.574817	3	3
+20	Amorfo	Grafico o estructura amorfa	7	2013-07-05 14:28:44.279768	2013-07-05 14:28:44.279768	3	3
+21	Estrella	Trazos con forma de estrella	7	2013-07-05 14:29:32.254028	2013-07-05 14:29:32.254028	3	3
+22	Libro	Texto escrito por conocidos autores sobre un tema particular	8	2013-07-05 15:29:07.533558	2013-07-05 15:29:07.533558	4	4
+23	Cuaderno	Apuntes de un estudiante	8	2013-07-05 15:29:49.566461	2013-07-05 15:29:49.566461	4	4
+24	TP	Trabajo practico	9	2013-07-05 15:36:46.275497	2013-07-05 15:36:46.275497	4	4
+25	Examen	Prueba de conocimientos sobre una manteria	9	2013-07-05 15:37:19.327579	2013-07-05 15:37:19.327579	4	4
 \.
 
 
@@ -1059,7 +1083,7 @@ COPY tipoitem (id, nombre, comentario, defase, "fechaCreacion", "fechaModificaci
 -- Name: tipoitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('tipoitem_id_seq', 26, true);
+SELECT pg_catalog.setval('tipoitem_id_seq', 25, true);
 
 
 --
@@ -1067,34 +1091,36 @@ SELECT pg_catalog.setval('tipoitem_id_seq', 26, true);
 --
 
 COPY user_rol (usuario_id, rol_id) FROM stdin;
-1	1
+2	1
 3	1
-1	2
 2	2
-1	3
+4	2
 2	3
-1	4
-3	4
-1	5
+3	3
+2	4
+4	4
 2	5
-3	6
-1	6
-1	7
+3	5
+4	6
+2	6
 2	7
-3	7
-1	8
 3	8
+2	8
 3	9
-2	9
-1	10
+5	9
+5	10
 3	10
 3	11
 2	11
-3	13
-2	13
-1	12
 3	12
+5	12
+2	13
+3	13
+2	14
 3	14
+4	14
+2	15
+4	15
 3	15
 \.
 
@@ -1105,9 +1131,9 @@ COPY user_rol (usuario_id, rol_id) FROM stdin;
 
 COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 1	Administrador	admin	7c4a8d09ca3762af61e59520943dc26494f8941b	t
-2	Martin Poletti	martin	54669547a225ff20cba8b75a4adca540eef25858	f
-3	Natalia Valdez	natalia	2298625f2ba17912b286ad9afd8f089e460241b9	t
-4	Dan Tor	dan	7c4a8d09ca3762af61e59520943dc26494f8941b	f
+2	Natalia Valdez	natalia	2298625f2ba17912b286ad9afd8f089e460241b9	t
+3	Martin Poletti	martin	54669547a225ff20cba8b75a4adca540eef25858	f
+4	Dan Thor	dan	7c4a8d09ca3762af61e59520943dc26494f8941b	t
 5	Anna Dyst	anna	7c4a8d09ca3762af61e59520943dc26494f8941b	f
 6	Ryunosuke Asakura	ryu	7c4a8d09ca3762af61e59520943dc26494f8941b	f
 \.
@@ -1117,7 +1143,7 @@ COPY usuario (id, nombre, nombredeusuario, clave, "isAdmin") FROM stdin;
 -- Name: usuario_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('usuario_id_seq', 7, true);
+SELECT pg_catalog.setval('usuario_id_seq', 6, true);
 
 
 --
@@ -1125,150 +1151,162 @@ SELECT pg_catalog.setval('usuario_id_seq', 7, true);
 --
 
 COPY valorbool (atributo_id, item_id, valor) FROM stdin;
-3	1	f
-3	2	t
-3	3	t
-3	4	f
-3	5	t
-3	6	f
-3	7	f
-3	8	t
-6	9	f
-6	10	f
+2	1	f
+2	2	f
+2	3	t
+2	4	t
+2	5	t
+2	6	t
+2	7	f
+2	8	f
+2	9	f
+2	10	f
 6	11	f
 6	12	f
 6	13	f
 6	14	f
 6	15	f
 6	16	f
-6	17	t
+6	17	f
 6	18	t
-3	19	f
-3	20	t
-3	21	t
-3	22	t
-3	23	t
+6	19	t
+2	20	f
+2	21	t
+2	22	t
+2	23	f
 6	24	f
 6	25	f
-6	26	f
-6	27	t
+6	26	t
+7	27	f
+10	27	f
 7	28	f
-10	28	f
-7	29	t
-10	29	f
-7	30	t
+10	28	t
+7	29	f
+10	29	t
+7	30	f
 10	30	f
-7	31	f
-10	31	f
+7	31	t
+10	31	t
 7	32	t
 10	32	t
-7	33	t
-10	33	t
+7	33	f
+10	33	f
 7	34	t
-10	34	t
-7	35	f
+10	34	f
+7	35	t
 10	35	f
-7	36	t
-10	36	f
-7	37	t
-10	37	f
-14	38	f
-14	39	t
-14	40	t
-14	41	f
-14	42	t
+16	36	f
+16	37	t
+16	38	t
+16	39	f
+16	40	f
+16	41	f
+7	42	f
+10	42	f
 7	43	f
-10	43	f
+10	43	t
 7	44	f
-10	44	f
-7	45	f
-10	45	f
-17	46	f
-18	46	f
-17	47	f
-18	47	t
-17	48	f
-18	48	t
-17	49	f
-18	49	f
-17	50	t
-18	50	f
-14	51	t
-17	52	t
-18	52	f
-17	53	f
-18	53	f
-17	54	f
-18	54	f
-17	55	f
-18	55	f
-19	56	f
-19	57	f
-19	58	f
-19	59	f
-19	60	f
-28	61	f
-28	62	t
-23	63	f
-23	64	t
-28	65	f
-28	66	t
-25	67	f
-25	68	t
-23	69	t
-28	70	t
-28	71	t
+10	44	t
+19	45	f
+20	45	f
+19	46	f
+20	46	t
+19	47	f
+20	47	t
+19	48	f
+20	48	f
+19	49	t
+20	49	t
+19	50	t
+20	50	t
+19	51	f
+20	51	f
+19	52	f
+20	52	f
+19	53	f
+20	53	f
+21	54	f
+21	55	f
+21	56	f
+21	57	f
+21	58	t
+21	59	t
+30	60	f
+30	61	t
+30	62	t
+27	63	f
+27	64	t
+27	65	t
+27	66	t
+24	67	f
+24	68	f
+24	69	t
+24	70	t
+30	71	f
 30	72	f
-30	73	t
-30	74	t
-30	75	f
-30	76	f
-30	77	f
-36	78	f
-36	79	f
+30	73	f
+32	74	f
+32	75	t
+32	76	t
+32	77	f
+32	78	f
+32	79	f
 36	80	f
 36	81	f
 36	82	f
 36	83	f
 36	84	f
 36	85	f
-30	94	f
-30	95	t
-30	96	t
-38	97	f
-38	98	f
-53	112	f
-53	113	t
-38	115	f
-53	116	t
-54	117	f
-54	118	t
-54	121	f
-54	122	f
-62	123	f
-62	124	f
-62	125	f
-62	126	f
-62	127	f
-62	128	t
-64	129	f
-64	130	t
-70	137	f
-70	138	f
-70	139	f
-78	143	f
-78	144	t
-78	145	t
-78	146	t
-72	147	f
-75	147	f
-72	148	t
-75	148	t
-72	149	t
-75	149	t
-78	150	f
-78	151	t
-78	152	t
+36	86	f
+36	87	t
+36	88	t
+32	92	f
+32	93	t
+32	94	t
+40	102	f
+40	103	f
+40	104	f
+52	117	f
+52	118	t
+52	119	t
+53	120	f
+53	121	t
+53	122	t
+53	126	f
+53	127	f
+53	128	f
+61	129	f
+61	130	f
+61	131	f
+61	132	f
+61	133	f
+61	134	f
+61	135	f
+61	136	t
+61	137	t
+63	138	f
+63	139	t
+63	140	t
+69	150	f
+69	151	f
+69	152	f
+70	153	f
+71	153	f
+70	154	f
+71	154	f
+73	155	f
+73	156	f
+73	157	t
+73	158	t
+70	159	f
+71	159	f
+70	160	t
+71	160	f
+70	161	t
+71	161	f
+73	162	f
+73	163	f
+73	164	f
 \.
 
 
@@ -1277,63 +1315,71 @@ COPY valorbool (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY valordate (atributo_id, item_id, valor) FROM stdin;
-1	1	\N
-1	2	2013-06-02 00:00:00
-1	3	\N
-1	4	\N
-1	5	2013-06-01 00:00:00
-1	6	\N
-1	7	2013-06-05 00:00:00
-1	8	2013-06-05 00:00:00
-1	19	\N
-1	20	2013-06-02 00:00:00
-1	21	\N
-1	22	\N
-1	23	\N
-11	28	\N
-11	29	2013-09-02 00:00:00
-11	30	\N
-11	31	\N
-11	32	2013-09-06 00:00:00
-11	33	2013-09-06 00:00:00
-11	34	\N
-11	35	\N
-11	36	2013-09-07 00:00:00
-11	37	\N
+3	1	\N
+3	2	\N
+3	3	2013-06-12 00:00:00
+3	4	2013-06-13 00:00:00
+3	5	\N
+3	6	\N
+3	7	\N
+3	8	2013-06-14 00:00:00
+3	9	2013-06-14 00:00:00
+3	10	\N
+3	20	\N
+3	21	2013-06-07 00:00:00
+3	22	\N
+3	23	\N
+8	27	\N
+8	28	2013-09-02 00:00:00
+8	29	\N
+8	30	\N
+8	31	2013-09-05 00:00:00
+8	32	\N
+8	33	\N
+8	34	2013-09-10 00:00:00
+8	35	\N
+12	36	\N
+12	37	2013-09-15 00:00:00
 12	38	\N
-12	39	2013-09-10 00:00:00
-12	40	\N
+12	39	\N
+12	40	2013-09-20 00:00:00
 12	41	\N
-12	42	2013-09-20 00:00:00
-11	43	\N
-11	44	2013-09-27 00:00:00
-11	45	\N
-12	51	\N
-44	99	\N
-44	100	2013-07-05 00:00:00
-44	101	\N
-44	102	\N
-44	103	2013-06-19 00:00:00
-44	104	\N
-46	105	\N
-46	106	2013-07-20 00:00:00
-46	107	\N
-46	110	\N
-57	117	\N
-57	118	2013-08-10 00:00:00
-57	121	\N
-57	122	2013-08-10 00:00:00
-61	123	\N
-61	124	2013-08-11 00:00:00
-61	125	\N
-61	126	2013-08-12 00:00:00
-61	127	\N
-61	128	2013-08-13 00:00:00
-66	129	\N
-66	130	2013-08-25 00:00:00
-71	137	\N
-71	138	2013-06-19 00:00:00
-71	139	\N
+8	42	\N
+8	43	2013-09-27 00:00:00
+8	44	\N
+18	45	\N
+18	46	2013-12-02 00:00:00
+18	47	\N
+18	48	\N
+18	49	2013-09-03 00:00:00
+18	50	\N
+18	51	\N
+18	52	2013-09-02 00:00:00
+18	53	\N
+46	111	\N
+46	112	2013-07-05 00:00:00
+46	113	\N
+56	120	\N
+56	121	2013-08-05 00:00:00
+56	122	\N
+56	126	\N
+56	127	2013-08-07 00:00:00
+56	128	\N
+60	129	\N
+60	130	2013-08-10 00:00:00
+60	131	\N
+60	132	\N
+60	133	2013-08-09 00:00:00
+60	134	\N
+60	135	\N
+60	136	2013-08-17 00:00:00
+60	137	\N
+65	138	\N
+65	139	2013-08-25 00:00:00
+65	140	\N
+68	150	\N
+68	151	2013-07-01 00:00:00
+68	152	\N
 \.
 
 
@@ -1349,7 +1395,7 @@ COPY valorfile (id, item_id, valor, nombre) FROM stdin;
 -- Name: valorfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('valorfile_id_seq', 1, false);
+SELECT pg_catalog.setval('valorfile_id_seq', 1, true);
 
 
 --
@@ -1357,137 +1403,125 @@ SELECT pg_catalog.setval('valorfile_id_seq', 1, false);
 --
 
 COPY valorint (atributo_id, item_id, valor) FROM stdin;
-4	9	0
-4	10	1
 4	11	0
-4	12	2
-4	13	0
-4	14	3
+4	12	1
+4	13	1
+4	14	0
 4	15	2
 4	16	2
-4	17	3
+4	17	0
 4	18	3
+4	19	3
 4	24	1
-4	25	1
-4	26	2
-4	27	3
-15	46	0
-15	47	1
-15	48	1
-15	49	0
-15	50	3
-15	52	3
-15	53	0
-15	54	1
-15	55	1
-26	61	0
-26	62	5
-21	63	0
-21	64	5
-26	65	0
-26	66	3
-21	69	5
-26	70	5
-26	71	3
-29	72	0
-29	73	1
-29	74	1
-29	75	0
-29	76	2
-29	77	2
-33	78	0
-34	78	0
-35	78	0
-33	79	5
-34	79	5
-35	79	2
-33	80	5
-34	80	5
-35	80	2
-33	81	0
-34	81	0
-35	81	0
+4	25	2
+4	26	3
+28	60	0
+28	61	5
+28	62	5
+25	63	0
+25	64	9
+25	65	9
+25	66	9
+28	71	0
+28	72	9
+28	73	9
+31	74	0
+31	75	3
+31	76	3
+31	77	0
+31	78	10
+31	79	10
+33	80	0
+34	80	0
+35	80	0
+33	81	5
+34	81	5
+35	81	3
 33	82	5
-34	82	4
+34	82	5
 35	82	3
-33	83	5
-34	83	4
-35	83	3
-33	84	0
-34	84	0
-35	84	0
-33	85	0
-34	85	0
-35	85	0
-31	86	0
-31	87	3
-31	88	0
-31	89	3
-31	90	3
-31	91	3
+33	83	0
+34	83	0
+35	83	0
+33	84	3
+34	84	4
+35	84	5
+33	85	3
+34	85	4
+35	85	5
+33	86	0
+34	86	0
+35	86	0
+33	87	3
+34	87	3
+35	87	3
+33	88	3
+34	88	3
+35	88	3
+37	89	0
+37	90	4
+37	91	0
 31	92	0
-31	93	4
-29	94	0
-29	95	3
-29	96	3
+31	93	6
+31	94	6
+37	95	0
+37	96	3
 37	97	0
-37	98	7
-40	99	0
-41	99	0
-40	100	2
-41	100	4
-40	101	2
-41	101	4
-40	102	0
-41	102	0
-40	103	5
-41	103	6
-40	104	5
-41	104	6
-45	105	0
-45	106	5
-45	107	5
-47	108	0
-48	108	0
-47	109	7
-48	109	5
-45	110	5
-47	111	7
-48	111	5
-50	112	0
-51	112	0
-52	112	0
-50	113	2
-51	113	4
-52	113	4
-31	114	4
-37	115	7
-50	116	2
-51	116	4
-52	116	4
-55	117	0
-55	118	4
-58	119	0
-58	120	4
-55	121	0
-55	122	7
-63	129	0
-63	130	5
-68	131	0
-68	132	2
-68	133	2
-68	134	0
-68	135	4
-68	136	4
-69	137	0
-69	138	20
-69	139	20
-68	140	0
-68	141	2
-68	142	2
-76	147	0
-76	148	95
-76	149	95
+37	98	0
+37	99	1
+37	100	1
+37	101	1
+39	102	0
+39	103	7
+39	104	7
+43	105	0
+44	105	0
+43	106	8
+44	106	9
+43	107	8
+44	107	9
+43	108	0
+44	108	0
+43	109	6
+44	109	4
+43	110	6
+44	110	4
+45	111	0
+45	112	5
+45	113	5
+47	114	0
+48	114	0
+47	115	5
+48	115	9
+47	116	5
+48	116	9
+50	117	0
+51	117	0
+50	118	4
+51	118	5
+50	119	4
+51	119	5
+54	120	0
+54	121	7
+54	122	7
+57	123	0
+57	124	8
+57	125	8
+54	126	0
+54	127	6
+54	128	6
+62	138	0
+62	139	5
+62	140	5
+66	141	0
+66	142	500
+66	143	500
+66	144	0
+66	145	300
+66	146	300
+66	147	0
+66	148	900
+66	149	900
 \.
 
 
@@ -1496,128 +1530,138 @@ COPY valorint (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY valorstr (atributo_id, item_id, valor) FROM stdin;
-2	1	
-2	2	Análisis de las instalaciones industriales
-2	3	Análisis de las instalaciones industriales
-2	4	
-2	5	Se proponen y analizan mejoras a las arquitecturas anteriores
-2	6	
-2	7	Análisis de la temperatura que generaría el procesador
-2	8	Análisis de la temperatura que generaría el procesador
-5	9	
-5	10	Análisis y busqueda de suelos ricos en minerales (cuarzo)
+1	1	
+1	2	
+1	3	Se toman experiencias pasadas en arquitecturas anteriores para la fabricacion de la nueva
+1	4	Se hacen mejoras a la nueva arquitectura en base a las arquitecturas anteriores y lo aprendido
+1	5	Se toman experiencias pasadas en arquitecturas anteriores para la fabricacion de la nueva
+1	6	Se hacen mejoras a la nueva arquitectura en base a las arquitecturas anteriores y lo aprendido
+1	7	
+1	8	Se hacen análisis sobre el impacto en temperatura de la nueva arquitectura
+1	9	Se hacen análisis sobre el impacto en temperatura de la nueva arquitectura
+1	10	Se hacen análisis sobre el impacto en temperatura de la nueva arquitectura
 5	11	
-5	12	Obtención de obleas de cuarzo
-5	13	
-5	14	Prueba térmica sobre las obleas de cuarzo
-5	15	Obtención de obleas de cuarzo
-5	16	Obtención de obleas de cuarzo
-5	17	Prueba térmica sobre las obleas de cuarzo
-5	18	Prueba térmica sobre las obleas de cuarzo
-2	19	
-2	20	Análisis de las arquitecturas anteriores de microprocesadores
-2	21	Análisis de las arquitecturas anteriores de microprocesadores
-2	22	Se proponen y analizan mejoras a las arquitecturas anteriores
-2	23	Análisis de la temperatura que generaría el procesador
-5	24	Análisis y busqueda de suelos ricos en minerales (cuarzo)
-5	25	Análisis y busqueda de suelos ricos en minerales (cuarzo)
-5	26	Obtención de obleas de cuarzo
-5	27	Prueba térmica sobre las obleas de cuarzo
-9	28	
-9	29	Extensiones agregadas a la arquitectura
-9	30	Extensiones agregadas a la arquitectura
-9	31	
-9	32	Esquemático que describe los circutios en el integrado
-9	33	Esquemático que describe los circutios en el integrado
-9	34	Esquemático que describe los circutios en el integrado
-9	35	
-9	36	Especificación de la tolerancia y los límites del nuevo hardware
-9	37	Especificación de la tolerancia y los límites del nuevo hardware
-13	38	
-13	39	BROADWELL
-13	40	BROADWELL
-13	41	
-13	42	MOBILE
-9	43	
-9	44	Documenta y especifica el ISA del microprocesador
-9	45	Documenta y especifica el ISA del microprocesador
-16	46	
-16	47	FULLWELL
-16	48	FULLWELL
-16	49	
-16	50	SOURCEWELL
-13	51	MOBILE
-16	52	SOURCEWELL
-16	53	
-16	54	BROADWELL
-16	55	BROADWELL
-20	56	
-20	57	Manual para implementadores y diseñadores de compiladores
-20	58	
-20	59	Manual para implementadores y diseñadores de compiladores
-20	60	
-27	61	
-27	62	Operaciones en punto flotante para el microprocesador
-22	63	
-22	64	Prueba de los límites térmicos del encapsulado
-27	65	
-27	66	Pruebas de operaciones enteras, producto matriz vector para el microprocesador
-24	67	
-24	68	Implementación del ISA para el compilador gcc
-22	69	Prueba de los límites térmicos del encapsulado
-27	70	Operaciones en punto flotante para el microprocesador
-27	71	Pruebas de operaciones enteras, producto matriz vector para el microprocesador
-32	86	
-32	87	Cuadrado Inicial
-32	88	
-32	89	Cuadrado número 2 
-32	90	Cuadrado Inicial
-32	91	Cuadrado número 2 
-32	92	
-32	93	El último cuadrado
-39	97	
-39	98	Una linea recta de
-43	99	
-43	100	rectángulo primal
-43	101	rectángulo primal
-43	102	
-43	103	Rectángulo dual
-43	104	Rectángulo dual
-49	108	
-49	109	Elipse Excéntrica
-49	111	Elipse Excéntrica
-32	114	El último cuadrado
-39	115	Una linea recta de
-56	117	
-56	118	Héxagono primal
-59	119	
-59	120	Octógono final
-56	121	
-56	122	Héxagono inestable
-60	123	
-60	124	Figura Amorfa de primer nivel
-60	125	
-60	126	Figura Amorfa giratoria
-60	127	
-60	128	Sólido amorfo de revolución
-65	129	
-65	130	Pentagrama punteado
-67	131	
-67	132	Piskunov
-67	133	Piskunov
-67	134	
-67	135	Sears
-67	136	Sears
-67	140	
-67	141	Piskunov
+5	12	Extraccion de minerales en busca de cuarzo
+5	13	Extraccion de minerales en busca de cuarzo
+5	14	
+5	15	Obtencion de obleas de cuarzo
+5	16	Obtencion de obleas de cuarzo
+5	17	
+5	18	Prueba de temperatura critica sobre las obleas
+5	19	Prueba de temperatura critica sobre las obleas
+1	20	
+1	21	Analisis de las instalaciones necesarias para la fabricacion de microprocesadores
+1	22	Analisis de las instalaciones necesarias para la fabricacion de microprocesadores
+1	23	Se hacen análisis sobre el impacto en temperatura de la nueva arquitectura
+5	24	Extraccion de minerales en busca de cuarzo
+5	25	Obtencion de obleas de cuarzo
+5	26	Prueba de temperatura critica sobre las obleas
+9	27	
+9	28	Extensiones implementadas a la nueva microarquitectura
+9	29	Extensiones implementadas a la nueva microarquitectura
+9	30	
+9	31	Esquematico fuente para el prototipo de microprocesador
+9	32	Esquematico fuente para el prototipo de microprocesador
+9	33	
+9	34	Pruebas de tolerancia y limites de temperatura sobre la oblea de cuarzo
+9	35	Pruebas de tolerancia y limites de temperatura sobre la oblea de cuarzo
+15	36	
+15	37	MOBILE
+15	38	MOBILE
+15	39	
+15	40	BROADWELL
+15	41	BROADWELL
+9	42	
+9	43	Descripcion de la nueva ISA
+9	44	Descripcion de la nueva ISA
+17	45	
+17	46	EXTREMEWELL
+17	47	EXTREMEWELL
+17	48	
+17	49	MOBILEWELL
+17	50	MOBILEWELL
+17	51	
+17	52	BROADWELL
+17	53	BROADWELL
+22	54	
+22	55	Manual para implementadores de compiladores
+22	56	Manual para implementadores de compiladores
+22	57	
+22	58	Fallas y Errores encontrados en procesos y documentos
+22	59	Fallas y Errores encontrados en procesos y documentos
+29	60	
+29	61	Pruebas en operaciones de Punto Flotante
+29	62	Pruebas en operaciones de Punto Flotante
+26	63	
+26	64	Limite termico del encapsulado
+26	65	Limite termico del encapsulado
+26	66	Limite termico del encapsulado
+23	67	
+23	68	
+23	69	Implementacion del ISA en el compilador GCC
+23	70	Implementacion del ISA en el compilador GCC
+29	71	
+29	72	Operaciones producto Matriz por vector para el microprocesador
+29	73	Operaciones producto Matriz por vector para el microprocesador
+38	89	
+38	90	Primer Cuadrado
+38	91	
+38	95	
+38	96	Segundo cuadrado
+38	97	
+38	98	
+38	99	Tercer Cuadrado
+38	100	Final Square
+38	101	Final Square
+41	102	
+41	103	Primera Linea
+41	104	Primera Linea
+42	105	
+42	106	Rectangulo UNO
+42	107	Rectangulo UNO
+42	108	
+42	109	Segundo Rectangulo
+42	110	Segundo Rectangulo
+49	114	
+49	115	Elipse horizontal
+49	116	Elipse horizontal
+55	120	
+55	121	Hexagono Estable
+55	122	Hexagono Estable
+58	123	
+58	124	Octogono Final
+58	125	Octogono Final
+55	126	
+55	127	Hexagono inestable 
+55	128	Hexagono inestable 
+59	129	
+59	130	Grafico Amorfo
+59	131	Grafico Amorfo
+59	132	
+59	133	Forma con puntas y estructura amorfa
+59	134	Forma con puntas y estructura amorfa
+59	135	
+59	136	Solido de revolucion
+59	137	Solido de revolucion
+64	138	
+64	139	Pentagrama punteado
+64	140	Pentagrama punteado
+67	141	
 67	142	Piskunov
-77	143	
-77	144	Cálculo I
-77	145	Cálculo I
-77	146	Cálculo I
-77	150	
-77	151	Física II
-77	152	Física II
+67	143	Piskunov
+67	144	
+67	145	Piskunov
+67	146	Piskunov
+67	147	
+67	148	Sears
+67	149	Sears
+72	155	
+72	156	
+72	157	Calculo II
+72	158	Calculo II
+72	162	
+72	163	Fisica II
+72	164	Fisica II
 \.
 
 
@@ -1626,158 +1670,170 @@ COPY valorstr (atributo_id, item_id, valor) FROM stdin;
 --
 
 COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModificacion", deitem, usuario_modificador_id) FROM stdin;
-1	0	Instalaciones	Activo	f	14000	12	2013-06-20 17:36:50.405986	1	1
-2	1	Instalaciones	Activo	f	14000	12	2013-06-20 17:37:15.228663	1	1
-3	2	Instalaciones	Eliminado	t	14000	12	2013-06-20 17:39:31.973182	1	1
-4	0	Mejoras	Activo	f	30000	10	2013-06-20 17:42:00.421074	2	1
-6	0	Temperatura	Activo	f	10000	13	2013-06-20 17:43:05.851946	3	1
-7	1	Temperatura	Activo	f	10000	13	2013-06-20 17:43:39.72127	3	1
-9	0	Minerales	Activo	f	500000	10	2013-06-20 17:44:29.81556	4	1
-11	0	Cuarzo	Activo	f	100000	15	2013-06-20 17:45:18.700759	5	1
-13	0	Prueba Térmica	Activo	f	100000	19	2013-06-20 17:46:43.969808	6	1
-12	1	Cuarzo	Activo	f	100000	15	2013-06-20 17:45:49.263322	5	1
-15	2	Cuarzo	Activo	f	100000	15	2013-06-20 17:47:18.478895	5	1
-14	1	Prueba Térmica	Activo	f	100000	19	2013-06-20 17:47:11.994942	6	1
-17	2	Prueba Térmica	Activo	f	100000	19	2013-06-20 17:47:34.32786	6	1
-19	0	Arq. Anteriores	Activo	f	13000	10	2013-06-20 17:49:01.904475	7	1
-20	1	Arq. Anteriores	Activo	f	13000	10	2013-06-20 17:49:26.246358	7	1
-5	1	Mejoras	Activo	f	30000	10	2013-06-20 17:42:27.009978	2	1
-8	2	Temperatura	Activo	f	10000	13	2013-06-20 17:43:51.444928	3	1
-10	1	Minerales	Activo	f	500000	10	2013-06-20 17:44:56.411065	4	1
-24	2	Minerales	Activo	f	500000	10	2013-06-20 17:52:45.901596	4	1
-16	3	Cuarzo	Activo	f	100000	15	2013-06-20 17:47:26.672209	5	1
-18	3	Prueba Térmica	Activo	f	100000	19	2013-06-20 17:48:08.890503	6	1
-21	2	Arq. Anteriores	Bloqueado	t	13000	10	2013-06-20 17:51:53.589317	7	1
-22	2	Mejoras	Bloqueado	t	30000	10	2013-06-20 17:52:04.318766	2	1
-23	3	Temperatura	Bloqueado	t	10000	13	2013-06-20 17:52:37.154051	3	1
-25	3	Minerales	Bloqueado	t	500000	10	2013-06-20 17:53:00.20785	4	1
-26	4	Cuarzo	Bloqueado	t	100000	15	2013-06-20 17:53:08.206306	5	1
-27	4	Prueba Térmica	Bloqueado	t	100000	19	2013-06-20 17:53:20.128584	6	1
-28	0	Extensiones	Activo	f	10000	3	2013-06-20 18:02:38.524235	8	1
-29	1	Extensiones	Activo	f	10000	3	2013-06-20 18:03:08.287948	8	1
-31	0	Esquemático	Activo	f	10000	5	2013-06-20 18:03:57.796369	9	1
-32	1	Esquemático	Activo	f	10000	5	2013-06-20 18:04:46.291644	9	1
-33	2	Esquemático	Activo	f	10000	5	2013-06-20 18:04:51.767846	9	1
-35	0	Tolerancia y Límites	Activo	f	50000	7	2013-06-20 18:06:23.476064	10	1
-36	1	Tolerancia y Límites	Activo	f	50000	7	2013-06-20 18:07:02.565662	10	1
-38	0	Prototipo	Activo	f	75000	9	2013-06-20 18:07:46.139315	11	1
-39	1	Prototipo	Activo	f	75000	9	2013-06-20 18:08:09.657044	11	1
-41	0	Empotrado	Activo	f	15000	3	2013-06-20 18:09:12.463724	12	1
-43	0	WhiteCard	Activo	f	20000	5	2013-06-20 18:10:19.991607	13	1
-44	1	WhiteCard	Activo	f	20000	5	2013-06-20 18:11:01.279992	13	1
-30	2	Extensiones	Bloqueado	t	10000	3	2013-06-20 18:03:31.314716	8	1
-34	3	Esquemático	Bloqueado	t	10000	5	2013-06-20 18:05:36.105505	9	1
-37	2	Tolerancia y Límites	Bloqueado	t	50000	7	2013-06-20 18:07:25.10511	10	1
-40	2	Prototipo	Bloqueado	t	75000	9	2013-06-20 18:08:42.240532	11	1
-45	2	WhiteCard	Bloqueado	t	20000	5	2013-06-20 18:11:42.333081	13	1
-46	0	Extreme	Activo	f	100000	3	2013-06-20 18:19:09.819748	14	1
-47	1	Extreme	Activo	f	100000	3	2013-06-20 18:19:31.218749	14	1
-49	0	Mobile	Activo	f	75000	7	2013-06-20 18:20:29.186812	15	1
-42	1	Empotrado	Activo	f	15000	3	2013-06-20 18:09:35.589538	12	1
-50	1	Mobile	Activo	f	75000	7	2013-06-20 18:20:48.385835	15	1
-53	0	Normal	Activo	f	50000	4	2013-06-20 18:31:01.484868	16	1
-54	1	Normal	Activo	f	50000	4	2013-06-20 18:31:14.675961	16	1
-56	0	Manua de Ref.	Activo	f	10000	3	2013-06-20 18:32:02.424953	17	1
-57	1	Manua de Ref.	Activo	f	10000	3	2013-06-20 18:32:22.115822	17	1
-58	0	Errata	Activo	f	5000	1	2013-06-20 18:33:06.692516	18	1
-48	2	Extreme	Bloqueado	t	100000	3	2013-06-20 18:20:04.777671	14	1
-52	2	Mobile	Bloqueado	t	75000	7	2013-06-20 18:30:25.72217	15	1
-55	2	Normal	Bloqueado	t	50000	4	2013-06-20 18:31:43.234811	16	1
-59	2	Manua de Ref.	Bloqueado	t	10000	3	2013-06-20 18:35:18.844707	17	1
-60	1	Errata	Bloqueado	t	5000	1	2013-06-20 18:35:26.666884	18	1
-61	0	Op. Punto flotante	Activo	f	10000	3	2013-06-20 18:46:36.13507	19	1
-63	0	Barrera Térmica	Activo	f	30000	4	2013-06-20 18:48:09.372839	20	1
-65	0	Op. Matriz Vector	Activo	f	10000	5	2013-06-20 18:50:12.237212	21	1
-67	0	Compilador	Activo	f	50000	7	2013-06-20 18:51:56.670504	22	1
-68	1	Compilador	Activo	t	50000	7	2013-06-20 18:52:57.455876	22	1
-64	1	Barrera Térmica	Activo	f	30000	4	2013-06-20 18:49:03.995228	20	1
-69	2	Barrera Térmica	Aprobado	t	30000	4	2013-06-20 18:53:24.476937	20	1
-62	1	Op. Punto flotante	Activo	f	10000	3	2013-06-20 18:46:59.324532	19	1
-70	2	Op. Punto flotante	Aprobado	t	10000	3	2013-06-20 18:53:39.873213	19	1
-66	1	Op. Matriz Vector	Activo	f	10000	5	2013-06-20 18:51:33.196187	21	1
-71	2	Op. Matriz Vector	Aprobado	t	10000	5	2013-06-20 18:53:49.131452	21	1
-72	0	C1	Activo	f	1000	1	2013-06-20 21:51:39.60636	23	3
-73	1	C1	Activo	f	1000	1	2013-06-20 21:51:49.284114	23	3
-75	0	C2	Activo	f	1000	2	2013-06-20 21:52:16.799291	24	3
-76	1	C2	Activo	f	1000	2	2013-06-20 21:52:22.816052	24	3
-78	0	T1	Activo	f	1500	3	2013-06-20 21:52:56.522616	25	3
-79	1	T1	Activo	f	1500	3	2013-06-20 21:53:09.907169	25	3
-81	0	T2	Activo	f	1650	4	2013-06-20 21:53:32.753009	26	3
-82	1	T2	Activo	f	1650	4	2013-06-20 21:53:43.090466	26	3
-84	0	T3	Activo	f	1500	5	2013-06-20 21:54:15.026001	27	3
-86	0	Q1	Activo	f	2000	2	2013-06-20 21:55:13.504395	28	3
-88	0	Q2	Activo	f	2000	2	2013-06-20 21:55:52.013532	29	3
-87	1	Q1	Activo	f	2000	2	2013-06-20 21:55:30.052163	28	3
-89	1	Q2	Activo	f	2000	2	2013-06-20 21:59:45.230088	29	3
-92	0	Q3	Activo	f	2000	2	2013-06-20 22:02:39.81833	30	3
-94	0	C3	Activo	f	750	3	2013-06-20 22:03:28.583306	31	3
-95	1	C3	Activo	f	750	3	2013-06-20 22:03:49.983897	31	3
-97	0	L1	Activo	f	250	1	2013-06-20 22:04:44.634957	32	3
-98	1	L1	Activo	f	250	1	2013-06-20 22:05:07.967524	32	3
-74	2	C1	Bloqueado	t	1000	1	2013-06-20 21:51:57.863883	23	3
-77	2	C2	Bloqueado	t	1000	2	2013-06-20 21:52:38.220282	24	3
-80	2	T1	Bloqueado	t	1500	3	2013-06-20 21:53:16.961116	25	3
-83	2	T2	Bloqueado	t	1650	4	2013-06-20 21:53:50.219905	26	3
-85	1	T3	Bloqueado	t	1500	5	2013-06-20 21:54:45.005402	27	3
-96	2	C3	Bloqueado	t	750	3	2013-06-20 22:03:58.948516	31	3
-90	2	Q1	Bloqueado	t	2000	2	2013-06-20 22:01:54.180685	28	3
-91	2	Q2	Bloqueado	t	2000	2	2013-06-20 22:02:04.420774	29	3
-99	0	R1	Activo	f	2500	4	2013-06-20 22:11:21.109807	33	3
-101	2	R1	Aprobado	t	2500	4	2013-06-20 22:12:31.503573	33	3
-102	0	R2	Activo	f	2500	4	2013-06-20 22:12:56.593863	34	3
-104	2	R2	Aprobado	t	2500	4	2013-06-20 22:13:36.686206	34	3
-105	0	P1	Activo	f	5000	7	2013-06-20 22:14:16.331761	35	3
-108	0	E1	Activo	f	2500	6	2013-06-20 22:15:04.641209	36	3
-107	2	P1	Revision	f	5000	7	2013-06-20 22:14:49.011936	35	3
-100	1	R1	Activo	f	2500	4	2013-06-20 22:11:45.906989	33	3
-103	1	R2	Activo	f	2500	4	2013-06-20 22:13:17.535024	34	3
-106	1	P1	Activo	f	5000	7	2013-06-20 22:14:32.668523	35	3
-110	3	P1	Aprobado	t	5000	7	2013-06-20 22:16:23.981573	35	3
-109	1	E1	Activo	f	2500	6	2013-06-20 22:15:28.678518	36	3
-111	2	E1	Aprobado	t	2500	6	2013-06-20 22:16:44.133291	36	3
-112	0	X1	Activo	f	1250	2	2013-06-20 22:17:07.388567	37	3
-93	1	Q3	Activo	f	2000	2	2013-06-20 22:02:56.441996	30	3
-113	1	X1	Activo	f	1250	2	2013-06-20 22:17:27.026093	37	3
-116	2	X1	Aprobado	t	1250	2	2013-06-20 22:19:15.721253	37	3
-114	2	Q3	Bloqueado	t	2000	2	2013-06-20 22:18:47.760786	30	3
-115	2	L1	Bloqueado	t	250	1	2013-06-20 22:18:57.850142	32	3
-117	0	H1	Activo	f	4500	6	2013-06-20 22:26:45.814953	38	1
-118	1	H1	Activo	t	4500	6	2013-06-20 22:27:15.120765	38	1
-119	0	O1	Activo	f	7000	9	2013-06-20 22:27:56.923618	39	1
-120	1	O1	Activo	t	7000	9	2013-06-20 22:28:16.880583	39	1
-121	0	H2	Activo	f	7500	9	2013-06-20 22:28:41.341282	40	1
-122	1	H2	Activo	t	7500	9	2013-06-20 22:29:06.503349	40	1
-123	0	A1	Activo	f	10000	9	2013-06-20 22:29:44.698716	41	1
-124	1	A1	Activo	t	10000	9	2013-06-20 22:30:08.013095	41	1
-125	0	A2	Activo	f	10000	9	2013-06-20 22:30:36.686046	42	1
-126	1	A2	Activo	t	10000	9	2013-06-20 22:30:56.160752	42	1
-127	0	A3	Activo	f	15000	10	2013-06-20 22:31:30.364325	43	1
-128	1	A3	Activo	t	15000	10	2013-06-20 22:31:51.617826	43	1
-129	0	S1	Activo	f	15000	10	2013-06-20 22:32:36.81941	44	1
-130	1	S1	Activo	t	15000	10	2013-06-20 22:33:10.038023	44	1
-131	0	Cálculo Infinitesima	Activo	f	35000	7	2013-06-21 18:04:16.09045	45	3
-132	1	Cálculo Infinitesima	Activo	f	35000	7	2013-06-21 18:04:28.262483	45	3
-134	0	Física	Activo	f	45000	5	2013-06-21 18:04:59.537703	46	3
-135	1	Física	Activo	f	45000	5	2013-06-21 18:05:09.06256	46	3
-137	0	Física II	Activo	f	2500	8	2013-06-21 18:05:43.828379	47	3
-138	1	Física II	Activo	f	2500	8	2013-06-21 18:05:57.332014	47	3
-140	0	Cálculo Integral	Activo	f	35000	9	2013-06-21 18:07:00.687042	48	3
-141	1	Cálculo Integral	Activo	f	35000	9	2013-06-21 18:07:12.382311	48	3
-133	2	Cálculo Infinitesima	Bloqueado	t	35000	7	2013-06-21 18:04:39.765972	45	3
-136	2	Física	Bloqueado	t	45000	5	2013-06-21 18:05:16.755639	46	3
-139	2	Física II	Bloqueado	t	2500	8	2013-06-21 18:06:18.225172	47	3
-142	2	Cálculo Integral	Bloqueado	t	35000	9	2013-06-21 18:07:21.016267	48	3
-143	0	Final 1	Activo	f	4500	9	2013-06-21 18:09:35.861741	49	3
-144	1	Final 1	Activo	f	4500	9	2013-06-21 18:09:44.827203	49	3
-145	2	Final 1	Aprobado	f	4500	9	2013-06-21 18:11:07.287767	49	3
-147	0	Electromagnetismo	Activo	f	2450	6	2013-06-21 18:12:19.527835	50	3
-148	1	Electromagnetismo	Activo	f	2450	6	2013-06-21 18:12:32.311323	50	3
-150	0	Recuperatorio	Activo	f	2450	9	2013-06-21 18:13:59.402721	51	3
-151	1	Recuperatorio	Activo	f	2450	9	2013-06-21 18:14:33.655884	51	3
-146	3	Final 1	Bloqueado	t	4500	9	2013-06-21 18:11:15.228308	49	3
-149	2	Electromagnetismo	Bloqueado	t	2450	6	2013-06-21 18:13:36.7113	50	3
-152	2	Recuperatorio	Bloqueado	t	2450	9	2013-06-21 18:15:01.235348	51	3
-51	2	Empotrado	Bloqueado	t	15000	3	2013-06-20 18:30:10.85877	12	1
+1	0	Arq. Anteriores	Activo	f	30000	4	2013-07-04 22:00:04.308328	1	2
+2	0	Mejoras	Activo	f	15000	5	2013-07-04 22:00:24.883391	2	2
+3	1	Arq. Anteriores	Activo	f	30000	4	2013-07-04 22:01:06.768276	1	2
+4	1	Mejoras	Activo	f	15000	5	2013-07-04 22:01:44.741746	2	2
+7	0	Temperatura	Activo	f	10000	3	2013-07-04 22:03:18.754222	3	2
+8	1	Temperatura	Activo	f	10000	3	2013-07-04 22:03:50.501876	3	2
+9	2	Temperatura	Activo	f	10000	3	2013-07-04 22:05:21.12339	3	2
+11	0	Minerales	Activo	f	500000	7	2013-07-04 22:05:47.856005	4	2
+12	1	Minerales	Activo	f	500000	7	2013-07-04 22:06:29.65898	4	2
+14	0	Cuarzo	Activo	f	150000	8	2013-07-05 09:59:17.016962	5	2
+15	1	Cuarzo	Activo	f	150000	8	2013-07-05 09:59:36.126006	5	2
+17	0	Prueba Termica	Activo	f	100000	5	2013-07-05 10:00:08.301692	6	2
+18	1	Prueba Termica	Activo	f	100000	5	2013-07-05 10:00:42.135695	6	2
+20	0	Instalaciones	Activo	f	14000	2	2013-07-05 10:02:22.618785	7	2
+21	1	Instalaciones	Activo	f	14000	2	2013-07-05 10:03:05.668734	7	2
+22	2	Instalaciones	Eliminado	t	14000	2	2013-07-05 10:03:15.748074	7	2
+5	2	Arq. Anteriores	Bloqueado	t	30000	4	2013-07-04 22:02:26.966118	1	2
+6	2	Mejoras	Bloqueado	t	15000	5	2013-07-04 22:02:34.69344	2	2
+29	2	Extensiones	Bloqueado	t	10000	7	2013-07-05 12:59:58.574674	8	2
+32	2	Esquematico	Bloqueado	t	10000	5	2013-07-05 13:09:03.268535	9	2
+35	2	Tolerancia y Limites	Bloqueado	t	50000	6	2013-07-05 13:10:11.520061	10	2
+10	3	Temperatura	Bloqueado	f	10000	3	2013-07-04 22:05:29.59474	3	2
+13	2	Minerales	Bloqueado	f	500000	7	2013-07-05 09:59:00.544779	4	2
+16	2	Cuarzo	Bloqueado	f	150000	8	2013-07-05 09:59:50.755375	5	2
+41	2	Prototipo	Bloqueado	t	75000	8	2013-07-05 13:12:31.988008	12	2
+19	2	Prueba Termica	Conflicto	f	100000	5	2013-07-05 10:01:29.227822	6	2
+38	2	Empotrado	Bloqueado	t	15000	9	2013-07-05 13:11:20.474018	11	2
+44	2	WhiteCard	Bloqueado	t	20000	4	2013-07-05 13:14:36.184077	13	2
+23	4	Temperatura	Bloqueado	t	10000	3	2013-07-05 12:20:53.510539	3	2
+24	3	Minerales	Bloqueado	t	500000	7	2013-07-05 12:20:53.695803	4	2
+25	3	Cuarzo	Bloqueado	t	150000	8	2013-07-05 12:20:53.863304	5	2
+26	3	Prueba Termica	Bloqueado	t	100000	5	2013-07-05 12:20:54.058462	6	2
+27	0	Extensiones	Activo	f	10000	7	2013-07-05 12:57:33.98838	8	2
+28	1	Extensiones	Activo	f	10000	7	2013-07-05 12:59:10.035942	8	2
+30	0	Esquematico	Activo	f	10000	5	2013-07-05 13:00:29.39333	9	2
+31	1	Esquematico	Activo	f	10000	5	2013-07-05 13:01:00.420765	9	2
+33	0	Tolerancia y Limites	Activo	f	50000	6	2013-07-05 13:09:21.794007	10	2
+34	1	Tolerancia y Limites	Activo	f	50000	6	2013-07-05 13:09:49.179329	10	2
+36	0	Empotrado	Activo	f	15000	9	2013-07-05 13:10:42.384573	11	2
+37	1	Empotrado	Activo	f	15000	9	2013-07-05 13:10:57.618555	11	2
+39	0	Prototipo	Activo	f	75000	8	2013-07-05 13:11:40.548171	12	2
+40	1	Prototipo	Activo	f	75000	8	2013-07-05 13:12:05.86476	12	2
+42	0	WhiteCard	Activo	f	20000	4	2013-07-05 13:12:49.384376	13	2
+43	1	WhiteCard	Activo	f	20000	4	2013-07-05 13:14:27.869749	13	2
+45	0	Extreme	Activo	f	100000	7	2013-07-05 13:20:53.728145	14	2
+46	1	Extreme	Activo	f	100000	7	2013-07-05 13:21:06.904532	14	2
+48	0	Mobile	Activo	f	75000	9	2013-07-05 13:21:37.616806	15	2
+49	1	Mobile	Activo	f	75000	9	2013-07-05 13:21:57.315058	15	2
+51	0	Normal	Activo	f	50000	3	2013-07-05 13:22:30.632315	16	2
+52	1	Normal	Activo	f	50000	3	2013-07-05 13:22:44.887296	16	2
+54	0	Manual de Ref.	Activo	f	10000	6	2013-07-05 13:23:49.302305	17	2
+55	1	Manual de Ref.	Activo	f	10000	6	2013-07-05 13:24:04.227335	17	2
+57	0	Errata	Activo	f	5000	3	2013-07-05 13:24:41.222259	18	2
+58	1	Errata	Activo	f	5000	3	2013-07-05 13:25:11.315728	18	2
+47	2	Extreme	Bloqueado	t	100000	7	2013-07-05 13:21:20.869678	14	2
+50	2	Mobile	Bloqueado	t	75000	9	2013-07-05 13:22:12.387634	15	2
+53	2	Normal	Bloqueado	t	50000	3	2013-07-05 13:23:08.400135	16	2
+56	2	Manual de Ref.	Bloqueado	t	10000	6	2013-07-05 13:24:21.012852	17	2
+59	2	Errata	Bloqueado	t	5000	3	2013-07-05 13:25:22.930902	18	2
+60	0	Op Punto Flotante	Activo	f	10000	3	2013-07-05 13:31:11.050432	19	2
+61	1	Op Punto Flotante	Activo	f	10000	3	2013-07-05 13:31:25.559312	19	2
+62	2	Op Punto Flotante	Aprobado	t	10000	3	2013-07-05 13:32:07.137001	19	2
+63	0	Barrera Termica	Activo	f	30000	8	2013-07-05 13:32:23.287148	20	2
+64	1	Barrera Termica	Activo	f	30000	8	2013-07-05 13:32:46.213816	20	2
+65	2	Barrera Termica	Aprobado	f	30000	8	2013-07-05 13:33:08.257943	20	2
+66	3	Barrera Termica	Aprobado	t	30000	8	2013-07-05 13:33:08.944449	20	2
+67	0	Op Matriz Vector	Activo	f	10000	8	2013-07-05 13:34:19.897199	21	2
+68	1	Homologacion	Activo	f	50000	9	2013-07-05 13:34:49.046806	21	2
+69	2	Homologacion	Activo	f	50000	9	2013-07-05 13:35:08.663858	21	2
+70	3	Homologacion	Aprobado	t	50000	9	2013-07-05 13:35:27.210716	21	2
+71	0	Op Matriz Vector	Activo	f	10000	8	2013-07-05 13:35:44.607363	22	2
+72	1	Op Matriz Vector	Activo	f	10000	8	2013-07-05 13:36:08.990693	22	2
+73	2	Op Matriz Vector	Aprobado	t	10000	8	2013-07-05 13:36:26.463043	22	2
+74	0	C1	Activo	f	2	5	2013-07-05 13:48:18.240736	23	3
+75	1	C1	Activo	f	2	5	2013-07-05 13:48:29.985779	23	3
+77	0	C2	Activo	f	5	2	2013-07-05 13:52:31.871646	24	3
+78	1	C2	Activo	f	5	2	2013-07-05 13:52:39.310182	24	3
+80	0	T1	Activo	f	3	3	2013-07-05 13:53:03.749773	25	3
+81	1	T1	Activo	f	3	3	2013-07-05 13:53:17.22105	25	3
+83	0	T2	Activo	f	5	5	2013-07-05 13:53:46.728944	26	3
+84	1	T2	Activo	f	5	5	2013-07-05 13:54:01.43068	26	3
+86	0	T3	Activo	f	5	7	2013-07-05 13:54:21.315959	27	3
+87	1	T3	Activo	f	5	7	2013-07-05 13:54:32.159179	27	3
+89	0	Q1	Activo	f	4	4	2013-07-05 13:55:22.864941	28	3
+90	1	Q1	Activo	f	4	4	2013-07-05 13:55:53.781805	28	3
+92	0	C3	Activo	f	5	5	2013-07-05 13:56:31.854397	29	3
+93	1	C3	Activo	f	5	5	2013-07-05 13:56:57.116842	29	3
+79	2	C2	Bloqueado	t	5	2	2013-07-05 13:52:50.557565	24	3
+82	2	T1	Bloqueado	t	3	3	2013-07-05 13:53:31.598989	25	3
+85	2	T2	Bloqueado	t	5	5	2013-07-05 13:54:08.852129	26	3
+88	2	T3	Bloqueado	t	5	7	2013-07-05 13:55:03.027474	27	3
+94	2	C3	Bloqueado	t	5	5	2013-07-05 13:57:05.744981	29	3
+91	2	Q1	Bloqueado	t	4	4	2013-07-05 13:56:10.20642	28	3
+95	0	Q2	Activo	f	6	7	2013-07-05 13:57:32.119984	30	3
+96	1	Q2	Activo	f	6	7	2013-07-05 14:00:36.601618	30	3
+98	0	Q3	Activo	f	5	3	2013-07-05 14:01:25.487166	31	3
+99	1	Q3	Activo	f	5	3	2013-07-05 14:01:46.788419	31	3
+100	2	Q3	Activo	f	5	3	2013-07-05 14:03:14.933257	31	3
+102	0	L1	Activo	f	1	1	2013-07-05 14:05:47.166599	32	3
+103	1	L1	Activo	f	1	1	2013-07-05 14:06:14.403356	32	3
+76	2	C1	Bloqueado	t	2	5	2013-07-05 13:48:38.23817	23	3
+97	2	Q2	Bloqueado	t	6	7	2013-07-05 14:00:58.558463	30	3
+101	3	Q3	Bloqueado	t	5	3	2013-07-05 14:05:27.603847	31	3
+104	2	L1	Bloqueado	t	1	1	2013-07-05 14:06:26.950007	32	3
+105	0	R1	Activo	f	6	5	2013-07-05 14:13:42.237696	33	3
+106	1	R1	Activo	f	6	5	2013-07-05 14:13:56.378265	33	3
+108	0	R2	Activo	f	7	5	2013-07-05 14:14:24.27631	34	3
+109	1	R2	Activo	f	7	5	2013-07-05 14:14:43.583087	34	3
+111	0	P1	Activo	f	8	8	2013-07-05 14:15:20.351715	35	3
+112	1	P1	Activo	f	8	8	2013-07-05 14:15:33.919794	35	3
+114	0	E1	Activo	f	9	8	2013-07-05 14:16:31.91073	36	3
+115	1	E1	Activo	f	9	8	2013-07-05 14:16:52.41589	36	3
+117	0	X1	Activo	f	3	2	2013-07-05 14:18:34.297967	37	3
+118	1	X1	Activo	f	3	2	2013-07-05 14:18:45.287656	37	3
+107	2	R1	Bloqueado	t	6	5	2013-07-05 14:14:12.556679	33	3
+110	2	R2	Bloqueado	t	7	5	2013-07-05 14:14:55.060209	34	3
+113	2	P1	Bloqueado	t	8	8	2013-07-05 14:16:05.069371	35	3
+116	2	E1	Bloqueado	t	9	8	2013-07-05 14:18:17.559755	36	3
+119	2	X1	Bloqueado	t	3	2	2013-07-05 14:19:01.123305	37	3
+120	0	H1	Activo	f	7	7	2013-07-05 15:16:42.462378	38	3
+121	1	H1	Activo	f	7	7	2013-07-05 15:17:03.211082	38	3
+123	0	O1	Activo	f	9	8	2013-07-05 15:17:29.799642	39	3
+124	1	O1	Activo	f	9	8	2013-07-05 15:17:39.995299	39	3
+126	0	H2	Activo	f	9	9	2013-07-05 15:18:12.666601	40	3
+127	1	H2	Activo	f	9	9	2013-07-05 15:18:34.151341	40	3
+129	0	A1	Activo	f	10	9	2013-07-05 15:19:11.855038	41	3
+130	1	A1	Activo	f	10	9	2013-07-05 15:19:24.699421	41	3
+132	0	A2	Activo	f	10	9	2013-07-05 15:20:00.103931	42	3
+133	1	A2	Activo	f	10	9	2013-07-05 15:20:27.57768	42	3
+135	0	A3	Activo	f	10	10	2013-07-05 15:21:02.57153	43	3
+136	1	A3	Activo	f	10	10	2013-07-05 15:21:23.449389	43	3
+138	0	S1	Activo	f	10	10	2013-07-05 15:21:59.648496	44	3
+139	1	S1	Activo	f	10	10	2013-07-05 15:22:21.082875	44	3
+122	2	H1	Bloqueado	t	7	7	2013-07-05 15:17:18.510255	38	3
+128	2	H2	Bloqueado	t	9	9	2013-07-05 15:18:57.065593	40	3
+125	2	O1	Bloqueado	t	9	8	2013-07-05 15:18:01.622315	39	3
+131	2	A1	Bloqueado	t	10	9	2013-07-05 15:19:44.605776	41	3
+134	2	A2	Bloqueado	t	10	9	2013-07-05 15:20:45.505887	42	3
+137	2	A3	Bloqueado	t	10	10	2013-07-05 15:21:48.744792	43	3
+140	2	S1	Bloqueado	t	10	10	2013-07-05 15:22:44.499067	44	3
+141	0	Calculo Infinitesima	Activo	f	30000	8	2013-07-05 15:31:46.327095	45	4
+142	1	Calculo Infinitesima	Activo	f	30000	8	2013-07-05 15:31:56.751117	45	4
+144	0	Calculo Integral	Activo	f	35000	9	2013-07-05 15:32:29.146505	46	4
+145	1	Calculo Integral	Activo	f	35000	9	2013-07-05 15:32:40.472802	46	4
+147	0	Fisica	Activo	f	45000	6	2013-07-05 15:32:57.828194	47	4
+148	1	Fisica	Activo	f	45000	6	2013-07-05 15:33:07.970116	47	4
+150	0	Fisica II	Activo	f	2500	5	2013-07-05 15:33:39.985293	48	4
+151	1	Fisica II	Activo	f	2500	5	2013-07-05 15:33:56.828835	48	4
+143	2	Calculo Infinitesima	Bloqueado	t	30000	8	2013-07-05 15:32:04.461678	45	4
+146	2	Calculo Integral	Bloqueado	t	35000	9	2013-07-05 15:32:46.936732	46	4
+149	2	Fisica	Bloqueado	t	45000	6	2013-07-05 15:33:16.893395	47	4
+152	2	Fisica II	Bloqueado	t	2500	5	2013-07-05 15:34:11.295059	48	4
+153	0	Calculo I Final	Activo	f	4500	8	2013-07-05 15:37:59.932601	49	4
+154	1	Calculo I Final	Eliminado	t	4500	8	2013-07-05 15:38:09.465056	49	4
+155	0	Calculo I	Activo	f	4500	8	2013-07-05 15:38:19.296975	50	4
+156	1	Primer Final	Activo	f	4500	8	2013-07-05 15:38:37.651008	50	4
+157	2	Primer Final	Activo	f	4500	8	2013-07-05 15:38:48.3537	50	4
+158	3	Primer Final	Aprobado	t	4500	8	2013-07-05 15:39:01.28035	50	4
+159	0	Electromagnetismo	Activo	f	8000	5	2013-07-05 15:39:14.923822	51	4
+160	1	Electromagnetismo	Activo	f	8000	5	2013-07-05 15:39:29.584228	51	4
+161	2	Electromagnetismo	Aprobado	t	8000	5	2013-07-05 15:39:47.90519	51	4
+162	0	Tercer Parcial	Activo	f	4500	6	2013-07-05 15:40:10.917323	52	4
+163	1	Tercer Parcial	Activo	f	4500	6	2013-07-05 15:40:20.566258	52	4
+164	2	Tercer Parcial	Aprobado	t	4500	6	2013-07-05 15:40:41.83049	52	4
 \.
 
 
@@ -1785,7 +1841,7 @@ COPY vitem (id, version, nombre, estado, actual, costo, dificultad, "fechaModifi
 -- Name: vitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('vitem_id_seq', 152, true);
+SELECT pg_catalog.setval('vitem_id_seq', 164, true);
 
 
 --
@@ -1793,8 +1849,9 @@ SELECT pg_catalog.setval('vitem_id_seq', 152, true);
 --
 
 COPY voto (peticion_id, user_id, valor) FROM stdin;
-1	1	t
-1	2	f
+1	2	t
+1	4	t
+1	3	t
 \.
 
 
@@ -1836,6 +1893,14 @@ ALTER TABLE ONLY item_peticion
 
 ALTER TABLE ONLY item
     ADD CONSTRAINT item_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lb_ver_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY lb_ver
+    ADD CONSTRAINT lb_ver_pkey PRIMARY KEY (lb_id, ver_id);
 
 
 --
@@ -2036,6 +2101,22 @@ ALTER TABLE ONLY item
 
 ALTER TABLE ONLY item
     ADD CONSTRAINT item_usuario_creador_id_fkey FOREIGN KEY (usuario_creador_id) REFERENCES usuario(id);
+
+
+--
+-- Name: lb_ver_lb_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY lb_ver
+    ADD CONSTRAINT lb_ver_lb_id_fkey FOREIGN KEY (lb_id) REFERENCES lineabase(id);
+
+
+--
+-- Name: lb_ver_ver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY lb_ver
+    ADD CONSTRAINT lb_ver_ver_id_fkey FOREIGN KEY (ver_id) REFERENCES vitem(id);
 
 
 --

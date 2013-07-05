@@ -139,6 +139,16 @@ CREATE TABLE item_peticion (
 
 
 --
+-- Name: lb_ver; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE lb_ver (
+    lb_id integer NOT NULL,
+    ver_id integer NOT NULL
+);
+
+
+--
 -- Name: lineabase; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -659,6 +669,14 @@ COPY item_peticion (peticion_id, item_id, actual) FROM stdin;
 
 
 --
+-- Data for Name: lb_ver; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY lb_ver (lb_id, ver_id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: lineabase; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -891,6 +909,14 @@ ALTER TABLE ONLY item
 
 
 --
+-- Name: lb_ver_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY lb_ver
+    ADD CONSTRAINT lb_ver_pkey PRIMARY KEY (lb_id, ver_id);
+
+
+--
 -- Name: lineabase_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1088,6 +1114,22 @@ ALTER TABLE ONLY item
 
 ALTER TABLE ONLY item
     ADD CONSTRAINT item_usuario_creador_id_fkey FOREIGN KEY (usuario_creador_id) REFERENCES usuario(id);
+
+
+--
+-- Name: lb_ver_lb_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY lb_ver
+    ADD CONSTRAINT lb_ver_lb_id_fkey FOREIGN KEY (lb_id) REFERENCES lineabase(id);
+
+
+--
+-- Name: lb_ver_ver_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY lb_ver
+    ADD CONSTRAINT lb_ver_ver_id_fkey FOREIGN KEY (ver_id) REFERENCES vitem(id);
 
 
 --
