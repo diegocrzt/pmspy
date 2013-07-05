@@ -38,7 +38,11 @@
 <center>
 <h3 class="muted">{{session['proyectonombre']}} - {{session['fasenombre']}}</h3>
             <img src="{{ nombre }}?{{aux}}" alt="Grafo 1"><BR>
+            {% if item %}
+            <center><a class="btn" href="/admitem/{{session['faseid']}}"><i class="icon-arrow-left"></i> Atras</a></center>
+            {%else%}
             <center><a class="btn" href="/admfase/{{session['proyectoid']}}"><i class="icon-arrow-left"></i> Atras</a></center>
+  			{%endif%}
   </center>
   
   <div class="span5">

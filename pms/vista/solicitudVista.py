@@ -343,7 +343,8 @@ def enviarSolicitud(s=None):
             for item in hi:
                 h.append(item)
         h.sort(cmp=numeric_compare, key=None, reverse=False)
-        return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=False, arbol=h)
+        lineas=getLBPeticion(s)
+        return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=False, arbol=h, lineas=lineas)
     if request.method == "POST":
         enviarPeticion(flask.session['solicitudid'])
         flask.flash(u"ENVIO EXITOSO","text-success")
@@ -387,7 +388,8 @@ def votarEnSoliciutud(s=None):
                 h.append(item)
         h.sort(cmp=numeric_compare, key=None, reverse=False)
         #sorted(h, key=lambda VersionItem: VersionItem.item.tipoitem.fase.numero , reverse=True)
-        return flask.render_template('votarSolicitud.html', s=soli, acciones=acc, miembros=m, arbol=h)
+        lineas=getLBPeticion(s)
+        return flask.render_template('votarSolicitud.html', s=soli, acciones=acc, miembros=m, arbol=h, lineas=lineas)
     if request.method == "POST":
         voto=None
         if "Aprobar" in flask.request.form:

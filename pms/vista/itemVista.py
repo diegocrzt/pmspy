@@ -738,5 +738,5 @@ def prevPageI():
 @pms.vista.required.login_required   
 def graficarItemArbol(i=None):
     n=graficarItem(i)
-    return flask.render_template('grafico.html',nombre=n[0],aux=n[1])
+    return flask.render_template('grafico.html',nombre=n[0],aux=n[1],item=True)
     
