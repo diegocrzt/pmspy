@@ -132,16 +132,12 @@ def graficarProyecto(idp=None):
         anterior=f     
         
     try:
-        print 'Intentando borrar'
         os.remove(nombre)
     except:
-        print 'Epic fail'
         pass
     
-    print 'Escribiendo en el el grafico'
     print nombre 
     graph.write_png(nombre)
-    print 'Escribio'
     
     return res
 

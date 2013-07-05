@@ -330,4 +330,4 @@ def ejComplAtributosItem(i=None):
         val.append(at)
     for at in ver.atributosdate:
         val.append(at)
-    return flask.render_template('ejCompletarAtributo.html',atributos=atr,valores=val) 
+    return flask.render_template('ejCompletarAtributo.html',atributos=atr,valores=val)
