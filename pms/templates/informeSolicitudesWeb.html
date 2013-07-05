@@ -1,14 +1,7 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    <link href="{{ url_for('static', filename = 'reportStyle.css') }}" rel="stylesheet">
-     </head>
-        <body>
-        <div id="pageHeader" >
-			
-			<p class="text-right"><em>{{dia.strftime('%Y/%m/%d')}}</em> - Usuario: <em>{{session['username']}}</em>
-			</p>
-		</div>
+{% extends "base.html" %}
+
+{% block content %}
+
 	<div align="center">
 	        <h2 class="text-info text-center">{{session['proyectonombre']}}</h2>
 	</div>
@@ -45,6 +38,7 @@
 						                        <th>Cost</th>
 						                        <th>Dif</th>
 						                        <th>LB</th>
+						                        
 		                                </tr>
 		                                {% for v in s[0].items %}
 		                    
@@ -98,8 +92,7 @@
 		                </div>
 		        </div>
 	        {%endfor%}
-			
+	        	<a class="btn btn-success" href="/admsolicitud/">Aceptar</a>
+				<a class="btn" href="/informesolicitud/1">Version PDF  <i class="icon-file"></i> </a>
 	</div>
-			
-	</body>
-</html>
+{%endblock%}

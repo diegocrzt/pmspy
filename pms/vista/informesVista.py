@@ -9,7 +9,10 @@ from pms.modelo.peticionControlador import getLBPeticion
 from datetime import datetime
 from pms import app
 @app.route('/hello/')
-def hello():
+def informeProyecto():
+    """
+    Retorna el informe de un proyecto
+    """
     pro=getProyectoId(flask.session['proyectoid'])
     fas=[]
     for fase in pro.fases:
@@ -32,8 +35,10 @@ def hello():
     
     return flask.render_template('hello.html',fases=fas)
 @app.route('/proyectopdf/')
-def hello_pdf():
-    # Make a PDF straight from HTML in a string.
+def informeProyectoPdf():
+    """
+    Retorna la version pdf del informe de proyecto
+    """
     pro=getProyectoId(flask.session['proyectoid'])
     fas=[]
     for fase in pro.fases:
@@ -58,7 +63,11 @@ def hello_pdf():
     return render_pdf(HTML(string=html))
 
 @app.route('/informesolicitud/')
-def informeSolicitud():
+@app.route('/informesolicitud/<a>')
+def informeSolicitud(a=None):
+    """
+    Retorna la version pdf del informe de solicitudes si recibe a, sino la version web
+    """
     pro=getProyectoId(flask.session['proyectoid'])
     solicitudes=[]
     for s in pro.solicitudes:
@@ -69,11 +78,18 @@ def informeSolicitud():
         aux.insert(1, lineas)
         solicitudes.append(aux)
         dia=datetime.today()
-    html = render_template('informeSolicitudes.html', solicitudes=solicitudes, dia=dia)
-    return render_pdf(HTML(string=html))
+    if a:
+        html = render_template('informeSolicitudes.html', solicitudes=solicitudes, dia=dia)
+        return render_pdf(HTML(string=html))
+    else:
+        return flask.render_template('informeSolicitudesWeb.html', solicitudes=solicitudes, dia=dia)
+    
 
 @app.route('/informeitem/<i>')
 def informeItem(i):
+    """
+    Restorna la version pdf del informe del historial de un item
+    """
     ver=getVersionId(i)
     item=getItemId(ver.deitem)
     tipo=getTipoItemId(item.tipo)
