@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <link href="{{ url_for('static', filename = 'reportStyle.css') }}" rel="stylesheet">
+     </head>
+        <body>
+        <div id="pageHeader" >
+			
+			<p class="text-right"><em>{{dia.strftime('%Y/%m/%d')}}</em> - Usuario: <em>{{session['username']}}</em>
+			</p>
+		</div>
+	<div align="center">
+	        <h2 class="text-info text-center">{{session['proyectonombre']}}</h2>
+	</div>
+	<div class="container">
+	       	<h3>Informe de Historial de Item</h3>
+	        <hr>
+	        <p><strong>Creacion:</strong>{{item.fechaCreacion.strftime('%Y-%m-%d')}}</p>
+			<p> <strong>Usuario:</strong>{{item.usuario_creador.nombre}}</p>
+	        {%for s in versiones %}
+		       	<h3 class="text-info">Version: {{s[0].version}}</h3>
+			  	<ul >
+		 		 <li><strong> Nombre: </strong>{{s[0].nombre}}</li>
+		 		 <li><strong> Modificado: </strong>{{s[0].fechaModificacion.strftime('%Y-%m-%d')}}</li>
+		 		 <li><strong> Usuario modificador: </strong>{{s[0].usuario_modificador.nombre}}</li>
+		 		 <li><strong> Comentario: </strong>{{s[0].comentario}}</li>
+		 		 <li><strong> Estado: </strong>{{s[0].estado}}</li>
+		 		 <li><strong> Costo: </strong>{{s[0].costo}}</li>
+		 		 <li><strong> Dificultad: </strong>{{s[0].dificultad}}</li>
+				</ul>
+				<div class="span4">
+				    <p class="text-center">	<strong>Atributos</strong></p>	
+					<table  class="table  table-bordered" >
+						<tr>
+                                  <th>Atributo</th>
+                                  <th>Valor</th>
+                               </tr>
+
+			           {% for a in atributos %}
+			           <tr>
+			            	<td>{{a.nombre}}</td>
+			            	{% for v in s[1] %}
+			            		{% if v.atributo_id == a.id %}
+			            			{% if a.tipoDato == "Fecha" %}
+			            				{% if v.valor != None %}
+				            				<td>{{v.valor.strftime('%Y-%m-%d')}}</td>
+				            			{% else %}
+				            				<td></td>
+				            			{% endif %}
+				            		{%else%}
+				            			<td>{{v.valor }}</td>
+			            			{%endif%}
+			            		{% endif %}
+			            		
+			            	{% endfor%}
+			            </tr>
+			            {% else %}
+						<tr>
+							<td colspan="2">  -No contiene Atributos-</td>
+						</tr>					
+          					{% endfor %}
+					</table>
+					</div>
+					<table>
+						<tr>
+						<td>
+						<div class="span4">
+					 		<p class="text-center">	<strong>Padres</strong></p>	
+								<table  class="table  table-bordered" >
+								<tr>
+							        <th>Nombre</th>
+							        <th>Estado</th>
+							        <th>Ver</th>
+							     </tr>
+					
+						     	{% for n in s[2]%}
+							     <tr>
+							      	<td>{{n.nombre}}</td>
+							      	<td>{{n.estado}}</td>
+							      	<td>{{n.version }}</td>
+							      </tr>
+							  	{% else %}
+								<tr>
+									<td colspan="3"> -No tiene Padres-</td>
+								</tr>
+					    		 {% endfor %}
+							</table>
+						</div>
+					</td>
+					<td>
+					<div class="span4">
+					  <p class="text-center">	<strong>Antecesores</strong></p>	
+							<table  class="table  table-bordered" >
+							<tr>
+						        <th>Nombre</th>
+						        <th>Estado</th>
+						        <th>Ver</th>
+						     </tr>
+						
+						     {% for n in s[3]%}
+							     <tr>
+							      	<td>{{n.nombre}}</td>
+							      	<td>{{n.estado}}</td>
+							      	<td>{{n.version }}</td>
+							      </tr>	
+							 {% else %}
+								<tr>
+									<td colspan="3"> -No tiene Antecesores-</td>
+								</tr>			
+						     {% endfor %}
+						</table>
+					</div>
+					</td>
+					</tr>
+				</table>
+				<table>
+				<tr>
+				<td>
+					<div class="span4">
+					    <p class="text-center">	<strong>Hijos</strong></p>	
+						<table  class="table  table-bordered" >
+						<tr>
+					        <th>Nombre</th>
+					        <th>Estado</th>
+					        <th>Ver</th>
+					     </tr>
+					
+					     {% for n in s[4]%}
+						     <tr>
+						      	<td>{{n.nombre}}</td>
+						      	<td>{{n.estado}}</td>
+						      	<td>{{n.version }}</td>
+						      </tr>	
+						 {% else %}
+							<tr>
+								<td colspan="3">  -No tiene Hijos-</td>
+							</tr>			
+					     {% endfor %}
+					</table>
+					</div>
+				</td>
+				<td>
+					<div class="span4">
+					    <p class="text-center">	<strong>Sucesores</strong></p>	
+						<table  class="table  table-bordered" >
+						<tr>
+					        <th>Nombre</th>
+					        <th>Estado</th>
+					        <th>Ver</th>
+					     </tr>
+					
+					     {% for n in s[5]%}
+						     <tr>
+						      	<td>{{n.nombre}}</td>
+						      	<td>{{n.estado}}</td>
+						      	<td>{{n.version }}</td>
+						      </tr>	
+						 {% else %}
+							<tr>
+								<td colspan="3">  -No tiene Sucesores-</td>
+							</tr>			
+					     {% endfor %}
+					</table>
+		        </div>
+		        </td>
+		        </tr>
+		     </table>
+	        {%endfor%}
+			
+	</div>
+			
+	</body>
+</html>

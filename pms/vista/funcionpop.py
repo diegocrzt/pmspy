@@ -26,3 +26,7 @@ def longitud(a=None):
     """
     l=len(a)
     return l
+
+def toString(n=None):
+    s= '%d' % n
+    return s

@@ -19,6 +19,7 @@ import modelo.rolControlador
 import vista.funcionpop
 import vista.solicitudVista
 import vista.ejecutarSolicitudVista
+import vista.informesVista
 
 
 app.jinja_env.globals.update(len=vista.funcionpop.longitud)

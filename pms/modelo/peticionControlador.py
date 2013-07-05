@@ -1,4 +1,4 @@
-from entidad import Proyecto, Peticion, Voto, Usuario, Item, VersionItem, Miembro, ItemPeticion,LineaBase
+from entidad import Proyecto, Peticion, Voto, LB_Ver, Miembro, ItemPeticion,LineaBase
 from initdb import db_session, init_db, shutdown_session
 from pms.modelo.proyectoControlador import getProyectoId
 from pms.modelo.usuarioControlador import getUsuarios
@@ -34,7 +34,7 @@ def crearPeticion(proyecto_id=None,comentario=None,usuario_id=None, items=None, 
     """
     if proyecto_id and comentario and usuario_id and items and acciones:
         init_db()
-        ultimo=session.query(Peticion).order_by(Peticion.id.desc()).first()
+        ultimo=session.query(Peticion).filter(Peticion.proyecto_id==proyecto_id).order_by(Peticion.id.desc()).first()
         if ultimo:
             numero=ultimo.numero+1
         else:
@@ -355,8 +355,6 @@ def actualizarItemsSolicitud(s=None):
             if nuevav.id!=i.item.id:
                 quitarItem(i.item.id)
                 a=agregarItem(nuevav.id, soli.id)
-                return True
-        return False
             
 def reiniciarVotacion(ids=None):
     """
@@ -372,7 +370,9 @@ def reiniciarVotacion(ids=None):
     shutdown_session()
     
 def compararPeticion(ids=None):
-   
+    """
+    Comprueba que el costo y la dificultad de una peticion no hayan sido alterados
+    """
     peticion=getPeticion(ids)
     aux=peticion.items
     l=[]
@@ -386,6 +386,9 @@ def compararPeticion(ids=None):
         return False
     
 def buscarSolicitud(idv=None):
+    """
+    Comprubea que la modificacion de un item no altera una solicitud en estado de votacion
+    """
     ver=getVersionId(idv)
     itm= ver.item
     fase=itm.tipoitem.fase
@@ -404,6 +407,9 @@ def buscarSolicitud(idv=None):
                 compararPeticion(getItemPeticion(s.version).peticion_id)
 
 def tSolicitud(ids=None):
+    """
+    Termina una Solicitud, recibe el id de la solicitud
+    """
     soli=getPeticion(ids)
     init_db()
     soli.estado="Terminada"
@@ -426,20 +432,100 @@ def tSolicitud(ids=None):
     shutdown_session()
     
 def getLBPeticion(ids=None):
+    """
+    Retorna las lineas base que van a ser o estan quebradas como consecuencia de la solicitud, recibe el id de la solicitud
+    """
     soli=getPeticion(ids)
     lineas=[]
     if soli.estado=="Terminada" or soli.estado=="Aprobada":
         for i in soli.items:
             v=i.item
-            while v.lalinea==None:
+            while not v.lalinea:
                 v=getItemVerNum(v.item.id,v.version-1)
-            lineas.append(v.lalinea)
-    else:
+            init_db()
+            l=session.query(LB_Ver).filter(LB_Ver.ver_id==v.id).first()
+            shutdown_session()
+            lineas.append(l.linea) 
+    else: 
         for i in soli.items:
             it=i.item.item
-            '''while it.lineabase==None:
-                it=getItemVerNum(it.id,i.item.version-1).item'''
             lineas.append(it.lineabase)
     return lineas   
-                
+
+def getItemsAfectados2(ids=None):
+    soli=getPeticion(ids)
+    items={}
+    lineas={}
+    colaitems=[]
+    for i in soli.items:
+        v=i.item
+        colaitems.append(v)
+    
+    if soli.estado=="Aprobada" or soli.estado=="Terminada":
+        for i in soli.items:
+            v=i.item
+            while not v.lalinea:
+                v=getItemVerNum(v.item.id,v.version-1)
+            init_db()
+            lv=session.query(LB_Ver).filter(LB_Ver.ver_id==v.id).first()
+            ll=session.query(LineaBase).filter(LineaBase.id==lv.lb_id).first()
+            lineas[ll.id]=ll
+            shutdown_session()
+            if not(ll.id in lineas):
+                for vaux in ll.vers:
+                    vn=getVersionId(vaux.ver_id)
+                    colaitems.append(vn)
+    for i in colaitems:
+        if not(i.id in items):
+            items[i.id]=i
+            itm=i.item
+            if itm.lineabase:
+                lb=itm.lineabase
+                for n in lb.items:
+                    nv=getVersionItem(n.id)
+                    colaitems.append(nv)
+            for x in i.ante_list:
+                if x.ante.actual==True:
+                    colaitems.append(x.ante)
+            for w in i.post_list:
+                if w.post.actual==True:
+                    colaitems.append(w.post)
+    return items
+
+def getItemsAfectados(ids=None):
+    soli=getPeticion(ids)
+    items={}
+    lineas={}
+    colaitems=[]
+    for i in soli.items:
+        v=i.item
+        colaitems.append(v)
+    
+    if soli.estado=="Aprobada" or soli.estado=="Terminada":
+        for i in soli.items:
+            v=i.item
+            while not v.lalinea:
+                v=getItemVerNum(v.item.id,v.version-1)
+            init_db()
+            lv=session.query(LB_Ver).filter(LB_Ver.ver_id==v.id).first()
+            ll=session.query(LineaBase).filter(LineaBase.id==lv.lb_id).first()
+            lineas[ll.id]=ll
+            shutdown_session()
+            if not(ll.id in lineas):
+                for vaux in ll.vers:
+                    vn=getVersionId(vaux.ver_id)
+                    colaitems.append(vn)
+    for i in colaitems:
+        if not(i.id in items):
+            items[i.id]=i
+            itm=i.item
+            if itm.lineabase:
+                lb=itm.lineabase
+                for n in lb.items:
+                    nv=getVersionItem(n.id)
+                    colaitems.append(nv)
+            for w in i.post_list:
+                if w.post.actual==True:
+                    colaitems.append(w.post)
+    return items
                 

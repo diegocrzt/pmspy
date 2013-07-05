@@ -1,10 +1,12 @@
 import flask.views
 from flask import request
-
-
 TAM_PAGINA=5
 
 def calculoPrimeraPag(cant):
+    """
+    Setea los valores correspondientes a la primera pagina de un paginar, 
+    recibe la cantidad de items, fases o proyectos que existen para dicho paginar
+    """
     if(cant!=0):#Si devolvio algo
         t=cant/TAM_PAGINA
         mod=cant%TAM_PAGINA
@@ -29,6 +31,10 @@ def calculoPrimeraPag(cant):
     return infopag
 
 def calculoDeSiguiente(cant):
+    """
+    Esta funcion es llamada cuando se hace click en el boton "Siguiente" del paginar
+    Setea los valores correspondientes para la siguiente pagina, calcula si hay siguiente para mostrar o no el boton de "Siguiente"
+    """
     t=cant/TAM_PAGINA
     mod=cant%TAM_PAGINA
     if mod>0:
@@ -50,6 +56,10 @@ def calculoDeSiguiente(cant):
     return infopag
 
 def calculoDeAnterior(cant):
+    """
+    Esta funcion es llamada cuando se hace click en el boton "Anterior" del paginar
+    Setea los valores correspondientes para la siguiente pagina, calcula si hay siguiente para mostrar o no el boton de "Siguiente" y "Anterior"
+    """
     t=cant/TAM_PAGINA #Saber cuantas paginas se necesitan
     mod=cant%TAM_PAGINA #modulo
     if mod>0: #si el mod no es cero, la division no es perfecta
@@ -71,6 +81,9 @@ def calculoDeAnterior(cant):
 
 
 def totalPaginas(cant):
+    """
+    Cacula cuantas paginas en total hay para la cant pasada como parametro
+    """
     t=cant/TAM_PAGINA
     mod=cant%TAM_PAGINA
     if mod>0:

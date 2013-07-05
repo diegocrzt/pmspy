@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<div align="center">
+	        <h2 class="text-info text-center">{{session['proyectonombre']}}</h2>
+	</div>
+	<div class="container">
+	       	<h3>Informe de Solicitudes</h3>
+	        <hr>
+	        {%for s in solicitudes %}
+		       	<h3 class="text-info"><strong>Solicitud: </strong>{{s[0].numero}}</h3>
+			  	<ul class="inline">
+		 		 <li><strong> Solicitante: </strong>{{s[0].usuario.nombre}}</li>
+		 		 <li><strong> Creacion: </strong>{{s[0].fechaCreacion.strftime('%Y/%m/%d')}}</li>
+		 		 <li><strong> Estado: </strong>{{s[0].estado}}</li>
+				</ul>
+				{%if s[0].estado!="EnEdicion"%}
+				<h4>Votantes</h4>
+				<ul>
+				
+				{%for v in s[0].votos%}
+					<li>{{v.usuario.nombre}}</li>
+					{%else%}
+					<li>--</li>
+				{%endfor%}
+				{%endif%}
+				</ul>
+				<div class="row" >
+		                <div class="span8">
+		                        <h4>Items </h4>
+		                        <table class="table table-striped table-bordered">
+		                                <tr>
+		                                        <th>Nombre</th>
+		                                        <th>Estado</th>
+		                                        <th>Fase</th>
+		                                        <th>Ver</th>
+						                        <th>Cost</th>
+						                        <th>Dif</th>
+						                        <th>LB</th>
+						                        
+		                                </tr>
+		                                {% for v in s[0].items %}
+		                    
+		                                <tr>
+							            	<td>{{v.item.nombre}}</td>
+							            	<td>{{v.item.estado}}</td>
+							            	<td>{{v.item.item.tipoitem.fase.numero}}</td>
+							            	<td>{{v.item.version}}</td>
+							            	<td>{{v.item.costo}}</td>
+							            	<td>{{v.item.dificultad}}</td>
+							            	{%if v.item.lalinea%}
+								            	{%for x in v.item.lalinea%}
+								            	<td>{{x.linea.numero}}</td>
+								            	{%endfor%}
+							            	{%else%}
+							            	<td>{{v.item.item.lineabase.numero}}</td>
+							            	{%endif%}
+		                        		</tr>
+		                                {% else %}
+		                        
+		                                <tr>
+		                                        No tiene items y no se podra cerrar la fase
+		                                </tr>
+		                                {% endfor %}
+		               			 </table>
+		               			 <h4>Lineas Base Afectadas </h4>
+		                        <table class="table table-striped table-bordered">
+		                                <tr>
+		                                        <th>Numero</th>
+		                                        <th>Fase</th>
+		                                        <th>Creador</th>
+		                                        <th>Estado</th>
+		                                        <th>CantI</th>
+		                                  </tr>
+		                                  {%for l in s[1]%}
+		                                  {%if l %}
+		                                  <tr>
+		                                  		<td>{{l.numero}}</td>
+		                                  		<td>{{l.fase.numero}}</td>
+		                                  		<td>{{l.creador.nombre}}</td>
+		                                  		<td>{{l.estado}}</td>
+		                                  		{%if l.estado=="Quebrada"%}
+		                                  		<td>{{len(l.vers)}}</td>
+		                                  		{%else%}
+		                                  		<td>{{len(l.items)}}</td>
+		                                  		{%endif%}
+		                                  </tr>
+		                                  {%endif%}
+		                                  {%endfor%}
+								</table>
+		                </div>
+		        </div>
+	        {%endfor%}
+	        	<a class="btn btn-success" href="/admsolicitud/">Aceptar</a>
+				<a class="btn" href="/informesolicitud/1">Version PDF  <i class="icon-file"></i> </a>
+	</div>
+{%endblock%}

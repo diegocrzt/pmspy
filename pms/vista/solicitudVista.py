@@ -1,15 +1,11 @@
 import flask.views
 from flask import request
-from pms.modelo.entidad import VersionItem
 from pms.modelo.usuarioControlador import  getUsuarioById
 from pms.modelo.proyectoControlador import getProyectoId
-from pms.modelo.peticionControlador import getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud, cambiarVotos, tSolicitud, getPeticionesVotacion
-from datetime import datetime
+from pms.modelo.peticionControlador import getItemsAfectados, getLBPeticion, getMiembro, contarVotos, getMiembros, agregarVoto, enviarPeticion, crearPeticion, getPeticion, eliminarPeticion, editarPeticion, getVersionesItemParaSolicitud, cambiarVotos, tSolicitud, getPeticionesVotacion
 from pms.modelo.relacionControlador import hijos
 import pms.vista.required
 from pms import app
-from pms.vista.paginar import calculoDeSiguiente, calculoDeAnterior, calculoPrimeraPag
-TAM_PAGINA=5
 
 
 class AdmSolicitud(flask.views.MethodView):
@@ -300,26 +296,30 @@ def consultarSolicitud(s=None):
     acc.insert(2,["Crear Relacion",soli.acciones%1000>=100])
     acc.insert(3,["Eliminar Relacion",soli.acciones%10000>=1000])
     p=getProyectoId(flask.session['proyectoid'])
-    miembros=p.miembros
-    m=[]
-    for mi in miembros:
-        vot=False
+    if soli.cantVotos==0 or soli.estado=="EnVotacion":
+        miembros=p.miembros
+        m=[]
+        for mi in miembros:
+            vot=False
+            for v in soli.votos:
+                if v.user_id==mi.user_id:
+                    m.append([v.usuario,True])
+                    vot=True
+            if not vot:
+                m.append([getUsuarioById(mi.user_id),False])
+    else:
+        m=[]
         for v in soli.votos:
-            if v.user_id==mi.user_id:
-                m.append([getUsuarioById(mi.user_id),True])
-                vot=True
-        if not vot:
-            m.append([getUsuarioById(mi.user_id),False])
+            m.append([v.usuario,True])
     for a in m:
         print a[0].nombre
+    q=getItemsAfectados(s)
     h=[]
-    for i in soli.items:
-        hi=hijos(i.item.id)
-        for item in hi:
-            h.append(item)
+    for x in q.values():
+        h.append(x)
     h.sort(cmp=numeric_compare, key=None, reverse=False)
-    
-    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=True, miembros=m, arbol=h)
+    lineas=getLBPeticion(s)
+    return flask.render_template('consultarSolicitud.html', s=soli, acciones=acc, consultar=True, miembros=m, arbol=h, lineas=lineas)
 
 @app.route('/admsolicitud/enviar/<s>',methods=['POST', 'GET'])
 @pms.vista.required.login_required
@@ -432,6 +432,9 @@ def terminarSolicitud(s=None):
             return flask.redirect(flask.url_for('admsolicitud'))
         
 def numeric_compare(x, y):
-        a=x.item.tipoitem.fase.numero
-        b=y.item.tipoitem.fase.numero
-        return  a-b
+    """
+    Comparador de items por el numero de su fase, recibe dos versiones de item
+    """
+    a=x.item.tipoitem.fase.numero
+    b=y.item.tipoitem.fase.numero
+    return  a-b

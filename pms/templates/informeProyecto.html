@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <link href="{{ url_for('static', filename = 'reportStyle.css') }}" rel="stylesheet">
+     </head>
+        <body> 
+		<div class="items">
+		<div id="pageHeader" >
+			
+			<p class="text-right"><em>{{dia.strftime('%Y/%m/%d')}}</em> - Usuario: <em>{{session['username']}}</em>
+			</p>
+		</div>
+		
+		<div align="center">
+        <h2 class="text-info text-center">{{session['proyectonombre']}}</h2>
+        </div>
+       	<div >
+       	<h3>Informe de proyecto</h3>
+        <hr>
+        {%for f in fases %}
+       	<h2>Fase: {{f[0]}}</h2>
+	  	<ul class="inline">
+ 		 <li><strong> Nombre: </strong>{{f[1]}}</li>
+ 		 <li><strong> Estado: </strong>{{f[2]}}</li>
+		</ul>
+		<ul>
+			<li> <strong> Inicio: </strong>{{f[3].strftime('%Y/%m/%d')}}</li>
+			<li><strong> Fin: </strong>{{f[4].strftime('%Y/%m/%d')}}</li>
+			<li><strong> Ultima modificacion: </strong>{{f[5].strftime('%Y/%m/%d')}}</li>
+		</ul>
+        		
+        <div class="row" >
+                <div class="span9">
+                        <h3>Items </h3>
+                        <table class="table table-bordered">
+                                <tr>
+                                        <th>Nombre</th>
+                                        <th>Estado</th>
+				                        <th>Tipo</th>
+				                        <th>Cost</th>
+				                        <th>Dif</th>
+				                        <th>LB</th>
+				                        
+                                </tr>
+                                {% for i in f[6] %}
+                    
+                                <tr>
+                                        <td>{{i.nombre}}</td>
+                                        <td>{{i.estado}}</td>
+                                        <td>{{i.item.tipoitem.nombre}}</td>
+                                        <td>{{i.costo}}</td>
+                                        <td>{{i.dificultad}}</td>
+                                        <td>{{i.item.lineabase.numero}}</td>
+                        </tr>
+                                {% else %}
+                        
+                                <tr>
+                                        No tiene items y no se podra cerrar la fase
+                                </tr>
+                                {% endfor %}
+                </table>
+                
+                
+      	  </div>
+      </div>
+      {%endfor%}
+       </div>
+</div>
+</body>
+</html>
+
