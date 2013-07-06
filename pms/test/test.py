@@ -12,6 +12,7 @@ from pms.modelo.faseControlador import getFase, eliminarFase
 from pms.modelo.rolControlador import getRolNombre
 from pms.modelo.usuarioControlador import getUsuario
 from pms.modelo.tipoItemControlador import getTipoItemNombre, eliminarTipoItem
+from pms.modelo.itemControlador import getVitemTest, dropItemTest
 
 class PMSTestSuite(unittest.TestCase):
     index = '/'
@@ -20,12 +21,15 @@ class PMSTestSuite(unittest.TestCase):
     editarOK = 'EDICION EXITOSA'
     eliminarOK = 'ELIMINACION EXITOSA'
     importarOK = 'IMPORTACION EXITOSA'
+    aprobarOK = 'APROBACION EXITOSA'
     consultaRol = 'Consulta de rol'
     listProject = 'Listado de Proyectos'
     listUser = 'Listado de Usuarios'
     listFase = 'Listado de Fases'
     listTipo = 'Listado de Tipos de Items'
     listAtributo = 'Listado de los Atributos'
+    listItem = 'Listado de Items'
+    listLB ='Listado de Lineas Base'
     editarUsuarioTitle = 'Editar Usuario'
     editarFaseTitle = 'Editar Fase'
     editarRolTitle = 'Editar Rol'
@@ -63,6 +67,11 @@ class PMSTestSuite(unittest.TestCase):
     crearAtributoURL = atributoURL + 'crearatributo/'
     importarTipoURL = tipoURL + 'admimportartipo/'
     importarTipoActionURL = tipoURL + 'importartipo/'
+    itemURL = '/admitem/'
+    crearItemURL = itemURL + 'crearitem/'
+    aprobarItemURL = itemURL + 'aprobaritem/'
+    admLineaBaseURL = '/admlinea/'
+    crearLineaBaseURL = admLineaBaseURL + 'crear/'
     
     def setUp(self):
         pms.app.config['TESTING'] = True
@@ -757,3 +766,158 @@ class PMSTestSuite(unittest.TestCase):
         assert self.logoutMessage in rv.data
        
         print 'Operaciones con Items [OK]'
+        
+    def testAdmProyecto(self):
+        # Dummy data
+        nombreFase = 'Dummy Fase'
+        fechaInicioFase = '2014-10-11'
+        fechaFinFase = '2015-12-11'
+        numeroFase = '1'
+        # Crear Proyecto
+        nombreProyecto = 'Dummy Project'
+        fechaInicioProyecto = '2014-10-10'
+        fechaFinProyecto = '2015-10-10'
+        liderProyecto = '1'
+       
+        # Login
+        rv = self.login()
+        assert self.listProject in rv.data
+       
+        # Crear Proyecto
+        rv = self.app.post(self.crearProyectoURL, data=dict(nombre=nombreProyecto,
+                                                                fechainicio=fechaInicioProyecto,
+                                                                fechafin=fechaFinProyecto,
+                                                                lider=liderProyecto),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+       
+        # Crear Fase
+        self.testRoute(self.faseURL + getProyecto(nombreProyecto).id.__str__(), nombreProyecto)
+        rv = self.app.post(self.crearFaseURL, data=dict(nombre=nombreFase,
+                                                                fechainicio=fechaInicioFase,
+                                                                fechafin=fechaFinFase,
+                                                                numero=numeroFase),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+              
+        # Inicializar proyecto
+        self.inicializarProyecto(getProyecto(nombreProyecto))
+        
+        nombreRol='Rol1'
+        self.testPermisos(nombreRol = nombreRol,numeroFase = numeroFase, nombreProyecto = nombreProyecto, nombreFase = nombreFase)
+        
+        #Tipo de Item
+        nombreTipo = 'Madera'
+        self.testTipoItem(nombreTipo = nombreTipo, nombreProyecto = nombreProyecto, numeroFase = numeroFase)
+        #Crear Item
+        nombreItem = 'PetriMad'
+        self.testItem(nombreItem=nombreItem,numeroFase=numeroFase,nombreProyecto=nombreProyecto,nombreTipo=nombreTipo)
+        
+        #Aprobar Item
+        self.testAprobarItem(nombreItem=nombreItem)
+        
+        #Eliminar Item, Linea Base si es necesario
+        dropItemTest(getVitemTest(nombreItem).id)
+        
+        #Eliminar rol (ambos)
+        self.testRoute(self.eliminarRolURL + getRolNombre(nombreRol).id.__str__() , 'Eliminar')
+        rv = self.app.post(self.eliminarRolURL, follow_redirects=True)
+        assert self.eliminarOK in rv.data
+        
+        eliminarTipoItem(getTipoItemNombre(nombreTipo, getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__()).id)
+        
+        # Eliminar el proyecto y todas sus fases
+        assert self.testBorrarProyecto(nombreProyecto)
+        
+        rv = self.logout()
+        assert self.logoutMessage in rv.data
+       
+        print 'Op. con proyecto OK [OK]'
+
+    def testPermisos(self, nombreRol=None, numeroFase=None, nombreProyecto=None, nombreFase=None):
+        if nombreRol == None:
+            return True
+        #Crear rol
+        crearT='on'
+        editarT='on'
+        eliminarT='on'
+        crearLB='on'
+        eliminarLB='on'
+        crearI='on'
+        editarI='on'
+        eliminarI='on'
+        aprobarI='on'
+        revivirI='on'
+        reversionarI='on'
+        asignarpadreI='on'
+        asignarantecesorI='on'
+        
+        # Rol para lafase
+        self.testRoute(self.rolURL + getFase(numeroFase, getProyecto(nombreProyecto).id).id.__str__(), nombreFase)
+        
+        rv = self.app.post(self.crearRolURL,data=dict(nombre=nombreRol,
+                                                      crearT=crearT,
+                                                      editarT=editarT,
+                                                      eliminarT=eliminarT,
+                                                      crearLB=crearLB,
+                                                      eliminarLB=eliminarLB,
+                                                      crearI=crearI,
+                                                      editarI=editarI,
+                                                      eliminarI=eliminarI,
+                                                      aprobarI=aprobarI,
+                                                      revivirI=revivirI,
+                                                      reversionarI=reversionarI,
+                                                      asignarpadreI=asignarpadreI,
+                                                      asignarantecesorI=asignarantecesorI),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        
+        #Asignar un rol
+        id_rol = getRolNombre(nombreRol).id.__str__()
+        id_user = getUsuario(pms.app.default_user).id.__str__()
+        
+        
+        #Rol
+        self.testRoute(self.asignarRolURL + id_rol,self.listUser)
+        rv = self.app.get(self.asignarRolActionURL + id_user ,follow_redirects=True)
+        print 'Permisos [OK]'
+        
+    def testTipoItem(self, nombreTipo = None, nombreProyecto = None, numeroFase = None):
+        if nombreProyecto == None:
+            return True
+        #crear tipo item
+        self.testRoute(self.faseURL + getProyecto(nombreProyecto).id.__str__(), self.listFase)
+        self.testRoute(self.tipoURL + getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__(),self.listTipo)
+        self.testRoute(self.crearTipoURL, 'Crear Tipo')
+        
+        comentarioTipo = 'Tipo de Item madera'
+        rv = self.app.post(self.crearTipoURL, data=dict(nombre=nombreTipo,
+                                                        comentario=comentarioTipo),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        print 'CRUD Tipo de Item [OK]'
+        
+    def testItem(self, nombreItem=None,numeroFase=None,nombreProyecto=None,nombreTipo=None):
+        if nombreItem == None:
+            return True
+        costoItem = '1'
+        dificultadItem = '1'
+        idFase = getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__()
+        tipoItem = getTipoItemNombre(nombreTipo, getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__()).id.__str__()
+        
+        self.testRoute(self.itemURL + getFase(numeroFase,getProyecto(nombreProyecto).id.__str__()).id.__str__(), self.listItem)
+        rv = self.app.post(self.crearItemURL, data=dict(nombre = nombreItem,
+                                                        costo = costoItem,
+                                                        dificultad = dificultadItem,
+                                                        tipo = tipoItem),
+                           follow_redirects=True)
+        assert self.crearOK in rv.data
+        print 'CRUD Item [OK]'
+        
+    def testAprobarItem(self, nombreItem=None):
+        if nombreItem == None:
+            return True
+        rv = self.app.post(self.aprobarItemURL + str(getVitemTest(nombreItem).id), data=dict(Aceptar="Aceptar")
+                      ,follow_redirects=True)
+        assert self.aprobarOK in rv.data
+        print 'Operaciones Proyecto [OK]'

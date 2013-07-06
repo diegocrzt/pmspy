@@ -13,6 +13,7 @@ from atributoControlador import getAtributoId
 from faseControlador import getFaseId
 from datetime import datetime
 from sqlalchemy import or_
+from pms.modelo.entidad import LineaBase
 
 session = db_session()
 
@@ -64,9 +65,6 @@ def getVersionId(id=None):
     return item
 
 def getVersionItem(idi=None):
-    """
-    Retorna la ultima version de un item, recibe el id del item
-    """
     init_db()
     version = session.query(VersionItem).filter(VersionItem.deitem == idi).filter(VersionItem.actual == True).first()
     shutdown_session()
@@ -75,7 +73,7 @@ def getVersionItem(idi=None):
         
 def comprobarItem(nombre=None, fase=None):
     """
-    Valida si ya existe un item con ese nombre en esa fase
+    valida si ya existe un item con ese nombre en esa fase
     """
     tipos = getTiposFase(fase)
     for t in tipos:
@@ -88,7 +86,7 @@ def comprobarItem(nombre=None, fase=None):
     
 
 def crearItem(ti=None, etiq=None, nom=None, est=None, cos=None, dif=None, usr=None):
-    """Crea un item, recibe id del tipo de item, la etiqueta, el nombre, el estado, el costo, la dificultad, y el id del usuario creador
+    """Crea un tipo de item
 
     """
     init_db()
@@ -104,7 +102,7 @@ def crearItem(ti=None, etiq=None, nom=None, est=None, cos=None, dif=None, usr=No
     
 def editarItem(idi=None, nom=None, est=None, cos=None, dif=None, usr=None):
     """
-   Edita un item, recibe el id del item, el nombre, el estado, el costo, la dificultad, y el id del usuario modificador
+    permite editar un tipo de item existente
     """
     init_db()
     v = getVersionItem(idi)
@@ -128,7 +126,7 @@ def editarItem(idi=None, nom=None, est=None, cos=None, dif=None, usr=None):
 
 def eliminarItem(idi=None, usr=None):
     """
-    Elimina un item, recibe el id del item y el id del usuario modificador
+    Elimina un item
     """
     if(idi):
         init_db()
@@ -155,7 +153,7 @@ def ejEliminarItem(idi=None):
         
 def crearValor(ida=None, idv=None, val=None):
     """
-    Crea un atributo nuevo, recibe el id del atributo, el id de la version a la que pertenece y el valor que sera asignado al atributo
+    Crea un atributo nuevo
     """
     atr = getAtributoId(ida)
     if atr.tipoDato == "Cadena":
@@ -257,3 +255,39 @@ def getItemsFiltrados(fase=None, filtro=None):
             for i in t.instancias:
                 r.append(getVersionItem(i.id))
         return r
+    
+def getVitemTest(nombre=None):
+    """
+        Retorna La primera ocurrencia de version del item dado el nombre del item
+        @param nombre: Nombre del item
+        Funcion Helper 
+    """
+    if nombre:
+        respuesta = session.query(VersionItem).filter(VersionItem.nombre == nombre).first()
+        return respuesta
+    
+def dropItemTest(vitem):
+    if vitem:
+        init_db()
+        verItem = session.query(VersionItem).filter(VersionItem.id == vitem).first()
+        elitem = verItem.deitem
+        lbase = verItem.item.lineabase
+        while session.query(VersionItem).filter(VersionItem.deitem == elitem).first() != None:
+            session.query(VersionItem).filter(VersionItem.deitem == elitem).delete()
+        session.commit
+        
+        if lbase:
+            session.query(LineaBase).filter(LineaBase.id == lbase.id).delete()
+            session.commit
+
+        session.query(Item).filter(Item.id == elitem).delete()
+        session.commit
+        shutdown_session
+    
+
+
+if __name__ == '__main__':
+    fase = getFaseId(1)
+    query = getItemsFiltrados(fase, "1")
+    for q in query:
+        print q.nombre + " tipo:" + str(q.item.tipo)
