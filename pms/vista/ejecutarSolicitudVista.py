@@ -17,6 +17,9 @@ TAM_PAGINA=5
 @app.route('/admsolicitud/ejecutar/<s>')
 @pms.vista.required.login_required
 def AdmEjecutarSolicitud(s=None):
+    """
+    Retorna la vista de la ejecucion de una solicitud, recibe el id de la solicitud
+    """
     soli=getPeticion(s)
     flask.session['solicitudid']=s
     #r=actualizarItemsSolicitud(flask.session['solicitudid'])
@@ -28,6 +31,9 @@ def AdmEjecutarSolicitud(s=None):
 @app.route('/admsolicitud/ejecutar/editaritem/<i>')
 @pms.vista.required.login_required
 def edItemSolicitud(i=None):
+    """
+    Retorna la vista de editar item de una ejecucion de solicitud de cambio, recibe el id del item
+    """
     iversion=getVersionId(i)
     flask.session['itemid']=iversion.deitem
     return flask.render_template('editarItemSolicitud.html', i=iversion)

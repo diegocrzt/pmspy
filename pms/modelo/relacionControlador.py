@@ -77,7 +77,7 @@ def comprobarRelacion(ante_id=None,post_id=None):
 
 class nodo():
     """
-    clase utilizada para reperesentar los nodos de un grafo
+    Clase utilizada para reperesentar los nodos de un grafo
     """
     def __init__(self, nombre, costo, dificultad,version,estado, item, ver):
         self.entrantes = []
@@ -246,6 +246,9 @@ def desAprobar(idv=None):
     shutdown_session()
     
 def hijos(vid=None):
+    """
+    Funcion que retorna el arbol de hijos de un item, recibe el id de la version del item
+    """
     ver=getVersionId(vid)
     itm= ver.item
     fase=itm.tipoitem.fase
@@ -260,6 +263,9 @@ def hijos(vid=None):
     return aux
 
 def hijosRecursivo(nA, grafo):
+    """
+    Funcion recursiva que es llamada por hijos() para obtener todos los hijos de un item, una version de item y el  grafo del proyecto
+    """
     l=[]
     for n in nA.salientes:
         aux=hijosRecursivo(n,grafo)
@@ -298,6 +304,9 @@ def calcularCyD(listaItems):
     return res
 
 def romperLB(idv):
+    """
+    Establece el estado de la linea base a quebrada
+    """
     ver=getVersionId(idv)
     init_db()
     if ver.estado=="Bloqueado":
@@ -366,7 +375,7 @@ def desBloquearAdelante2(lista=None):
     
 def desBloquearAdelanteG(idvcambio=None,grafo=None):
     """
-    Funcione recursiva que prueba la reversion de estado de un nodo a Revision y  continua con todos sus dependientes
+    Funcion recursiva que prueba la reversion de estado de un nodo a Revision y  continua con todos sus dependientes
     """
     ver=getVersionId(idvcambio)
     if ver.item.lineabase!=None:
@@ -413,6 +422,9 @@ def setEnCambio(idv=None):
     shutdown_session()
     
 def abrirLB(idlb=None):
+    """
+    Establece el estado de la linea base a "Abierta"
+    """
     linea=getLineaBaseId(idlb)
     init_db()
     linea.estado="Abierta"

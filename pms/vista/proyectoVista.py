@@ -223,6 +223,9 @@ def terminarProyectoB(p=None):
 @app.route('/admfase/graficar/<idp>', methods=["POST", "GET"])
 @pms.vista.required.login_required    
 def GraficarProyecto(idp=None):
+    """
+    Ejecuta la funcion de graficar el grafo del proyecto y etorna la vista del grafo, recibe el id del proyecto
+    """
     n=graficarProyecto(idp)
     return flask.render_template('grafico.html',nombre=n[0],aux=n[1])
     

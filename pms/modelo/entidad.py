@@ -393,7 +393,7 @@ class LineaBase(Base):
 
 class LB_Ver(Base):
     """
-        Define la tabla entre el rol y el usuario y la mapea con la tabla valorstr
+        Define la tabla de la lineas base quebradas
     """
     __tablename__ = 'lb_ver'
     lb_id = Column(Integer, ForeignKey('lineabase.id'), primary_key=True)
@@ -476,6 +476,9 @@ class Miembro(Base):
         self.user_id = user_id
 
 class ItemPeticion(Base):
+    """
+        Define la relacion de muchos a muchos entre entre una peticion y una version de item
+    """
     __tablename__ = 'item_peticion'
     peticion_id = Column(Integer, ForeignKey('peticion.id'), primary_key=True)
     item_id = Column(Integer, ForeignKey('vitem.id'), primary_key=True)
