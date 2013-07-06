@@ -251,6 +251,9 @@ def graficarFase(idf=None):
     return res
 
 def graficarItem(idi=None):
+    """
+    Grafica el grafo de un item
+    """
     graph = pydot.Dot(graph_type='digraph',rankdir="LR")
     items={}
     lineas={}

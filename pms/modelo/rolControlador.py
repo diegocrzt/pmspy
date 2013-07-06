@@ -68,6 +68,9 @@ def comprobarRol(nombre=None, fase=None):
     return False                
     
 def comprobarUser_Rol(idr=None,idu=None):
+    """
+    Verifica si el usuario ya tiene asignado el rol, recibe el id del rol y el del usuario
+    """
     res=getRolUser(idr,idu)
     if res==None :
         return True

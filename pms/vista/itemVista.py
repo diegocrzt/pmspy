@@ -151,7 +151,7 @@ class CompletarAtributo(flask.views.MethodView):
     @pms.vista.required.login_required
     def post(self):
         itm1=getVersionItem(flask.session['itemid'])
-        editarItem(flask.session['itemid'],itm1.nombre,itm1.estado,itm1.costo,itm1.dificultad,flask.session['usuarioid'])
+        editarItem(flask.session['itemid'],itm1.nombre,"Activo",itm1.costo,itm1.dificultad,flask.session['usuarioid'])
         itm=getVersionItem(flask.session['itemid'])
         tipo=getTipoItemId(flask.session['tipoitemid'])
         for at in tipo.atributos:
@@ -171,6 +171,9 @@ class CompletarAtributo(flask.views.MethodView):
 @app.route('/admitem/atributo/<i>')
 @pms.vista.required.login_required       
 def complAtributosItem(i=None): 
+    """
+    Retorna la vista de completar atributos de un item
+    """
     ver=getVersionId(i)
     item=getItemId(ver.deitem)
     tipo=getTipoItemId(item.tipo)
@@ -233,6 +236,9 @@ class EliminFichero(flask.views.MethodView):
 @app.route('/admitem/fichero/<vitemId>')
 @pms.vista.required.login_required       
 def admFicheroItem(vitemId=None):
+    """
+    Retorna la vista de administrar fichero de un item, recibe el id de la version del item
+    """
     versionItem = getVersionId(vitemId)
     itemId = versionItem.deitem
     vFile = getFileByItemId(itemId)
@@ -242,6 +248,9 @@ def admFicheroItem(vitemId=None):
 @app.route('/admitem/fichero/descargar/<idFichero>')
 @pms.vista.required.login_required
 def descargarFichero(idFichero=None):
+    """
+    Ejecutra la fuincion de descargar fichero, recibe el de del fichero
+    """
     fichero = getFileById(idFichero)
     response = make_response(fichero.valor)
     response.headers['Cache-Control'] = 'no-cache'
@@ -257,6 +266,9 @@ def descargarFichero(idFichero=None):
 @app.route('/admitem/fichero/eliminar/<idFichero>')
 @pms.vista.required.login_required
 def elimFichero(idFichero=None):
+    """
+    Ejecuta la funcion de eliminar un fichero, recibe el id del fichero
+    """
     vFile = getFileById(idFichero)
     vitem = getVersionItem(vFile.item_id)
     vitemId = vitem.id
@@ -313,6 +325,9 @@ class EditarItem(flask.views.MethodView):
 @app.route('/admitem/editaritem/<t>')
 @pms.vista.required.login_required       
 def edItem(t=None): 
+    """
+    Retorna la vista de editar item, recibe el id del item
+    """
     ver=getVersionId(t)
     #item=getItemId(t)
     flask.session['itemid']=ver.deitem
@@ -690,7 +705,7 @@ def eliminarRel(vid=None):
 @pms.vista.required.login_required
 def eliminarRelb(vid=None): 
     """
-
+    Elimina una relacion de un item, recibe el id del item con quien se tiene la relacion que se va a eliminar
     """
     flask.session.pop('itemnombre',None)
     eliminarRelacion(flask.session['idver'],vid)
@@ -705,7 +720,7 @@ def eliminarRelb(vid=None):
 @pms.vista.required.login_required
 def eliminarRelc(vid=None): 
     """
-
+    Elimina una relacion de un item, recibe el id del item con quien se tiene la relacion que se va a eliminar
     """
     eliminarRelacion(vid,flask.session['idver'])
     if getVersionId(flask.session['idver']).estado=="Aprobado":
@@ -737,6 +752,9 @@ def prevPageI():
 @app.route('/consultaritem/grafico/<i>')
 @pms.vista.required.login_required   
 def graficarItemArbol(i=None):
+    """
+    Ejecuta la funcion de graficar el grafo de los item relacionados con un item y retorna la vista, recibe el id del item
+    """
     n=graficarItem(i)
     return flask.render_template('grafico.html',nombre=n[0],aux=n[1],item=True)
     

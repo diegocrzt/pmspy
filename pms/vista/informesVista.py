@@ -88,7 +88,7 @@ def informeSolicitud(a=None):
 @app.route('/informeitem/<i>')
 def informeItem(i):
     """
-    Restorna la version pdf del informe del historial de un item
+    Retorna la version pdf del informe del historial de un item
     """
     ver=getVersionId(i)
     item=getItemId(ver.deitem)
